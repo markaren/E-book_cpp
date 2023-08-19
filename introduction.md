@@ -29,7 +29,7 @@ Remember, programming is a tool that allows you to solve problems, automate task
 
 ### Introduction to Object-Oriented Programming (OOP)
 
-Welcome to the world of Object-Oriented Programming (OOP)! Imagine being able to model real-world objects, their behaviors, and interactions in your programs, making your code more organized, reusable, and easier to manage. OOP is a powerful approach used in programming to create well-structured and efficient software.
+Imagine being able to model real-world objects, their behaviors, and interactions in your programs, making your code more organized, reusable, and easier to manage. OOP is a powerful approach used in programming to create well-structured and efficient software.
 
 #### What is Object-Oriented Programming?
 
@@ -67,13 +67,32 @@ Learning OOP has several benefits:
 
 - __Collaboration:__ OOP promotes collaboration among developers by allowing them to work on different parts of a project independently.
 
+#### OOP compared to other paradigmes
+
+|              | OOP                                                                                                                          | Procedural                                                                                            | Functional                                                                                                                    |
+|--------------|------------------------------------------------------------------------------------------------------------------------------|-------------------------------------------------------------------------------------------------------|-------------------------------------------------------------------------------------------------------------------------------|
+| Focus        | OOP focuses on modeling real-world entities as objects, combining data and methods that operate on the data.                 | Procedural programming focuses on procedures or functions that execute a sequence of statements.      | Functional programming focuses on treating computation as the evaluation of mathematical functions and avoiding mutable data. |
+| Key Concepts | Classes, objects, inheritance, encapsulation, polymorphism.                                                                  | Functions, sequences, variables.                                                                      | First-class functions, immutability, higher-order functions.                                                                  |
+| Advantages   | Encourages code reusability, modularity, and easy maintenance. Supports complex systems by representing entities as objects. | Simple and straightforward for smaller tasks. Emphasizes clear step-by-step procedures.               | Emphasizes clear data flows and avoids side effects. Well-suited for tasks involving data transformations.                    |
+| Examples     | C++, Java, Python.                                                                                                           | C, Pascal.                                                                                            | Haskell, Lisp, Clojure.                                                                                                       |
+| Metaphor     | Think of objects as self-contained entities with attributes and behaviors, much like objects in the real world.              | Think of programming as a series of well-defined steps or instructions, much like following a recipe. | Think of programming as composing and applying functions to data, like mathematical transformations.                          |
+
+##### Commonalities and Considerations:
+
+All paradigms have their strengths and are suitable for different scenarios.
+OOP is useful for modeling real-world systems and creating reusable components.
+Procedural programming is suitable for simple tasks and clear, step-by-step procedures.
+Functional programming is good for tasks involving data transformations and avoiding side effects.
+As you explore programming paradigms, remember that they're not exclusive; you can often use elements from different paradigms to suit the needs of your projects. 
+Understanding the strengths and characteristics of each paradigm will help you choose the right approach for your coding challenges.
+
 ### Introduction to C++
 
-Welcome to the exciting world of programming with C++! Imagine having the power to create software, games, and applications that can do almost anything you can think of. C++ is a programming language that allows you to turn your ideas into functional and interactive programs.
+Imagine having the power to create software, games, and applications that can do almost anything you can think of. C++ is a programming language that allows you to turn your ideas into functional and interactive programs.
 
 #### What is C++
 
-C++ is a versatile and widely used programming language known for its combination of power and efficiency. It was developed as an extension of the [C programming language](https://en.wikipedia.org/wiki/C_(programming_language)), adding features that make it easier to organize and manage your code. C++ is used in a wide range of applications, from creating games and mobile apps to building complex software systems and even controlling hardware devices.
+C++ is a versatile and widely used programming language known for its combination of power and efficiency. It was developed as an extension of the [C programming language](https://en.wikipedia.org/wiki/C_(programming_language)), adding features that make it easier to organize and manage your code. C++ is used in a wide range of applications, from creating games and mobile apps to building complex software systems and even controlling hardware devices. C++ supports OOP, as well as other programming paradigms, making in a multi-paradigm language. The focus in this course, however, lies with OOP.
 
 You might have heard that C++ is a difficult language to learn. This is somewhat true, however, the language has evolved a lot since its inception in 1985. Todays C++ programmers should be using best practices for the language standards C++11 and newer. Also known as _modern C++_. The newer language standards have made the language much easier to use. This course uses C++17. 
 
@@ -91,7 +110,7 @@ Learning C++ opens up a world of possibilities. Here are a few reasons why you m
 
 - __Career Opportunities:__ Knowledge of C++ is a valuable skill in the software development industry, opening doors to various job opportunities.
 
-#### Key concepts to explore:
+#### Key concepts to be explored:
 
 As you embark on your journey with C++, here are some key concepts you'll learn about:
 

@@ -8,6 +8,6 @@ The book will be updated regularly troughout the semester. Make sure to bookmark
 
 | Week | Topic |
 |------|-------|
-|  34    |  [Introduction](inroduction.md)     |
+|  34    |  [Introduction](introduction.md)     |
 |      |       |
 

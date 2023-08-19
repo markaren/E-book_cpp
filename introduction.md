@@ -26,7 +26,7 @@ Here's a simple breakdown of how programming works:
 
 Remember, programming is a tool that allows you to solve problems, automate tasks, and create amazing things on a computer. It might seem a bit challenging at first, but with practice and persistence, you'll become more comfortable and confident in your programming abilities.
 
-
+---
 ### Introduction to Object-Oriented Programming (OOP)
 
 Imagine being able to model real-world objects, their behaviors, and interactions in your programs, making your code more organized, reusable, and easier to manage. OOP is a powerful approach used in programming to create well-structured and efficient software.
@@ -86,6 +86,7 @@ Functional programming is good for tasks involving data transformations and avoi
 As you explore programming paradigms, remember that they're not exclusive; you can often use elements from different paradigms to suit the needs of your projects. 
 Understanding the strengths and characteristics of each paradigm will help you choose the right approach for your coding challenges.
 
+---
 ### Introduction to C++
 
 Imagine having the power to create software, games, and applications that can do almost anything you can think of. C++ is a programming language that allows you to turn your ideas into functional and interactive programs.

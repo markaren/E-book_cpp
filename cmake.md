@@ -1,6 +1,6 @@
 # CMake 
 
-CMake is a powerful tool in the world of C++ programming that simplifies the process of building, compiling, and managing complex projects. It helps you create cross-platform, organized, and easily maintainable codebases.
+[CMake](https://cmake.org/) is a powerful tool in the world of C++ programming that simplifies the process of building, compiling, and managing complex projects. It helps you create cross-platform, organized, and easily maintainable codebases.
 
 [CLion](https://www.jetbrains.com/clion/) is a powerfull and cross-platform C/C++ IDE that supports CMake projects, which we will use in this course. 
 As an NTNU student, you are [eligible for a free license](https://www.jetbrains.com/community/education/#students).  

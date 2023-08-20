@@ -8,6 +8,6 @@ The book will be updated regularly troughout the semester. Make sure to bookmark
 
 | Week | Topic |
 |------|-------|
-|  34    |  [Introduction](introduction.md)     |
-|      |       |
+|  34    |  <ul><li> [Introduction](introduction.md) <ul><li>[Control Statements](control_statements.md)</li><li>[Functions](functions.md)</li><li>[CMake](cmake.md)</li></ul> </li></ul>     |         
+|  35    |       |
 

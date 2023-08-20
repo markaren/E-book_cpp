@@ -27,10 +27,12 @@ With CLion and and a working compiler setup:
 2. Under C++, choose C++ executable.
 3. Specify the location of the project and set the language standard to C++17.
 4. A CMake settings window should appear. If not goto `File->Settings->Build, Execution, Deployment->CMake`. The default settings are likely OK.
-   - If you have installed Visual Studio under Windows, you might want to go `File->Settings->Build, Execution, Deployment->Toolchains` and add Visual Studio using the `+`. Make sure to select `x86_amd64` under `Architecture`.
+   - If you have installed Visual Studio under Windows, however, you might want to go `File->Settings->Build, Execution, Deployment->Toolchains` and add Visual Studio using the `+`. Make sure to select `x86_amd64` under `Architecture`.
 
 > Note. It's not a good idea to specify the location as a folder under cloud storage. This will result a large number of files beeing synchronized during building,
 > and of you use multiple PC's you'll end up with synchronization issues as the build files generated are PC specific.
+>
+> Furthermore, paths with special characters (including Norwegian ones) are likely to lead to hard to understand errors at least on Windows. Also _try_ to avoid paths with spaces. 
 
 With the configuration done, CLion as now created a dummy "Hello world" project for you. It consists of two files:
 

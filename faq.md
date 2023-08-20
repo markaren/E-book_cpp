@@ -1,0 +1,17 @@
+# FAQ
+
+- [Why should I not include cpp-files and instead use a header?](https://stackoverflow.com/questions/1686204/why-should-i-not-include-cpp-files-and-instead-use-a-header)
+- [What are the differences between a pointer variable and a reference variable?](https://stackoverflow.com/questions/57483/what-are-the-differences-between-a-pointer-variable-and-a-reference-variable)
+- [What does the explicit keyword mean?](https://stackoverflow.com/questions/121162/what-does-the-explicit-keyword-mean)
+- [Why is using namespace std considered bad practice?](https://stackoverflow.com/questions/1452721/why-is-using-namespace-std-considered-bad-practice)
+- [What is the difference between include filename and include filename?](https://stackoverflow.com/questions/21593/what-is-the-difference-between-include-filename-and-include-filename)
+- [Why should C++ programmers minimize use of new](https://stackoverflow.com/questions/6500313/why-should-c-programmers-minimize-use-of-new)
+- [Why are #ifndef and #define used in C++ header files](https://stackoverflow.com/questions/1653958/why-are-ifndef-and-define-used-in-c-header-files)
+- [std::endl-vs-"\\n"](https://stackoverflow.com/questions/213907/stdendl-vs-n)
+- [Difference-between-static-and-shared-libraries?](https://stackoverflow.com/questions/2649334/difference-between-static-and-shared-libraries)
+- [What are the advantages of list-initialization using curly braces?](https://stackoverflow.com/questions/18222926/what-are-the-advantages-of-list-initialization-using-curly-braces)
+- [Is it a bad practice to use an if-statement without curly-braces?](https://stackoverflow.com/questions/2125066/is-it-a-bad-practice-to-use-an-if-statement-without-curly-braces)
+- [What is a lambda expression in C++11?](https://stackoverflow.com/questions/7627098/what-is-a-lambda-expression-in-c11)
+- [What are POD types in C++?](https://stackoverflow.com/questions/146452/what-are-pod-types-in-c)
+- [Can I call a constructor from another constructor (do constructor chaining) in C++](https://stackoverflow.com/questions/308276/can-i-call-a-constructor-from-another-constructor-do-constructor-chaining-in-c)
+- [When should static_cast, dynamic_cast, const_cast, and reinterpret_cast be used?](https://stackoverflow.com/questions/332030/when-should-static-cast-dynamic-cast-const-cast-and-reinterpret-cast-be-used)

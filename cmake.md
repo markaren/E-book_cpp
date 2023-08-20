@@ -101,10 +101,11 @@ By organizing your CMake project in this manner, you'll make it easier for yours
 For more information see [The Pitchfork Layout](https://api.csswg.org/bikeshed/?force=1&url=https://raw.githubusercontent.com/vector-of-bool/pitchfork/develop/data/spec.bs).
 
 
-## Creating a CMake project
+## Manually creating a CMake project
 
-In your project directory, create a file named `CMakeLists.txt`. This file contains instructions for CMake to configure and generate build files.
-Creating a new Project in CLion will do this for you.
+In your selected project directory, create a file named `CMakeLists.txt`. This file contains instructions for CMake to configure and generate build files.
+
+> Note: Creating a new Project in CLion will do this for you.
 
 Here's a basic `CMakeLists.txt` example:
 
@@ -123,6 +124,22 @@ add_executable(MyExecutable main.cpp)
 # Note: You can add more source files by extending the 'add_executable' line.
 # For example, 'add_executable(MyExecutable main.cpp another_file.cpp)'
 ```
+
+### Building from the Command Line
+
+CMake projects can be built using the Command Line using a variation of the commands below.
+
+```
+//Windows
+cmake . -A x64 -B build -DCMAKE_BUILD_TYPE=Release
+cmake --build build --config Release
+
+//Linux & Mac
+cmake . -B build -DCMAKE_BUILD_TYPE=Release
+cmake --build build
+```
+
+This assumes that `cmake` command is available. That is, CMake is installed and globally available on the system i.e. added to PATH.
 
 ## Summary
 

@@ -134,7 +134,7 @@ It's commonly used when you know the exact number of iterations needed.
 
 ```
 
-### `for each (Range-based for) loop:
+### `for each` (Range-based for) loop:
 
 The "for each" loop, also known as the range-based for loop, is used to iterate through each element in a collection, such as an array or a container. It simplifies the process of accessing elements and is great for traversing sequences.
 

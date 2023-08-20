@@ -56,13 +56,10 @@ Your main `CMakeLists.txt` file should be in the root directory. If you have sub
 
 - __Build Directory:__
 Create a separate build directory (e.g., `build/`) to keep build-related files separate from the source code. This prevents cluttering your source directory with build artifacts.
-
 - __Include Directory:__
 Place header files (.h or .hpp) in the `include/` directory. Organize headers based on their functionality or modules. Use proper directory structure to prevent naming clashes and enhance code readability.
-
 - __Source Directory:__
 The `src/` directory is where your source code files (.cpp files) reside. Similar to headers, organize source files by functionality or modules to maintain clarity.
-
 - __Subdirectories__:
 Consider creating subdirectories within `include/` and `src/` as your project grows. This helps maintain a well-structured codebase. For example:
 
@@ -92,10 +89,9 @@ For testing purposes, create a separate directory like test/ or tests/ to hold y
 Consider having a docs/ directory to store any documentation related to your project.
 
 - __Additional Files:__
-
-- Include a README.md file to provide an overview of your project, its purpose, and how to use it.
-- Include a .gitignore file to specify which files and directories should be ignored by version control.
-- Include a LICENSE file to state the terms under which your code is shared.
+  - Include a `README.md` file to provide an overview of your project, its purpose, and how to use it.
+  - Include a `.gitignore` file to specify which files and directories should be ignored by version control.
+  - Include a `LICENSE` file to state the terms under which your code is shared.
 
 By organizing your CMake project in this manner, you'll make it easier for yourself and other developers to navigate, understand, and maintain your codebase as it grows in complexity.
 For more information see [The Pitchfork Layout](https://api.csswg.org/bikeshed/?force=1&url=https://raw.githubusercontent.com/vector-of-bool/pitchfork/develop/data/spec.bs).

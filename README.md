@@ -8,8 +8,8 @@ The book will be updated regularly throughout the semester. Make sure to bookmar
 
 | Week | Topic |
 |------|-------|
-|  34    |  <ul><li> [Introduction](introduction.md) <ul><li>[Control Statements](control_statements.md)</li><li>[Functions](functions.md)</li><li>[Variables and Basic Types](variables.md)</li><li>[Getting Started](getting_started.md)</li><li>[CMake](cmake.md)</li></ul> </li></ul>     |         
-|  35    |       |
+|  34    |  <ul><li> [Introduction](introduction.md) <ul><li>[Control Statements](control_statements.md)</li><li>[Functions](functions.md)</li><li>[Variables and Basic Types](variables.md)</li><li>[Getting Started](getting_started.md)</li></ul> </li></ul>     |         
+|  35    |  <ul><li>[CMake](cmake.md) </li></ul>     |
 
 
 

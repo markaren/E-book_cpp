@@ -12,7 +12,6 @@ The book will be updated regularly throughout the semester. Make sure to bookmar
 |  35    |  <ul><li>[CMake](cmake.md) </li></ul>     |
 
 
-
 ### Additional resources
 
 While aimed to support your endevours, this book should not be treated as a complete reference guide. It is crucial that you supplement with other resources.
@@ -27,3 +26,5 @@ Below is a non-extausive list of recommended learning resources.
 - [__cppreference__](https://en.cppreference.com/w/) - A reliable online reference for C++ programming, providing detailed and up-to-date documentation on C++ language features, libraries, and standard functions.
 - [__LearnCpp__](https://www.learncpp.com/) - An online resource offering comprehensive tutorials and guides to help beginners learn C++ programming through step-by-step lessons and practical examples.
 - [__Stack Overflow__](https://stackoverflow.com/) - A popular online platform where programmers ask questions, share knowledge, and find solutions to programming-related issues from a community of developers worldwide.
+
+### [Frequently asked questions (FAQ)](faq.md)

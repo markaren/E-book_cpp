@@ -3,12 +3,12 @@
 In C++, variables are essential components that allow you to store and manipulate data. 
 They act like containers for holding different types of information, such as numbers, text, or even complex structures. 
 Understanding variables is fundamental for writing effective and dynamic programs.
-C++ is a strongly, or statically, types language meaning all variables have a specific type. 
+C++ is a strongly, or statically, typed language meaning all variables have a specific type. 
 Once a variable has been declared, the type cannot be changed unlike e.g., Python.
 
-## Data Types:
+## Basic Data Types:
 
-Variables have data types that define the kind of value they can hold. Common data types include:
+Variables have data types that define the kind of value they can hold. C++ inherits a number of basic data types (known as primitives) from C, these include but are not limited to:
 
 |Type|Comment|
 |----|-------|
@@ -17,7 +17,8 @@ Variables have data types that define the kind of value they can hold. Common da
 | int | Integers (whole numbers) |
 | float | Floating-point numbers (decimal numbers) |
 | double | Floating-point numbers with higher accuracy |
-| std::string | Sequences of characters (text) |
+
+For a more elavorate overview, see cppreferences entry on [Fundamental types](https://en.cppreference.com/w/cpp/language/types)
 
 
 > Using the `class` or `struct` keyword in C++ you can defines your own custom types.
@@ -25,7 +26,8 @@ Variables have data types that define the kind of value they can hold. Common da
 
 ## What is a Variable?
 
-Imagine a box where you can put something and give it a name. In programming, a variable is like that box. It's a named storage location in your computer's memory that holds a value. This value can be a number, a piece of text, or something more complex.
+Imagine a box where you can put something and give it a name. In programming, a variable is like that box. It's a named storage location in your computer's memory that holds a value. 
+This value can be a number, a piece of text, or something more complex.
 
 ### Declaring a Variable:
 
@@ -38,7 +40,8 @@ double price;  // Declare a double (floating-point) variable named 'price'
 
 ### Assigning a Value:
 
-After declaring a variable, you can assign a value to it using the assignment operator =. The value you assign must match the variable's type:
+After declaring a variable, you can assign a value to it using the assignment operator `=`. 
+The value you assign must match the variable's type:
 
 ```cpp
 age = 25;  // Assign the value 25 to the 'age' variable
@@ -54,10 +57,11 @@ int quantity = 10;  // Declare and initialize the 'quantity' variable with the v
 double sum{5.0};   // Declare and initialize the 'sum' variable with the value 5.0 using uniform initialization.
 ```
 
-Initializing variables when you declare them is a good programming practice with several benefits. Let's explore why you should make it a habit to initialize variables right from the start:
+Initializing variables when you declare them is a good programming practice with several benefits.
+Let's explore why you should make it a habit to initialize variables right from the start:
 
 1. __Prevents Unintended Values:__
-When you declare a without initializing it, it contains whatever was previously stored in that memory location.
+When you declare a variable without initializing it, it contains whatever was previously stored in that memory location.
 This could be garbage values, remnants of previous computations, or unpredictable data.
 Initializing variables ensures that they start with a known, meaningful value.
 3. __Avoids Bugs and Errors:__

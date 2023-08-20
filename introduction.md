@@ -127,6 +127,6 @@ Learning C++ is an exciting adventure that requires practice and patience. Start
 - [learncpp.com](https://www.learncpp.com/) - LearnCpp.com is a free website devoted to teaching you how to program in C++.
 - [ChatGPT](https://chat.openai.com/) - Used correctly, ChatGPT can be great companion and sparring partner. 
 
-Remember, every programmer started from the beginning, and with determination and practice, you'll be well on your way to mastering C++ and creating your own remarkable software.
+Remember, with determination and practice, you'll be well on your way to mastering C++ and creating your own remarkable software.
 
 Happy coding, and welcome to the world of C++ programming!

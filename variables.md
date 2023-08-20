@@ -31,13 +31,14 @@ price = 19.99;  // Assign the value 19.99 to the 'price' variable
 You can also declare and assign a value in a single step, known as initialization:
 
 ```cpp
-int quantity = 10;  // Declare and initialize the 'quantity' variable with the value 10
+int quantity = 10;  // Declare and initialize the 'quantity' variable with the value 10 using direct initialization with assignment.
+double sum{5.0};   // Declare and initialize the 'sum' variable with the value 5.0 using uniform initialization.
 ```
 
 Initializing variables when you declare them is a good programming practice with several benefits. Let's explore why you should make it a habit to initialize variables right from the start:
 
 1. __Prevents Unintended Values:__
-When you declare a variable without initializing it, it contains whatever was previously stored in that memory location.
+When you declare a without initializing it, it contains whatever was previously stored in that memory location.
 This could be garbage values, remnants of previous computations, or unpredictable data.
 Initializing variables ensures that they start with a known, meaningful value.
 3. __Avoids Bugs and Errors:__

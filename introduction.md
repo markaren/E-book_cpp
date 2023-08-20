@@ -106,6 +106,10 @@ Learning C++ opens up a world of possibilities. Here are a few reasons why you m
 
 You might have heard that C++ is a difficult language to learn. This is somewhat true, however, the language has evolved a lot since its inception in 1985. Todays C++ programmers should be using best practices for the language standards C++11 and newer. Also known as _modern C++_. The newer language standards have made the language much easier to use. This course uses C++17.
 
+The gist of _modern C++_ is as follows:
+
+> Modern C++ is characterized by a set of programming practices, language features, and design principles that aim to enhance code clarity, efficiency, and safety. It encourages the use of standardized libraries, smart pointers, lambda expressions, type inference, and other features to write concise, expressive, and maintainable code. The emphasis is on leveraging the C++11 and later standards to achieve a balance between high-level abstractions and low-level control while promoting best practices for memory management and code organization.
+
 #### Key concepts to be explored:
 
 As you embark on your journey with C++, here are some key concepts you'll learn about:

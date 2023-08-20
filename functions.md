@@ -5,7 +5,13 @@ Functions are fundamental building blocks of programming in C++, enabling you to
 ## What is a Function?
 
 A function is a self-contained block of code that performs a specific task. It can take inputs, process data, and produce outputs. 
-Functions make your code more organized, readable, and maintainable by allowing you to break down complex problems into smaller, manageable pieces.
+Compared to putting all declarations and statements inside the same code block, functions provide some benefits:
+
+- __Modularity:__ Functions allow you to break down a large problem into smaller, manageable tasks.
+- __Reusability:__ Once defined, functions can be reused multiple times across your codebase.
+- __Readability:__ Functions make your code more understandable by encapsulating complex logic.
+- __Maintenance:__ Changes or updates are easier to manage within a function than scattered throughout the code.
+
 
 ### Function Components:
 
@@ -35,7 +41,8 @@ int main() {
 }
 ```
 
-In C++ the declaration and implementation may be split, either within the same file or in two separate files.
+In C++ the declaration and implementation may be split, either within the same file or in two separate files.The latter is known as separate compilation, which lets us split our
+programs into several files, each of which can be compiled independently. This allows for faster complation and hiding of implementation details.
 
 ```cpp
 // Function declaration
@@ -53,14 +60,7 @@ int add(int a, int b) {
 }
 ```
 
-To use a function, you call it by its name and provide any necessary arguments (inputs) within parentheses as seen above.
-
-### Advantages of Functions:
-
-- __Modularity:__ Functions allow you to break down a large problem into smaller, manageable tasks.
-- __Reusability:__ Once defined, functions can be reused multiple times across your codebase.
-- __Readability:__ Functions make your code more understandable by encapsulating complex logic.
-- __Maintenance:__ Changes or updates are easier to manage within a function than scattered throughout the code.
+To use a function, you call it by its name and provide any necessary arguments (inputs) within parentheses (call operator) as seen above.
 
 ### Function Overloading:
 

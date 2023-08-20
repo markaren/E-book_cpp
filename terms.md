@@ -20,4 +20,5 @@ This page tries to put a meaning to as many such terms as possible.
 |member function|Operation defined by a class. Member functions ordinarily are called to operate on a specific object.|
 |method|Synonym for member function|
 |namespace|Mechanism for putting names defined by a library into a single place. Namespaces help avoid inadvertent name clashes. The names defined by the C++ library are in the namespace std.|
+|parameter list|Part of the definition of a function. Possibly empty list that specifies what arguments can be used to call the function.|
 |variable|A named object.|

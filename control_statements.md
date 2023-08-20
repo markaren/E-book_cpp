@@ -21,7 +21,7 @@ if (condition) {
 }
 ```
 
-### `if else` statment
+### `if-else` statement
 
 The `if-else` statement adds an alternative block of code to be executed when the condition is false.
 
@@ -33,9 +33,25 @@ if (condition) {
 }
 ```
 
-### `else if` statement
+The shorthand if-else statement in C++ is known as the ternary operator (?:). It provides a compact way to write a simple conditional expression in a single line. The syntax is:
 
-The `else if` statement allows you to check multiple conditions sequentially. It's useful when you have more than two possible outcomes.
+```
+condition ? expression_if_true : expression_if_false;
+```
+
+For example:
+
+```cpp
+int num = 10;
+std::string result = (num > 5) ? "Greater than 5" : "Not greater than 5";
+```
+
+In this example, if num is greater than 5, the result will be set to "Greater than 5"; otherwise, it will be set to "Not greater than 5".
+
+
+### `else-if` statement
+
+The `else-if` statement allows you to check multiple conditions sequentially. It's useful when you have more than two possible outcomes.
 
 ```cpp
 if (condition1) {
@@ -114,9 +130,9 @@ while (condition) {
     // Code to be repeated
 }
 ```
-### `do while` loop
+### `do-while` loop
 
-The `do while` loop is similar to the while loop, but it ensures that the code block is executed at least once before checking the condition. 
+The `do-while` loop is similar to the while loop, but it ensures that the code block is executed at least once before checking the condition. 
 It's useful when you want to ensure something happens before checking if it should continue happening.
 
 ```cpp
@@ -134,9 +150,10 @@ It's commonly used when you know the exact number of iterations needed.
 
 ```
 
-### `for each` (Range-based for) loop:
+### `for-each` (Range-based for) loop:
 
-The "for each" loop, also known as the range-based for loop, is used to iterate through each element in a collection, such as an array or a container. It simplifies the process of accessing elements and is great for traversing sequences.
+The `for-each` loop, also known as the range-based for loop, is used to iterate through each element in a collection, such as an array or a container. 
+It simplifies the process of accessing elements and is great for traversing sequences.
 
 ```cpp
 for (data_type element : collection) {

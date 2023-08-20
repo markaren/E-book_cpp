@@ -1,4 +1,4 @@
-# Variables
+# Variables and Basic Types
 
 In C++, variables are essential components that allow you to store and manipulate data. 
 They act like containers for holding different types of information, such as numbers, text, or even complex structures. 
@@ -91,27 +91,12 @@ int total = quantity * 2;  // Use the 'quantity' variable in an expression
 Variable names can consist of letters, digits, and underscores. They must start with a letter or an underscore. 
 Names are case-sensitive (e.g., `age` and `Age` are different variables).
 
-### Data Types:
-
-Variables have data types that define the kind of value they can hold. Common data types include:
-
-|Type|Comment|
-|----|-------|
-| char | Single characters |
-| bool | Boolean values (true or false) |
-| int | Integers (whole numbers) |
-| double | Floating-point numbers (decimal numbers) |
-| std::string | Sequences of characters (text) |
-
-
-Using the `class` or `struct` keyword in C++ you can defines your own custom types.
-
-## Scope:
+### Scope:
 
 Scope defines the area of your code where a variable is visible and can be accessed. 
 Each pair of curly braces `{}` marks a new scope. Variables declared within a scope are usually only accessible within that scope.
 
-### Local Scope:
+#### Local Scope:
 
 Variables declared inside a function are local to that function's scope. 
 They can't be accessed from outside the function. This is great for keeping variables separate and preventing unintended interference.
@@ -123,7 +108,7 @@ void printMessage() {
 } // 'message' goes out of scope here and is no longer accessible
 ```
 
-### Global Scope:
+#### Global Scope:
 
 Variables declared outside any function, at the top of your code, have global scope. 
 They can be accessed from anywhere in your program. However, it's recommended to limit global variables as they can make code harder to understand and maintain.
@@ -148,6 +133,22 @@ int main() {
     return 0;
 }
 ```
+
+## Data Types:
+
+Variables have data types that define the kind of value they can hold. Common data types include:
+
+|Type|Comment|
+|----|-------|
+| char | Single characters |
+| bool | Boolean values (true or false) |
+| int | Integers (whole numbers) |
+| double | Floating-point numbers (decimal numbers) |
+| std::string | Sequences of characters (text) |
+
+
+Using the `class` or `struct` keyword in C++ you can defines your own custom types.
+
 
 ## Summary
 

@@ -3,6 +3,25 @@
 In C++, variables are essential components that allow you to store and manipulate data. 
 They act like containers for holding different types of information, such as numbers, text, or even complex structures. 
 Understanding variables is fundamental for writing effective and dynamic programs.
+C++ is a strongly, or statically, types language meaning all variables have a specific type. 
+Once a variable has been declared, the type cannot be changed unlike e.g., Python.
+
+## Data Types:
+
+Variables have data types that define the kind of value they can hold. Common data types include:
+
+|Type|Comment|
+|----|-------|
+| char | Single characters |
+| bool | Boolean values (true or false) |
+| int | Integers (whole numbers) |
+| float | Floating-point numbers (decimal numbers) |
+| double | Floating-point numbers with higher accuracy |
+| std::string | Sequences of characters (text) |
+
+
+> Using the `class` or `struct` keyword in C++ you can defines your own custom types.
+
 
 ## What is a Variable?
 
@@ -134,22 +153,6 @@ int main() {
     return 0;
 }
 ```
-
-## Data Types:
-
-Variables have data types that define the kind of value they can hold. Common data types include:
-
-|Type|Comment|
-|----|-------|
-| char | Single characters |
-| bool | Boolean values (true or false) |
-| int | Integers (whole numbers) |
-| double | Floating-point numbers (decimal numbers) |
-| std::string | Sequences of characters (text) |
-
-
-Using the `class` or `struct` keyword in C++ you can defines your own custom types.
-
 
 ## Summary
 

@@ -88,11 +88,12 @@ Example: `int num;` or `double price = 10.99;`
 4. __Control Flow Statements:__
 These control the flow of execution in your program. <br>
 Examples: if, else, switch, while, for, do-while. <br>
-See also [Control Statements](control_statements.md)
 
 5. __Jump Statements:__
 These transfer control to a different part of the program. <br>
 Examples: break, continue, return, goto (though rarely used).
+
+See also [Control Statements](control_statements.md)
 
 ## Semicolons
 

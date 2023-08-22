@@ -4,7 +4,8 @@ In order to get started with C++, you need a compiler. Simply put, a compiler is
 and creates a binary file that the machine’s CPU can understand and execute. Compilers for Windows, Linux and MacOS are typically different. 
 
 You are expected to use [CLion](https://www.jetbrains.com/clion/) in this course. CLion is a cross-platform IDE for C and C++, which is free for students. 
-CLion comes bundled with CMake, so you do not have to install that independently. On Windows it also comes with a working compiler that uses the MinGW toolchain. However, you might want to use a different one tailored to Windoes.
+CLion comes bundled with CMake, so you do not have to install that independently. On Windows it also comes with a working compiler that uses the MinGW toolchain. 
+However, you might consider using the MSVC compiler, which is tailored to Windows.
 
 ## Windows
 
@@ -22,10 +23,10 @@ installed in your system by default, you can install the latest available versio
 sudo apt-get update && sudo apt-get install build-essential
 ```
 
----
 
-With CLion and and a working compiler setup:
+## Your first project
 
+With CLion and a working compiler setup:
 
 1. Open CLion and choose `New Project`.
 2. Under C++, choose C++ executable.

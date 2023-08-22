@@ -90,15 +90,15 @@ src/
 ```
 
 - __Testing:__
-For testing purposes, create a separate directory like test/ or tests/ to hold your unit tests. This keeps test code separate from your source code.
+For testing purposes, create a separate directory like `test/` or `tests/` to hold your unit tests. This keeps test code separate from your source code.
 
 - __Documentation:__
-Consider having a docs/ directory to store any documentation related to your project.
+Consider having a `docs/` directory to store any documentation related to your project.
 
 - __Additional Files:__
   - Include a `README.md` file to provide an overview of your project, its purpose, and how to use it.
   - Include a `.gitignore` file to specify which files and directories should be ignored by version control.
-  - Include a `LICENSE` file to state the terms under which your code is shared.
+  - Include a `LICENSE` [file](https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-features/customizing-your-repository/licensing-a-repository) to state the terms under which your code is shared.
 
 By organizing your CMake project in this manner, you'll make it easier for yourself and other developers to navigate, understand, and maintain your codebase as it grows in complexity.
 For more information see [The Pitchfork Layout](https://api.csswg.org/bikeshed/?force=1&url=https://raw.githubusercontent.com/vector-of-bool/pitchfork/develop/data/spec.bs).
@@ -147,4 +147,3 @@ This assumes that `cmake` command is available. That is, CMake is installed and 
 ## Summary
 
 Mastering CMake will empower you to efficiently manage your C++ projects, create consistent and reliable build systems, and collaborate effectively in the world of software development.
-

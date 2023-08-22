@@ -1,18 +1,22 @@
 # Getting started
 
-In order to get started with C++, you need a compiler. Simply put, a compiler is a software program that processes instructions written in a programming language and creates a binary file that the machine’s CPU can understand and execute. Compilers for Windows, Linux and MacOS are typically different. 
+In order to get started with C++, you need a compiler. Simply put, a compiler is a software program that processes instructions written in a programming language 
+and creates a binary file that the machine’s CPU can understand and execute. Compilers for Windows, Linux and MacOS are typically different. 
 
-You are expected to use [CLion](https://www.jetbrains.com/clion/) in this course. CLion is a cross-platform IDE for C and C++, which is free for students. CLion comes bundled with CMake, so you do not have to install that independently. On Windows it also comes with a working compiler that uses the MinGW toolchain. However, you might want to use a different one tailored to Windoes.
+You are expected to use [CLion](https://www.jetbrains.com/clion/) in this course. CLion is a cross-platform IDE for C and C++, which is free for students. 
+CLion comes bundled with CMake, so you do not have to install that independently. On Windows it also comes with a working compiler that uses the MinGW toolchain. However, you might want to use a different one tailored to Windoes.
 
 ## Windows
 
-_Optional:_ Download [Visual Studio Community](https://visualstudio.microsoft.com/vs/community/). This is the preferred compiler on Windows, however, you can opt to use the the MinGW toolchain that come bundled with CLion.
+_Optional:_ Download [Visual Studio Community](https://visualstudio.microsoft.com/vs/community/). 
+This is the preferred compiler on Windows, however, you can opt to use the the MinGW toolchain that come bundled with CLion.
 
 ## MacOS
 Apple supports C++ with the Apple Clang compiler (included in Xcode). 
 
 ## Linux 
-In Debian-based distributions, the most well-known C and C++ compilers are gcc and g++. f your system doesn’t have the build-essential package installed in your system by default, you can install the latest available version from the default distribution repositories as follows:
+In Debian-based distributions, the most well-known C and C++ compilers are gcc and g++. If your system doesn’t have the build-essential package 
+installed in your system by default, you can install the latest available version from the default distribution repositories as follows:
 
 ```
 sudo apt-get update && sudo apt-get install build-essential
@@ -39,12 +43,12 @@ With the configuration done, CLion as now created a dummy "Hello world" project 
 ##### CMakeLists.txt
 
 ```cmake
-cmake_minimum_required(VERSION 3.26)
-project(delete)
+cmake_minimum_required(VERSION 3.15)
+project(demo)
 
 set(CMAKE_CXX_STANDARD 17)
 
-add_executable(delete main.cpp)
+add_executable(demo main.cpp)
 ```
 
 ##### main.cpp

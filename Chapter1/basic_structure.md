@@ -27,13 +27,26 @@ to the screen, and it is amazing */
 std::cout << "Hello World!";
 ```
 
-## main() function
 
-Every C++ program must have a `main()` function. It serves as the entry point for execution.
-Program execution starts from the first statement in the `main()` function.
+## Semicolons
+
+Semicolons indicate the end of a statement in C++.
+Missing semicolons can lead to syntax errors.
 ```cpp
-int main() { /* code here */ return 0; }
+int quantity = 10;
+double price = 5.40;
+double sum = price * quantity;
+std::cout << "Hello there" << std::endl;
 ```
+
+They are also used to end class definitions.
+
+```cpp
+class MyClass {
+// class definitions
+};
+```
+
 
 ## Code Blocks:
 
@@ -44,8 +57,9 @@ Code blocks in C++ also define the scope of variables.
 
 ### Scope and Code Blocks
 
-A scope is a region of code where a variable or other named entity can be accessed and manipulated. 
-In C++, code blocks, which are enclosed within curly braces {}, play a significant role in defining the scope of variables and other declarations. Here's how it works:
+A scope is a region of code where a variable or other named entity can be accessed and manipulated.
+In C++, code blocks, which are enclosed within curly braces {}, play a significant role in defining the 
+scope of variables and other declarations. Here's how it works:
 
 1. __Local Scope:__ Variables declared inside a code block are said to have local scope.They can only be accessed and used within that specific code block.Once you move outside the code block, those variables are no longer accessible.
 3. __Block Nesting:__ Code blocks can be nested within each other. Variables declared in an outer block are visible to inner blocks, but not vice versa. Inner blocks can "see" variables from outer blocks, but not the other way around.
@@ -68,37 +82,41 @@ int main() {
 }
 ```
 
-Understanding scope is crucial for avoiding naming conflicts and making sure that your variables are used where and when they are intended. 
+Understanding scope is crucial for avoiding naming conflicts and making sure that your variables are used where and when they are intended.
 It's also a fundamental concept in programming languages, as it allows you to manage the visibility and accessibility of variables throughout your code.
 
 ## Statements
 
-A statement in C++ is a complete instruction that performs a specific action. 
+A statement in C++ is a complete instruction that performs a specific action.
 Here are some common types of statements:
 
 1. __Expression Statements:__
-An expression followed by a semicolon is an expression statement. <br>
-Example: `x = y + z;` or `result = 2 * (x + y);`
+   An expression followed by a semicolon is an expression statement. <br>
+   Example: `x = y + z;` or `result = 2 * (x + y);`
 
 
 2. __Declaration Statements:__
-These declare variables or other entities. <br>
-Example: `int num;` or `double price = 10.99;`
+   These declare variables or other entities. <br>
+   Example: `int num;` or `double price = 10.99;`
 
 4. __Control Flow Statements:__
-These control the flow of execution in your program. <br>
-Examples: if, else, switch, while, for, do-while. <br>
+   These control the flow of execution in your program. <br>
+   Examples: if, else, switch, while, for, do-while. <br>
 
 5. __Jump Statements:__
-These transfer control to a different part of the program. <br>
-Examples: break, continue, return, goto (though rarely used).
+   These transfer control to a different part of the program. <br>
+   Examples: break, continue, return, goto (though rarely used).
 
 See also [Control Statements](control_statements.md)
 
-## Semicolons
 
-Semicolons indicate the end of a statement in C++.
-Missing semicolons can lead to syntax errors.
+## main() function
+
+Every C++ program must have a `main()` function. It serves as the entry point for execution.
+Program execution starts from the first statement in the `main()` function.
 ```cpp
-std::cout << "Hello, World!";
+int main() { 
+    /* code here */ 
+    return 0;
+}
 ```

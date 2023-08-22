@@ -18,15 +18,16 @@ Variables have data types that define the kind of value they can hold. C++ inher
 | float | Floating-point numbers (decimal numbers) |
 | double | Floating-point numbers with higher accuracy |
 
-For a more elavorate overview, see cppreferences entry on [Fundamental types](https://en.cppreference.com/w/cpp/language/types)
+For a more elaborate overview, see cppreferences' entry on [Fundamental types](https://en.cppreference.com/w/cpp/language/types)
 
 
-> Using the `class` or `struct` keyword in C++ you can defines your own custom types.
+> Using the `class` or `struct` keyword in C++ you can define your own custom types.
 
 
 ## What is a Variable?
 
-Imagine a box where you can put something and give it a name. In programming, a variable is like that box. It's a named storage location in your computer's memory that holds a value. 
+Imagine a box where you can put something and give it a name. In programming, a variable is like that box. 
+It's a named storage location in your computer's memory that holds a value. 
 This value can be a number, a piece of text, or something more complex.
 
 ### Declaring a Variable:
@@ -68,17 +69,17 @@ Initializing variables ensures that they start with a known, meaningful value.
 Using variables without initializing them can lead to bugs that are difficult to identify and fix.
 Unexpected behavior can occur when uninitialized variables interact with other parts of your code.
 Initializing variables from the beginning reduces the chances of introducing subtle errors.
-5. __Enhances Readability and Intent:__
+3. __Enhances Readability and Intent:__
 When you initialize variables at the point of declaration, you make your code more self-explanatory.
 Anyone reading your code can immediately understand the initial value and the intended purpose of the variable.
 This improves code readability and aids collaboration.
-7. __Promotes Good Habits:__
+4. __Promotes Good Habits:__
 Initializing variables encourages good coding habits. It forces you to think about the initial state and value that your variable should have.
 This practice can extend to more complex scenarios where initializing variables becomes essential for proper program behavior.
-9. __Makes Debugging Easier:__
+5. __Makes Debugging Easier:__
 If you encounter unexpected behavior in your program, initialized variables help narrow down the scope of the issue.
 You can rule out uninitialized variables as a potential cause of bugs, saving time during debugging.
-11. __Prevents Undefined Behavior:__
+6. __Prevents Undefined Behavior:__
 In C++, using uninitialized variables can lead to undefined behavior.
 The C++ standard doesn't define the behavior of your program when you read from an uninitialized variable.
 This means your program might work differently on different compilers or platforms.
@@ -118,12 +119,14 @@ Names are case-sensitive (e.g., `age` and `Age` are different variables).
 ### Scope:
 
 Scope defines the area of your code where a variable is visible and can be accessed. 
-Each pair of curly braces `{}` marks a new scope. Variables declared within a scope are usually only accessible within that scope.
+Each pair of curly braces `{}` marks a new scope. Variables declared within a scope 
+are usually only accessible within that scope.
 
 #### Local Scope:
 
 Variables declared inside a function are local to that function's scope. 
-They can't be accessed from outside the function. This is great for keeping variables separate and preventing unintended interference.
+They can't be accessed from outside the function. This is great for keeping 
+variables separate and preventing unintended interference.
 
 ```cpp
 void printMessage() {
@@ -135,7 +138,8 @@ void printMessage() {
 #### Global Scope:
 
 Variables declared outside any function, at the top of your code, have global scope. 
-They can be accessed from anywhere in your program. However, it's recommended to limit global variables as they can make code harder to understand and maintain.
+They can be accessed from anywhere in your program. However, it's recommended to limit global variables 
+as they can make code harder to understand and maintain.
 
 ```cpp
 #include <iostream>
@@ -162,5 +166,7 @@ int main() {
 
 In a nutshell, variables in C++ are like named storage boxes for holding different types of information. 
 Variables store data, and scope determines where that data is accessible. 
-By understanding how to declare, initialize, and use variables in various scopes, you'll be able to build dynamic and organized programs. 
-Keeping variables in appropriate scopes contributes to code clarity, prevents conflicts, and sets the foundation for creating reliable software.
+By understanding how to declare, initialize, and use variables in various scopes, 
+you'll be able to build dynamic and organized programs. 
+Keeping variables in appropriate scopes contributes to code clarity, prevents conflicts, 
+and sets the foundation for creating reliable software.

@@ -3,11 +3,13 @@
 
 Control statements are essential tools in programming that enable you to control the flow of execution within your code. 
 They allow you to make decisions, repeat actions, and create logical structures in your programs. 
-In C++, there are three main types of control statements: [conditional statements](#Conditional-statements), [loop statements](#Loop-statements), and [branching statements](#Branching-statements).
+In C++, there are three main types of control statements: 
+[conditional statements](#Conditional-statements), [loop statements](#Loop-statements), and [branching statements](#Branching-statements).
 
 ## Conditional statements
 
-Conditional statements in C++ are tools that allow your programs to make decisions and execute different blocks of code based on certain conditions. 
+Conditional statements in C++ are tools that allow your programs to make decisions and 
+execute different blocks of code based on certain conditions. 
 They let your program choose between alternative paths, enabling you to create dynamic and responsive applications. 
 Here's a concise summary of the main conditional statements you'll encounter in C++:
 
@@ -33,7 +35,8 @@ if (condition) {
 }
 ```
 
-The shorthand if-else statement in C++ is known as the ternary operator (?:). It provides a compact way to write a simple conditional expression in a single line. The syntax is:
+The shorthand if-else statement in C++ is known as the ternary operator (`?:`). 
+It provides a compact way to write a simple conditional expression in a single line. The syntax is:
 
 ```
 condition ? expression_if_true : expression_if_false;
@@ -46,12 +49,14 @@ int num = 10;
 std::string result = (num > 5) ? "Greater than 5" : "Not greater than 5";
 ```
 
-In this example, if num is greater than 5, the result will be set to "Greater than 5"; otherwise, it will be set to "Not greater than 5".
+In this example, if num is greater than 5, the result will be set to "Greater than 5"; otherwise, 
+it will be set to "Not greater than 5".
 
 
 ### `else-if` statement
 
-The `else-if` statement allows you to check multiple conditions sequentially. It's useful when you have more than two possible outcomes.
+The `else-if` statement allows you to check multiple conditions sequentially. 
+It's useful when you have more than two possible outcomes.
 
 ```cpp
 if (condition1) {
@@ -81,8 +86,10 @@ switch (variable) {
 }
 ```
 
-In C++, when working with the switch statement, it's a good practice to use braces `{}` to define the scope of each case's code block. 
-This helps prevent unintended behavior and makes your code more robust. Let's modify the switch example to demonstrate the importance of using braces:
+In C++, when working with the switch statement, it's a good practice to use braces `{}` 
+to define the scope of each case's code block. 
+This helps prevent unintended behavior and makes your code more robust. 
+Let's modify the switch example to demonstrate the importance of using braces:
 
 ```cpp
 switch (variable) {

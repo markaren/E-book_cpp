@@ -1,14 +1,17 @@
-# CMake 
+# CMake introduction
 
-[CMake](https://cmake.org/) is a powerful tool in the world of C++ programming that simplifies the process of building, compiling, and managing complex projects. It helps you create cross-platform, organized, and easily maintainable codebases.
+[CMake](https://cmake.org/) is a powerful tool in the world of C++ programming that simplifies the process of building, 
+compiling, and managing complex projects. It helps you create cross-platform, organized, and easily maintainable codebases.
 
-[CLion](https://www.jetbrains.com/clion/) is a powerfull and cross-platform C/C++ IDE that supports CMake projects, which we will use in this course. 
+[CLion](https://www.jetbrains.com/clion/) is a cross-platform C/C++ IDE that supports CMake projects, which we will use in this course. 
 As an NTNU student, you are [eligible for a free license](https://www.jetbrains.com/community/education/#students).  
 
 
 ## What is CMake?
 
-CMake is a widely used open-source build system and project configuration tool. It allows developers to define and manage the build process of their C++ projects in a platform-independent way. CMake generates platform-specific build files, such as Makefiles for Unix-like systems or project files for IDEs like Visual Studio.
+CMake is a widely used open-source build system and project configuration tool. 
+It allows developers to define and manage the build process of their C++ projects in a platform-independent way. 
+CMake generates platform-specific build files, such as Makefiles for Unix-like systems or project files for IDEs like Visual Studio.
 
 ### Key Concepts:
 
@@ -36,10 +39,12 @@ CMake offers several benefits for C++ projects:
 
 ## Organizing CMake projects
 
-Organizing a CMake project effectively is crucial for maintaining a clean, structured, and manageable codebase. Here's a recommended organization structure for your CMake project:
+Organizing a CMake project effectively is crucial for maintaining a clean, structured, and manageable codebase. 
+Here's a recommended organization structure for your CMake project:
 
 - __Root Directory:__
-The root directory of your project contains the main `CMakeLists.txt` file and any top-level project files. This directory often has a name that reflects your project's purpose.
+The root directory of your project contains the main `CMakeLists.txt` file and any top-level project files. 
+- This directory often has a name that reflects your project's purpose.
 
 ```scss
 MyProject/
@@ -49,7 +54,9 @@ MyProject/
 ├── .gitignore
 ├── build/ (auto-generated build directory)
 ├── include/ (Header files)
-└── src/ (Source files)
+├── src/ (Source files)
+├── test/ (Test folder)
+└── data/ (Additional resources for your project)
 ```
 
 Your main `CMakeLists.txt` file should be in the root directory. If you have subdirectories, create additional `CMakeLists.txt` files in those directories to configure the build for their specific contents.

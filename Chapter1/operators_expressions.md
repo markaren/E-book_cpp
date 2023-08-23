@@ -8,32 +8,32 @@ Expressions are combinations of operators and operands that produce a value.
 
 1. __Arithmetic Operators:__
 Perform basic mathematical operations. <br>
-Examples: `+ (addition), - (subtraction), * (multiplication), / (division), % (modulus).`
+Examples: `+` (addition), `-` (subtraction), `*` (multiplication), `/` (division), `%` (modulus).
 
 2.  __Assignment Operators:__
 Assign a value to a variable. <br>
-Examples: `= (assignment), += (add and assign), -= (subtract and assign), *= (multiply and assign), /= (divide and assign).`
+Examples: `=` (assignment), `+=` (add and assign), -= (subtract and assign), `*=` (multiply and assign), `/=` (divide and assign).
 
 3.  __Comparison Operators:__
 Compare two values and return a Boolean result (true or false). <br>
-Examples: `== (equal to), != (not equal to), < (less than), > (greater than), <= (less than or equal to), >= (greater than or equal to).`
+Examples: `==` (equal to), `!=` (not equal to), `<` (less than), > (greater than), `<=` (less than or equal to), `>=` (greater than or equal to).
 
 4.  __Logical Operators:__
-Perform logical operations on Boolean values.
-Examples: `&& (logical AND), || (logical OR), ! (logical NOT).`
+Perform logical operations on Boolean values. <br>
+Examples: `&&` (logical AND), `||` (logical OR), `!` (logical NOT).
 
 5.  __Increment and Decrement Operators:__
 Increase or decrease the value of a variable by 1. <br>
-Examples: `++ (increment), -- (decrement).`
+Examples: `++` (increment), `--` (decrement).
 
 6.  __Conditional (Ternary) Operator:__
-A shorthand way of writing if-else statements.
-Syntax: condition ? expression1 : expression2
+A shorthand way of writing if-else statements. <br>
+Syntax: `condition ? expression1 : expression2` <br>
 Example: `result = (x > y) ? x : y;`
 
 7.  __Bitwise Operators:__
 Perform operations on individual bits of values. <br>
-Examples: `& (bitwise AND), | (bitwise OR), ^ (bitwise XOR), ~ (bitwise NOT), << (left shift), >> (right shift).`
+Examples: `&` (bitwise AND), `|` (bitwise OR), `^` (bitwise XOR), `~` (bitwise NOT), `<<` (left shift), `>>` (right shift).`
 
 ## Expressions
 

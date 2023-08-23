@@ -157,7 +157,7 @@ You often pair a header file with a source file. The header file defines the int
 However, in many cases the header could contain both the definition and implementation of your code. The choice is often yours wether or not you want to split the header or not. 
 There are advantages and disadvatages with both alternatives.
 
-You include the header file in your source file using the `#include` directive.
+You include the header file in other files using the `#include` directive.
 
 ### Header Files:
 

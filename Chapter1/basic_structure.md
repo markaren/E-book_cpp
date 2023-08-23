@@ -149,3 +149,77 @@ int main() {
     return 0;
 }
 ```
+
+## Header and source files
+
+C++ projects are often split into multiple files to keep things organized and manageable. The two main types of files you'll encounter are header files and source files.
+You often pair a header file with a source file. The header file defines the interface of your code, while the source file provides the actual logic and details. 
+However, in many cases the header could contain both the definition and implementation of your code. The choice is often yours wether or not you want to split the header or not. 
+There are advantages and disadvatages with both alternatives.
+
+You include the header file in your source file using the `#include` directive.
+
+### Header Files:
+
+Header files (usually with a .h or .hpp extension) are used to declare various elements, like classes, functions, and variables, without necessarily providing their implementations. 
+These files act as blueprints that describe what something does and how it can be used. Header files contain function prototypes (declarations) and class definitions to be re-used in other files. 
+They don't typically contain the actual code for those functions or classes.
+
+Example of a header file named `my_class.h`:
+
+```cpp
+#ifndef MY_CLASS_H
+#define MY_CLASS_H
+
+class MyClass {
+public:
+    MyClass();          // Constructor declaration
+    void doSomething(); // Method declaration
+private:
+    int someData;       // Data member declaration
+};
+
+#endif
+```
+
+### Source Files:
+
+Source files (usually with a .cpp extension) contain the actual implementation of the code you declared in the header files. 
+They include the details of how functions are defined, classes are built, and variables are used. Source files provide the "meat" of your program.
+
+Example of a source file named `my_class.cpp` implementing the `MyClass` class:
+
+ ```cpp
+#include "my_class.h"
+
+MyClass::MyClass(): someData(0) {} // initialize the value of someData to 0 using member initializer list
+
+void MyClass::doSomething() {
+    // Implementation of the method
+}
+```
+
+
+#### Alternative approach to splitting header
+
+As an alternative to the split above, we often can provide the header also with the implementation details:
+
+```cpp
+#ifndef MY_CLASS_H
+#define MY_CLASS_H
+
+class MyClass {
+public:
+    MyClass(): someData(0){}
+
+    void doSomething() {
+       // do something
+    }
+private:
+    int someData; 
+};
+
+#endif
+```
+
+As you go along, you'll learn to make more informed decisions on which approach to go with.

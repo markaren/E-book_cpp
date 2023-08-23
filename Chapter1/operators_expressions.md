@@ -12,7 +12,7 @@ Examples: `+` (addition), `-` (subtraction), `*` (multiplication), `/` (division
 
 2.  __Assignment Operators:__
 Assign a value to a variable. <br>
-Examples: `=` (assignment), `+=` (add and assign), -= (subtract and assign), `*=` (multiply and assign), `/=` (divide and assign).
+Examples: `=` (assignment), `+=` (add and assign), `-=` (subtract and assign), `*=` (multiply and assign), `/=` (divide and assign).
 
 3.  __Comparison Operators:__
 Compare two values and return a Boolean result (true or false). <br>

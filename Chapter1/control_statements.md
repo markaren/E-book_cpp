@@ -154,7 +154,21 @@ The for loop provides a structured way to repeat code a specific number of times
 It's commonly used when you know the exact number of iterations needed.
 
 ```cpp
+for (initialization; condition; update) {
+    // Code to repeat
+}
+```
 
+- __Initialization:__ This is where you set up your loop, usually by initializing a counter variable.
+- __Condition:__ The loop continues as long as this condition is true.
+- __Update:__ After each iteration, the update statement is executed, usually incrementing or decrementing the counter.
+  
+#### Example: Printing numbers from 1 to 5 using a for loop.
+
+```cpp
+for (int i = 1; i <= 5; i++) {
+    std::cout << i << " ";
+}
 ```
 
 ### `for-each` (Range-based for) loop:
@@ -165,6 +179,15 @@ It simplifies the process of accessing elements and is great for traversing sequ
 ```cpp
 for (data_type element : collection) {
     // Code to be executed for each element
+}
+```
+
+#### Example: Printing the values of a `std::vector` container:
+
+```cpp
+std::vector<int> v{1, 2, 3};
+for (int value : v) {
+    std::cout << value << " ";
 }
 ```
 

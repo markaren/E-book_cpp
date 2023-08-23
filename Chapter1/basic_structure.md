@@ -11,6 +11,35 @@ Example:
 #include <iostream>  // to include the input-output stream library.
 ```
 
+### Header guards
+
+All headers you write should contain a _header guard_.
+Header guards are a programming technique used to prevent the multiple inclusion of the same header file (.h/.hpp) throughout your project.
+When you `#include` a header file in multiple places within your codebase, it can lead to problems like duplicate declarations, redefinitions, and compilation errors. 
+Header guards are a way to mitigate these issues and look like this:
+
+##### header.hpp
+```cpp
+#ifndef HEADER_FILENAME_H
+#define HEADER_FILENAME_H
+
+// Content of the header file goes here
+
+#endif
+```
+
+ Note that the `HEADER_FILENAME_H` above needs to be unique for every file.
+
+#### Alternative: `#pragma once`
+ An alternative to the above is to use the non-stanard `#pragma once` directive, which is supported by all major compilers.
+
+##### header.hpp
+ ```cpp
+#pragma once
+
+// Content of the header file goes here
+```
+
 ## Comments
 
 Comments are non-executable lines used for documentation and explanations.

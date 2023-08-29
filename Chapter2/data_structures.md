@@ -228,32 +228,34 @@ int main() {
 
 1. __Ordering:__
 
-- std::map: Stores elements in a sorted order based on the keys.
-- std::unordered_map: Does not guarantee any specific order of elements.
+- `std::map`: Stores elements in a sorted order based on the keys.
+- `std::unordered_map`: Does not guarantee any specific order of elements.
 
 2. __Performance:__
 
-- std::map: Provides slower insertion and lookup times compared to std::unordered_map. Insertions and lookups have logarithmic time complexity.
-- std::unordered_map: Provides faster insertion and lookup times on average, typically with constant-time complexity.
+- `std::map`: Provides slower insertion and lookup times compared to std::unordered_map. Insertions and lookups have logarithmic time complexity.
+- `std::unordered_map`: Provides faster insertion and lookup times on average, typically with constant-time complexity.
 
 3. __Underlying Data Structure:__
 
-- std::map: Typically implemented as a balanced binary search tree (such as a red-black tree).
-- std::unordered_map: Implemented using a hash table.
+- `std::map`: Typically implemented as a balanced binary search tree (such as a red-black tree).
+- `std::unordered_map`: Implemented using a hash table.
 
 4. __Key Type Requirements:__
 
-- std::map: Requires that the key type supports comparison operations (e.g., less than) to maintain order.
-- std::unordered_map: Requires that the key type supports hash functions and equality comparisons.
+- `std::map`: Requires that the key type supports comparison operations (e.g., less than) to maintain order.
+- `std::unordered_map`: Requires that the key type supports hash functions and equality comparisons.
 
 5. __Memory Usage:__
 
-- std::map: Generally uses more memory due to the tree structure and additional pointers.
-- std::unordered_map: Memory usage depends on the load factor and hash function quality, but it can be more memory-efficient in some cases.
+- `std::map`: Generally uses more memory due to the tree structure and additional pointers.
+- `std::unordered_map`: Memory usage depends on the load factor and hash function quality, but it can be more memory-efficient in some cases.
 
 6. __Use Cases:__
 
-- std::map: Suitable when maintaining order is important or when the keys are naturally ordered.
-- std::unordered_map: Suitable for fast data retrieval when order doesn't matter and hash-based lookup is efficient.
+- `std::map`: Suitable when maintaining order is important or when the keys are naturally ordered.
+- `std::unordered_map`: Suitable for fast data retrieval when order doesn't matter and hash-based lookup is efficient.
 
-When choosing between std::map and std::unordered_map, consider the specific requirements of your application. If you need fast insertion and lookup times and order is not important, std::unordered_map might be a better choice. If you need to maintain elements in a sorted order, then std::map is more appropriate.
+When choosing between `std::map` and `std::unordered_map`, consider the specific requirements of your application. 
+If you need fast insertion and lookup times and order is not important, `std::unordered_map` might be a better choice. 
+If you need to maintain elements in a sorted order, then `std::map` is more appropriate.

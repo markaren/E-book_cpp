@@ -19,14 +19,20 @@ Here is an overview of common data structures:
 
 - __Graphs:__ Graphs are a collection of nodes connected by edges. They can be directed (edges have a direction) or undirected. Graphs are used to represent relationships between elements.
 
-- __Sets and Maps:__ Sets store unique elements in no particular order, while maps (also known as dictionaries) store key-value pairs. C++ provides std::set, std::unordered_set, std::map, and std::unordered_map as part of the STL.
-
-- __Strings:__ Strings are sequences of characters. C++ provides both C-style strings (character arrays) and the std::string class in the Standard Library for string manipulation.
+- __Sets and Maps:__ Sets store unique elements in no particular order, while maps (also known as dictionaries) store key-value pairs. C++ provides `std::set`, `std::unordered_set`, `std::map`, and `std::unordered_map` as part of the STL.
 
 These are just some of the common data structures in C++. Choosing the right data structure depends on the problem you're trying to solve and the efficiency you require for different operations. 
 The C++ Standard Library provides implementations of many of these data structures.
 
-## Arrays
+## Sequence containers
+
+Sequence containers refer to a group of container class templates in the standard library of the C++ programming language that implement storage of data elements. 
+Being templates, they can be used to store arbitrary elements, such as integers or custom classes.
+
+The following containers are defined in the current revision of the C++ standard: `array`, `vector`, `list`, `forward_list`, `deque`. 
+Each of these containers implements different algorithms for data storage, which means that they have different speed guarantees for different operations
+
+### Arrays
 
 As mentioned, Arrays have a fixed size that needs to be specified during declaration. C provides a built-in array type, however, 
 the C++ Standard Library provides a better option through its `std::array` type.
@@ -67,12 +73,12 @@ int main() {
 }
 ```
 
-### Difference between C Arrays and C++ Arrays:
+#### Difference between C Arrays and C++ Arrays:
 
 1. __Declaration and Initialization:__
 
-- In C, you typically declare and initialize arrays separately, like int myArray[5]; followed by assignment of values.
-- In C++, you can combine declaration and initialization using the curly braces initializer syntax, like int myArray[5] = {10, 20, 30, 40, 50};.
+- In C, you typically declare and initialize arrays separately, like `int myArray[5];` followed by assignment of values.
+- In C++, you can combine declaration and initialization using the curly braces initializer syntax, like `int myArray[5] = {10, 20, 30, 40, 50};`.
 
 2. __Bound Checking:__
 
@@ -81,29 +87,52 @@ int main() {
 
 3. __Passing to Functions:__
 
-- In C, when you pass an array to a function, you're actually passing a pointer to the first element. There's no inherent mechanism to know the size of the array within the function.
-- In C++, you can use Standard Library containers like std::array or reference parameters to pass arrays with size information.
+- In C, when you pass an array to a function, you're actually passing a pointer to the first element. There's no inherent mechanism to know the size of the array so you'll need to pass an additional size parameter alongside the array.
+- In C++, you can use `std::array` to pass arrays with size information.
 
 4. __Copying and Assignment:__
 
 - C arrays don't have built-in copy mechanisms or assignment operators.
 - C++ arrays (using `std::array`) can be copied directly using the assignment operator, and the copy will contain the same elements.
 
-5. __Dynamic Arrays:__
-
-- In C, dynamic memory allocation using functions like malloc and free is commonly used to create arrays with sizes determined at runtime.
-- In C++, std::vector provides dynamic arrays that can grow or shrink dynamically while managing memory automatically.
-
 In summary, while C arrays and C++ arrays share some similarities, C++ introduces improvements and safer alternatives through the Standard Library, like `std::array` and containers such as `std::vector`. 
 These improvements help in avoiding common pitfalls associated with C arrays.
 
-#### Vectors
+### Vectors
 
+A vector is essentially a dynamic array. It automatically handles memory allocation and resizing as elements are added or removed. 
+This makes vectors more versatile than traditional arrays, which have a fixed size.
+
+```cpp
+#include <iostream>
+#include <vector>
+
+int main() {
+    // Create a vector of integers initialized with some elements
+    std::vector<int> myVector {1 ,2 3};
+
+    // Add additional elements to the vector
+    myVector.emplace_back(10);
+    myVector.emplace_back(20);
+    myVector.emplace_back(30);
+
+    // Iterate through the vector using a range-based loop
+    for (int element : myVector) {
+        std::cout << element << " ";
+    }
+    std::cout << std::endl;
+
+    return 0;
+}
+```
+
+Unless you have a very good reason not to, `std::vector` should be used for storing elements in a list-like structure.
 
 ### Linked-list
 
+A linked list is a data structure to organize and store a collection of elements, where each element is represented by a node. Unlike arrays or vectors, which use contiguous memory to store elements, a linked list consists of a series of nodes, where each node contains both the actual data and a pointer to the next node in the list. This chain of nodes forms a linear sequence.
 
-#### Implementation of a singly-linked list
+##### Implementation of a singly-linked list
 ```cpp
 #include <iostream>
 
@@ -145,7 +174,6 @@ public:
       return current->data;
     }
 
-    // Function to insert a new node at the end of the list
     void insert(T value) {
         auto newNode = new Node<T>(value);
         if (!head_) {
@@ -180,15 +208,15 @@ int main() {
     list.insert(40);
     
     for (int i = 0; i < list.size(); i++) {
-        std::cout << list[i] << std::endl;
+        std::cout << list[i] << " ";
     }
+    std::cout << std::endl
 
     return 0;
 }
-
 ```
 
-### Maps
+## Maps
 
 Maps (also known as dictionaries) store key-value pairs.
 
@@ -259,3 +287,62 @@ int main() {
 When choosing between `std::map` and `std::unordered_map`, consider the specific requirements of your application. 
 If you need fast insertion and lookup times and order is not important, `std::unordered_map` might be a better choice. 
 If you need to maintain elements in a sorted order, then `std::map` is more appropriate.
+
+### Trees
+
+A tree is a widely used abstract data type that represents a hierarchical tree structure with a set of connected nodes. Each node in the tree can be connected to many children (depending on the type of tree), but must be connected to exactly one parent,[1] except for the root node, which has no parent (i.e., the root node as the top-most node in the tree hierarchy). These constraints mean there are no cycles or "loops" (no node can be its own ancestor), and also that each child can be treated like the root node of its own subtree, making recursion a useful technique for tree traversal.
+
+##### Implementation of a tree in C++
+
+```cpp
+template<class T>
+class node {
+
+public:
+    node(T value) : value_(std::move(value)) {}
+
+    T &value() {
+        return value_;
+    }
+
+    const T &value() const {
+        return value_;
+    }
+
+    [[nodiscard]] bool hasParent() const {
+        return parent_ != nullptr;
+    }
+
+    const node<T> *parent() const {
+        return parent_;
+    }
+
+    const std::vector<std::unique_ptr<node<T>>> &children() const {
+        return children_;
+    }
+
+    node<T> &addChild(T child) {
+        children_.emplace_back(std::make_unique<node<T>>(child));
+        children_.back()->parent_ = this;
+        return *(children_.back());
+    }
+
+    [[nodiscard]] size_t numChildren() const {
+        return children_.size();
+    }
+
+    // implementing depth-first traversal using recursion 
+    void traverse(const std::function<void(node<T> &)> &f) override {
+        f(*this);
+        for (auto &child: children_)) {
+            child->traverse(f);
+        }
+    }
+
+private:
+    T value_;
+    node<T> *parent_ = nullptr;
+    std::vector<std::unique_ptr<node<T>>> children_;
+};
+```
+

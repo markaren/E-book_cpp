@@ -10,7 +10,7 @@ However, you might consider using the MSVC compiler, which is tailored to Window
 ## Windows
 
 _Optional:_ Download [Visual Studio Community](https://visualstudio.microsoft.com/vs/community/). 
-This is the preferred compiler on Windows, however, you can opt to use the the MinGW toolchain that come bundled with CLion.
+This is the preferred compiler on Windows, however, you can opt to use the MinGW toolchain that come bundled with CLion.
 
 ## MacOS
 Apple supports C++ with the Apple Clang compiler (included in Xcode). 

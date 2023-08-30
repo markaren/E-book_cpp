@@ -30,7 +30,7 @@ With CLion and a working compiler setup:
 
 1. Open CLion and choose `New Project`.
 2. Under C++, choose C++ executable.
-3. Specify the location of the project and set the language standard to C++17.
+3. Specify the location of the project and set the language standard to C++17/20.
 4. A CMake settings window should appear. If not goto `File->Settings->Build, Execution, Deployment->CMake`. The default settings are likely OK.
    - If you have installed Visual Studio under Windows, however, you might want to go `File->Settings->Build, Execution, Deployment->Toolchains` and add Visual Studio using the `+`. Make sure to select `x86_amd64` under `Architecture`.
 

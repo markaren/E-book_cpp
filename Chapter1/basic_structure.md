@@ -13,8 +13,8 @@ Example:
 
 ### Header guards
 
-All headers you write should contain a _header guard_.
-Header guards are a programming technique used to prevent the multiple inclusion of the same header file (.h/.hpp) throughout your project.
+All headers (.h/.hpp) you write should contain a _header guard_.
+Header guards are a programming technique used to prevent the multiple inclusion of the same header file throughout your project.
 When you `#include` a header file in multiple places within your codebase, it can lead to problems like duplicate declarations, redefinitions, and compilation errors. 
 Header guards are a way to mitigate these issues and look like this:
 
@@ -77,7 +77,7 @@ class MyClass {
 ```
 
 
-## Code Blocks:
+## Code Blocks
 
 Sections of code enclosed in curly braces `{}` are called code blocks.
 Blocks help organize and group statements together.
@@ -87,7 +87,7 @@ Code blocks in C++ also define the scope of variables.
 ### Scope and Code Blocks
 
 A scope is a region of code where a variable or other named entity can be accessed and manipulated.
-In C++, code blocks, which are enclosed within curly braces {}, play a significant role in defining the 
+In C++, code blocks, which are enclosed within curly braces `{}`, play a significant role in defining the 
 scope of variables and other declarations. Here's how it works:
 
 1. __Local Scope:__ Variables declared inside a code block are said to have local scope.They can only be accessed and used within that specific code block.Once you move outside the code block, those variables are no longer accessible.
@@ -130,11 +130,11 @@ Here are some common types of statements:
 
 4. __Control Flow Statements:__
    These control the flow of execution in your program. <br>
-   Examples: if, else, switch, while, for, do-while. <br>
+   Examples: `if`, `else`, `switch`, `while`, `for`, `do-while`. <br>
 
 5. __Jump Statements:__
    These transfer control to a different part of the program. <br>
-   Examples: break, continue, return, goto (though rarely used).
+   Examples: `break`, `continue`, `return`, `goto` (though rarely used).
 
 See also [Control Statements](control_statements.md)
 
@@ -159,7 +159,7 @@ There are advantages and disadvatages with both alternatives.
 
 You include the header file in other files using the `#include` directive.
 
-### Header Files:
+### Header Files
 
 Header files (usually with a .h or .hpp extension) are used to declare various elements, like classes, functions, and variables, without necessarily providing their implementations. 
 These files act as blueprints that describe what something does and how it can be used. Header files contain function prototypes (declarations) and class definitions to be re-used in other files. 
@@ -182,7 +182,7 @@ private:
 #endif
 ```
 
-### Source Files:
+### Source Files
 
 Source files (usually with a .cpp extension) contain the actual implementation of the code you declared in the header files. 
 They include the details of how functions are defined, classes are built, and variables are used. Source files provide the "meat" of your program.

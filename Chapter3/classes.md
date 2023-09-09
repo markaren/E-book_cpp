@@ -145,9 +145,7 @@ This helps in hiding the internal details of how a class works and provides a we
 
 ### Why Encapsulation?
 - __Data Protection:__ Encapsulation helps protect data from unauthorized access or modification. By defining data members as private or protected, you can control who or what can change the internal state of an object.
-
 - __Abstraction:__ It allows you to provide a simplified view of an object to the outside world. Users of a class don't need to know the intricate details of how it works internally; they only need to interact with its public interface.
-
 - __Code Organization:__ Encapsulation promotes clean and organized code. Data and related functions are grouped together within a class, making the codebase more maintainable.
 
 Here's an example demonstrating encapsulation in C++:
@@ -187,6 +185,7 @@ ensuring controlled and safe access to the data.
 
 By following the principles of encapsulation, you can build robust and maintainable code while protecting your data from unintended modifications. 
 It's a foundational concept in OOP and is widely used in programming to create organized and secure software systems.
+
 ---
 Note the added trailing `_` to the private attributes in the example above. 
 It is common to add _some_ special decoration to class member attributes in C++ in order to avoid variable shadowing. 

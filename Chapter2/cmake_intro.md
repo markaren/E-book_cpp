@@ -33,8 +33,9 @@ CMake offers several benefits for C++ projects:
 
 #### Going further:
 
-- __Adding Libraries:__ Use `target_link_libraries` to link your executable with external libraries.
-- __Multiple Source Files:__ Add all your source files to the `add_executable` line in the `CMakeLists.txt` file.
+- __Specify include directories__: Use `target_include_directories` to specify search folders for headers.
+- __Create Libraries__: Use `add_library` to create modular and re-usable code.
+- __Adding Libraries:__ Use `target_link_libraries` to link your executable with your own or external libraries.
 - __Organizing Code:__ Create subdirectories for different parts of your project and use `add_subdirectory` in your `CMakeLists.txt`.
 
 ## Organizing CMake projects

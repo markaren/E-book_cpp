@@ -35,6 +35,22 @@ const int& constRefY = y; // 'constRefY' is a constant reference to 'y'
 // constRefY = 50; // This would result in a compilation error because you can't modify 'y' through 'constRefY'
 ```
 
+We often choose const references in C++ whenever we want to pass data around (and don't need `nullptr`) so that we avoid copying data.
+
+```cpp
+
+void doWork(const std::vector<double>& data) {
+  // do something with `data` (we can read, but not modify `data`)
+  std::vector<double> copy = data; // if I need a copy, I can do that...
+}
+
+int main() {
+  std::vector<double> data = someFunctionThatReturnsLotsOfNumbers();
+  doWork(data);
+}
+
+```
+
 ## Pointers
 Pointers in C++ are variables that store memory addresses of other variables. They are declared using the `*` symbol. Pointers can be used to access and manipulate data indirectly. 
 They are more versatile than references because they can be reassigned to different memory locations. Here's an example:
@@ -55,6 +71,7 @@ Pointers and references are similar, however, pointers can be `nullptr`, which m
 * Pointers store memory addresses, offering greater flexibility for memory management and manipulation.
 * Given a value-type you can get a reference or a pointer to it that is valid for the duration of the values life-time.
 
+#### Example 1
 ```cpp
 int createIntValue() {
   return 1;
@@ -79,6 +96,7 @@ int main() {
 }
 ```
 
+#### Example 2
 ```cpp
 
 class Demo {

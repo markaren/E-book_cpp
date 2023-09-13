@@ -106,11 +106,11 @@ public:
     return value;
   }
 
-  int& getValueRef() const {
+ int& getValueRef() const {
     return *value;
   }
 
-  int* getValuePtr() const {
+ int* getValuePtr() const {
     return &value;
   }
 
@@ -126,6 +126,9 @@ int main() {
   int i1 = obj.getValue();
   int& i2 = obj.getValueRef();
   int* i3 = obj.getValuePtr();
+
+  // Note that i2, and i3 provides access to the underlying private member.
+  // We are then able to change the value of the value held be `obj`, thus breaking encapsulation!
 
 }
 

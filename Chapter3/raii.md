@@ -19,7 +19,27 @@ This constructor is responsible for obtaining and initializing the resource.
 3. **Resource Release**: You define a destructor for the same object. The destructor's role is to release the acquired resource.
 This happens automatically when the object goes out of scope or is explicitly destroyed.
 
-Here's a example of RAII for managing a temporary folder:
+The following example demonstrates the key principle of RAII:
+```cpp
+
+class RaiiDemo {
+
+public:
+
+    // constructor
+    RaiiDemo() {
+        // initialize resource when object is created
+    }
+
+    // destructor
+    ~RaiiDemo() {
+        // release resource when object goes out of scope
+    }
+
+};
+``` 
+
+Here's a more elaborate example of RAII for managing a temporary folder:
 
 ```cpp
 #include <iostream>
@@ -31,16 +51,12 @@ class TemporaryDirectory {
 public:
     // Constructor creates a temporary directory
     TemporaryDirectory() {
-        try {
-            // Generate a unique directory path using C++ filesystem library
-            directoryPath_ = std::filesystem::temp_directory_path() / std::filesystem::unique_path();
-            
-            // Create the temporary directory
-            if (!std::filesystem::create_directory(directoryPath_)) {
-                throw std::runtime_error("Failed to create a temporary directory.");
-            }
-        } catch (const std::exception& e) {
-            throw std::runtime_error("Failed to create a temporary directory: " + std::string(e.what()));
+        // Generate a unique directory path using C++ filesystem library
+        directoryPath_ = std::filesystem::temp_directory_path() / std::filesystem::unique_path();
+        
+        // Create the temporary directory
+        if (!std::filesystem::create_directory(directoryPath_)) {
+            throw std::runtime_error("Failed to create a temporary directory.");
         }
     }
 
@@ -75,7 +91,7 @@ int main() {
   
           // Use the temporary directory for some operations...
 
-        } // temp dir goes out of scope and is destructed (deleting the created temp dir in the process).
+        } // `tempDir` goes out of scope and is destructed (deleting the created directory in the process).
 
         std::cout << "Temporary directory deleted." << std::endl;
 

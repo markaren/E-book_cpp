@@ -29,12 +29,13 @@ In this example, we prompt the user for input using `cout` and read their respon
 
 ## File Streams
 
-File streams in C++ allow you to perform I/O operations on files. They provide a way to read data from files (input file streams) or write data to files (output file streams). C++ offers two primary classes for file I/O:
+File streams in C++ allow you to perform I/O operations on files. They provide a way to read data from files (input file streams) or write data to files (output file streams). 
+C++ offers two primary classes for file I/O:
 
 - **`ifstream`**: This class represents an input file stream and is used for reading data from files.
 - **`ofstream`**: This class represents an output file stream and is used for writing data to files.
 
-To work with file streams, you need to include the <fstream> header.
+To work with file streams, you need to include the `<fstream>` header.
 
 Here's an example of using `ifstream` to read data from a file:
 
@@ -49,15 +50,16 @@ int main() {
         while (std::getline(inputFile, line)) {
             std::cout << line << std::endl;
         }
-        inputFile.close();
+        inputFile.close(); // Would also have been called implicitly due to RAII
     } else {
-        std::cout << "Unable to open file." << std::endl;
+        std::cerr << "Unable to open file." << std::endl;
     }
     return 0;
 }
 ```
 
-In this example, we open a file named "example.txt" for reading using ifstream. We then check if the file is open and proceed to read and display its contents line by line.
+In this example, we open a file named "example.txt" for reading using `ifstream`. 
+We then check if the file is open and proceed to read and display its contents line by line.
 
 Similarly, you can use `ofstream` to write data to a file. Just replace `ifstream` with `ofstream` and use the `<<` operator to write data to the file.
 

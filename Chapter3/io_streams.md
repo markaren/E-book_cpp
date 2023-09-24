@@ -27,6 +27,51 @@ int main() {
 
 In this example, we prompt the user for input using `cout` and read their response into the `number` variable with `cin`.
 
+### Writing complex/custom types to `cout`
+
+Standard datatypes like `int`, `double`, `std::string` and similar can be printed by `cout`. 
+However, more complex types like `std::vector` and your own classes cannot be represented by default. 
+To make these work with std::cout, you can:
+
+1. Create a function that converts the type in question to a string.
+2. Overload operator `<<`.
+
+##### Example
+```cpp
+#include <iostream>
+#include <ostream>
+#include <string>
+
+struct Vector3 {
+    
+  float x, y, z;
+  
+  std::string toString() {
+      return "Vector3(x=" + std::to_string(x) + ", y=" + std::to_string(y) + ", z=" + std::to_string(z) + ")"; 
+  }
+  
+  friend std::ostream& operator << (std::ostream& os, const Vector3& v) {
+      os << "Vector3(x=" << v.x << ", y=" << v.y << ", z=" << v.z + ")"; 
+      return os;
+  }
+};
+
+std::string toString(const Vector3& v) {
+    return "Vector3(x=" + std::to_string(v.x) + ", y=" + std::to_string(v.y) + ", z=" + std::to_string(v.z) + ")"; 
+}
+
+int main()
+{
+    Vector3 v;
+    
+    std::cout << toString(v) << std::endl;     // free function
+    std::cout << v.toString() << std::endl;    // member function
+    std::cout << v << std::endl;               // overloading operator <<
+
+    return 0;
+}
+```
+
 ## File Streams
 
 File streams in C++ allow you to perform I/O operations on files. They provide a way to read data from files (input file streams) or write data to files (output file streams). 

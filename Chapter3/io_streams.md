@@ -51,7 +51,7 @@ struct Vector3 {
   }
   
   friend std::ostream& operator << (std::ostream& os, const Vector3& v) {
-      os << "Vector3(x=" << v.x << ", y=" << v.y << ", z=" << v.z + ")"; 
+      os << "Vector3(x=" << v.x << ", y=" << v.y << ", z=" << v.z << ")"; 
       return os;
   }
 };
@@ -67,6 +67,11 @@ int main()
     std::cout << toString(v) << std::endl;     // free function
     std::cout << v.toString() << std::endl;    // member function
     std::cout << v << std::endl;               // overloading operator <<
+
+    // Prints:
+    // Vector3(x=0.000000, y=0.000000, z=0.000000)
+    // Vector3(x=0.000000, y=0.000000, z=0.000000)
+    // Vector3(x=0, y=0, z=0)
 
     return 0;
 }

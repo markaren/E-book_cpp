@@ -16,7 +16,7 @@ copyAge = 30; // 'age' is still 25
 Copies of these variables result in independent instances, each with its own data. 
 Therefore, if you create a copy of a value type variable, changes to one copy won't affect the others.
 
-> Note: In C++, whenver you return or assign to a value-type, a copy is created. 
+> Note: In C++, whenever you return or assign to a value-type, a copy is created. 
 
 ## References
 A reference in C++ is an alias or an alternate name for an existing variable. It allows you to access and modify the original variable's value indirectly. 
@@ -32,7 +32,7 @@ refAge = 10;     // Modifying 'age' indirectly through 'refAge'.
 
 ## Const References
 A const reference in C++ is similar to a regular reference but with the added restriction that you cannot modify the value it references. 
-It's declared using const in front of the reference type. Example: 
+It's declared using `const` in front of the reference type. Example: 
 
 ```cpp
 int y = 100;
@@ -43,7 +43,6 @@ const int& constRefY = y; // 'constRefY' is a constant reference to 'y'
 Const references are useful when you want to pass data to functions without allowing them to change the original value. Here's an example:
 
 ```cpp
-
 void doWork(const std::vector<double>& data) {
   // do something with `data` (we can read, but not modify `data`)
   std::vector<double> copy = data; // if I need a copy, I can do that...
@@ -53,7 +52,6 @@ int main() {
   std::vector<double> data = someFunctionThatReturnsLotsOfNumbers();
   doWork(data);
 }
-
 ```
 
 ## Pointers

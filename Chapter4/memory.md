@@ -39,15 +39,13 @@ The heap is a region of memory used for dynamic memory allocation, where you can
 
 Key characteristics of the heap:
 
-* **Dynamic Memory Allocation:** Memory on the heap is allocated and deallocated explicitly using functions like new and delete or malloc() and free() in C. This allows you to allocate memory at runtime, making it suitable for data structures with variable sizes.
+* **Dynamic Memory Allocation:** Memory on the heap is allocated and deallocated explicitly using functions like `new` and `delete` (or `malloc()` and `free()` in C). This allows you to allocate memory at runtime, making it suitable for data structures with variable sizes.
 
 * **Lack of Automatic Management:** Memory on the heap must be manually managed. Failure to deallocate memory when it's no longer needed can lead to memory leaks.
 
 * **Large and Flexible:** The heap is typically much larger than the stack and can grow dynamically, depending on system memory availability.
 
 * **Slower Access:** Accessing data on the heap is slower than on the stack because it involves pointer dereferencing and may require traversing data structures.
-
-* **Potential for Fragmentation:** Repeated allocation and deallocation on the heap can lead to memory fragmentation, which may require memory management techniques like garbage collection to address.
 
 ```cpp
 #include <iostream>
@@ -123,7 +121,8 @@ Smart pointers are objects that wrap around raw pointers and provide automatic m
 
 * **Interoperability:** Smart pointers can be used in conjunction with other C++ features like containers and algorithms, making them an integral part of modern C++ idioms.
 
-While smart pointers offer numerous advantages, it's important to choose the appropriate type of smart pointer for a given situation. std::unique_ptr should be used when ownership is strictly exclusive, while `std::shared_ptr` is suitable for shared ownership scenarios. `std::weak_ptr` complements std::shared_ptr by breaking circular references and avoiding memory leaks.
+While smart pointers offer numerous advantages, it's important to choose the appropriate type of smart pointer for a given situation. `std::unique_ptr` should be used when ownership is strictly exclusive, while `std::shared_ptr` is suitable for shared ownership scenarios. 
+`std::weak_ptr` complements std::shared_ptr by breaking circular references and avoiding memory leaks.
 
 > A circular reference, also known as a circular dependency or reference cycle, is a situation in computer programming and data structures where two or more objects or elements reference each other in a way that creates an infinite loop or cycle of references.
 

@@ -9,6 +9,8 @@ When you create a variable of a value type, it holds the value itself. Here's an
 
 ```cpp
 int age = 25; // Declaring an integer variable 'age' and initializing it with the value 25
+int copyAge = age; // copy
+copyAge = 30; // 'age' is still 25
 ```
 
 Copies of these variables result in independent instances, each with its own data. 
@@ -23,9 +25,9 @@ References are declared using the `&` symbol and must be initialized when declar
 They are often used as function parameters to avoid copying large objects. Here's an example:
 
 ```cpp
-int x = 42;
-int& refX = x; // 'refX' is a reference to 'x'
-refX = 10;     // Modifying 'x' indirectly through 'refX'
+int age = 42;
+int& refAge = age; // 'refAge' is a reference to 'age'
+refAge = 10;     // Modifying 'age' indirectly through 'refAge'.
 ```
 
 ## Const References

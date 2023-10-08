@@ -12,7 +12,6 @@ In C++ we have two types of polymorphism:
 
 ## Compile-time polymorphism
 Compile-time polymorphism is done by overloading an operator or function. 
-It is also known as "static" or "early binding".
 
 ### Function overloading
 

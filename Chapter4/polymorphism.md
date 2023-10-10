@@ -79,15 +79,62 @@ int main() {
 
 Run-time polymorphism in C++ is achieved through virtual functions and inheritance.  
 
+### Inheritance
+
+Inheritance is a fundamental object-oriented programming concept that allows you to create a new class based on an existing class. The new class, known as the derived class, inherits properties and behaviors (data members and member functions) from the existing class, called the base class. This facilitates code reuse and the creation of a hierarchy of classes.
+
+```cpp
+class BaseClass {
+    // members and methods of BaseClass
+};
+
+class DerivedClass : access-specifier BaseClass {
+    // members and methods of DerivedClass
+};
+```
+
+- `access-specifier` can be one of three: `public`, `protected`, or `private`. It specifies the access level for the members inherited from the base class.
+
+##### Example
+
+```cpp
+class Animal {
+public:
+    void eat() {
+        cout << "Animal is eating." << endl;
+    }
+};
+
+class Dog : public Animal {
+public:
+    void bark() {
+        cout << "Dog is barking." << endl;
+    }
+};
+```
+
+In this example, `Dog` is a derived class inheriting publicly from `Animal`. Now, objects of the `Dog` class can access the `eat()` method from the `Animal` class as well as its own `bark()` method.
+
+```cpp
+int main() {
+    Dog myDog;
+    myDog.eat();  // Output: Animal is eating.
+    myDog.bark(); // Output: Dog is barking.
+    return 0;
+}
+```
+
+This way, inheritance allows for creating a hierarchy of classes, enabling the creation of more specialized classes based on existing ones, promoting code reuse and modularity.
+
 ### Virtual Functions
-In C++, you use the virtual keyword to declare a member function of the base class as virtual. 
+In C++, you use the `virtual`` keyword to declare a member function of the base class as virtual. 
 Virtual functions are resolved at runtime, allowing the appropriate derived class function to be called based on the 
-object's actual type rather than the declared type.
+object's actual type rather than the declared type. Virtual functions can have a defualt implementation that gets inherited (and possibly overriden (replaced)) or be defined as pure virtual where some subclass __must__ provide an implementation.
 
 ```cpp
 class Shape {
 public:
-    virtual void draw() = 0;
+    virtual void draw() = 0; //pure virtual
 };
 
 class Circle : public Shape {
@@ -106,9 +153,9 @@ public:
 
 ```
 
-In this example, the `draw()` function is declared as virtual in the Shape class. 
+In this example, the `draw()` function is declared as `virtual` in the Shape class. 
 When you have a pointer or reference of the base class type pointing to 
-an object of a derived class, the correct draw() function is called based on the actual object type.
+an object of a derived class, the correct `draw()` function is called based on the actual object type.
 
 ```cpp
 
@@ -124,20 +171,17 @@ int main() {
 
 ```
 
-n this example, polymorphism allows the draw() function to behave differently based on the actual type of the object it's called on.
+In this example, polymorphism allows the `draw()` function to behave differently based on the actual type of the object it's called on.
 
 Polymorphism enables you to write more generic and flexible code, making it easier to extend and modify your programs without altering existing code. 
 It's a powerful concept that enhances the maintainability and readability of object-oriented programs in C++.
 
 #### Object slicing
 
-Object slicing in C++ occurs when you assign an object of a derived class to an 
-object of its base class type. In this situation, if the derived class object 
-contains additional member variables or member functions that are not present 
-in the base class, those extra parts of the object are "sliced off." 
+Object slicing in C++ occurs when you assign an object of a derived class to an object of its base class type. In this situation, if the derived class object contains additional member variables or member functions that are not present in the base class, those extra parts of the object are "sliced off." 
 This can lead to unexpected behavior and loss of data if you are not careful.
 
-t's important to be aware of object slicing when dealing with inheritance 
+It's important to be aware of object slicing when dealing with inheritance 
 and assignments between objects of base and derived classes. 
 To avoid object slicing, you can use pointers or references to the base class 
 when working with polymorphic behavior, as shown in the previous examples with virtual functions.
@@ -176,7 +220,7 @@ public:
         : out_(outFile) {}
 
     void log(const std::string& str) override {
-        out_ << str;
+        out_ << str << std::endl;
     }
 
 private:
@@ -204,10 +248,14 @@ decide whether to log to file or console as shown here:
 class Simulation {
 
 public:
-    void stepSimulation() {
+    void stepSimulation(double dt) {
+        // simulate something
+        
         if (logger_) {
-            logger_->log("Stepping simulation");
+            logger_->log("Stepping simulation, t=" + std::to_string(t));
         }
+
+        t += dt;
     }
 
     void setLogger(std::unique_ptr<Logger> logger) {
@@ -215,6 +263,7 @@ public:
     }
 
 private:
+    double t = 0;
     // note that the type is the abstract Logger type
     std::unique_ptr<Logger> logger_;
 };

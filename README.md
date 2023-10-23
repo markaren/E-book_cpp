@@ -16,6 +16,7 @@ The book will be updated regularly throughout the semester. Make sure to bookmar
 |  37,38    | <ul><li>[Classes](Chapter3/classes.md)</li> <ul><li>[RAII](Chapter3/raii.md)</li></ul> <li>[Values, References & Pointers](Chapter3/types_refs_ptrs.md)</li> <li>[IO & Streams](Chapter3/io_streams.md)</li></ul> |                                                                                                                                                                                                                                     |
 |  39,40    | <ul> <li>[Memory managment](Chapter4/memory.md)</li> <li>[Move semantics](Chapter4/move.md)</li> </ul> |
 |  41,42    | <ul> <li>[Polymorphism](Chapter4/polymorphism.md)</li><li> [Templates](Chapter4/templates.md) </li> </ul> |                                                                                                                                                                                                                                      |
+|  43    | <ul> <li>[Separation of Concerns](Chapter5/soc.md)</li><li> [Observer Pattern](Chapter5/observer.md) </li> </ul> |
 
 ### Additional resources
 

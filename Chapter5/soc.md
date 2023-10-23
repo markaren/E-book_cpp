@@ -1,6 +1,6 @@
 # Separation of Concerns (SoC) in Software Development
 
-eparation of Concerns (SoC) is a fundamental design principle in software engineering that 
+Separation of Concerns (SoC) is a fundamental design principle in software engineering that 
 advocates breaking a computer program into distinct features or concerns, 
 each of which addresses a separate set of functionalities. 
 The main idea behind SoC is to divide the software system into smaller, 

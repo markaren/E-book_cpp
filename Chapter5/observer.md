@@ -30,7 +30,7 @@ public:
 class ConcreteSubject : public Subject {
 public:
     void attach(Observer* observer) override {
-        observers.push_back(observer);
+        observers.emplace_back(observer);
     }
 
     void detach(Observer* observer) override {
@@ -97,8 +97,8 @@ In this example, `Subject` is an interface that declares methods for attaching,
 detaching, and notifying observers. ConcreteSubject is a class implementing the Subject interface. 
 It maintains a list of observers and notifies them when its state changes.
 
-`Observer` is an abstract class with an `update` method that concrete observers must implement. 
-`ConcreteObserver` is a class implementing the `Observer` class. It registers itself with a 
+`Observer` is an interface with an `update` method that concrete observers must implement. 
+`ConcreteObserver` is a class implementing the `Observer`. It registers itself with a 
 `ConcreteSubject` instance and receives updates when the subject's state changes.
 
 In the main function, a `ConcreteSubject` instance is created, and two `ConcreteObserver` 

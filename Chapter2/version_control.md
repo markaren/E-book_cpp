@@ -53,4 +53,4 @@ Created by Linus Torvalds in 2005, Git revolutionized the way developers collabo
 
 - [Official Git tutorial](https://git-scm.com/docs/gittutorial)
 - ["Become a git guru" by Atlassian](https://www.atlassian.com/git/tutorials)
-- [CLion: Working with Git]([working-with-git-tutorial](https://www.jetbrains.com/help/clion/working-with-git-tutorial.html)https://www.jetbrains.com/help/clion/working-with-git-tutorial.html)
+- [CLion: Working with Git tutorial](https://www.jetbrains.com/help/clion/working-with-git-tutorial.html)https://www.jetbrains.com/help/clion/working-with-git-tutorial.html)

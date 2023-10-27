@@ -37,7 +37,7 @@ class ClassName {
 In C++, the choice of the template parameter, often denoted as `T`, is a convention rather than a strict rule. The letter `T` stands for "Type" and is commonly used as a placeholder to represent any data type that can be passed to the template. 
 However, it's essential to understand that you can use any valid C++ identifier as a template parameter name. For example, instead of `T`, you could use `Type`, `ElementType`, or any other meaningful name that helps make your code more readable and understandable.
 
-However, the convention of using T or Type is widespread in the C++ community. It's recognizable and serves as a clear indicator that the identifier is a placeholder for a data type. 
+However, the convention of using `T` is widespread in the C++ community. It's recognizable and serves as a clear indicator that the identifier is a placeholder for a data type. 
 Ultimately, the choice of the template parameter name is a matter of readability, maintainability, and personal or team preference. 
 Just ensure that whatever name you choose, it clearly conveys the purpose of the template parameter in your code.
 

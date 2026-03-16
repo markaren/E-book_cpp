@@ -16,7 +16,7 @@ To implement RAII in C++, you typically follow these steps:
 1. **Resource Acquisition**: When you acquire a resource, such as allocating memory or opening a file, you do it within the constructor of an object.
 This constructor is responsible for obtaining and initializing the resource.
 
-3. **Resource Release**: You define a destructor for the same object. The destructor's role is to release the acquired resource.
+2. **Resource Release**: You define a destructor for the same object. The destructor's role is to release the acquired resource.
 This happens automatically when the object goes out of scope or is explicitly destroyed.
 
 The following example demonstrates the key principle of RAII:
@@ -51,8 +51,8 @@ class TemporaryDirectory {
 public:
     // Constructor creates a temporary directory
     TemporaryDirectory() {
-        // Generate a unique directory path using C++ filesystem library
-        directoryPath_ = std::filesystem::temp_directory_path() / std::filesystem::unique_path();
+        // Build a path inside the system's temp folder
+        directoryPath_ = std::filesystem::temp_directory_path() / "ais1003_temp";
         
         // Create the temporary directory
         if (!std::filesystem::create_directory(directoryPath_)) {
@@ -100,7 +100,7 @@ int main() {
         return 1; // signal error
     }
 
-    return 0; // signal sucess
+    return 0; // signal success
 }
 ```
 

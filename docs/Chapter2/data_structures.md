@@ -1,348 +1,228 @@
-# Data structures
+# Data Structures
 
-A data structure is a way of organizing and storing data in memory to efficiently perform various operations on that data. 
-Data structures provide a way to manage and manipulate data elements, making it easier to perform tasks like insertion, deletion, searching, and sorting.
+A **data structure** is a way of organising data so that the operations you need to perform on it are efficient. The choice of structure shapes how fast your program runs and how clean the code that uses it looks.
 
-Here is an overview of common data structures:
+This chapter is about *choosing*. C++'s standard library provides solid, well-tested implementations of every data structure you will need this semester — your job is to pick the right one for the job. We will look at what each one is good at and let go of the temptation to implement them from scratch.
 
-- __Arrays:__ An array is a collection of elements of the same data type stored in contiguous memory locations. Elements can be accessed using an index. Arrays have a fixed size that needs to be specified during declaration.
+---
 
-- __Vectors:__ Vectors are a dynamic array implementation provided by the C++ Standard Library (STL). They can dynamically resize themselves, making them more flexible than traditional arrays. Vectors provide methods for adding, removing, and accessing elements.
+## The mental model
 
-- __Linked Lists:__ A linked list is a data structure consisting of nodes, where each node contains data and a reference (or pointer) to the next node in the sequence. Linked lists can be singly linked (each node points to the next) or doubly linked (each node points to both the next and previous nodes).
+Every data structure is a trade-off. Adding to one is fast; finding in another is fast; iterating in order through a third is fast. There is no "best" data structure — only the one that fits the operations you actually do.
 
-- __Stacks:__ A stack is a linear data structure that follows the Last-In-First-Out (LIFO) principle. Elements are added and removed from the top of the stack. Common operations include push (add) and pop (remove) operations.
+The questions to ask:
 
-- __Queues:__ A queue is a linear data structure that follows the First-In-First-Out (FIFO) principle. Elements are added at the back (enqueue) and removed from the front (dequeue) of the queue.
+1. **How will I add items?** — at the end, at the front, in the middle?
+2. **How will I find items?** — by index, by key, by scanning?
+3. **Do I need them in order?** — insertion order, sorted order, or no order?
+4. **Will the size change?** — at compile time, at runtime, often, rarely?
 
-- __Trees:__ Trees are hierarchical data structures composed of nodes. Each tree has a root node, and every node can have child nodes. Binary trees, binary search trees, and AVL trees are common variations.
+The answers usually pick the container for you.
 
-- __Graphs:__ Graphs are a collection of nodes connected by edges. They can be directed (edges have a direction) or undirected. Graphs are used to represent relationships between elements.
-
-- __Sets and Maps:__ Sets store unique elements in no particular order, while maps (also known as dictionaries) store key-value pairs. C++ provides `std::set`, `std::unordered_set`, `std::map`, and `std::unordered_map` as part of the STL.
-
-These are just some of the common data structures in C++. Choosing the right data structure depends on the problem you're trying to solve and the efficiency you require for different operations. 
-The C++ Standard Library provides implementations of many of these data structures.
+---
 
 ## Sequence containers
 
-Sequence containers refer to a group of container class templates in the standard library of the C++ programming language that implement storage of data elements. 
-Being templates, they can be used to store arbitrary elements, such as integers or custom classes.
+Containers that store a linear sequence of values.
 
-The following containers are defined in the current revision of the C++ standard: `array`, `vector`, `list`, `forward_list`, `deque`. 
-Each of these containers implements different algorithms for data storage, which means that they have different speed guarantees for different operations
+### `std::vector<T>` — dynamic array
 
-### Arrays
-
-As mentioned, Arrays have a fixed size that needs to be specified during declaration. C provides a built-in array type, however, 
-the C++ Standard Library provides a better option through its `std::array` type.
-
-#### C-style array
-```cpp
-#include <iostream>
-
-int main() {
-    // Declare and initialize C-style array of integers with a fixed size
-    int myArray[5] = {10, 20, 30, 40, 50};
-
-    // Access and print array elements
-    for (int i = 0; i < sizeof(myArray) / sizeof(int); ++i) {
-        std::cout << "Element at index " << i << ": " << myArray[i] << std::endl;
-    }
-
-    return 0;
-}
-```
-
-#### std::array
+Elements live in **contiguous memory**, like a C array, but the size can grow at runtime.
 
 ```cpp
-#include <iostream>
-#include <array>
-
-int main() {
-    // Declare and initialize an std::array of integers
-    std::array<int, 5> myArray = {10, 20, 30, 40, 50};
-
-    // Access and print array elements
-    for (int i = 0; i < myArray.size(); ++i) { // alternativly, use for-each 
-        std::cout << "Element at index " << i << ": " << myArray[i] << std::endl;
-    }
-
-    return 0;
-}
-```
-
-#### Difference between C Arrays and C++ Arrays:
-
-1. __Declaration and Initialization:__
-
-- In C, you typically declare and initialize arrays separately, like `int myArray[5];` followed by assignment of values.
-- In C++, you can combine declaration and initialization using the curly braces initializer syntax, like `int myArray[5] = {10, 20, 30, 40, 50};`.
-
-2. __Bound Checking:__
-
-- C arrays do not perform bounds checking. Accessing an index outside the array's bounds can lead to undefined behavior, like accessing memory that doesn't belong to the array.
-- C++ STL containers like `std::array` and `std::vector` (which are similar to arrays) perform bounds checking and throw exceptions when accessing out-of-bounds indices.
-
-3. __Passing to Functions:__
-
-- In C, when you pass an array to a function, you're actually passing a pointer to the first element. There's no inherent mechanism to know the size of the array so you'll need to pass an additional size parameter alongside the array.
-- In C++, you can use `std::array` to pass arrays with size information.
-
-4. __Copying and Assignment:__
-
-- C arrays don't have built-in copy mechanisms or assignment operators.
-- C++ arrays (using `std::array`) can be copied directly using the assignment operator, and the copy will contain the same elements.
-
-In summary, while C arrays and C++ arrays share some similarities, C++ introduces improvements and safer alternatives through the Standard Library, like `std::array` and containers such as `std::vector`. 
-These improvements help in avoiding common pitfalls associated with C arrays.
-
-### Vectors
-
-A vector is essentially a dynamic array. It automatically handles memory allocation and resizing as elements are added or removed. 
-This makes vectors more versatile than traditional arrays, which have a fixed size.
-
-```cpp
-#include <iostream>
 #include <vector>
 
-int main() {
-    // Create a vector of integers initialized with some elements
-    std::vector<int> myVector {1, 2, 3};
+std::vector<int> readings;
+readings.push_back(42);          // add to the end — fast
+readings.push_back(17);
+readings.push_back(99);
 
-    // Add additional elements to the vector
-    myVector.emplace_back(10);
-    myVector.emplace_back(20);
-    myVector.emplace_back(30);
-
-    // Iterate through the vector using a range-based loop
-    for (int element : myVector) {
-        std::cout << element << " ";
-    }
-    std::cout << std::endl;
-
-    return 0;
-}
+int first = readings[0];         // index access — constant time
+readings.size();                 // 3
 ```
 
-Unless you have a very good reason not to, `std::vector` should be used for storing elements in a list-like structure.
+| Operation | Cost |
+|-----------|------|
+| Index access (`v[i]`) | O(1) |
+| `push_back` (append) | O(1) amortised |
+| Insert/remove in the middle | O(n) — everything after has to shift |
+| Find by value (`std::find`) | O(n) |
 
-### Linked-list
+**Use vector by default.** Only reach for something else if your usage pattern genuinely conflicts with what vector is good at.
 
-A linked list is a data structure to organize and store a collection of elements, where each element is represented by a node. Unlike arrays or vectors, which use contiguous memory to store elements, a linked list consists of a series of nodes, where each node contains both the actual data and a pointer to the next node in the list. This chain of nodes forms a linear sequence.
+### `std::array<T, N>` — fixed-size array
 
-##### Implementation of a singly-linked list
+Like `std::vector` but the size is fixed at compile time. Lives on the stack, no heap allocation.
+
 ```cpp
-#include <iostream>
+#include <array>
 
-// Define a class for the linked list
-template <class T>
-class LinkedList {
-    
-private:
-   
-    // Define the structure for a singly linked list node
-    template <class E>
-    struct Node {
-        E data;
-        Node<E>* next;
-    
-        Node(E value) : data(value), next(nullptr) {}
-    };
-    
-     size_t size_;
-     Node<T>* head_;
-
-public:
-    LinkedList() : head_(nullptr) {}
-    
-    size_t size() const {
-        
-        return size_;
-    }
-
-    T &operator[](size_t index) {
-      if (index > size_) {
-        throw std::runtime_error("Index out of bounds: " + std::to_string(index));
-      }
-      
-      auto* current = head_;
-      for (int i = 0; i < index; i++) {
-        current = current->next;
-      }
-      return current->data;
-    }
-
-    void insert(T value) {
-        auto newNode = new Node<T>(value);
-        if (!head_) {
-            head_ = newNode;
-        } else {
-            auto* current = head_;
-            while (current->next) {
-                current = current->next;
-            }
-            current->next = newNode;
-        }
-        ++size_;
-    }
-
-    // Destructor to release memory occupied by nodes
-    ~LinkedList() {
-        auto* current = head_;
-        while (current) {
-            auto* temp = current;
-            current = current->next;
-            delete temp;
-        }
-    }
-};
-
-int main() {
-    LinkedList<int> list;
-
-    list.insert(10);
-    list.insert(20);
-    list.insert(30);
-    list.insert(40);
-    
-    for (int i = 0; i < list.size(); i++) {
-        std::cout << list[i] << " ";
-    }
-    std::cout << std::endl;
-
-    return 0;
-}
+std::array<double, 3> position = {0.0, 0.0, 0.0};
+position[2] = 1.5;
 ```
 
-## Maps
+**Use when** the size is known and won't change — fixed-length sensor packets, lookup tables, matrix dimensions.
 
-Maps (also known as dictionaries) store key-value pairs.
+### `std::deque<T>` — double-ended queue
+
+Like `vector`, but also fast to add or remove at the **front**.
 
 ```cpp
-#include <iostream>
+#include <deque>
+
+std::deque<int> buffer;
+buffer.push_back(1);     // add at the back
+buffer.push_front(0);    // add at the front — fast
+```
+
+The cost is that elements are not in one contiguous block, so it's slightly less cache-friendly than a vector. **Use when** you need fast inserts at both ends.
+
+### `std::list<T>` — doubly linked list
+
+Each element holds pointers to the next and previous. Insertions and deletions anywhere in the list are O(1) — but you also lose O(1) index access and most of the cache-friendliness of `vector`.
+
+```cpp
+#include <list>
+
+std::list<int> jobs;
+jobs.push_back(1);
+jobs.push_front(0);
+// jobs[2] does NOT work — no index access
+```
+
+In practice, `std::list` is rarely the right choice. Modern hardware loves contiguous memory; the constant-factor cost of pointer-chasing through a linked list often outweighs the algorithmic advantage. **Use only when** you specifically need to splice items between lists, or remove from the middle while holding an iterator to the item.
+
+---
+
+## Associative containers
+
+Containers that store key-value pairs (or just keys), with fast lookup by key.
+
+### `std::map<K, V>` — sorted key-value store
+
+Keys are kept sorted. Lookup, insertion, and deletion are O(log n).
+
+```cpp
 #include <map>
+
+std::map<std::string, double> sensorOffsets;
+sensorOffsets["temp"]    = -0.5;
+sensorOffsets["voltage"] = 0.01;
+
+double t = sensorOffsets["temp"];       // -0.5
+sensorOffsets.contains("temp");          // true (C++20)
+
+for (const auto& [name, offset] : sensorOffsets) {
+    // iterates in alphabetical order of key
+}
+```
+
+**Use when** you need fast key lookup *and* you want to iterate in sorted order, *or* you want to do range queries on keys.
+
+### `std::unordered_map<K, V>` — hash-based key-value store
+
+Same interface as `std::map`, but unordered. Backed by a hash table, so lookups are O(1) on average.
+
+```cpp
 #include <unordered_map>
 
-int main() {
-    // Using std::map (ordered map)
-    std::map<int, std::string> orderedMap;
-    orderedMap[3] = "Apple";
-    orderedMap[1] = "Banana";
-    orderedMap[2] = "Orange";
+std::unordered_map<int, std::string> users;
+users[1] = "alice";
+users[2] = "bob";
+```
 
-    std::cout << "Ordered Map:" << std::endl;
-    for (const auto& entry : orderedMap) {
-        std::cout << entry.first << ": " << entry.second << std::endl;
-    }
+| Property | `std::map` | `std::unordered_map` |
+|----------|------------|----------------------|
+| Underlying structure | Balanced tree | Hash table |
+| Lookup | O(log n) | O(1) average |
+| Order of iteration | Sorted by key | Unspecified |
+| Memory overhead per element | Higher | Lower (usually) |
+| Required from the key type | Less-than comparison | Hash + equality |
 
-    // Using std::unordered_map (unordered hash map)
-    std::unordered_map<int, std::string> unorderedMap;
-    unorderedMap[3] = "Cat";
-    unorderedMap[1] = "Dog";
-    unorderedMap[2] = "Elephant";
+**Default to `unordered_map`.** Pick `map` when you want ordering.
 
-    std::cout << "Unordered Map:" << std::endl;
-    for (const auto& entry : unorderedMap) {
-        std::cout << entry.first << ": " << entry.second << std::endl;
-    }
+### `std::set` and `std::unordered_set`
 
-    return 0;
+Same as the maps, but storing only keys — no values. Useful for "have I seen this?" and de-duplicating data.
+
+```cpp
+#include <unordered_set>
+
+std::unordered_set<int> seen;
+if (seen.insert(42).second) {
+    std::cout << "first time seeing 42\n";
 }
 ```
 
-#### Differences between std::map and std::unordered_map:
+---
 
-1. __Ordering:__
+## Container adapters
 
-- `std::map`: Stores elements in a sorted order based on the keys.
-- `std::unordered_map`: Does not guarantee any specific order of elements.
+Three convenience wrappers built on top of other containers, exposing only the operations of a classic data structure.
 
-2. __Performance:__
-
-- `std::map`: Provides slower insertion and lookup times compared to std::unordered_map. Insertions and lookups have logarithmic time complexity.
-- `std::unordered_map`: Provides faster insertion and lookup times on average, typically with constant-time complexity.
-
-3. __Underlying Data Structure:__
-
-- `std::map`: Typically implemented as a balanced binary search tree (such as a red-black tree).
-- `std::unordered_map`: Implemented using a hash table.
-
-4. __Key Type Requirements:__
-
-- `std::map`: Requires that the key type supports comparison operations (e.g., less than) to maintain order.
-- `std::unordered_map`: Requires that the key type supports hash functions and equality comparisons.
-
-5. __Memory Usage:__
-
-- `std::map`: Generally uses more memory due to the tree structure and additional pointers.
-- `std::unordered_map`: Memory usage depends on the load factor and hash function quality, but it can be more memory-efficient in some cases.
-
-6. __Use Cases:__
-
-- `std::map`: Suitable when maintaining order is important or when the keys are naturally ordered.
-- `std::unordered_map`: Suitable for fast data retrieval when order doesn't matter and hash-based lookup is efficient.
-
-When choosing between `std::map` and `std::unordered_map`, consider the specific requirements of your application. 
-If you need fast insertion and lookup times and order is not important, `std::unordered_map` might be a better choice. 
-If you need to maintain elements in a sorted order, then `std::map` is more appropriate.
-
-### Trees
-
-A tree is a widely used abstract data type that represents a hierarchical tree structure with a set of connected nodes. Each node in the tree can be connected to many children (depending on the type of tree), but must be connected to exactly one parent, except for the root node, which has no parent (i.e., the root node as the top-most node in the tree hierarchy). These constraints mean there are no cycles or "loops" (no node can be its own ancestor), and also that each child can be treated like the root node of its own subtree, making recursion a useful technique for tree traversal.
-
-##### Implementation of a tree in C++
+| Adapter | Behaviour |
+|---------|-----------|
+| `std::stack<T>` | LIFO (last in, first out) — push, pop, top |
+| `std::queue<T>` | FIFO (first in, first out) — push, pop, front |
+| `std::priority_queue<T>` | Always pops the largest element |
 
 ```cpp
-template<class T>
-class node {
+#include <stack>
 
-public:
-    node(T value) : value_(std::move(value)) {}
+std::stack<int> calls;
+calls.push(1);
+calls.push(2);
+calls.top();   // 2
+calls.pop();
+calls.top();   // 1
+```
 
-    T &value() {
-        return value_;
-    }
+These are convenient when the algorithm you are implementing genuinely needs a stack or queue. For most purposes, a `vector` exposes everything they do and more.
 
-    const T &value() const {
-        return value_;
-    }
+---
 
-    [[nodiscard]] bool hasParent() const {
-        return parent_ != nullptr;
-    }
+## Choosing — a decision table
 
-    const node<T> *parent() const {
-        return parent_;
-    }
+| You need to… | Use |
+|--------------|-----|
+| Hold a list of values, grow at the end | `std::vector` |
+| Hold a fixed-size collection | `std::array` |
+| Hold a list, grow at both ends | `std::deque` |
+| Map keys to values, lookup fast | `std::unordered_map` |
+| Map keys to values, iterate in order | `std::map` |
+| Track which items you have seen | `std::unordered_set` |
+| LIFO behaviour | `std::stack` |
+| FIFO behaviour | `std::queue` |
+| Always pop the highest priority | `std::priority_queue` |
 
-    const std::vector<std::unique_ptr<node<T>>> &children() const {
-        return children_;
-    }
+When in doubt, start with `std::vector` or `std::unordered_map`. They cover more cases than any other two containers.
 
-    node<T> &addChild(T child) {
-        children_.emplace_back(std::make_unique<node<T>>(child));
-        children_.back()->parent_ = this;
-        return *(children_.back());
-    }
+---
 
-    [[nodiscard]] size_t numChildren() const {
-        return children_.size();
-    }
+## Trees, graphs, and "why isn't there a `std::tree`?"
 
-    // implementing depth-first traversal using recursion
-    void traverse(const std::function<void(node<T> &)> &f) {
-        f(*this);
-        for (auto &child : children_) {
-            child->traverse(f);
-        }
-    }
+You may notice that the standard library does *not* ship with a general-purpose tree or graph container. That is intentional: trees and graphs come in too many shapes (binary, n-ary, balanced, weighted, directed, …) for one container to fit them all.
 
-private:
-    T value_;
-    node<T> *parent_ = nullptr;
-    std::vector<std::unique_ptr<node<T>>> children_;
+When you need a tree, build it out of nodes with `std::unique_ptr` children:
+
+```cpp
+template <typename T>
+struct TreeNode {
+    T value;
+    std::vector<std::unique_ptr<TreeNode<T>>> children;
 };
 ```
 
+When you need a graph, an "adjacency list" — `std::unordered_map<NodeId, std::vector<NodeId>>` — is usually all you need. Specialised libraries exist (Boost.Graph, for example) when the algorithms get serious.
+
+Implementing these from scratch is a fine learning exercise, but for production code, prefer the library where one exists.
+
+---
+
+## Summary
+
+- The standard library covers every basic data structure you need this semester.
+- `std::vector` is your default sequence; `std::unordered_map` is your default lookup table.
+- Linked lists exist but are usually not what you want — `std::vector` is cache-friendlier.
+- Trees and graphs are not in the standard library; build them out of `std::unique_ptr` and `std::vector`.
+- Pick a container by asking how you will add, find, and order the elements — not by which one sounds clever.

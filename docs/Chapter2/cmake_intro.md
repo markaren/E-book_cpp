@@ -1,150 +1,191 @@
-# CMake introduction
+# CMake
 
-[CMake](https://cmake.org/) is a powerful tool in the world of C++ programming that simplifies the process of building, 
-compiling, and managing complex projects. It helps you create cross-platform, organized, and easily maintainable codebases.
+So far you have run programs through CLion's green play button. That button is calling a build tool behind the scenes — and that tool is **CMake**.
 
-[CLion](https://www.jetbrains.com/clion/) is a cross-platform C/C++ IDE that supports CMake projects, which we will use in this course. 
-As an NTNU student, you are [eligible for a free license](https://www.jetbrains.com/community/education/#students).  
+CMake is not a compiler. It is one level above: you describe your project to CMake in a small file called `CMakeLists.txt`, and CMake generates the platform-specific instructions (Makefiles on Linux, Visual Studio project files on Windows, Xcode projects on macOS) that your compiler then follows. Write the project description once; build it anywhere.
 
+You will spend the rest of your career writing C++ inside CMake projects. This chapter teaches the minimum you need today, then shows how it grows as your project does.
 
-## What is CMake?
+---
 
-CMake is a widely used open-source build system and project configuration tool. 
-It allows developers to define and manage the build process of their C++ projects in a platform-independent way. 
-CMake generates platform-specific build files, such as Makefiles for Unix-like systems or project files for IDEs like Visual Studio.
+## The smallest CMake project
 
-### Key Concepts:
-
-- __CMakeLists.txt:__ A CMakeLists.txt file is at the heart of every CMake project. It contains instructions for CMake to configure and generate build files. It specifies project details, source files, dependencies, compiler options, and more.
-- __Cross-Platform:__ CMake enables you to write build configurations that work across different platforms, including Windows, macOS, and various Unix-like systems.
-- __Generator:__ A generator is a tool that CMake uses to generate platform-specific build files. It can create Makefiles, Visual Studio project files, Xcode project files, and more.
-- __Target:__ In CMake, a target represents an output artifact, such as an executable, library, or other build result. Targets can have properties, dependencies, and compile options.
-- __Out-of-Source Build:__ CMake encourages an out-of-source build approach, where build files and generated artifacts are kept separate from the source code, reducing clutter and ensuring clean organization.
-
-### Why Use CMake?
-
-CMake offers several benefits for C++ projects:
-
-- __Simplicity:__ CMake simplifies the process of configuring, building, and managing complex projects, abstracting away platform-specific details.
-- __Cross-Platform:__ With CMake, you can generate build files that work seamlessly on different platforms without significant modifications.
-- __Modularity:__ CMake promotes modular project organization, making it easier to manage larger codebases and libraries.
-- __Dependencies:__ CMake simplifies the inclusion of external libraries and dependencies into your project.
-- __IDE Integration:__ CMake integrates with various Integrated Development Environments (IDEs), allowing you to work within your preferred coding environment.
-
-#### Going further:
-
-- __Specify include directories__: Use `target_include_directories` to specify search folders for headers.
-- __Create Libraries__: Use `add_library` to create modular and re-usable code.
-- __Adding Libraries:__ Use `target_link_libraries` to link your executable with your own or external libraries.
-- __Organizing Code:__ Create subdirectories for different parts of your project and use `add_subdirectory` in your `CMakeLists.txt`.
-
-## Organizing CMake projects
-
-Organizing a CMake project effectively is crucial for maintaining a clean, structured, and manageable codebase. 
-Here's a recommended organization structure for your CMake project:
-
-- __Root Directory:__
-The root directory of your project contains the main `CMakeLists.txt` file and any top-level project files. 
-- This directory often has a name that reflects your project's purpose.
-
-```scss
-MyProject/
-├── CMakeLists.txt (Main CMake configuration)
-├── README.md
-├── LICENSE
-├── .gitignore
-├── build/ (auto-generated build directory)
-├── include/ (Header files)
-├── src/ (Source files)
-├── test/ (Test folder)
-└── data/ (Additional resources for your project)
-```
-
-Your main `CMakeLists.txt` file should be in the root directory. If you have subdirectories, create additional `CMakeLists.txt` files in those directories to configure the build for their specific contents.
-
-- __Build Directory:__
-Create a separate build directory (e.g., `build/`) to keep build-related files separate from the source code. This prevents cluttering your source directory with build artifacts.
-- __Include Directory:__
-Place header files (.h or .hpp) in the `include/` directory. Organize headers based on their functionality or modules. Use proper directory structure to prevent naming clashes and enhance code readability.
-- __Source Directory:__
-The `src/` directory is where your source code files (.cpp files) reside. Similar to headers, organize source files by functionality or modules to maintain clarity.
-- __Subdirectories__:
-Consider creating subdirectories within `include/` and `src/` as your project grows. This helps maintain a well-structured codebase. For example:
-
-```
-...
-include/
-├── math/
-│   ├── arithmetic.h
-│   └── geometry.h
-└── utils/
-    ├── string_utils.h
-    └── file_utils.h
-src/
-├── CMakeLists.txt
-├── math/
-│   ├── arithmetic.cpp
-│   └── geometry.cpp
-└── utils/
-    ├── string_utils.cpp
-    └── file_utils.cpp
-```
-
-- __Testing:__
-For testing purposes, create a separate directory like `test/` or `tests/` to hold your unit tests. This keeps test code separate from your source code.
-
-- __Documentation:__
-Consider having a `docs/` directory to store any documentation related to your project.
-
-- __Additional Files:__
-  - Include a `README.md` file to provide an overview of your project, its purpose, and how to use it.
-  - Include a `.gitignore` file to specify which files and directories should be ignored by version control.
-  - Include a `LICENSE` [file](https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-features/customizing-your-repository/licensing-a-repository) to state the terms under which your code is shared.
-
-By organizing your CMake project in this manner, you'll make it easier for yourself and other developers to navigate, understand, and maintain your codebase as it grows in complexity.
-For more information see [The Pitchfork Layout](https://api.csswg.org/bikeshed/?force=1&url=https://raw.githubusercontent.com/vector-of-bool/pitchfork/develop/data/spec.bs).
-
-
-## Manually creating a CMake project
-
-In your selected project directory, create a file named `CMakeLists.txt`. This file contains instructions for CMake to configure and generate build files.
-
-> Note: Creating a new Project in CLion will do this for you.
-
-Here's a basic `CMakeLists.txt` example:
+A single-file program needs three lines:
 
 ```cmake
-# Specify the minimum required version of CMake.
 cmake_minimum_required(VERSION 3.15)
+project(hello)
 
-# Define the project name.
-project(MyProject)
-
-# The 'project' command above initializes the project.
-# Now, let's add our source files to be compiled into an executable.
-# 'add_executable' associates source files with the project and generates the executable.
-add_executable(MyExecutable main.cpp)
-
-# Note: You can add more source files by extending the 'add_executable' line.
-# For example, 'add_executable(MyExecutable main.cpp another_file.cpp)'
+add_executable(hello main.cpp)
 ```
 
-### Building from the Command Line
+That is it. Save as `CMakeLists.txt` next to `main.cpp`, and CLion (or `cmake -B build && cmake --build build` on the command line) will compile `main.cpp` into an executable called `hello`.
 
-CMake projects can be built using the Command Line using a variation of the commands below.
+What each line does:
+
+| Line | Meaning |
+|------|---------|
+| `cmake_minimum_required(VERSION 3.15)` | The oldest CMake version that can build this project. 3.15 is a sensible floor for modern C++. |
+| `project(hello)` | Names the project. Must come before any targets. |
+| `add_executable(hello main.cpp)` | Define an executable target named `hello`, built from `main.cpp`. |
+
+You will copy this template into many projects. Get familiar with it.
+
+---
+
+## Setting the C++ standard
+
+The default standard depends on the compiler, and it is rarely the one you want. Set it explicitly:
+
+```cmake
+cmake_minimum_required(VERSION 3.15)
+project(hello)
+
+set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+
+add_executable(hello main.cpp)
+```
+
+`CMAKE_CXX_STANDARD 17` tells the compiler to use C++17 (the standard this course teaches). `CMAKE_CXX_STANDARD_REQUIRED ON` makes it a hard requirement — without it, an older compiler would silently fall back to whatever it supports.
+
+---
+
+## Multiple source files
+
+A real project quickly grows beyond one file. Suppose you have:
 
 ```
-//Windows
-cmake . -A x64 -B build -DCMAKE_BUILD_TYPE=Release
-cmake --build build --config Release
+hello/
+├── CMakeLists.txt
+├── main.cpp
+├── motor.cpp
+└── motor.hpp
+```
 
-//Linux & Mac
-cmake . -B build -DCMAKE_BUILD_TYPE=Release
+Just list the additional `.cpp` files in `add_executable`:
+
+```cmake
+add_executable(hello main.cpp motor.cpp)
+```
+
+Header files (`.hpp` / `.h`) are *not* listed — they are pulled in by `#include` lines in the source files. CMake only needs to know which `.cpp` files to compile.
+
+For larger projects you can glob, but glob-based source lists do not pick up new files until CMake re-runs. Explicit lists are clearer:
+
+```cmake
+add_executable(hello
+    main.cpp
+    motor.cpp
+    sensor.cpp
+    controller.cpp
+)
+```
+
+---
+
+## Headers in a separate folder
+
+A convention that pays off as projects grow:
+
+```
+hello/
+├── CMakeLists.txt
+├── include/
+│   ├── motor.hpp
+│   └── sensor.hpp
+└── src/
+    ├── main.cpp
+    ├── motor.cpp
+    └── sensor.cpp
+```
+
+Tell CMake where the headers live so `#include "motor.hpp"` works from inside any source file:
+
+```cmake
+add_executable(hello src/main.cpp src/motor.cpp src/sensor.cpp)
+target_include_directories(hello PRIVATE include)
+```
+
+`target_include_directories(<target> PRIVATE <path>)` adds `<path>` to the list of folders the compiler searches for `#include`d files when building `<target>`.
+
+`PRIVATE` means "this is only used to build this target." For executables this is always what you want. (You will see `PUBLIC` and `INTERFACE` when you start writing libraries that other code links to.)
+
+---
+
+## Building libraries
+
+Once you have several executables that share code (your tests, your main program, perhaps a quick CLI tool), put the shared code in a **library** so it is compiled once:
+
+```cmake
+add_library(motor src/motor.cpp src/sensor.cpp)
+target_include_directories(motor PUBLIC include)
+
+add_executable(hello src/main.cpp)
+target_link_libraries(hello PRIVATE motor)
+```
+
+What changed:
+
+- `add_library` defines a library target. The default is a **static** library — its contents are baked into anything that links it. (You can pass `STATIC`, `SHARED`, or `OBJECT` if you need a specific kind.)
+- `target_link_libraries(hello PRIVATE motor)` tells CMake that the `hello` executable uses the `motor` library. The compiler now sees `motor`'s headers, and the linker now combines `motor`'s compiled code into `hello`.
+- The library uses `PUBLIC` for its include directory — meaning anyone linking to `motor` *also* gets `motor`'s `include/` folder on their search path. That is what you want for a library's public headers.
+
+---
+
+## Building from the command line
+
+CLion drives CMake for you, but every CMake project can also be built directly:
+
+```bash
+# Configure: generate build files in a 'build/' folder
+cmake -B build
+
+# Build everything
+cmake --build build
+
+# Run the executable (path varies slightly by platform)
+./build/hello              # Linux / macOS
+./build/Debug/hello.exe    # Windows with MSVC
+```
+
+The `-B build` flag puts all generated files into `build/` so they stay out of your source tree. Add `build/` to your `.gitignore` (or use `*/build` if you have nested projects).
+
+For release builds with optimisations on:
+
+```bash
+cmake -B build -DCMAKE_BUILD_TYPE=Release
 cmake --build build
 ```
 
-This assumes that `cmake` command is available. That is, CMake is installed and globally available on the system i.e. added to PATH.
+---
+
+## A note on project layout
+
+The layout below scales from one-file scripts to multi-library systems:
+
+```
+my_project/
+├── CMakeLists.txt
+├── README.md
+├── .gitignore
+├── include/        # public headers
+├── src/            # implementation files
+└── tests/          # tests (see Chapter 5)
+```
+
+You do not need all of these on day one. Start with one `main.cpp` and one `CMakeLists.txt`. Split into `src/` and `include/` when you have more than four or five files. Add `tests/` when you start writing tests. The point is to grow into the structure, not to set it all up before writing any code.
+
+For a more elaborate convention used in larger industry projects, see [the Pitchfork Layout](https://api.csswg.org/bikeshed/?force=1&url=https://raw.githubusercontent.com/vector-of-bool/pitchfork/develop/data/spec.bs).
+
+---
 
 ## Summary
 
-Mastering CMake will empower you to efficiently manage your C++ projects, create consistent and reliable build systems, and collaborate effectively in the world of software development.
+- `CMakeLists.txt` describes your project; CMake turns the description into platform-specific build files.
+- Three lines suffice for a single-file program: `cmake_minimum_required`, `project`, `add_executable`.
+- Set `CMAKE_CXX_STANDARD 17` explicitly.
+- Add more source files by listing them in `add_executable`. Headers do not need to be listed.
+- Use `target_include_directories` when headers live in a separate folder.
+- Use `add_library` and `target_link_libraries` once you have code shared between executables.
+- Keep build artefacts in a separate `build/` folder; ignore it in git.

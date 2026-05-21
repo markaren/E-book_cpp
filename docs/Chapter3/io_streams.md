@@ -1,17 +1,20 @@
-# C++ Input/Output and File Streams
+# Input, Output, and File Streams
 
-In C++, Input/Output (I/O) operations play a crucial role in interacting with the user, reading data from external sources, 
-and writing data to files. C++ provides a comprehensive set of tools for performing these operations, 
-including standard input and output streams, as well as file streams.
+A **stream** in C++ is an object that data flows through. `std::cout` is the stream connected to your console; `std::cin` is the stream that delivers what the user types; `std::ifstream` is a stream connected to a file you are reading.
 
-## Standard Input and Output Streams
+The operators `<<` and `>>` move data into and out of streams. Once you know the pattern with `std::cout`, the same shape works for every stream the standard library provides.
 
-C++ offers two primary standard I/O streams:
+---
 
-- **`cin`**: This is the standard input stream, often used for reading data from the user via the keyboard. It's connected to the console by default.
-- **`cout`**: This is the standard output stream, used for displaying data to the console. You can use `cout` to print information, results, or messages to the screen.
+## Console I/O
 
-Here's a simple example of using `cin` and `cout`:
+Two stream objects, both in `<iostream>`:
+
+| Stream      | Direction      | Purpose                                    |
+|-------------|----------------|--------------------------------------------|
+| `std::cout` | output         | Print to the console                       |
+| `std::cin`  | input          | Read from the console (keyboard, usually)  |
+| `std::cerr` | output (error) | Print to the error stream                  |
 
 ```cpp
 #include <iostream>
@@ -19,99 +22,176 @@ Here's a simple example of using `cin` and `cout`:
 int main() {
     int number;
     std::cout << "Enter a number: ";
-    std::cin >> number;
-    std::cout << "You entered: " << number << std::endl;
+    std::cin  >> number;
+    std::cout << "You entered " << number << "\n";
     return 0;
 }
 ```
 
-In this example, we prompt the user for input using `cout` and read their response into the `number` variable with `cin`.
+`<<` reads "put this *into* the stream"; `>>` reads "extract from the stream *into* this variable." You can chain them — the operators return the stream itself so the next one can be applied immediately.
 
-### Writing complex/custom types to `cout`
+> **A note on `std::endl` vs `"\n"`:** Both produce a newline. `std::endl` also *flushes* the stream — forces any buffered output to appear immediately. Flushing is expensive; in tight loops, prefer `"\n"`. Reach for `endl` only when you specifically want to flush.
 
-Standard datatypes like `int`, `double`, `std::string` and similar can be printed by `cout`. 
-However, more complex types like `std::vector` and your own classes cannot be represented by default. 
-To make these work with std::cout, you can:
+---
 
-1. Create a function that converts the type in question to a string.
-2. Overload operator `<<`.
+## Reading several values
 
-##### Example
+Stream extraction (`>>`) skips whitespace, so reading several values is just chaining:
+
 ```cpp
-#include <iostream>
-#include <ostream>
+int a, b;
+std::cout << "Enter two integers separated by a space: ";
+std::cin >> a >> b;
+std::cout << "Sum: " << (a + b) << "\n";
+```
+
+The user can type `3 5`, `3<tab>5`, or even press Enter between them — `>>` will pick up both.
+
+### When extraction fails
+
+If the user types `hello` when you asked for an integer, `>>` fails silently — the stream enters an error state and subsequent extractions also fail. You can check the stream like a boolean:
+
+```cpp
+int n;
+if (!(std::cin >> n)) {
+    std::cerr << "That was not a number.\n";
+    return 1;
+}
+```
+
+---
+
+## Reading whole lines
+
+`>>` stops at whitespace. To read an entire line — including spaces — use `std::getline`:
+
+```cpp
 #include <string>
 
-struct Vector3 {
-    
-  float x, y, z;
-  
-  std::string toString() const {
-      return "Vector3(x=" + std::to_string(x) + ", y=" + std::to_string(y) + ", z=" + std::to_string(z) + ")"; 
-  }
-  
-  friend std::ostream& operator << (std::ostream& os, const Vector3& v) {
-      os << "Vector3(x=" << v.x << ", y=" << v.y << ", z=" << v.z << ")"; 
-      return os;
-  }
-};
+std::string name;
+std::cout << "What is your name? ";
+std::getline(std::cin, name);
+std::cout << "Hello, " << name << "!\n";
+```
 
-std::string toString(const Vector3& v) {
-    return "Vector3(x=" + std::to_string(v.x) + ", y=" + std::to_string(v.y) + ", z=" + std::to_string(v.z) + ")"; 
-}
+---
 
-int main()
-{
-    Vector3 v;
-    
-    std::cout << toString(v) << std::endl;     // free function
-    std::cout << v.toString() << std::endl;    // member function
-    std::cout << v << std::endl;               // overloading operator <<
+## File I/O
 
-    // Prints:
-    // Vector3(x=0.000000, y=0.000000, z=0.000000)
-    // Vector3(x=0.000000, y=0.000000, z=0.000000)
-    // Vector3(x=0, y=0, z=0)
+Files use the same operators. Three classes in `<fstream>`:
 
-    return 0;
+| Class           | Direction | Purpose             |
+|-----------------|-----------|---------------------|
+| `std::ifstream` | input     | Read from a file    |
+| `std::ofstream` | output    | Write to a file     |
+| `std::fstream`  | both      | Read and write      |
+
+### Reading a file line by line
+
+```cpp
+#include <fstream>
+#include <iostream>
+#include <string>
+
+int main() {
+    std::ifstream in("readings.txt");
+    if (!in) {
+        std::cerr << "Could not open readings.txt\n";
+        return 1;
+    }
+
+    std::string line;
+    while (std::getline(in, line)) {
+        std::cout << line << "\n";
+    }
+    // No explicit close needed — RAII closes the file when `in` goes out of scope.
 }
 ```
 
-## File Streams
+The `if (!in)` check uses the stream's bool conversion: a "good" stream is truthy, a stream that failed to open or has hit an error is falsy.
 
-File streams in C++ allow you to perform I/O operations on files. They provide a way to read data from files (input file streams) or write data to files (output file streams). 
-C++ offers two primary classes for file I/O:
+`std::ifstream` is a great example of [RAII](raii.md) in action: opening the file in the constructor, closing it in the destructor. You do not have to remember to call `close()` — it happens automatically, even if an exception is thrown mid-function.
 
-- **`ifstream`**: This class represents an input file stream and is used for reading data from files.
-- **`ofstream`**: This class represents an output file stream and is used for writing data to files.
+### Writing a file
 
-To work with file streams, you need to include the `<fstream>` header.
+```cpp
+#include <fstream>
 
-Here's an example of using `ifstream` to read data from a file:
+std::ofstream out("results.txt");
+out << "Mean: "      << mean      << "\n";
+out << "Std dev: "   << stddev    << "\n";
+// closed automatically when `out` goes out of scope
+```
+
+By default `std::ofstream` *truncates* the file — any previous contents are lost. To append instead:
+
+```cpp
+std::ofstream out("results.txt", std::ios::app);
+```
+
+---
+
+## Printing your own types
+
+`std::cout << myObject;` works for built-in types and most standard library types. For your own classes, you teach the stream how to print them by overloading `operator<<`:
 
 ```cpp
 #include <iostream>
-#include <fstream>
+
+struct Vector3 {
+    double x, y, z;
+};
+
+std::ostream& operator<<(std::ostream& os, const Vector3& v) {
+    os << "Vector3(" << v.x << ", " << v.y << ", " << v.z << ")";
+    return os;
+}
 
 int main() {
-    std::ifstream inputFile("example.txt");
-    if (inputFile.is_open()) {
-        std::string line;
-        while (std::getline(inputFile, line)) {
-            std::cout << line << std::endl;
-        }
-        inputFile.close(); // Would also have been called implicitly due to RAII
-    } else {
-        std::cerr << "Unable to open file." << std::endl;
-    }
-    return 0;
+    Vector3 v{1.0, 2.0, 3.0};
+    std::cout << v << "\n";   // prints: Vector3(1, 2, 3)
 }
 ```
 
-In this example, we open a file named "example.txt" for reading using `ifstream`. 
-We then check if the file is open and proceed to read and display its contents line by line.
+Two things to notice:
 
-Similarly, you can use `ofstream` to write data to a file. Just replace `ifstream` with `ofstream` and use the `<<` operator to write data to the file.
+- The first parameter is `std::ostream&` (the base class of `std::cout`, `std::ofstream`, etc.) — so the same overload works with any output stream.
+- The function returns the stream so that `<<` calls can be chained.
 
-C++ provides various methods for manipulating files, including reading and writing binary data. When working with files, 
-always ensure proper error handling to deal with potential issues like file not found or permission errors.
+The same pattern with `std::istream&` and `>>` lets you parse your own type from input.
+
+---
+
+## Formatting
+
+For most output, default formatting is fine. When it is not, the `<iomanip>` header has manipulators that change how subsequent values are printed:
+
+```cpp
+#include <iomanip>
+#include <iostream>
+
+double pi = 3.14159265;
+
+std::cout << std::fixed << std::setprecision(2) << pi << "\n";  // 3.14
+std::cout << std::setw(10) << 42 << "\n";                       // "        42"
+std::cout << std::hex << 255 << "\n";                            // ff
+```
+
+Manipulators are "sticky" — once you set them on a stream, they stay set until you change them. If you only need formatting for a single value, save and restore — or use `std::format` (C++20) for clean local formatting:
+
+```cpp
+std::cout << std::format("{:.2f}\n", pi);   // C++20
+```
+
+(C++17 — the standard for this course — does not have `std::format` yet. `printf`-style formatting from `<cstdio>` is also available, and a common choice in embedded code.)
+
+---
+
+## Summary
+
+- `<<` writes to a stream; `>>` reads from one. Both chain.
+- `std::cout`, `std::cin`, `std::cerr` are the console streams; `std::ifstream` / `std::ofstream` are file streams.
+- Prefer `"\n"` to `std::endl` unless you specifically want to flush.
+- `std::getline` reads a whole line including spaces.
+- File streams close themselves automatically when they go out of scope (RAII).
+- Define `operator<<` for your own classes to make them printable.

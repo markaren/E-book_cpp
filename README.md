@@ -4,21 +4,7 @@ Welcome to the E-book for the course [AIS1003](https://www.ntnu.no/studier/emner
 
 **Read online: [markaren.github.io/E-book_cpp](https://markaren.github.io/E-book_cpp/)**
 
-The book will be updated regularly throughout the semester. Make sure to bookmark it!
-
 > Note. The book is in an early state of development. Consider it a preview.
-
-## Content
-
-| Week | Topic                                                                                                                                                                                                                                                                                                                                                                                                                  |
-|------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-|  34    | <ul><li> [Introduction](docs/Chapter1/introduction.md) <ul><li>[Basic Structure](docs/Chapter1/basic_structure.md)</li><li>[Control Statements](docs/Chapter1/control_statements.md)</li><li>[Variables and Basic Types](docs/Chapter1/variables.md)</li><li>[Functions](docs/Chapter1/functions.md)</li><li>[Operators and Expressions](docs/Chapter1/operators_expressions.md)</li></ul> <li>[Getting Started](docs/getting_started.md)</li> </li></ul> |
-|  35    | <ul><li>[CMake introduction](docs/Chapter2/cmake_intro.md)</li><li>[Version Control & Git](docs/Chapter2/version_control.md)</li><li>[PlatformIO](docs/Chapter2/platformio.md)</li> </ul>  |
-|  36    | <ul><li>[C++ Standard Library](docs/Chapter2/standard_library.md)</li><li>[Data structures](docs/Chapter2/data_structures.md)</li> </ul> |
-|  37,38    | <ul><li>[Classes](docs/Chapter3/classes.md)</li> <ul><li>[RAII](docs/Chapter3/raii.md)</li></ul> <li>[Values, References & Pointers](docs/Chapter3/types_refs_ptrs.md)</li> <li>[IO & Streams](docs/Chapter3/io_streams.md)</li></ul> |
-|  39,40    | <ul> <li>[Memory Management](docs/Chapter4/memory.md)</li> <li>[Move semantics](docs/Chapter4/move.md)</li> </ul> |
-|  41,42    | <ul> <li>[Polymorphism](docs/Chapter4/polymorphism.md)</li><li> [Templates](docs/Chapter4/templates.md) </li> </ul> |
-|  43    | <ul> <li>[Separation of Concerns](docs/Chapter5/soc.md)</li><li> [Observer Pattern](docs/Chapter5/observer.md) </li><li> [Testing](docs/Chapter5/testing.md) </li><li> [Error Handling](docs/Chapter5/error_handling.md) </li> </ul> |
 
 ### Additional resources
 

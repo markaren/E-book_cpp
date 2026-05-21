@@ -1,0 +1,118 @@
+site_name: AIS1003 E-book
+site_description: Course e-book for AIS1003 — Object-Oriented Programming with C++
+site_url: https://ais1003-h-2023.github.io/E-book/
+repo_url: https://github.com/AIS1003-H-2023/E-book
+repo_name: AIS1003-H-2023/E-book
+edit_uri: edit/main/docs/
+
+theme:
+  name: material
+  language: en
+  features:
+    - navigation.instant
+    - navigation.tracking
+    - navigation.tabs
+    - navigation.sections
+    - navigation.indexes
+    - navigation.top
+    - navigation.footer
+    - toc.follow
+    - search.suggest
+    - search.highlight
+    - search.share
+    - content.code.copy
+    - content.code.annotate
+    - content.action.edit
+  palette:
+    - media: "(prefers-color-scheme: light)"
+      scheme: default
+      primary: indigo
+      accent: indigo
+      toggle:
+        icon: material/weather-night
+        name: Switch to dark mode
+    - media: "(prefers-color-scheme: dark)"
+      scheme: slate
+      primary: indigo
+      accent: indigo
+      toggle:
+        icon: material/weather-sunny
+        name: Switch to light mode
+  icon:
+    repo: fontawesome/brands/github
+    edit: material/pencil
+
+markdown_extensions:
+  - admonition
+  - attr_list
+  - md_in_html
+  - tables
+  - footnotes
+  - toc:
+      permalink: true
+  - pymdownx.details
+  - pymdownx.highlight:
+      anchor_linenums: true
+      line_spans: __span
+      pygments_lang_class: true
+  - pymdownx.inlinehilite
+  - pymdownx.snippets
+  - pymdownx.superfences
+  - pymdownx.tabbed:
+      alternate_style: true
+  - pymdownx.tasklist:
+      custom_checkbox: true
+  - pymdownx.emoji:
+      emoji_index: !!python/name:material.extensions.emoji.twemoji
+      emoji_generator: !!python/name:material.extensions.emoji.to_svg
+
+plugins:
+  - search
+
+nav:
+  - Home: index.md
+  - Getting Started: getting_started.md
+  - 1. Introduction:
+    - Introduction: Chapter1/introduction.md
+    - Basic Structure: Chapter1/basic_structure.md
+    - Control Statements: Chapter1/control_statements.md
+    - Variables and Basic Types: Chapter1/variables.md
+    - Functions: Chapter1/functions.md
+    - Operators and Expressions: Chapter1/operators_expressions.md
+  - 2. Tooling & Standard Library:
+    - CMake Introduction: Chapter2/cmake_intro.md
+    - Version Control & Git: Chapter2/version_control.md
+    - PlatformIO: Chapter2/platformio.md
+    - C++ Standard Library: Chapter2/standard_library.md
+    - Data Structures: Chapter2/data_structures.md
+  - 3. Classes & Types:
+    - Classes: Chapter3/classes.md
+    - RAII: Chapter3/raii.md
+    - Values, References & Pointers: Chapter3/types_refs_ptrs.md
+    - IO & Streams: Chapter3/io_streams.md
+  - 4. Memory & Polymorphism:
+    - Memory Management: Chapter4/memory.md
+    - Move Semantics: Chapter4/move.md
+    - Polymorphism: Chapter4/polymorphism.md
+    - Templates: Chapter4/templates.md
+  - 5. Design & Quality:
+    - Separation of Concerns: Chapter5/soc.md
+    - Observer Pattern: Chapter5/observer.md
+    - Testing: Chapter5/testing.md
+    - Error Handling: Chapter5/error_handling.md
+  - Reference:
+    - Reading Compiler Errors: compiler_errors.md
+    - Strings: strings.md
+    - Lambda Expressions: lambdas.md
+    - Floating-Point Pitfalls: floating_point.md
+    - Common Terms: terms.md
+    - FAQ: faq.md
+
+extra:
+  social:
+    - icon: fontawesome/brands/github
+      link: https://github.com/AIS1003-H-2023/E-book
+  generator: false
+
+copyright: >
+  Released under the MIT License.

@@ -4,7 +4,7 @@
 Control statements are essential tools in programming that enable you to control the flow of execution within your code. 
 They allow you to make decisions, repeat actions, and create logical structures in your programs. 
 In C++, there are three main types of control statements: 
-[conditional statements](#Conditional-statements), [loop statements](#Loop-statements), and [branching statements](#Branching-statements).
+[conditional statements](#conditional-statements), [loop statements](#loop-statements), and [branching statements](#branching-statements).
 
 ## Conditional statements
 

@@ -69,6 +69,12 @@ markdown_extensions:
 plugins:
   - search
 
+hooks:
+  - hooks/compiler_explorer.py
+
+extra_css:
+  - stylesheets/extra.css
+
 nav:
   - Home: index.md
   - Getting Started: getting_started.md

@@ -1,0 +1,22 @@
+/* "Run on Compiler Explorer" link injected by hooks/compiler_explorer.py */
+.ce-run-link {
+  display: inline-block;
+  margin-top: -0.75rem;
+  margin-bottom: 1rem;
+  padding: 0.15rem 0.6rem;
+  font-size: 0.75rem;
+  font-weight: 500;
+  color: var(--md-default-fg-color--light);
+  background: var(--md-code-bg-color);
+  border: 1px solid var(--md-default-fg-color--lightest);
+  border-top: none;
+  border-radius: 0 0 0.2rem 0.2rem;
+  text-decoration: none;
+  transition: color 0.15s, background-color 0.15s, border-color 0.15s;
+}
+
+.ce-run-link:hover {
+  color: var(--md-accent-fg-color);
+  border-color: var(--md-accent-fg-color);
+  background: var(--md-default-bg-color);
+}

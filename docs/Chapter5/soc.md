@@ -1,73 +1,198 @@
-# Separation of Concerns (SoC) in Software Development
+# Separation of Concerns
 
-Separation of Concerns (SoC) is a fundamental design principle in software engineering that 
-advocates breaking a computer program into distinct features or concerns, 
-each of which addresses a separate set of functionalities. 
-The main idea behind SoC is to divide the software system into smaller, 
-manageable parts, making it easier to develop, maintain, and understand.
+When a program is small — one `main`, a few helper functions — you can keep the whole thing in your head. As it grows, you cannot. The way out is **separation of concerns**: organising the program so each piece is responsible for one thing, and pieces only know about each other through narrow, deliberate interfaces.
 
-Follwing is some of the key aspects of SoC:
+Code written this way is easier to read, easier to test, and easier to change. Code that ignores it tends to develop a quality where every change breaks something unrelated.
 
-- **Modularity:**
-SoC promotes modularity, which means breaking down a system into smaller, self-contained modules. 
-Each module is responsible for a specific aspect of the functionality. These modules can be developed, tested,
-modified, and maintained independently, leading to greater flexibility and reusability of code.
+This chapter explains the principle and shows what it looks like in code.
 
-- **Encapsulation:**
-Encapsulation is a concept in object-oriented programming where the internal workings of a 
-module are hidden from the rest of the system. By encapsulating data and behavior within modules, 
-you can control access to the module's internal state, allowing changes to be made without affecting 
-the rest of the system. This encapsulation enhances security and simplifies maintenance.
+---
 
-- **Single Responsibility Principle (SRP):**
-SRP, one of the SOLID principles of object-oriented design, is closely related to SoC. 
-It states that a class should have only one reason to change, meaning that it should have only 
-one job or responsibility within the system. By adhering to SRP, developers ensure that each module 
-or class focuses on a specific functionality, enhancing clarity and maintainability.
+## The smell of mixed concerns
 
-- **Ease of Maintenance:**
-SoC simplifies the debugging and maintenance process. When concerns are separated, 
-it's easier to identify and fix issues within a specific module without disrupting the entire system. 
-Developers can work on one concern at a time, which improves productivity and reduces the risk of introducing new bugs.
+Here is a function that reads a temperature sensor, decides whether it is overheating, and prints a warning. All in one place:
 
-- **Interoperability and Reusability**
-Separating concerns enables components to be reused in different contexts. 
-A module designed to handle a specific concern can be utilized in various projects without 
-modification if its interface remains consistent. This reusability promotes the development of robust, 
-tested components that can be integrated into different systems.
+```cpp
+void monitorLoop() {
+    while (true) {
+        int raw = analogRead(A0);
+        double celsius = (raw * 5.0 / 1023.0 - 0.5) * 100.0;
 
-- **Collaborative Development:**
-SoC allows multiple developers or teams to work on different concerns simultaneously. 
-This parallel development accelerates the overall development process, especially in large and complex projects. 
-Teams can focus on their specific areas of expertise without interfering with other parts of the system.
+        if (celsius > 80.0) {
+            std::ofstream log("alerts.log", std::ios::app);
+            log << "[ALERT] " << celsius << " C at " << millis() << "\n";
+            std::cout << "OVERHEAT\n";
+            digitalWrite(LED_BUILTIN, HIGH);
+        }
 
+        delay(100);
+    }
+}
+```
 
-### Achieving Separation of Concerns 
-Achieving Separation of Concerns in software development involves applying various design principles and techniques to structure your codebase. 
-Here are several strategies you can use to achieve this separation:
+What is wrong with it? Nothing, mechanically — it works. But three different concerns are tangled together:
 
-- **Modular Programming:**
-Break down your software into smaller modules, each responsible for a specific functionality. Modules should have well-defined interfaces, allowing them to interact with other modules in a controlled manner.
+1. **Hardware access** — reading the sensor, writing to the LED.
+2. **Domain logic** — converting raw ADC values to temperature, deciding what counts as overheating.
+3. **Reporting** — writing to a log file, printing to the console.
 
-- **Use of Functions and Methods:**
-Encapsulate specific tasks into functions (in procedural programming) or methods (in object-oriented programming). Functions/methods should ideally perform one task and do it well, adhering to the Single Responsibility Principle.
+To test the domain logic without a real sensor, you cannot. To send alerts somewhere other than a file, you have to edit this function. To use a different sensor with a different conversion formula, ditto. Every concern is welded to every other.
 
-- **Object-Oriented Design:**
-Utilize classes and objects to encapsulate data and behavior. Classes represent specific concerns or entities in your system, encapsulating related data and methods. Properly designed classes enhance modularity and encapsulation.
+---
 
-- **Design Patterns:**
-Familiarize yourself with design patterns such as the Observer pattern, Strategy pattern, and Factory pattern. These patterns provide tested solutions to common design problems and often promote separation of concerns in their implementations.
+## The same logic, separated
 
-- **Event-Driven Architecture:**
-Implement an event-driven architecture where components communicate through events or messages. This promotes loose coupling between components, allowing them to operate independently and handle specific concerns.
+The same behaviour, but each concern is its own piece:
 
-- **Separate User Interface (UI) from Business Logic:**
-In applications with graphical user interfaces, separate the UI code from the underlying business logic. Use design patterns like Model-View-Controller (MVC) to achieve this separation, ensuring that the presentation layer is decoupled from the application's core logic.
+```cpp
+// --- Concern 1: hardware access ---
+class TemperatureSensor {
+public:
+    virtual ~TemperatureSensor() = default;
+    virtual double readCelsius() = 0;
+};
 
-- **Testing and Test Automation:**
-Write unit tests and automated tests that focus on specific concerns. Test each module or component in isolation to ensure they work as expected. Automated tests also act as a safety net when you make changes, ensuring that existing concerns are not affected.
+class AnalogTemperatureSensor : public TemperatureSensor {
+public:
+    AnalogTemperatureSensor(int pin) : pin_(pin) {}
+    double readCelsius() override {
+        int raw = analogRead(pin_);
+        return (raw * 5.0 / 1023.0 - 0.5) * 100.0;
+    }
+private:
+    int pin_;
+};
 
+// --- Concern 2: domain logic ---
+class OverheatPolicy {
+public:
+    OverheatPolicy(double threshold) : threshold_(threshold) {}
+    bool isOverheating(double celsius) const {
+        return celsius > threshold_;
+    }
+private:
+    double threshold_;
+};
+
+// --- Concern 3: reporting ---
+class AlertSink {
+public:
+    virtual ~AlertSink() = default;
+    virtual void overheatDetected(double celsius) = 0;
+};
+
+class FileAlertSink : public AlertSink {
+public:
+    FileAlertSink(const std::filesystem::path& path) : out_(path, std::ios::app) {}
+    void overheatDetected(double celsius) override {
+        out_ << "[ALERT] " << celsius << " C\n";
+    }
+private:
+    std::ofstream out_;
+};
+
+// --- The orchestrator: ties them together, knows nothing about details ---
+void monitorLoop(TemperatureSensor& sensor,
+                 const OverheatPolicy& policy,
+                 AlertSink& alerts) {
+    while (true) {
+        double t = sensor.readCelsius();
+        if (policy.isOverheating(t)) {
+            alerts.overheatDetected(t);
+        }
+        delay(100);
+    }
+}
+```
+
+Each class has one job. The function that pulls them together knows about *what* must happen but nothing about *how* — it has no idea whether the temperature comes from an analog pin or a simulated sensor, no idea whether alerts go to a file or a network socket, no idea what threshold is in effect.
+
+Want to test the policy? Construct an `OverheatPolicy` and call `isOverheating` with values — no hardware required. Want to switch from a file to a console alert? Write a `ConsoleAlertSink` and pass it in instead. Want to test the orchestrator? Pass it a fake sensor that returns scripted values and a fake sink that records the alerts.
+
+---
+
+## What "concern" means in practice
+
+A **concern** is one thing a program is responsible for. Some concerns are obvious:
+
+- talking to hardware
+- computing something
+- presenting results to a user
+- storing data
+- handling errors
+
+Other concerns are more subtle and emerge over time. You will recognise mixed concerns by the symptoms:
+
+- A small change to one part forces edits in unrelated parts.
+- Writing a test for one piece requires setting up things that have nothing to do with the test.
+- A function's name needs the word "and" — `readSensorAndAlertIfHot`.
+- A single class talks to the network, the database, and the user interface.
+
+When you spot these, you have a candidate for splitting.
+
+---
+
+## Tools for separating concerns
+
+The principle is timeless; the techniques are concrete.
+
+### Functions
+
+The most basic tool. If a chunk of code inside a function does something with a name, give it its own function:
+
+```cpp
+// Before
+void run() {
+    int raw = analogRead(A0);
+    double celsius = (raw * 5.0 / 1023.0 - 0.5) * 100.0;
+    /* ... 50 more lines ... */
+}
+
+// After
+double readTemperature() {
+    int raw = analogRead(A0);
+    return (raw * 5.0 / 1023.0 - 0.5) * 100.0;
+}
+
+void run() {
+    double t = readTemperature();
+    /* ... */
+}
+```
+
+The named function documents intent, can be tested in isolation, and stops the calling function from drowning in detail.
+
+### Classes
+
+A class groups data with the operations that act on it. Reach for a class when several related pieces of state need to evolve together — a connection, a parser, a controller — and you find the same data being passed around in tandem.
+
+### Interfaces (abstract base classes)
+
+When the orchestrator does not need to know which concrete implementation it is talking to, hide it behind an interface. The example above uses `TemperatureSensor` and `AlertSink` exactly this way — `monitorLoop` works with anything that fulfils those interfaces. Swap implementations without touching the orchestrator.
+
+This is also what makes code testable: the interface lets you substitute a fake implementation in tests.
+
+### Files and modules
+
+Once a logical piece grows beyond a screen, give it its own file. Header + implementation pair per class is a reasonable default. Group related files into folders (`sensors/`, `alerts/`, `policies/`). The folder structure itself becomes documentation of what concerns the project has.
+
+---
+
+## How far to take it
+
+It is possible to over-do this. A program with thirty classes for the same job five would handle is not "separated"; it is shattered. Two rules of thumb:
+
+1. **Separate when you have a reason.** If your `readSensor` function never changes and you only call it from one place, leaving it inline is fine.
+2. **Look for the friction.** When you find yourself wanting to test something but not being able to, or wanting to swap something out and not being able to — that is where to draw the line.
+
+Good design is not the design with the most classes. It is the design where each class has a clear job, and where introducing a new requirement does not force you to rewrite everything.
+
+---
 
 ## Summary
-In summary, Separation of Concerns is a foundational principle that promotes a systematic approach to software development. By organizing code into modular, encapsulated components, developers can create flexible, maintainable, and scalable software systems. This approach enhances collaboration, facilitates debugging, 
-and ultimately leads to the creation of more reliable and efficient software applications.
+
+- **Each piece of code should be responsible for one thing.**
+- When you find a function doing more than one thing, split it.
+- Use interfaces to decouple "what" from "how" — `TemperatureSensor` does not know which sensor; `monitorLoop` does not know which sensor either.
+- Separation makes code easier to test, easier to change, and easier to read.
+- Do not separate just for the sake of it. The signal is friction — testing, changing, swapping.

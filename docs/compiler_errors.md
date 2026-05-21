@@ -161,6 +161,8 @@ Three strategies, in this order:
 
 **3. Search the *exact* error text.** Copy the most specific part — usually starting with `error:` — and paste it into a search engine. Most error messages have been asked about on Stack Overflow several times over.
 
+**4. Ask an AI to translate the message.** Pasting the *full* compiler output together with the offending code into an AI assistant is one of its best use cases. See [Using AI for Coding](using_ai.md) for the habits that keep this from turning into "the AI does my work."
+
 Template errors are a special case: they can be hundreds of lines long for a single typo. The trick is to read from the top down and look for the line `note: candidate template ignored: ...`, which says *why* a template couldn't be used. That note usually contains the real problem in plain English.
 
 ---

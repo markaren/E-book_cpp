@@ -108,6 +108,7 @@ nav:
     - Error Handling: Chapter5/error_handling.md
   - Reference:
     - Reading Compiler Errors: compiler_errors.md
+    - Using AI for Coding: using_ai.md
     - Strings: strings.md
     - Lambda Expressions: lambdas.md
     - Floating-Point Pitfalls: floating_point.md

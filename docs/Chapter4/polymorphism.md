@@ -1,61 +1,237 @@
-# Polymorphism 
+# Polymorphism
 
-Polymorphism means many forms, and is one of the fundamental principles of Object-Oriented Programming (OOP).
-It allows objects of different classes to be treated as objects of a common superclass. 
-It promotes flexibility and reusability in code, enabling you to write more generic 
-and extensible programs. 
+**Polymorphism** — "many forms" — is the ability to treat different concrete types through a common interface. Code written against the common interface does not need to know which specific type it is dealing with.
 
-In C++ we have two types of polymorphism:
+This is the feature that lets you swap one implementation for another without touching the code that uses it: replace a console logger with a file logger, swap a real sensor for a simulated one in tests, add a new shape to a drawing program without rewriting the renderer.
 
-1. Compile Time Polymorphism
-2. Runtime Polymorphism
+C++ has two kinds:
 
-## Compile-time polymorphism
-Compile-time polymorphism is done by overloading an operator or function. 
+| Kind | Resolved at | Mechanism |
+|------|-------------|-----------|
+| Compile-time polymorphism | Compile time | Function overloading, templates |
+| Runtime polymorphism | Run time | Virtual functions through inheritance |
 
-### Function overloading
+Compile-time polymorphism is faster (no indirection at runtime) but every concrete type must be known when the code is built. Runtime polymorphism is slightly slower but allows behaviour to be selected — or even loaded — after the program has started.
 
-Function overloading allows you to define multiple functions with the same name in the
-same scope but with different parameters. 
-The appropriate function is called based on the number and types of 
-arguments passed during the function call.
+---
+
+## A motivating example
+
+Suppose your simulation needs to log progress. Sometimes you want output on the console; sometimes to a file; in tests you want it suppressed entirely. You could pepper your code with `if` statements:
 
 ```cpp
-class Example {
-public:
-    void display(int num) {
-        cout << "Integer: " << num << endl;
-    }
-
-    void display(double num) {
-        cout << "Double: " << num << endl;
-    }
-};
-
-int main() {
-    Example obj;
-    obj.display(5);     // Output: Integer: 5
-    obj.display(3.14);  // Output: Double: 3.14
-    return 0;
+if (logToFile) {
+    file << message << "\n";
+} else if (logToConsole) {
+    std::cout << message << "\n";
 }
 ```
 
-#### Operator Overloading
+This is ugly, and every new destination means changing every call site. Polymorphism solves it cleanly:
 
-Operator overloading allows you to define how operators behave for user-defined data types. 
-It enables you to redefine the behavior of operators like `+`, `-`, `*`, etc., 
-for objects of a class. I.e., operators can behave differently depending on the type used with them.
+```cpp
+class Logger {
+public:
+    virtual ~Logger() = default;
+    virtual void log(const std::string& message) = 0;
+};
+```
+
+`Logger` is an **abstract base class** — `= 0` marks `log` as a **pure virtual function**, meaning derived classes are required to provide their own implementation. You cannot create a `Logger` directly; you create something that *is* a `Logger`.
+
+```cpp
+class ConsoleLogger : public Logger {
+public:
+    void log(const std::string& message) override {
+        std::cout << message << "\n";
+    }
+};
+
+class FileLogger : public Logger {
+public:
+    FileLogger(const std::filesystem::path& path) : out_(path) {}
+
+    void log(const std::string& message) override {
+        out_ << message << "\n";
+    }
+
+private:
+    std::ofstream out_;
+};
+```
+
+Now any code that works against `Logger&` or `std::unique_ptr<Logger>` works with both implementations — and any future implementation you add:
+
+```cpp
+class Simulation {
+public:
+    void setLogger(std::unique_ptr<Logger> logger) {
+        logger_ = std::move(logger);
+    }
+
+    void step(double dt) {
+        // ... do work ...
+        if (logger_) {
+            logger_->log("Step t=" + std::to_string(t_));
+        }
+        t_ += dt;
+    }
+
+private:
+    double t_ = 0;
+    std::unique_ptr<Logger> logger_;
+};
+
+int main() {
+    Simulation sim;
+    sim.setLogger(std::make_unique<FileLogger>("simulation.log"));
+    // or:
+    // sim.setLogger(std::make_unique<ConsoleLogger>());
+
+    sim.step(0.1);
+}
+```
+
+`Simulation` knows nothing about files or terminals. To add a `NetworkLogger` later you write the class — that's it. No change to `Simulation`.
+
+The rest of this chapter explains how every piece of that example works.
+
+---
+
+## Inheritance
+
+A **derived class** is built on top of a **base class**, automatically getting all of its members:
+
+```cpp
+class Vehicle {
+public:
+    void start() { std::cout << "Engine starting\n"; }
+};
+
+class Car : public Vehicle {
+public:
+    void honk() { std::cout << "Beep!\n"; }
+};
+
+Car c;
+c.start();   // inherited from Vehicle
+c.honk();    // defined on Car
+```
+
+The `public` after the colon is the **access specifier**. For 99% of cases (including everything in this course) you want `public` inheritance. `private` and `protected` inheritance exist but are rare and surprising.
+
+Inheritance models "**is-a**" — a `Car` *is a* `Vehicle`. If you find yourself reaching for inheritance to model "**has-a**" — a `Car` *has an* engine — use a member variable instead.
+
+---
+
+## Virtual functions
+
+A regular function call is resolved based on the *static* type of the variable. A `virtual` function call is resolved based on the *dynamic* type of the object — the actual type at runtime.
+
+```cpp
+class Shape {
+public:
+    virtual ~Shape() = default;
+    virtual void draw() = 0;
+};
+
+class Circle : public Shape {
+public:
+    void draw() override { std::cout << "Drawing a circle\n"; }
+};
+
+class Square : public Shape {
+public:
+    void draw() override { std::cout << "Drawing a square\n"; }
+};
+
+void render(Shape& shape) {
+    shape.draw();    // calls Circle::draw() or Square::draw(), depending on actual type
+}
+```
+
+`override` is not strictly required, but always write it. It tells the compiler "I mean to be overriding a base-class function" — and if you mistype the name, change a parameter type, or get the const-ness wrong, the compiler will reject the file rather than silently introducing a brand-new unrelated function.
+
+### Pure virtual = abstract
+
+A function written `= 0` is **pure virtual**:
+
+```cpp
+class Shape {
+public:
+    virtual void draw() = 0;   // pure virtual
+};
+```
+
+A class with at least one pure virtual function is **abstract** — you cannot instantiate it directly. Concrete derived classes must implement the function before they can be instantiated. This is how `Logger` enforces "every concrete logger must implement `log`."
+
+---
+
+## The virtual destructor rule
+
+A class designed for polymorphic use — one whose derived objects may be deleted through a base-class pointer — **must** have a virtual destructor:
+
+```cpp
+class Logger {
+public:
+    virtual ~Logger() = default;   // required!
+    virtual void log(const std::string&) = 0;
+};
+```
+
+Without it, deleting a `FileLogger` through a `std::unique_ptr<Logger>` runs only `Logger`'s destructor, never `FileLogger`'s — leaking the open file, never calling derived destructors, generally undefined behaviour. The compiler does not warn you.
+
+Rule of thumb: every class with any `virtual` function should also have a `virtual` destructor.
+
+---
+
+## Object slicing
+
+If you copy a derived object into a base-class *value*, the derived parts are silently sliced off:
+
+```cpp
+Circle c;
+Shape s = c;   // SLICING — s is just a Shape now, the Circle-ness is gone
+s.draw();      // does NOT call Circle::draw() — calls Shape::draw() if it had one
+```
+
+This is one reason you almost always use **pointers or references** when working with polymorphic types:
+
+```cpp
+Circle c;
+Shape& ref = c;            // OK — reference, no slicing
+std::unique_ptr<Shape> p = std::make_unique<Circle>();  // also fine
+```
+
+Pass by `Shape&` (or `const Shape&`), store as `std::unique_ptr<Shape>`. Never by `Shape`.
+
+---
+
+## Compile-time polymorphism: overloading
+
+For completeness, the other kind of polymorphism — chosen by the compiler based on argument types, not by the runtime type of the receiver:
+
+### Function overloading
+
+```cpp
+void log(int value)            { std::cout << "int: "    << value << "\n"; }
+void log(double value)         { std::cout << "double: " << value << "\n"; }
+void log(const std::string& s) { std::cout << "str: "    << s     << "\n"; }
+
+log(42);         // calls log(int)
+log(3.14);       // calls log(double)
+log("hello");    // calls log(const std::string&)
+```
+
+### Operator overloading
+
+You can define what the built-in operators (`+`, `-`, `*`, `==`, `<<`, …) mean for your own types:
 
 ```cpp
 class Complex {
-
 public:
+    Complex(int real = 0, int imag = 0) : real_(real), imag_(imag) {}
 
-    // constructor with default values
-    Complex(int real = 0, int imag = 0)
-        : real_(real), imag_(imag) {}
-
-    // overloading operator +
     Complex operator+(const Complex& other) const {
         return Complex(real_ + other.real_, imag_ + other.imag_);
     }
@@ -64,220 +240,22 @@ private:
     int real_, imag_;
 };
 
-int main() {
-    Complex num1(1, 2);
-    Complex num2(3, 4);
-    Complex result = num1 + num2; // Operator + is overloaded for objects of Complex class
-    return 0;
-}
+Complex a(1, 2);
+Complex b(3, 4);
+Complex sum = a + b;    // calls a.operator+(b)
 ```
 
-## Runtime polymorphism
-
-Run-time polymorphism in C++ is achieved through virtual functions and inheritance.  
-
-### Inheritance
-
-Inheritance is a fundamental object-oriented programming concept that allows you to create a new class based on an existing class. The new class, known as the derived class, inherits properties and behaviors (data members and member functions) from the existing class, called the base class. This facilitates code reuse and the creation of a hierarchy of classes.
-
-```cpp
-class BaseClass {
-    // members and methods of BaseClass
-};
-
-class DerivedClass : access-specifier BaseClass {
-    // members and methods of DerivedClass
-};
-```
-
-- `access-specifier` can be one of three: `public`, `protected`, or `private`. It specifies the access level for the members inherited from the base class.
-
-##### Example
-
-```cpp
-class Animal {
-public:
-    void eat() {
-        cout << "Animal is eating." << endl;
-    }
-};
-
-class Dog : public Animal {
-public:
-    void bark() {
-        cout << "Dog is barking." << endl;
-    }
-};
-```
-
-In this example, `Dog` is a derived class inheriting publicly from `Animal`. Now, objects of the `Dog` class can access the `eat()` method from the `Animal` class as well as its own `bark()` method.
-
-```cpp
-int main() {
-    Dog myDog;
-    myDog.eat();  // Output: Animal is eating.
-    myDog.bark(); // Output: Dog is barking.
-    return 0;
-}
-```
-
-This way, inheritance allows for creating a hierarchy of classes, enabling the creation of more specialized classes based on existing ones, promoting code reuse and modularity.
-
-### Virtual Functions
-In C++, you use the `virtual` keyword to declare a member function of the base class as virtual. 
-Virtual functions are resolved at runtime, allowing the appropriate derived class function to be called based on the 
-object's actual type rather than the declared type. Virtual functions can have a defualt implementation that gets inherited (and possibly overriden (replaced)) or be defined as pure virtual where some subclass __must__ provide an implementation.
-
-```cpp
-class Shape {
-public:
-    virtual void draw() = 0; //pure virtual
-};
-
-class Circle : public Shape {
-public:
-    void draw() override {
-        cout << "Drawing a circle\n";
-    }
-};
-
-class Square : public Shape {
-public:
-    void draw() override {
-        cout << "Drawing a square\n";
-    }
-};
-
-```
-
-In this example, the `draw()` function is declared as `virtual` in the Shape class. 
-When you have a pointer or reference of the base class type pointing to 
-an object of a derived class, the correct `draw()` function is called based on the actual object type.
-
-```cpp
-
-int main() {
-    std::unique_ptr<Shape> shape1 = std::make_unique<Circle>();
-    std::unique_ptr<Shape> shape2 = std::make_unique<Square>();
-
-    shape1->draw(); // Output: Drawing a circle
-    shape2->draw(); // Output: Drawing a square
-
-    return 0;
-}
-
-```
-
-In this example, polymorphism allows the `draw()` function to behave differently based on the actual type of the object it's called on.
-
-Polymorphism enables you to write more generic and flexible code, making it easier to extend and modify your programs without altering existing code. 
-It's a powerful concept that enhances the maintainability and readability of object-oriented programs in C++.
-
-#### Object slicing
-
-Object slicing in C++ occurs when you assign an object of a derived class to an object of its base class type. In this situation, if the derived class object contains additional member variables or member functions that are not present in the base class, those extra parts of the object are "sliced off." 
-This can lead to unexpected behavior and loss of data if you are not careful.
-
-It's important to be aware of object slicing when dealing with inheritance 
-and assignments between objects of base and derived classes. 
-To avoid object slicing, you can use pointers or references to the base class 
-when working with polymorphic behavior, as shown in the previous examples with virtual functions.
-Pointers or references allow you to access the derived class's specific members without losing data due to object slicing.
+Overload operators when the meaning is obvious. For a `Complex` number, `+` is natural. For an `Employee`, it is not — don't overload it just to be clever.
 
 ---
-### More complex example using runtime-polymorphism 
 
-Imagine we have an application where we want to have some 
-logging for debugging or informational purposes.
+## When to use which
 
-We could place some `std:cout` calls in our code, but that is not very flexible and would be alot of work to change later. 
-What if we wanted to log to a file rather than to the terminal? Let us use inheritance!
+| You want… | Use |
+|-----------|-----|
+| Different behaviour at runtime, chosen by the actual object type | Virtual functions through inheritance |
+| Different behaviour at compile time, chosen by argument types | Overloading or templates |
+| One operation conceptually "the same" across types (`add(int)`, `add(double)`) | Overloading |
+| Mathematical-style notation on a custom type | Operator overloading |
 
-We can define an abstract base class `Logger` that declares a (pure) virtual 
-function `log(args` like so:
-
-```cpp
-class Logger {
-public:
-    virtual ~Logger() = default; // virtual destructor — required for safe deletion through Logger*
-    virtual void log(const std::string& str) = 0;
-};
-```
-
-> Whenever a class is intended to be used polymorphically (i.e., stored and deleted via a pointer to its base class), the base class **must** declare a virtual destructor. Without it, deleting a derived object through a base pointer is undefined behaviour.
-
-As `Logger` defines a pure virtual function, it is an abstract type, 
-meaning it is not a complete type that we can instantiate. 
-We need some other class(es) to subclass it!
-
-Let us create a `FileLogger` and a `ConsoleLogger` like so:
-
-```cpp
-class FileLogger: public Logger {
-
-public:
-    FileLogger(const std::filesystem::path& outFile)
-        : out_(outFile) {}
-
-    void log(const std::string& str) override {
-        out_ << str << std::endl;
-    }
-
-private:
-    std::ofstream out_;
-};
-
-class ConsoleLogger: public Logger {
-
-public:
-
-    void log(const std::string& str) override {
-        std::cout << str << std::endl;
-    }
-
-};
-```
-
-The `FileLogger` and `ConsoleLogger` both inherits from `Logger` 
-and provides an implementation of the `log(...)` function.
-
-Now we can write code that only knows about `Logger` and it's up to the user to
-decide whether to log to file or console as shown here:
-
-```cpp
-class Simulation {
-
-public:
-    void stepSimulation(double dt) {
-        // simulate something
-        
-        if (logger_) {
-            logger_->log("Stepping simulation, t=" + std::to_string(t));
-        }
-
-        t += dt;
-    }
-
-    void setLogger(std::unique_ptr<Logger> logger) {
-        logger_ = std::move(logger);
-    }
-
-private:
-    double t = 0;
-    // note that the type is the abstract Logger type
-    std::unique_ptr<Logger> logger_;
-};
-
-int main() {
-
-    Simulation sim;
-    auto logger = std::make_unique<FileLogger>("logfile.txt");
-    //        auto logger = std::make_unique<ConsoleLogger>(); // could use this one as well
-
-    sim.setLogger(std::move(logger));
-
-    sim.stepSimulation(0.1);
-}
-```
-
-Now we can remove or add new `Logger` implementations without `Simulation` even knowing!
+Inheritance is powerful but expensive in design terms — it ties your derived classes to the base class's contract forever. Reach for it when you have a genuine "is-a" relationship and a clear interface that multiple implementations will share. For everything else, plain functions, composition, and templates are usually cleaner.

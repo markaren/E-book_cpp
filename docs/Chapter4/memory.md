@@ -1,129 +1,260 @@
-# Memory managment in C++
+# Memory Management
 
-In C++, memory management is a crucial aspect of programming, and understanding the concepts of the stack and heap is fundamental to writing efficient and reliable code. 
-These two memory areas play distinct roles in managing data during program execution. Let's explore the stack and heap in C++.
+Every value in a C++ program lives somewhere in memory. Most of the time you do not have to think about *where* — the language and compiler handle it for you. But automation code talks to hardware, builds long-lived state machines, and runs for hours; getting memory management wrong here causes real bugs that real users will see.
 
-## Stack
-The stack is a region of memory used for the management of function calls and local variables. It operates in a Last-In, First-Out (LIFO) manner, meaning that the most recently called function is at the top of the stack, and it must finish execution before the previous function can resume. The stack is relatively small and typically has a fixed size determined by the system or the compiler.
+This chapter walks through the two places values can live (the **stack** and the **heap**), the old C-style way of managing dynamic memory (`new` / `delete`), why it is dangerous, and the modern tools (**smart pointers**) that make it safe again.
 
-Key characteristics of the stack:
+---
 
-* **Function Call Management:** Every time a function is called, a new stack frame is created to store its local variables, function arguments, and return address. When the function returns, its stack frame is destroyed.
+## Stack vs. heap
 
-* **Automatic Memory Management:** Memory for variables on the stack is allocated and deallocated automatically. When a variable goes out of scope (e.g., when a function exits), the memory associated with it is immediately reclaimed.
+Two regions of memory matter to a programmer:
 
-* **Fast Access:** Accessing data on the stack is faster than on the heap because it involves simple pointer manipulation.
+| | Stack | Heap |
+|---|-------|------|
+| **Allocation** | Automatic — happens when a variable is declared | Manual — you ask for it with `new` (or, better, a smart pointer) |
+| **Deallocation** | Automatic — when the variable goes out of scope | Manual — you must release it (or let a smart pointer do it) |
+| **Speed** | Very fast — just bump a pointer | Slower — needs a real allocator |
+| **Size** | Small (typically a few MB total per thread) | Large (limited by available RAM) |
+| **Lifetime** | Tied to the enclosing block | Lives until explicitly freed |
 
-* **Limited Size:** The stack has a limited size, and if it becomes exhausted (usually due to excessive function calls or large local variables), it can lead to a stack overflow error.
+The single most important rule:
 
-* **No Need for Explicit Deallocation:** You do not need to explicitly release memory on the stack; it is managed by the system.
+> **Prefer the stack.** Only use the heap when the stack will not work.
+
+The stack works as long as:
+
+- the size of the data is known at compile time, and
+- the data does not need to outlive the function that created it.
+
+When either condition fails — a vector that grows at runtime, an object that needs to survive the function that built it, an array whose size depends on a sensor reading — you use the heap.
+
+### Stack example
+
+```cpp
+#include <iostream>
+
+void demo() {
+    int  count = 42;       // on the stack
+    double pi    = 3.14;   // on the stack
+    std::cout << count << " " << pi << "\n";
+}   // both variables destroyed automatically here
+```
+
+Nothing to clean up. Each local variable is created when the function is entered and destroyed when the function returns. This is the easy, fast, correct default.
+
+### Heap example (the C way, do not write code like this)
 
 ```cpp
 #include <iostream>
 
 int main() {
-    int stackVariable = 42; // Stack allocation
-
-    std::cout << "Stack Variable: " << stackVariable << std::endl;
-
-    // Memory for stackVariable is automatically released when it goes out of scope
-
+    int* heapInt = new int(42);          // allocate on the heap
+    std::cout << *heapInt << "\n";       // dereference to read the value
+    delete heapInt;                      // release the memory — required!
     return 0;
 }
 ```
 
-In this example, `stackVariable` is allocated on the stack, and its memory is automatically released when the main function exits.
+`new` allocates memory on the heap and returns a pointer to it. `delete` releases the memory. You must call `delete` exactly once for every `new`, no matter what — including when an exception is thrown halfway through your function.
 
-## Heap
-The heap is a region of memory used for dynamic memory allocation, where you can request memory at runtime and release it when you're done with it. Unlike the stack, the heap's memory allocation and deallocation are explicit and are controlled by the programmer.
+This is harder than it sounds.
 
-Key characteristics of the heap:
+---
 
-* **Dynamic Memory Allocation:** Memory on the heap is allocated and deallocated explicitly using functions like `new` and `delete` (or `malloc()` and `free()` in C). This allows you to allocate memory at runtime, making it suitable for data structures with variable sizes.
+## Why raw `new` / `delete` is dangerous
 
-* **Lack of Automatic Management:** Memory on the heap must be manually managed. Failure to deallocate memory when it's no longer needed can lead to memory leaks.
+Three kinds of bug haunt every C codebase and every C++ codebase that uses raw `new` / `delete`:
 
-* **Large and Flexible:** The heap is typically much larger than the stack and can grow dynamically, depending on system memory availability.
-
-* **Slower Access:** Accessing data on the heap is slower than on the stack because it involves pointer dereferencing and may require traversing data structures.
+**1. Memory leaks.** Forget to `delete` and the memory is gone for the lifetime of the program.
 
 ```cpp
-#include <iostream>
-
-int main() {
-    int* heapVariable = new int(42); // Heap allocation
-
-    std::cout << "Heap Variable: " << *heapVariable << std::endl;
-
-    // Manually deallocate memory
-    delete heapVariable; // Note: This is necessary to prevent memory leaks
-
-    return 0;
+void process() {
+    int* data = new int[1000];
+    if (somethingFailed()) {
+        return;            // leak — `data` is never freed
+    }
+    delete[] data;
 }
 ```
 
-In this example, `heapVariable` is allocated on the heap using new, and it's essential to deallocate the memory using delete to prevent memory leaks.
-
-In C++, you have the freedom to choose between the stack and heap for storing data, depending on your program's requirements. It's essential to use each memory area appropriately to avoid memory-related issues, such as stack overflows or memory leaks, and to ensure efficient resource utilization in your C++ programs.
-
-You can also allocate objects on the stack that contain pointers to heap-allocated objects.
+**2. Use-after-free.** Use a pointer after the memory has been freed and you get undefined behaviour — usually a crash, sometimes silent data corruption.
 
 ```cpp
-#include <iostream>
+int* p = new int(5);
+delete p;
+std::cout << *p << "\n";   // undefined behaviour
+```
 
-class MyClass {
+**3. Double-free.** Calling `delete` twice on the same pointer is also undefined behaviour.
+
+```cpp
+int* p = new int(5);
+delete p;
+delete p;                  // undefined behaviour
+```
+
+Every one of these is invisible in the source code — nothing tells the reader "this pointer has already been freed." They show up at runtime, often in production, often after a long random delay.
+
+---
+
+## The trap: classes that own raw pointers
+
+A common beginner pattern: a class allocates something with `new` in its constructor and frees it in its destructor.
+
+```cpp
+class Buffer {
 public:
-    MyClass(int value) : data(new int(value)) {}
-    ~MyClass() { delete data; }
+    Buffer(int size) : data_(new int[size]) {}
+    ~Buffer()        { delete[] data_; }
 
-    int getValue() const { return *data; }
+    int* data() { return data_; }
 
 private:
-    int* data;
+    int* data_;
+};
+```
+
+This looks reasonable. It is broken.
+
+Watch what happens when you copy a `Buffer`:
+
+```cpp
+Buffer a(100);
+Buffer b = a;     // copies the pointer, not the underlying memory
+// `a.data_` and `b.data_` now point at the SAME array
+```
+
+When `a` and `b` are destroyed, the same array is `delete[]`d twice — undefined behaviour. The default copy that C++ provides is a shallow copy: it copies the *pointer*, not what the pointer points to.
+
+The classical fix — implementing a copy constructor, a copy assignment operator, and a destructor that all agree on ownership — is called the **Rule of Three** (or, in modern C++, the **Rule of Five**, which adds move operations). It is correct, but it is also a lot of error-prone code for what should be a simple type.
+
+There is a better answer: **don't own raw pointers**.
+
+---
+
+## Smart pointers
+
+A **smart pointer** is a small class that owns a pointer and automatically deletes it when the smart pointer itself goes out of scope. It is RAII applied to dynamic memory.
+
+The C++ standard library provides three, all in `<memory>`:
+
+| Type                | Ownership | When to use |
+|---------------------|-----------|-------------|
+| `std::unique_ptr<T>` | Exactly one owner | Almost always |
+| `std::shared_ptr<T>` | Multiple co-owners, counted | When ownership genuinely is shared |
+| `std::weak_ptr<T>`   | Non-owning observer of a `shared_ptr` | Break reference cycles |
+
+### `std::unique_ptr` — the default
+
+```cpp
+#include <iostream>
+#include <memory>
+
+class Motor {
+public:
+    Motor(int id) : id_(id) {
+        std::cout << "Motor " << id_ << " constructed\n";
+    }
+    ~Motor() {
+        std::cout << "Motor " << id_ << " destroyed\n";
+    }
+    void spin() { std::cout << "Motor " << id_ << " spinning\n"; }
+private:
+    int id_;
 };
 
 int main() {
-    MyClass stackObject(42); // Stack allocation with heap-allocated data
-
-    std::cout << "Stack Object Value: " << stackObject.getValue() << std::endl;
-
-    // Memory for stackObject is automatically released when it goes out of scope
-
+    std::unique_ptr<Motor> m = std::make_unique<Motor>(7);
+    m->spin();
+    // No delete needed — m's destructor releases the Motor automatically
     return 0;
 }
 ```
 
-In this example, `stackObject` is allocated on the stack, but it contains a pointer (data) to an integer allocated on the heap. The destructor of `MyClass` is responsible for deallocating the heap-allocated memory when `stackObject`goes out of scope (RAII).
+Output:
 
-Remember that proper memory management is crucial when dealing with heap-allocated memory to avoid memory leaks and undefined behavior. In modern C++, using smart pointers (e.g., std::unique_ptr and std::shared_ptr) is recommended to simplify and improve memory management in heap-allocated objects.
+```
+Motor 7 constructed
+Motor 7 spinning
+Motor 7 destroyed
+```
 
-## Smart Pointers in Modern C++: Enhancing Memory Management and Safety
+`std::make_unique<Motor>(7)` allocates a `Motor` on the heap and hands the pointer to a `unique_ptr` that owns it. When `m` goes out of scope, its destructor runs and the `Motor` is destroyed. No leaks, no use-after-free, no double-delete.
 
-In modern C++, memory management and safety are paramount concerns. Traditional C++ provided manual memory management through raw pointers, which often led to memory leaks, dangling pointers, and other memory-related issues. To address these problems, C++ introduced smart pointers, which have become a cornerstone of modern C++ programming. This section will delve into what smart pointers are and why they should be used in contemporary C++ development.
+A `unique_ptr` cannot be copied — that would create a second owner — but it can be **moved**:
 
-### What are Smart Pointers?
+```cpp
+std::unique_ptr<Motor> a = std::make_unique<Motor>(1);
+std::unique_ptr<Motor> b = std::move(a);   // ownership transferred to b
+// a is now empty (nullptr); b owns the Motor
+```
 
-Smart pointers are objects that wrap around raw pointers and provide automatic memory management capabilities. They are part of the C++ Standard Library and come in two main flavors: `std::shared_ptr` and `std::unique_ptr`, introduced in C++11, and `std::weak_ptr`, introduced in the same standard but serving a different purpose. These smart pointers help mitigate many of the common pitfalls associated with manual memory management.
+(More on `std::move` in the [next chapter](move.md).)
 
-### Why Use Smart Pointers in Modern C++?
+### `std::shared_ptr` — shared ownership
 
-* **Automatic Memory Management:** Smart pointers automatically manage the memory they point to. When the smart pointer goes out of scope or is no longer needed, it automatically deallocates the memory, eliminating the risk of memory leaks. This feature reduces the cognitive burden on developers and minimizes the chances of human error in memory management.
+When several parts of your program legitimately share ownership of one object — and none of them can decide alone when it should be destroyed — use `std::shared_ptr`. It keeps a reference count and deletes the object when the last `shared_ptr` to it goes away.
 
-* **Resource Ownership Clarification:** Smart pointers make it clear which parts of the code are responsible for owning and managing resources. For example, std::unique_ptr signifies exclusive ownership, while std::shared_ptr indicates shared ownership. This clarity enhances code readability and maintainability.
+```cpp
+#include <memory>
+#include <vector>
 
-* **Reduced Dangling Pointers:** Dangling pointers, which point to memory that has been deallocated, can lead to undefined behavior. Smart pointers help prevent this issue by automatically nullifying themselves when the pointed-to memory is deallocated.
+void demo() {
+    auto motor = std::make_shared<Motor>(42);
 
-* **Exception Safety:** Smart pointers enhance exception safety in C++ programs. If an exception is thrown, smart pointers ensure that any dynamically allocated resources are properly released as the stack unwinds. This prevents resource leaks and helps maintain program integrity.
+    std::vector<std::shared_ptr<Motor>> subscribers;
+    subscribers.push_back(motor);    // reference count: 2
+    subscribers.push_back(motor);    // reference count: 3
 
-* **Simpler Code:** Smart pointers often lead to cleaner and more concise code. They eliminate the need for explicit new and delete calls, reducing boilerplate code and making the codebase less error-prone.
+    // Motor is destroyed only after `motor` and both copies in
+    // `subscribers` are all gone.
+}
+```
 
-* **Memory Leak Prevention:** Smart pointers are effective tools for preventing memory leaks, even in complex scenarios where objects are shared among multiple parts of the code. They manage reference counts and ensure that memory is released when the last reference to it is gone.
+`shared_ptr` is more expensive than `unique_ptr` (the reference count has to be maintained, atomically, across threads). Reach for it only when shared ownership is really what you need.
 
-* **Interoperability:** Smart pointers can be used in conjunction with other C++ features like containers and algorithms, making them an integral part of modern C++ idioms.
+### `std::weak_ptr` — non-owning observer
 
-While smart pointers offer numerous advantages, it's important to choose the appropriate type of smart pointer for a given situation. `std::unique_ptr` should be used when ownership is strictly exclusive, while `std::shared_ptr` is suitable for shared ownership scenarios. 
-`std::weak_ptr` complements std::shared_ptr by breaking circular references and avoiding memory leaks.
+Two `shared_ptr`s that point at each other will keep each other alive forever — a **reference cycle**, and a leak. `std::weak_ptr` is a pointer that can observe a `shared_ptr` without contributing to its reference count, which is how you break such cycles. You will see this in graph and parent/child structures; it is not something to worry about on day one.
 
-> A circular reference, also known as a circular dependency or reference cycle, is a situation in computer programming and data structures where two or more objects or elements reference each other in a way that creates an infinite loop or cycle of references.
+---
 
-In conclusion, smart pointers have revolutionized memory management in modern C++ by providing automatic memory management, enhancing code safety, and simplifying complex resource ownership scenarios. They are essential tools for writing reliable and maintainable C++ code. Developers are encouraged to adopt smart pointers as a best practice to make their code safer, more efficient, and less error-prone.
+## The Rule of Zero
+
+Now reconsider the `Buffer` class from earlier, written with a `unique_ptr` instead of a raw pointer:
+
+```cpp
+class Buffer {
+public:
+    Buffer(int size) : data_(std::make_unique<int[]>(size)) {}
+
+    int* data() { return data_.get(); }
+
+private:
+    std::unique_ptr<int[]> data_;
+};
+```
+
+No destructor. No copy constructor. No assignment operator. The compiler-generated defaults are correct, because `unique_ptr` already knows how to manage its memory — and it forbids copying, which is exactly the behaviour we want.
+
+This is the **Rule of Zero**: if all of your class's members manage their own lifetime (via RAII), you do not have to write *any* special member functions. Most well-designed C++ classes are written this way.
+
+Practically: when you find yourself reaching for `new` and `delete`, stop and ask whether `std::vector`, `std::string`, or `std::unique_ptr` already does what you need.
+
+---
+
+## Best practices
+
+- **Prefer the stack.** Use the heap only when the stack will not work.
+- **Never write `new` or `delete` in modern C++.** Use `std::make_unique` and `std::make_shared`.
+- **Default to `unique_ptr`.** Only use `shared_ptr` when ownership is genuinely shared.
+- **Use standard containers** (`std::vector`, `std::string`) instead of hand-rolled dynamic arrays.
+- **Aim for the Rule of Zero.** If you do need to write your own special members, write all of them (Rule of Five).
+- **Smart pointers are not garbage collection.** They are deterministic — destruction happens at a known, predictable point. This is a feature, especially for embedded code.
+
+---
+
+## Summary
+
+The heap is necessary, but raw heap management is error-prone enough that experienced C++ programmers avoid writing `new` and `delete` directly. Smart pointers and standard containers give you the same capabilities with automatic cleanup, exception safety, and clear ownership semantics. Start with the stack; reach for `std::unique_ptr` when you must; reach for `std::shared_ptr` only when ownership is really shared.

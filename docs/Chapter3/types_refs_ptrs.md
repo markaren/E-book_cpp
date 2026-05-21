@@ -82,22 +82,20 @@ int createIntValue() {
   return 1;
 }
 
-int createIntRef() {
+int& createIntRef() {
   int value = createIntValue();
-  int& ref = *value;
-  return ref; // bad
+  return value; // bad — `value` is destroyed when the function returns
 }
 
-int createIntPtr() {
+int* createIntPtr() {
   int value = createIntValue();
-  int* ptr = &value;
-  return ptr; // bad
+  return &value; // bad — `value` is destroyed when the function returns
 }
 
 int main() {
-  int i1 = createIntValue();   // Safe. Function returns a new copy.
-  int& i2 = createIntRef();    // Undefined beheviour. The underlying value no longer exist.
-  int* i3 = createIntPtr();    // Undefined beheviour. The underlying value no longer exist.
+  int  i1 = createIntValue();   // Safe. Function returns a new copy.
+  int& i2 = createIntRef();     // Undefined behaviour. The underlying value no longer exists.
+  int* i3 = createIntPtr();     // Undefined behaviour. The underlying value no longer exists.
 }
 ```
 
@@ -111,11 +109,11 @@ public:
     return value;
   }
 
- int& getValueRef() const {
-    return *value;
+  int& getValueRef() {
+    return value;
   }
 
- int* getValuePtr() const {
+  int* getValuePtr() {
     return &value;
   }
 
@@ -128,13 +126,14 @@ int main() {
   Demo obj;
 
   // All these are fine as obj is still alive and well.
-  int i1 = obj.getValue();
+  int  i1 = obj.getValue();
   int& i2 = obj.getValueRef();
   int* i3 = obj.getValuePtr();
 
-  // Note that i2, and i3 provides access to the underlying private member.
-  // We are then able to change the value of the value held be `obj`, thus breaking encapsulation!
-
+  // Note that i2 and i3 provide access to the underlying private member.
+  // We are then able to change the value held by `obj`, thus breaking encapsulation!
+  i2 = 42;        // obj.value is now 42
+  *i3 = 99;       // obj.value is now 99
 }
 ```
 

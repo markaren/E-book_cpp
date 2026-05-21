@@ -48,31 +48,28 @@ for objects of a class. I.e., operators can behave differently depending on the 
 
 ```cpp
 class Complex {
-    
+
 public:
-    
+
     // constructor with default values
-    Complex(int real = 0, complex = 0)
-        : real_(real), complex_(complex){}
-    
-    // overloading operator + 
-    Complex operator + (const Complex &obj) {
-        Complex temp;
-        temp.real = real + obj.real;
-        temp.imag = imag + obj.imag;
-        return temp;
+    Complex(int real = 0, int imag = 0)
+        : real_(real), imag_(imag) {}
+
+    // overloading operator +
+    Complex operator+(const Complex& other) const {
+        return Complex(real_ + other.real_, imag_ + other.imag_);
     }
-    
+
 private:
     int real_, imag_;
 };
 
 int main() {
-    Complex num1, num2; // Assume num1 and num2 are initialized with meaningful values
+    Complex num1(1, 2);
+    Complex num2(3, 4);
     Complex result = num1 + num2; // Operator + is overloaded for objects of Complex class
     return 0;
 }
-
 ```
 
 ## Runtime polymorphism
@@ -127,7 +124,7 @@ int main() {
 This way, inheritance allows for creating a hierarchy of classes, enabling the creation of more specialized classes based on existing ones, promoting code reuse and modularity.
 
 ### Virtual Functions
-In C++, you use the `virtual`` keyword to declare a member function of the base class as virtual. 
+In C++, you use the `virtual` keyword to declare a member function of the base class as virtual. 
 Virtual functions are resolved at runtime, allowing the appropriate derived class function to be called based on the 
 object's actual type rather than the declared type. Virtual functions can have a defualt implementation that gets inherited (and possibly overriden (replaced)) or be defined as pure virtual where some subclass __must__ provide an implementation.
 
@@ -202,9 +199,12 @@ function `log(args` like so:
 ```cpp
 class Logger {
 public:
+    virtual ~Logger() = default; // virtual destructor — required for safe deletion through Logger*
     virtual void log(const std::string& str) = 0;
 };
 ```
+
+> Whenever a class is intended to be used polymorphically (i.e., stored and deleted via a pointer to its base class), the base class **must** declare a virtual destructor. Without it, deleting a derived object through a base pointer is undefined behaviour.
 
 As `Logger` defines a pure virtual function, it is an abstract type, 
 meaning it is not a complete type that we can instantiate. 
@@ -228,13 +228,13 @@ private:
 };
 
 class ConsoleLogger: public Logger {
-    
+
 public:
-    
-    void log(const std::string& str) {
+
+    void log(const std::string& str) override {
         std::cout << str << std::endl;
     }
-    
+
 };
 ```
 
@@ -276,7 +276,7 @@ int main() {
 
     sim.setLogger(std::move(logger));
 
-    sim.stepSimulation();
+    sim.stepSimulation(0.1);
 }
 ```
 

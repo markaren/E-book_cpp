@@ -11,11 +11,16 @@ including implementing graphical user interfaces, event handling systems, and di
 ### Example
 
 ```cpp
-
+#include <algorithm>
 #include <iostream>
 #include <vector>
 
-class Observer;
+// Observer interface that defines the update method to be called by the subject.
+class Observer {
+public:
+    virtual ~Observer() = default;
+    virtual void update(int newState) = 0;
+};
 
 // Subject interface that defines methods for attaching, detaching, and notifying observers.
 class Subject {
@@ -30,53 +35,52 @@ public:
 class ConcreteSubject : public Subject {
 public:
     void attach(Observer* observer) override {
-        observers.emplace_back(observer);
+        observers_.emplace_back(observer);
     }
 
     void detach(Observer* observer) override {
-        // Implementation for detaching an observer.
+        observers_.erase(
+            std::remove(observers_.begin(), observers_.end(), observer),
+            observers_.end());
     }
 
     void setState(int state) {
-        this->state = state;
+        state_ = state;
         notify(); // Notify observers when the state changes.
     }
 
     int getState() const {
-        return state;
+        return state_;
     }
 
     void notify() override {
-        for (Observer* observer : observers) {
-            observer->update();
+        for (Observer* observer : observers_) {
+            observer->update(state_);
         }
     }
 
 private:
-    std::vector<Observer*> observers;
-    int state;
-};
-
-// Observer interface that defines the update method to be called by the subject.
-class Observer {
-public:
-    virtual ~Observer() = default;
-    virtual void update() = 0;
+    std::vector<Observer*> observers_;
+    int state_ = 0;
 };
 
 // Concrete observer class that implements the Observer interface.
 class ConcreteObserver : public Observer {
 public:
-    ConcreteObserver(ConcreteSubject* subject) : subject(subject) {
-        subject->attach(this);
+    ConcreteObserver(ConcreteSubject* subject) : subject_(subject) {
+        subject_->attach(this);
     }
 
-    void update() override {
-        std::cout << "Observer received update. New state: " << subject->getState() << std::endl;
+    ~ConcreteObserver() override {
+        subject_->detach(this);
+    }
+
+    void update(int newState) override {
+        std::cout << "Observer received update. New state: " << newState << std::endl;
     }
 
 private:
-    ConcreteSubject* subject;
+    ConcreteSubject* subject_;
 };
 
 int main() {
@@ -90,7 +94,6 @@ int main() {
 
     return 0;
 }
-
 ```
 
 In this example, `Subject` is an interface that declares methods for attaching, 

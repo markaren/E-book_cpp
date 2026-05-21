@@ -109,7 +109,7 @@ This makes vectors more versatile than traditional arrays, which have a fixed si
 
 int main() {
     // Create a vector of integers initialized with some elements
-    std::vector<int> myVector {1 ,2 3};
+    std::vector<int> myVector {1, 2, 3};
 
     // Add additional elements to the vector
     myVector.emplace_back(10);
@@ -210,7 +210,7 @@ int main() {
     for (int i = 0; i < list.size(); i++) {
         std::cout << list[i] << " ";
     }
-    std::cout << std::endl
+    std::cout << std::endl;
 
     return 0;
 }
@@ -331,10 +331,10 @@ public:
         return children_.size();
     }
 
-    // implementing depth-first traversal using recursion 
-    void traverse(const std::function<void(node<T> &)> &f) override {
+    // implementing depth-first traversal using recursion
+    void traverse(const std::function<void(node<T> &)> &f) {
         f(*this);
-        for (auto &child: children_)) {
+        for (auto &child : children_) {
             child->traverse(f);
         }
     }

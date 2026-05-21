@@ -1,6 +1,6 @@
 # Using AI for Coding
 
-AI assistants — ChatGPT, Claude, Copilot, Gemini, and the rest — can write C++. They can explain it, debug it, refactor it, and answer questions about it at any hour of the day. They are genuinely useful tools, and you will use them. Everyone will.
+AI assistants (ChatGPT, Claude, Copilot, Gemini, and the rest) can write C++. They can explain it, debug it, refactor it, and answer questions about it at any hour of the day. They are genuinely useful tools, and you will use them. Everyone will.
 
 The question is not *whether* to use them. The question is how to use them in a way that makes you a better programmer instead of one that quietly becomes worse over time.
 
@@ -10,13 +10,13 @@ This page is the short, honest version of what they are, what they are good and 
 
 ## What an LLM actually is
 
-A **large language model** is, in one sentence, a statistical engine that predicts what text plausibly comes next given the text so far. It was trained on enormous amounts of text — books, websites, code repositories, forum threads — and learned the patterns inside it. When you ask it to "write a C++ program that reads a CSV file", it does not understand CSVs. It produces the kind of text that, statistically, follows a request like that.
+A **large language model** is, in one sentence, a statistical engine that predicts what text plausibly comes next given the text so far. It was trained on enormous amounts of text (books, websites, code repositories, forum threads) and learned the patterns inside it. When you ask it to "write a C++ program that reads a CSV file", it does not understand CSVs. It produces the kind of text that, statistically, follows a request like that.
 
 Three consequences matter for using it:
 
 1. **It has no compiler, no debugger, and no eyes.** It cannot run code, cannot read your screen, cannot tell whether what it just produced will compile. It is reasoning entirely from patterns in text.
 2. **It can be confidently wrong.** Because it produces fluent, plausible-looking text, mistakes do not announce themselves. The output reads like an expert wrote it whether or not an expert *would* have written it.
-3. **Its C++ knowledge is skewed to what was on the internet.** A lot of internet C++ is old — pre-`std::unique_ptr`, pre-`auto`, full of `using namespace std;` and raw `new`/`delete`. Modern best practice is under-represented in training data compared to its actual frequency in good codebases.
+3. **Its C++ knowledge is skewed to what was on the internet.** A lot of internet C++ is old: pre-`std::unique_ptr`, pre-`auto`, full of `using namespace std;` and raw `new`/`delete`. Modern best practice is under-represented in training data compared to its actual frequency in good codebases.
 
 All of these are getting better over time. None of them have gone away.
 
@@ -28,7 +28,7 @@ Used well, an AI assistant is one of the best learning tools you have ever had a
 
 - **Explaining concepts in a different voice.** If the textbook explanation of references doesn't click, asking "explain references in C++ as if I have used Python" often does.
 - **Reading scary error messages.** Paste a 200-line template error and ask "what is this complaining about?" — it can usually translate the wall of text into one sentence.
-- **Generating boilerplate.** A `CMakeLists.txt` for a project with a library and tests, a basic class skeleton with constructors and getters, a `Makefile`-style script — these have one obvious correct shape and AI produces them quickly and reliably.
+- **Generating boilerplate.** A `CMakeLists.txt` for a project with a library and tests, a basic class skeleton with constructors and getters, a `Makefile`-style script: these have one obvious correct shape and AI produces them quickly and reliably.
 - **Translating between languages.** "Here is my Python solution; what would this look like in C++?" is a fast way to bridge prior experience.
 - **Rubber-ducking.** Describing your problem out loud often makes you realise the answer; doing it to an AI works the same way, plus it sometimes notices things you missed.
 - **Code review on your own code.** "Here's the function I just wrote, do you see any bugs or things I could simplify?" is a much better prompt than "write a function that does X."
@@ -51,7 +51,7 @@ The reverse list, equally important:
 
 Here is the bit you should re-read every semester.
 
-The danger of AI is not that it will write your assignments. The danger is that it will write them *well enough* that you never learn to write them yourself, and you will not notice you haven't learned until much later — typically at an exam, an interview, or a job where you are expected to actually program.
+The danger of AI is not that it will write your assignments. The danger is that it will write them *well enough* that you never learn to write them yourself, and you will not notice you haven't learned until much later: typically at an exam, an interview, or a job where you are expected to actually program.
 
 There are specific skills that only develop through doing-it-yourself, even when AI could do it faster:
 
@@ -70,7 +70,7 @@ The trade-off above is real but not absolute. The following practices give you m
 
 ### Try first, ask second
 
-Spend at least ten minutes trying a problem on your own before asking AI. Even if you fail, you have built a mental map of what is hard. When the AI then shows you a solution, you understand *why* its choice helps — instead of skipping over a problem you never engaged with.
+Spend at least ten minutes trying a problem on your own before asking AI. Even if you fail, you have built a mental map of what is hard. When the AI then shows you a solution, you understand *why* its choice helps, rather than skipping over a problem you never engaged with.
 
 ### Type the code yourself, even if you didn't write it
 
@@ -78,7 +78,7 @@ Copy-pasting from AI is the single biggest barrier to learning. Your fingers and
 
 ### Ask "why", not just "what"
 
-After AI gives you code, ask it to explain *why* — why this approach, why this header, why this signature. Then check the explanation. If the explanation doesn't make sense to you, you don't yet understand the code, and you should not turn it in.
+After AI gives you code, ask it to explain *why*: why this approach, why this header, why this signature. Then check the explanation. If the explanation doesn't make sense to you, you don't yet understand the code, and you should not turn it in.
 
 ### Verify by running, not by reading
 
@@ -96,7 +96,7 @@ The more constraints you give, the closer the output is to what you actually wan
 
 A surprisingly good prompt:
 
-> "Here's the function I wrote: `[paste]`. What bugs or improvements do you see? Don't rewrite it — just point things out."
+> "Here's the function I wrote: `[paste]`. What bugs or improvements do you see? Don't rewrite it; just point things out."
 
 This keeps *you* writing the code, with the AI as a second pair of eyes. The code stays yours; the feedback helps.
 
@@ -111,16 +111,16 @@ Useful starting point. Possibly wrong. Always verify against a primary source ([
 A few practical tips for getting good C++ out of an assistant in this course's context:
 
 - **State the standard.** "Use C++20" in your prompt. Otherwise expect C++98 idioms.
-- **Forbid the bad habits.** "No `using namespace std;`. No raw `new`/`delete` — use `std::unique_ptr` or standard containers. Use RAII." Once stated, most models comply.
+- **Forbid the bad habits.** "No `using namespace std;`. No raw `new`/`delete`; use `std::unique_ptr` or standard containers. Use RAII." Once stated, most models comply.
 - **Ask for the smallest version first.** "Show me the minimum CMakeLists.txt to build one executable" is a better prompt than "set up a full CMake project for me."
-- **For errors, paste the whole thing.** Give the AI your code *and* the full compiler output. Don't summarise — the full text often contains the clue.
-- **Distinguish concepts from generation.** When you don't understand something — references, RAII, virtual functions — asking AI to explain is great. When you have an assignment problem to solve, write it yourself first.
+- **For errors, paste the whole thing.** Give the AI your code *and* the full compiler output. Don't summarise; the full text often contains the clue.
+- **Distinguish concepts from generation.** When you don't understand something (references, RAII, virtual functions), asking AI to explain is great. When you have an assignment problem to solve, write it yourself first.
 
 ---
 
 ## Academic integrity
 
-This book does not set the rules for what counts as cheating in your specific course — your course staff and the institution do. Find those rules and follow them. If AI use must be disclosed, disclose it. If it is forbidden on a particular assignment, don't use it. The rules apply whether or not the AI is detectable.
+This book does not set the rules for what counts as cheating in your specific course; your course staff and the institution do. Find those rules and follow them. If AI use must be disclosed, disclose it. If it is forbidden on a particular assignment, don't use it. The rules apply whether or not the AI is detectable.
 
 Independent of any course rule: if your name is on something and you cannot explain every line of it under questioning, you should treat that as a problem worth fixing before turning it in.
 

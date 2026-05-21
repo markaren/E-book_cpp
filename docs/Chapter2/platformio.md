@@ -15,7 +15,7 @@ You will see two common ways to program an Arduino-style board:
 | **Arduino IDE** | Built-in, simple | Limited editor, weak project structure, hard to manage dependencies |
 | **PlatformIO** | Proper IDE integration, dependency management, multi-board projects, scriptable builds | A bit more setup |
 
-For anything beyond a one-file sketch, PlatformIO is the right tool. It also integrates cleanly into CLion, the IDE you already use for desktop C++ — meaning you can write code for both your desktop simulation and the embedded target in the same editor.
+For anything beyond a one-file sketch, PlatformIO is the right tool. It also integrates cleanly into CLion, the IDE you already use for desktop C++, meaning you can write code for both your desktop simulation and the embedded target in the same editor.
 
 ---
 
@@ -58,11 +58,11 @@ lib_deps =
 
 What each line does:
 
-- `[env:uno]` — defines a build environment named `uno`. You can have multiple environments in one project (e.g. one for an Uno, one for an ESP32) and switch between them.
-- `platform` — the CPU family. `atmelavr` for classic Arduinos, `espressif32` for ESP32, etc.
-- `board` — the specific board. PlatformIO supports hundreds; see their [board search](https://platformio.org/boards).
-- `framework` — what kind of code you are writing. `arduino` gives you the Arduino API; `espidf` gives you ESP-IDF; some boards support both.
-- `lib_deps` — libraries to fetch automatically. PlatformIO downloads them on the next build.
+- `[env:uno]` defines a build environment named `uno`. You can have multiple environments in one project (e.g. one for an Uno, one for an ESP32) and switch between them.
+- `platform` is the CPU family. `atmelavr` for classic Arduinos, `espressif32` for ESP32, etc.
+- `board` is the specific board. PlatformIO supports hundreds; see their [board search](https://platformio.org/boards).
+- `framework` is what kind of code you are writing. `arduino` gives you the Arduino API; `espidf` gives you ESP-IDF; some boards support both.
+- `lib_deps` lists libraries to fetch automatically. PlatformIO downloads them on the next build.
 
 Source code lives in `src/`. The Arduino sketch you would normally call `MyProject.ino` becomes `src/main.cpp`:
 
@@ -102,8 +102,8 @@ Most embedded development follows the cycle: edit, build, upload, watch the seri
 
 ## Further reading
 
-- [PlatformIO documentation](https://docs.platformio.org/) — comprehensive.
-- [Supported boards](https://platformio.org/boards) — searchable list.
-- [PlatformIO library registry](https://registry.platformio.org/) — where `lib_deps` resolves from.
+- [PlatformIO documentation](https://docs.platformio.org/): comprehensive.
+- [Supported boards](https://platformio.org/boards): searchable list.
+- [PlatformIO library registry](https://registry.platformio.org/): where `lib_deps` resolves from.
 
-PlatformIO is its own ecosystem; this chapter is just a doorway. When you start your embedded project, expect to spend an evening with PlatformIO's docs — it pays off for the rest of the project.
+PlatformIO is its own ecosystem; this chapter is just a doorway. When you start your embedded project, expect to spend an evening with PlatformIO's docs, it pays off for the rest of the project.

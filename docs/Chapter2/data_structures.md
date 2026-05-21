@@ -2,20 +2,20 @@
 
 A **data structure** is a way of organising data so that the operations you need to perform on it are efficient. The choice of structure shapes how fast your program runs and how clean the code that uses it looks.
 
-This chapter is about *choosing*. C++'s standard library provides solid, well-tested implementations of every data structure you will need this semester — your job is to pick the right one for the job. We will look at what each one is good at and let go of the temptation to implement them from scratch.
+This chapter is about *choosing*. C++'s standard library provides solid, well-tested implementations of every data structure you will need this semester; your job is to pick the right one for the job. We will look at what each one is good at and let go of the temptation to implement them from scratch.
 
 ---
 
 ## The mental model
 
-Every data structure is a trade-off. Adding to one is fast; finding in another is fast; iterating in order through a third is fast. There is no "best" data structure — only the one that fits the operations you actually do.
+Every data structure is a trade-off. Adding to one is fast; finding in another is fast; iterating in order through a third is fast. There is no "best" data structure; only the one that fits the operations you actually do.
 
 The questions to ask:
 
-1. **How will I add items?** — at the end, at the front, in the middle?
-2. **How will I find items?** — by index, by key, by scanning?
-3. **Do I need them in order?** — insertion order, sorted order, or no order?
-4. **Will the size change?** — at compile time, at runtime, often, rarely?
+1. **How will I add items?** At the end, at the front, in the middle?
+2. **How will I find items?** By index, by key, by scanning?
+3. **Do I need them in order?** Insertion order, sorted order, or no order?
+4. **Will the size change?** At compile time, at runtime, often, rarely?
 
 The answers usually pick the container for you.
 
@@ -25,7 +25,7 @@ The answers usually pick the container for you.
 
 Containers that store a linear sequence of values.
 
-### `std::vector<T>` — dynamic array
+### `std::vector<T>`: dynamic array
 
 Elements live in **contiguous memory**, like a C array, but the size can grow at runtime.
 
@@ -33,11 +33,11 @@ Elements live in **contiguous memory**, like a C array, but the size can grow at
 #include <vector>
 
 std::vector<int> readings;
-readings.push_back(42);          // add to the end — fast
+readings.push_back(42);          // add to the end, fast
 readings.push_back(17);
 readings.push_back(99);
 
-int first = readings[0];         // index access — constant time
+int first = readings[0];         // index access, constant time
 readings.size();                 // 3
 ```
 
@@ -45,12 +45,12 @@ readings.size();                 // 3
 |-----------|------|
 | Index access (`v[i]`) | O(1) |
 | `push_back` (append) | O(1) amortised |
-| Insert/remove in the middle | O(n) — everything after has to shift |
+| Insert/remove in the middle | O(n), everything after has to shift |
 | Find by value (`std::find`) | O(n) |
 
 **Use vector by default.** Only reach for something else if your usage pattern genuinely conflicts with what vector is good at.
 
-### `std::array<T, N>` — fixed-size array
+### `std::array<T, N>`: fixed-size array
 
 Like `std::vector` but the size is fixed at compile time. Lives on the stack, no heap allocation.
 
@@ -61,9 +61,9 @@ std::array<double, 3> position = {0.0, 0.0, 0.0};
 position[2] = 1.5;
 ```
 
-**Use when** the size is known and won't change — fixed-length sensor packets, lookup tables, matrix dimensions.
+**Use when** the size is known and won't change: fixed-length sensor packets, lookup tables, matrix dimensions.
 
-### `std::deque<T>` — double-ended queue
+### `std::deque<T>`: double-ended queue
 
 Like `vector`, but also fast to add or remove at the **front**.
 
@@ -72,12 +72,12 @@ Like `vector`, but also fast to add or remove at the **front**.
 
 std::deque<int> buffer;
 buffer.push_back(1);     // add at the back
-buffer.push_front(0);    // add at the front — fast
+buffer.push_front(0);    // add at the front, fast
 ```
 
 The cost is that elements are not in one contiguous block, so it's slightly less cache-friendly than a vector. **Use when** you need fast inserts at both ends.
 
-### `std::list<T>` — doubly linked list
+### `std::list<T>`: doubly linked list
 
 Each element holds pointers to the next and previous. Insertions and deletions anywhere in the list are O(1) — but you also lose O(1) index access and most of the cache-friendliness of `vector`.
 
@@ -87,7 +87,7 @@ Each element holds pointers to the next and previous. Insertions and deletions a
 std::list<int> jobs;
 jobs.push_back(1);
 jobs.push_front(0);
-// jobs[2] does NOT work — no index access
+// jobs[2] does NOT work, no index access
 ```
 
 In practice, `std::list` is rarely the right choice. Modern hardware loves contiguous memory; the constant-factor cost of pointer-chasing through a linked list often outweighs the algorithmic advantage. **Use only when** you specifically need to splice items between lists, or remove from the middle while holding an iterator to the item.
@@ -98,7 +98,7 @@ In practice, `std::list` is rarely the right choice. Modern hardware loves conti
 
 Containers that store key-value pairs (or just keys), with fast lookup by key.
 
-### `std::map<K, V>` — sorted key-value store
+### `std::map<K, V>`: sorted key-value store
 
 Keys are kept sorted. Lookup, insertion, and deletion are O(log n).
 
@@ -119,7 +119,7 @@ for (const auto& [name, offset] : sensorOffsets) {
 
 **Use when** you need fast key lookup *and* you want to iterate in sorted order, *or* you want to do range queries on keys.
 
-### `std::unordered_map<K, V>` — hash-based key-value store
+### `std::unordered_map<K, V>`: hash-based key-value store
 
 Same interface as `std::map`, but unordered. Backed by a hash table, so lookups are O(1) on average.
 
@@ -143,7 +143,7 @@ users[2] = "bob";
 
 ### `std::set` and `std::unordered_set`
 
-Same as the maps, but storing only keys — no values. Useful for "have I seen this?" and de-duplicating data.
+Same as the maps, but storing only keys (no values). Useful for "have I seen this?" and de-duplicating data.
 
 ```cpp
 #include <unordered_set>
@@ -162,8 +162,8 @@ Three convenience wrappers built on top of other containers, exposing only the o
 
 | Adapter | Behaviour |
 |---------|-----------|
-| `std::stack<T>` | LIFO (last in, first out) — push, pop, top |
-| `std::queue<T>` | FIFO (first in, first out) — push, pop, front |
+| `std::stack<T>` | LIFO (last in, first out): push, pop, top |
+| `std::queue<T>` | FIFO (first in, first out): push, pop, front |
 | `std::priority_queue<T>` | Always pops the largest element |
 
 ```cpp
@@ -181,7 +181,7 @@ These are convenient when the algorithm you are implementing genuinely needs a s
 
 ---
 
-## Choosing — a decision table
+## Choosing: a decision table
 
 | You need to… | Use |
 |--------------|-----|
@@ -223,6 +223,6 @@ Implementing these from scratch is a fine learning exercise, but for production 
 
 - The standard library covers every basic data structure you need this semester.
 - `std::vector` is your default sequence; `std::unordered_map` is your default lookup table.
-- Linked lists exist but are usually not what you want — `std::vector` is cache-friendlier.
+- Linked lists exist but are usually not what you want; `std::vector` is cache-friendlier.
 - Trees and graphs are not in the standard library; build them out of `std::unique_ptr` and `std::vector`.
-- Pick a container by asking how you will add, find, and order the elements — not by which one sounds clever.
+- Pick a container by asking how you will add, find, and order the elements, not which one sounds clever.

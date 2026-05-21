@@ -1,6 +1,6 @@
 # Move Semantics
 
-Some operations in C++ involve transferring ownership of data from one object to another. **Move semantics** — introduced in C++11 — let you do this *without copying*, which is often dramatically faster.
+Some operations in C++ involve transferring ownership of data from one object to another. **Move semantics**, introduced in C++11, let you do this *without copying*, which is often dramatically faster.
 
 To see why this matters, you first have to understand what "copying" actually costs.
 
@@ -20,7 +20,7 @@ What is *inside* a `std::string`? Three things:
 - a `size` (how many characters are in use),
 - a `capacity` (how many characters the buffer can hold).
 
-The string object itself is small — typically 24 or 32 bytes on a desktop platform. The 10 MB of actual text lives on the heap.
+The string object itself is small, typically 24 or 32 bytes on a desktop platform. The 10 MB of actual text lives on the heap.
 
 Now copy the string:
 
@@ -40,7 +40,7 @@ For 10 MB this is slow. For a `std::vector<Motor>` holding a thousand motors, yo
 
 ## What move does instead
 
-A **move** transfers ownership of the underlying resource — without copying it.
+A **move** transfers ownership of the underlying resource, without copying it.
 
 ```cpp
 std::string log = readEntireFile("server.log");
@@ -54,7 +54,7 @@ Now C++ does this:
 
 That is it. No 10 MB allocation, no `memcpy`, no thousand copy constructors. Three pointer-sized writes, regardless of the size of the data.
 
-After the move, `copy` owns the 10 MB and `log` is in a **valid but unspecified state** — usually empty. You may assign to it or destroy it, but you should not assume any particular contents.
+After the move, `copy` owns the 10 MB and `log` is in a **valid but unspecified state** (usually empty). You may assign to it or destroy it, but you should not assume any particular contents.
 
 ---
 
@@ -70,7 +70,7 @@ std::vector<int> readSamples() {
     for (int i = 0; i < 1000; ++i) {
         samples.push_back(i);
     }
-    return samples;     // moved (or even better — see RVO below)
+    return samples;     // moved (or even better, see RVO below)
 }
 
 std::vector<int> data = readSamples();   // no copy, no move call needed
@@ -81,10 +81,10 @@ std::vector<int> data = readSamples();   // no copy, no move call needed
 ```cpp
 std::vector<std::string> names;
 names.push_back(std::string("Alice"));   // the temporary string is moved in
-names.push_back("Bob");                  // same — the temporary is moved
+names.push_back("Bob");                  // same, the temporary is moved
 ```
 
-The compiler can see that the source value will not be used afterwards, so it moves rather than copies. In modern C++ this happens by default, and the language-level optimisation called **Return Value Optimisation (RVO)** often eliminates even the move — the function builds the return value directly in the caller's variable.
+The compiler can see that the source value will not be used afterwards, so it moves rather than copies. In modern C++ this happens by default, and the language-level optimisation called **Return Value Optimisation (RVO)** often eliminates even the move: the function builds the return value directly in the caller's variable.
 
 > **Do not write `return std::move(samples);`** on a local variable. It disables RVO and is actually slower than just `return samples;`.
 
@@ -104,7 +104,7 @@ private:
 };
 ```
 
-The parameter `filename` is a named local variable, and the compiler will not move it for you automatically. Without `std::move`, the member is *copy-constructed* from it — a needless allocation. With `std::move`, the member adopts the parameter's storage.
+The parameter `filename` is a named local variable, and the compiler will not move it for you automatically. Without `std::move`, the member is *copy-constructed* from it (a needless allocation). With `std::move`, the member adopts the parameter's storage.
 
 Another common case: transferring ownership of a `unique_ptr`.
 
@@ -114,7 +114,7 @@ sim.installMotor(std::move(motor));
 // motor is now empty; sim owns the Motor
 ```
 
-`unique_ptr` cannot be copied — copying would create a second owner — so `std::move` is the *only* way to hand one over.
+`unique_ptr` cannot be copied (copying would create a second owner), so `std::move` is the *only* way to hand one over.
 
 ---
 
@@ -122,19 +122,19 @@ sim.installMotor(std::move(motor));
 
 When you copy an object, the compiler calls its **copy constructor**. When you move one, it calls its **move constructor**. For standard library types (`std::string`, `std::vector`, `std::unique_ptr`, `std::map`, etc.) both are already implemented correctly.
 
-If you write your own class and follow the [Rule of Zero](memory.md#the-rule-of-zero) — letting your members manage themselves — the compiler also generates a correct move constructor for free. You almost never have to write one by hand.
+If you write your own class and follow the [Rule of Zero](memory.md#the-rule-of-zero), letting your members manage themselves, the compiler also generates a correct move constructor for free. You almost never have to write one by hand.
 
 ---
 
 ## A note on the moved-from object
 
-After `std::move(x)`, `x` is still a valid object — you can destroy it, you can assign a new value to it — but you should **not** assume anything about its current value.
+After `std::move(x)`, `x` is still a valid object. You can destroy it; you can assign a new value to it. But you should **not** assume anything about its current value.
 
 ```cpp
 std::string a = "Hello";
 std::string b = std::move(a);
 
-std::cout << a << "\n";   // legal — but the result is unspecified
+std::cout << a << "\n";   // legal, but the result is unspecified
 a = "Goodbye";            // legal and well-defined
 ```
 
@@ -144,10 +144,10 @@ A simple rule of thumb: treat a moved-from variable as if it has been freshly de
 
 ## Summary
 
-- A **copy** duplicates the underlying data — potentially expensive.
-- A **move** transfers ownership of the underlying data — cheap (a few pointer writes).
+- A **copy** duplicates the underlying data; potentially expensive.
+- A **move** transfers ownership of the underlying data; cheap (a few pointer writes).
 - The compiler inserts moves automatically for returns and temporaries.
 - Write `std::move` yourself when you have a named variable whose contents you want to hand off.
-- Do **not** `std::move` a return value of a local variable — it disables RVO.
-- Use moves when transferring `unique_ptr`s — they cannot be copied.
+- Do **not** `std::move` a return value of a local variable; it disables RVO.
+- Use moves when transferring `unique_ptr`s; they cannot be copied.
 - A moved-from object is valid but unspecified; assign to it or destroy it.

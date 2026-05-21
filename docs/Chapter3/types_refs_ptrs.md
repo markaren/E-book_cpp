@@ -51,7 +51,7 @@ void printVector(const std::vector<double>& v) {
     for (double x : v) {
         std::cout << x << "\n";
     }
-    // v.push_back(0.0);   // compile error — const
+    // v.push_back(0.0);   // compile error, const
 }
 ```
 
@@ -59,7 +59,7 @@ This is the standard idiom for passing large objects without copying them:
 
 ```cpp
 std::vector<double> data = readSensorBatch();
-printVector(data);   // no copy — printVector sees the original via const&
+printVector(data);   // no copy, printVector sees the original via const&
 ```
 
 Without `const&`, `printVector` would receive a 10 MB copy every call. With it, the call costs one pointer's worth of work.
@@ -73,25 +73,25 @@ A **pointer** is a variable that holds an *address*. The `*` operator looks thro
 ```cpp
 int x = 7;
 int* p = &x;     // p holds the address of x
-*p = 42;         // writes through p — x is now 42
+*p = 42;         // writes through p, x is now 42
 ```
 
 | Symbol | Meaning |
 |--------|---------|
-| `int*`  | "pointer to int" — the type of `p` |
-| `&x`    | "address of x" — produces a pointer |
-| `*p`    | "what `p` points to" — dereference |
+| `int*`  | "pointer to int"; the type of `p` |
+| `&x`    | "address of x"; produces a pointer |
+| `*p`    | "what `p` points to"; dereference  |
 
 Pointers differ from references in three important ways:
 
-- A pointer can be `nullptr` — pointing to nothing.
+- A pointer can be `nullptr`, meaning it points to nothing.
 - A pointer can be reassigned to point elsewhere.
 - A pointer can be dangerous: dereferencing a null or invalid pointer is undefined behaviour.
 
 ```cpp
 int* p = nullptr;   // valid pointer, points to nothing
 if (p != nullptr) {
-    *p = 5;         // safe — checked first
+    *p = 5;         // safe, checked first
 }
 ```
 
@@ -108,21 +108,21 @@ The rule: a reference or pointer is only valid as long as what it refers to is s
 ```cpp
 int& createIntRef() {
     int value = 1;
-    return value;     // bad — `value` is destroyed when the function returns
+    return value;     // bad, `value` is destroyed when the function returns
 }
 
 int* createIntPtr() {
     int value = 1;
-    return &value;    // bad — same problem
+    return &value;    // bad, same problem
 }
 
 int main() {
-    int& bad1 = createIntRef();    // dangling reference — undefined behaviour
-    int* bad2 = createIntPtr();    // dangling pointer  — undefined behaviour
+    int& bad1 = createIntRef();    // dangling reference, undefined behaviour
+    int* bad2 = createIntPtr();    // dangling pointer , undefined behaviour
 }
 ```
 
-Both functions return a handle to memory that no longer belongs to anyone. Reading from `bad1` or `bad2` is undefined behaviour. Modern compilers warn about exactly this pattern — pay attention to the warnings.
+Both functions return a handle to memory that no longer belongs to anyone. Reading from `bad1` or `bad2` is undefined behaviour. Modern compilers warn about exactly this pattern; pay attention to the warnings.
 
 The fix: return by value (you get your own copy) or pass a reference *into* the function so the caller controls the lifetime.
 
@@ -133,7 +133,7 @@ Returning a reference or pointer to a class's private data also breaks encapsula
 ```cpp
 class Demo {
 public:
-    int  getValue() const   { return value_; }   // safe — returns a copy
+    int  getValue() const   { return value_; }   // safe, returns a copy
     int& getValueRef()      { return value_; }   // hands out write access
     int* getValuePtr()      { return &value_; }  // hands out write access
 
@@ -143,7 +143,7 @@ private:
 
 Demo obj;
 int& ref = obj.getValueRef();
-ref = 42;        // obj's private data is now 42 — invariants bypassed
+ref = 42;        // obj's private data is now 42, invariants bypassed
 ```
 
 If you must expose a member by reference, return `const T&` to keep it read-only. Otherwise external code can change your private state without going through the methods that enforce your invariants.
@@ -167,7 +167,7 @@ For data members of a class, the rules of thumb are similar:
 
 | Situation | Use |
 |-----------|-----|
-| Class owns the data | Plain value member — `std::vector<int> data_` |
+| Class owns the data | Plain value member (e.g. `std::vector<int> data_`) |
 | Class observes data owned by something else | A reference or raw pointer — but think carefully about who keeps it alive |
 | Class shares ownership with others | `std::shared_ptr<T>` (see [Memory](../Chapter4/memory.md)) |
 

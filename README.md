@@ -16,7 +16,7 @@ The book will be updated regularly throughout the semester. Make sure to bookmar
 |  35    | <ul><li>[CMake introduction](docs/Chapter2/cmake_intro.md)</li><li>[Version Control & Git](docs/Chapter2/version_control.md)</li><li>[PlatformIO](docs/Chapter2/platformio.md)</li> </ul>  |
 |  36    | <ul><li>[C++ Standard Library](docs/Chapter2/standard_library.md)</li><li>[Data structures](docs/Chapter2/data_structures.md)</li> </ul> |
 |  37,38    | <ul><li>[Classes](docs/Chapter3/classes.md)</li> <ul><li>[RAII](docs/Chapter3/raii.md)</li></ul> <li>[Values, References & Pointers](docs/Chapter3/types_refs_ptrs.md)</li> <li>[IO & Streams](docs/Chapter3/io_streams.md)</li></ul> |
-|  39,40    | <ul> <li>[Memory managment](docs/Chapter4/memory.md)</li> <li>[Move semantics](docs/Chapter4/move.md)</li> </ul> |
+|  39,40    | <ul> <li>[Memory Management](docs/Chapter4/memory.md)</li> <li>[Move semantics](docs/Chapter4/move.md)</li> </ul> |
 |  41,42    | <ul> <li>[Polymorphism](docs/Chapter4/polymorphism.md)</li><li> [Templates](docs/Chapter4/templates.md) </li> </ul> |
 |  43    | <ul> <li>[Separation of Concerns](docs/Chapter5/soc.md)</li><li> [Observer Pattern](docs/Chapter5/observer.md) </li><li> [Testing](docs/Chapter5/testing.md) </li><li> [Error Handling](docs/Chapter5/error_handling.md) </li> </ul> |
 

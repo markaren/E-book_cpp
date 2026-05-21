@@ -94,6 +94,8 @@ We will not write a class today. Chapter 3 covers them properly. For now, keep t
 
 Read each chapter, then write code. Type the examples by hand rather than copy-pasting — the typos you make are how you learn what the compiler complains about. When you get an error you do not understand, see the [Reading Compiler Errors](../compiler_errors.md) reference, then search the exact error text — almost every compiler error has been asked about on Stack Overflow.
 
+AI assistants will happily write C++ for you. Read [Using AI for Coding](../using_ai.md) before relying on them — the short version is that they are excellent tools and treacherous teachers, and using them well requires a few specific habits.
+
 When this book gives a recommendation, it is the one you should follow unless you have a specific reason not to. C++ has many ways to do most things, and a beginner who tries to learn *all* of them ends up confused. Learn the one good way first.
 
 Up next: [Basic Structure](basic_structure.md) breaks down a complete C++ program piece by piece. If you have not yet installed CLion, see [Getting Started](../getting_started.md) first.

@@ -24,8 +24,10 @@ COMPILER_OPTIONS = "-std=c++17 -O0 -Wall -Wextra -pedantic"
 
 
 # Match a fenced cpp block, with or without trailing attributes on the opener.
+# IMPORTANT: the attributes match uses [ \t]+ rather than \s+ — \s matches \n,
+# which would greedily eat the first source line as part of the "attributes".
 _CODE_BLOCK_RE = re.compile(
-    r"```cpp(?:\s+[^\n]*)?\n(.*?)\n```",
+    r"```cpp(?:[ \t]+[^\n]*)?\n(.*?)\n```",
     re.DOTALL,
 )
 

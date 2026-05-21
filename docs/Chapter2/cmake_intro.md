@@ -176,7 +176,7 @@ my_project/
 
 You do not need all of these on day one. Start with one `main.cpp` and one `CMakeLists.txt`. Split into `src/` and `include/` when you have more than four or five files. Add `tests/` when you start writing tests. The point is to grow into the structure, not to set it all up before writing any code.
 
-For a more elaborate convention used in larger industry projects, see [the Pitchfork Layout](https://api.csswg.org/bikeshed/?force=1&url=https://raw.githubusercontent.com/vector-of-bool/pitchfork/develop/data/spec.bs).
+For a more elaborate convention used in larger industry projects, see [the Pitchfork Layout](https://joholl.github.io/pitchfork-website/).
 
 ---
 

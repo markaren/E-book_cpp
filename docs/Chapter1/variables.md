@@ -1,172 +1,130 @@
 # Variables and Basic Types
 
-In C++, variables are essential components that allow you to store and manipulate data. 
-They act like containers for holding different types of information, such as numbers, text, or even complex structures. 
-Understanding variables is fundamental for writing effective and dynamic programs.
-C++ is a strongly, or statically, typed language meaning all variables have a specific type. 
-Once a variable has been declared, the type cannot be changed unlike e.g., Python.
+A **variable** is a named piece of memory that holds a value. When you write `int age = 25;`, you tell the compiler: "set aside enough memory to hold an integer, call it `age`, and store `25` in it."
 
-## Basic Data Types:
+In C++ every variable has a **type** that is fixed for its entire lifetime. You declare the type up front; you cannot later store a string in a variable declared `int`. This is what makes C++ a **statically typed** language.
 
-Variables have data types that define the kind of value they can hold. C++ inherits a number of basic data types (known as primitives) from C, these include but are not limited to:
+---
 
-|Type|Comment|
-|----|-------|
-| char | Single characters |
-| bool | Boolean values (true or false) |
-| int | Integers (whole numbers) |
-| float | Floating-point numbers (decimal numbers) |
-| double | Floating-point numbers with higher accuracy |
+## Built-in types
 
-For a more elaborate overview, see cppreferences' entry on [Fundamental types](https://en.cppreference.com/w/cpp/language/types)
+The types you will use day-to-day:
 
+| Type     | Holds                                | Typical size | Example value |
+|----------|--------------------------------------|--------------|---------------|
+| `bool`   | true or false                        | 1 byte       | `true`        |
+| `char`   | a single character                   | 1 byte       | `'A'`         |
+| `int`    | whole numbers                        | 4 bytes      | `42`          |
+| `double` | decimal numbers (floating point)     | 8 bytes      | `3.14159`     |
+| `float`  | decimal numbers, less precision      | 4 bytes      | `3.14f`       |
 
-> Using the `class` or `struct` keyword in C++ you can define your own custom types.
+Prefer `int` for whole numbers and `double` for decimal numbers unless you have a specific reason to do otherwise (`float` for memory-constrained embedded code, for instance). Sizes are typical for desktop platforms — they can differ on microcontrollers.
 
+The standard library adds a few more types you will use constantly. They are not "built in" but they are everywhere:
 
-## What is a Variable?
+| Type          | Holds                       | Header        |
+|---------------|-----------------------------|---------------|
+| `std::string` | text                        | `<string>`    |
+| `std::vector` | a resizable list of values  | `<vector>`    |
 
-Imagine a box where you can put something and give it a name. In programming, a variable is like that box. 
-It's a named storage location in your computer's memory that holds a value. 
-This value can be a number, a piece of text, or something more complex.
+For a complete reference, see [cppreference's entry on Fundamental types](https://en.cppreference.com/w/cpp/language/types).
 
-### Declaring a Variable:
+---
 
-To use a variable, you need to declare it first. This means giving it a name and specifying its type (what kind of data it will hold). For example:
+## Declaring and initialising
 
-```cpp
-int age;  // Declare an integer variable named 'age'
-double price;  // Declare a double (floating-point) variable named 'price'
-```
-
-### Assigning a Value:
-
-After declaring a variable, you can assign a value to it using the assignment operator `=`. 
-The value you assign must match the variable's type:
+You can declare a variable and assign to it in one step (recommended) or split it into two:
 
 ```cpp
-age = 25;  // Assign the value 25 to the 'age' variable
-price = 19.99;  // Assign the value 19.99 to the 'price' variable
+int quantity = 10;       // declare and initialise — preferred
+double price{5.99};      // braces also work, and are stricter about conversions
+
+int count;               // declare only — `count` now holds a garbage value
+count = 5;               // assign later
 ```
 
-### Initializing a Variable:
-
-You can also declare and assign a value in a single step, known as initialization:
+**Always initialise variables when you declare them.** Reading from an uninitialised variable is **undefined behaviour** — the program might print garbage, might crash, might appear to work fine and then break on a different compiler. The compiler will not warn you in every case.
 
 ```cpp
-int quantity = 10;  // Declare and initialize the 'quantity' variable with the value 10 using direct initialization with assignment.
-double sum{5.0};   // Declare and initialize the 'sum' variable with the value 5.0 using uniform initialization.
+int x;                       // uninitialised
+std::cout << x * 2 << "\n";  // undefined behaviour — never do this
 ```
 
-Initializing variables when you declare them is a good programming practice with several benefits.
-Let's explore why you should make it a habit to initialize variables right from the start:
+Two extra reasons to initialise eagerly:
 
-1. __Prevents Unintended Values:__
-When you declare a variable without initializing it, it contains whatever was previously stored in that memory location.
-This could be garbage values, remnants of previous computations, or unpredictable data.
-Initializing variables ensures that they start with a known, meaningful value.
-3. __Avoids Bugs and Errors:__
-Using variables without initializing them can lead to bugs that are difficult to identify and fix.
-Unexpected behavior can occur when uninitialized variables interact with other parts of your code.
-Initializing variables from the beginning reduces the chances of introducing subtle errors.
-3. __Enhances Readability and Intent:__
-When you initialize variables at the point of declaration, you make your code more self-explanatory.
-Anyone reading your code can immediately understand the initial value and the intended purpose of the variable.
-This improves code readability and aids collaboration.
-4. __Promotes Good Habits:__
-Initializing variables encourages good coding habits. It forces you to think about the initial state and value that your variable should have.
-This practice can extend to more complex scenarios where initializing variables becomes essential for proper program behavior.
-5. __Makes Debugging Easier:__
-If you encounter unexpected behavior in your program, initialized variables help narrow down the scope of the issue.
-You can rule out uninitialized variables as a potential cause of bugs, saving time during debugging.
-6. __Prevents Undefined Behavior:__
-In C++, using uninitialized variables can lead to undefined behavior.
-The C++ standard doesn't define the behavior of your program when you read from an uninitialized variable.
-This means your program might work differently on different compilers or platforms.
+- The initial value documents what the variable is *for*. `int retries = 0;` tells the reader something `int retries;` does not.
+- If you do not have a sensible initial value yet, that is usually a sign the variable should be declared later — closer to where it is actually used.
 
-#### Example
+### Brace initialisation
+
+You will see two ways to initialise:
 
 ```cpp
-int main() {
-    int age;      // Not initialized
-    int salary = 0; // Initialized
-
-    // Using uninitialized variable 'age'
-    int doubleAge = age * 2; // Undefined behavior
-
-    // Using initialized variable 'salary'
-    int doubleSalary = salary * 2; // Safe and predictable
-
-    return 0;
-}
+int a = 10;   // copy initialisation
+int b{10};    // brace (uniform) initialisation
 ```
 
-### Using Variables:
-
-Once you've declared and assigned a value to a variable, you can use it in your code. For example:
+Both work. Brace initialisation is stricter: it refuses **narrowing conversions** that silently lose information.
 
 ```cpp
-int quantity = 3;
-//...
-int total = quantity * 2;  // Use the 'quantity' variable in an expression
+int    a = 3.7;   // compiles — silently truncates to 3
+int    b{3.7};    // compile error — narrowing from double to int
 ```
 
-### Variable Names:
+For numeric types it is up to you. For class types (which you will meet in Chapter 3) brace initialisation often does the right thing more reliably.
 
-Variable names can consist of letters, digits, and underscores. They must start with a letter or an underscore. 
-Names are case-sensitive (e.g., `age` and `Age` are different variables).
+---
 
-### Scope:
+## Type inference with `auto`
 
-Scope defines the area of your code where a variable is visible and can be accessed. 
-Each pair of curly braces `{}` marks a new scope. Variables declared within a scope 
-are usually only accessible within that scope.
-
-#### Local Scope:
-
-Variables declared inside a function are local to that function's scope. 
-They can't be accessed from outside the function. This is great for keeping 
-variables separate and preventing unintended interference.
+Sometimes the type is obvious from the right-hand side and writing it out is just noise:
 
 ```cpp
-void printMessage() {
-    std::string message = "Hello!"; // Local variable within the function
-    std::cout << message << std::endl;
-} // 'message' goes out of scope here and is no longer accessible
+std::vector<int> numbers = {1, 2, 3, 4, 5};
+
+// Without auto:
+std::vector<int>::iterator it = numbers.begin();
+
+// With auto — the compiler figures out the type from numbers.begin():
+auto it = numbers.begin();
 ```
 
-#### Global Scope:
+`auto` lets the compiler deduce the type for you. It is not "dynamic typing" — the type is still fixed and checked at compile time. Use `auto` when the type is verbose or when the exact type does not matter to the reader; spell it out when the explicit type helps clarity.
 
-Variables declared outside any function, at the top of your code, have global scope. 
-They can be accessed from anywhere in your program. However, it's recommended to limit global variables 
-as they can make code harder to understand and maintain.
+---
+
+## Naming variables
+
+A name can contain letters, digits, and underscores, and must start with a letter or underscore. Names are case-sensitive: `count` and `Count` are different variables.
+
+Two conventions used throughout this book:
+
+- Local variables and function parameters: `lowerCamelCase` — `maxSpeed`, `sensorIndex`.
+- Constants and macros: `UPPER_SNAKE_CASE` — `MAX_RETRIES`.
+
+Pick descriptive names. `int x` is fine for a loop counter; `int maxAllowedTemperature` is far better than `int t` if that is what the variable means.
+
+---
+
+## Constants
+
+If a value should never change after it is set, mark it `const`:
 
 ```cpp
-#include <iostream>
-
-int globalVariable = 100; // Global variable accessible everywhere
-
-void demoScopes() {
-    int localVariable = 50; // Local variable only accessible within this function
-
-    std::cout << "Global variable: " << globalVariable << std::endl;
-    std::cout << "Local variable: " << localVariable << std::endl;
-}
-
-int main() {
-    demoScopes();
-    // Uncommenting the next line will cause an error:
-    // std::cout << "Local variable: " << localVariable << std::endl;
-
-    return 0;
-}
+const int maxRetries = 5;
+maxRetries = 10; // compile error — cannot assign to const
 ```
+
+The compiler enforces this, which catches a class of bugs and also documents intent: "this is a value, not a setting."
+
+---
 
 ## Summary
 
-In a nutshell, variables in C++ are like named storage boxes for holding different types of information. 
-Variables store data, and scope determines where that data is accessible. 
-By understanding how to declare, initialize, and use variables in various scopes, 
-you'll be able to build dynamic and organized programs. 
-Keeping variables in appropriate scopes contributes to code clarity, prevents conflicts, 
-and sets the foundation for creating reliable software.
+- Every variable has a type, fixed at declaration.
+- Always initialise — uninitialised reads are undefined behaviour.
+- Prefer `int` and `double` for arithmetic. Use `bool` for true/false. Use `std::string` for text.
+- Use `const` for values that should not change.
+- Pick descriptive names.
+
+Scope — the region in which a variable exists — was covered in [Basic Structure](basic_structure.md). The short version: variables declared in a block disappear when the block ends.

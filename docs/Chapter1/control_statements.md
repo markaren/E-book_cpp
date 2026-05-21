@@ -1,251 +1,212 @@
+# Control Statements
 
-# Control statements
+By default, a program runs one statement after another from top to bottom. **Control statements** let you change that flow: take one path or another based on a condition, repeat a block of code, or stop a loop early.
 
-Control statements are essential tools in programming that enable you to control the flow of execution within your code. 
-They allow you to make decisions, repeat actions, and create logical structures in your programs. 
-In C++, there are three main types of control statements: 
-[conditional statements](#conditional-statements), [loop statements](#loop-statements), and [branching statements](#branching-statements).
+Three families:
 
-## Conditional statements
+| Family | Examples | Purpose |
+|--------|----------|---------|
+| Conditional | `if`, `else`, `else if`, `switch` | Choose between paths |
+| Loop        | `while`, `do-while`, `for`, range-based `for` | Repeat code |
+| Jump        | `break`, `continue`, `return` | Exit a block or function early |
 
-Conditional statements in C++ are tools that allow your programs to make decisions and 
-execute different blocks of code based on certain conditions. 
-They let your program choose between alternative paths, enabling you to create dynamic and responsive applications. 
-Here's a concise summary of the main conditional statements you'll encounter in C++:
+---
 
-### `if` statement
-
-The `if` statement is used to execute a block of code if a specified condition is true. It's the simplest form of decision-making in C++.
+## `if` and `else`
 
 ```cpp
-if (condition) {
-    // Code to be executed if condition is true
+if (temperature > 80) {
+    std::cout << "Cooling down\n";
 }
 ```
 
-### `if-else` statement
+The condition in parentheses must produce a `bool` (or something convertible to one). If it is true, the block runs; otherwise it is skipped.
 
-The `if-else` statement adds an alternative block of code to be executed when the condition is false.
+To handle the other case:
 
 ```cpp
-if (condition) {
-    // Code to be executed if condition is true
+if (temperature > 80) {
+    std::cout << "Cooling down\n";
 } else {
-    // Code to be executed if condition is false
+    std::cout << "Normal\n";
 }
 ```
 
-The shorthand if-else statement in C++ is known as the ternary operator (`?:`). 
-It provides a compact way to write a simple conditional expression in a single line. The syntax is:
-
-```
-condition ? expression_if_true : expression_if_false;
-```
-
-For example:
+For more than two outcomes, chain with `else if`:
 
 ```cpp
-int num = 10;
-std::string result = (num > 5) ? "Greater than 5" : "Not greater than 5";
-```
-
-In this example, if num is greater than 5, the result will be set to "Greater than 5"; otherwise, 
-it will be set to "Not greater than 5".
-
-
-### `else-if` statement
-
-The `else-if` statement allows you to check multiple conditions sequentially. 
-It's useful when you have more than two possible outcomes.
-
-```cpp
-if (condition1) {
-    // Code to be executed if condition1 is true
-} else if (condition2) {
-    // Code to be executed if condition2 is true
+if (temperature > 80) {
+    std::cout << "Too hot\n";
+} else if (temperature < 10) {
+    std::cout << "Too cold\n";
 } else {
-    // Code to be executed if none of the conditions are true
+    std::cout << "Fine\n";
 }
 ```
 
-### `switch` statement
+Only the first matching branch runs. Once a branch is taken, the rest are skipped.
 
-The `switch` statement is used for multiway branching. It's often used when you have a specific value to compare against.
+> **Use braces even for single-statement bodies.** It is one extra line and avoids a surprising class of bugs when someone adds a second statement later.
+
+---
+
+## `switch`
+
+When you are comparing one value against several constants, `switch` is clearer than a long `else if` chain:
 
 ```cpp
-switch (variable) {
-    case value1:
-        // Code to be executed if variable == value1
-        break;
-    case value2:
-        // Code to be executed if variable == value2
-        break;
-    // ... more cases ...
-    default:
-        // Code to be executed if none of the cases match
+switch (gear) {
+    case 1: std::cout << "First\n";  break;
+    case 2: std::cout << "Second\n"; break;
+    case 3: std::cout << "Third\n";  break;
+    default: std::cout << "Unknown\n";
 }
 ```
 
-In C++, when working with the switch statement, it's a good practice to use braces `{}` 
-to define the scope of each case's code block. 
-This helps prevent unintended behavior and makes your code more robust. 
-Let's modify the switch example to demonstrate the importance of using braces:
+Two things to know:
+
+1. **Always include `break`** at the end of each case unless you specifically want execution to fall through to the next case. Forgetting `break` is a classic bug — execution silently continues into the next case.
+2. `switch` only works with integer-like values (`int`, `char`, enumerations). It cannot switch on a `std::string` or a `double`.
+
+If a case needs to declare its own local variables, wrap its body in braces:
 
 ```cpp
-switch (variable) {
-    case value1: {
-          // Code to be executed if variable == value1
-          break;
-    }
-    case value2: {
-          // Code to be executed if variable == value2
-          break;
-    }
-    // ... more cases ...
-    default: {
-          // Code to be executed if none of the cases match
-          break;
-    }
+case 1: {
+    int local = 5;
+    // ...
+    break;
 }
 ```
 
-This allows you to declare a variable with the same name in each of the blocks. 
+---
 
-### Summary
+## `while`
 
-- Conditional statements enable your program to respond to changing conditions and make decisions.
-- `if`, `if else`, and `else if` statements allow you to control program flow based on whether conditions are true or false.
-- The switch statement provides a way to compare a variable against multiple possible values and execute code accordingly.
-- Be mindful of using curly braces `{}` to define the scope of code blocks associated with conditional statements.
-- Proper indentation and clear formatting make your code more readable and easier to understand.
-
-Understanding and using conditional statements effectively is crucial for building flexible and interactive programs. 
-As you practice, you'll become more adept at creating logical and responsive code that can handle various scenarios.
-
-## Loop statements
-
-Loop statements in C++ provide you with the power to execute a block of code repeatedly, making your programs more efficient and capable of automating tasks. 
-Here's a concise summary of the main loop statements you'll encounter in C++:
-
-### `while` loop
-
-The `while` loop repeats a block of code as long as a specified condition remains true. 
-It's ideal for situations where you want to repeat an action while a condition is met.
+Repeat a block as long as a condition is true:
 
 ```cpp
-while (condition) {
-    // Code to be repeated
+int countdown = 5;
+while (countdown > 0) {
+    std::cout << countdown << "...\n";
+    --countdown;
+}
+std::cout << "Go!\n";
+```
+
+The condition is checked *before* each iteration. If it is false at the start, the body runs zero times.
+
+The number-one bug with `while` loops is forgetting to make progress toward the exit condition:
+
+```cpp
+int i = 0;
+while (i < 10) {
+    std::cout << i << "\n";
+    // forgot ++i — infinite loop
 }
 ```
-### `do-while` loop
 
-The `do-while` loop is similar to the while loop, but it ensures that the code block is executed at least once before checking the condition. 
-It's useful when you want to ensure something happens before checking if it should continue happening.
+If your program hangs, this is the first place to look.
+
+---
+
+## `do-while`
+
+Like `while`, but the condition is checked *after* the first iteration. The body therefore always runs at least once:
 
 ```cpp
+int input;
 do {
-    // Code to be repeated
-} while (condition);
+    std::cout << "Enter a positive number: ";
+    std::cin >> input;
+} while (input <= 0);
 ```
 
-### `for` loop
+Use this when the work must happen before you know whether to continue. Common pattern: "read input until the user provides something valid."
 
-The for loop provides a structured way to repeat code a specific number of times or over a range of values. 
-It's commonly used when you know the exact number of iterations needed.
+---
 
-```cpp
-for (initialization; condition; update) {
-    // Code to repeat
-}
-```
+## `for`
 
-- __Initialization:__ This is where you set up your loop, usually by initializing a counter variable.
-- __Condition:__ The loop continues as long as this condition is true.
-- __Update:__ After each iteration, the update statement is executed, usually incrementing or decrementing the counter.
-  
-#### Example: Printing numbers from 1 to 5 using a for loop.
-
-```cpp
-for (int i = 1; i <= 5; i++) {
-    std::cout << i << " ";
-}
-```
-
-### `for-each` (Range-based for) loop:
-
-The `for-each` loop, also known as the range-based for loop, is used to iterate through each element in a collection, such as an array or a container. 
-It simplifies the process of accessing elements and is great for traversing sequences.
-
-```cpp
-for (data_type element : collection) {
-    // Code to be executed for each element
-}
-```
-
-#### Example: Printing the values of a `std::vector` container:
-
-```cpp
-std::vector<int> v{1, 2, 3};
-for (int value : v) {
-    std::cout << value << " ";
-}
-```
-
-### Summary
-
-- Loop statements help you automate repetitive tasks, iterate through data, and execute code multiple times.
-- Use the while loop for situations where you need to repeat code based on a condition.
-- The do-while loop guarantees the code block runs at least once before checking the condition.
-- The for loop offers a structured way to repeat code with clear initialization, condition, and update steps.
-- The "for each" loop simplifies iterating through collections by directly accessing each element.
-- Be cautious of infinite loops – make sure the loop condition can eventually become false.
-
-## Branching statements
-
-Branching statements in C++ provide you with the ability to control the flow of your program by making decisions and altering the sequence of code execution. 
-These statements enable your program to respond dynamically to different situations. Here's a concise summary of the main branching statements you'll encounter in C++:
-
-### `break` statement
-
-The `break` statement is used to exit from a loop or switch statement prematurely. It allows you to immediately terminate the current loop iteration or switch case and continue executing the code after the loop or switch.
-
-```cpp
-while (condition) {
-    // Code
-    if (some_condition) {
-        break;  // Exit the loop
-    }
-    // More code
-}
-```
-
-### `continue` statement
-
-The `continue` statement is used to skip the rest of the current iteration of a loop and proceed to the next iteration.
-It's often used to avoid executing certain code within an iteration.
+When you know how many times to loop, `for` is the cleanest form:
 
 ```cpp
 for (int i = 0; i < 5; ++i) {
-    if (i == 2) {
-        continue;  // Skip iteration when i is 2
-    }
-    // Code to execute for each iteration
+    std::cout << i << "\n";
 }
+// prints 0, 1, 2, 3, 4
 ```
 
-### `return` statement
+The three parts inside the parentheses are:
 
-The `return` statement is used to exit a function and optionally return a value to the calling code. It immediately stops the function's execution and returns control to the calling context.
+1. **Initialisation** — `int i = 0` — runs once, before the loop starts.
+2. **Condition** — `i < 5` — checked before each iteration. Loop ends when false.
+3. **Update** — `++i` — runs after each iteration.
+
+A `for` loop is just a `while` loop with the parts arranged for visibility. Use it whenever you have a counter.
+
+---
+
+## Range-based `for`
+
+For visiting every element of a container, the range-based `for` is shorter and harder to get wrong than a counter-based `for`:
 
 ```cpp
-int square(int x) {
-    return x * x;  // Return the square of x
+std::vector<int> readings{42, 17, 99, 8};
+
+for (int value : readings) {
+    std::cout << value << "\n";
 }
 ```
 
-### Summary
+If you do not need to modify the elements, prefer `const auto&` to avoid copying:
 
-- Branching statements enable your program to change its behavior based on conditions or to exit from a certain block of code.
-- The break statement is used to exit loops or switch statements prematurely.
-- The continue statement skips the remaining code in the current loop iteration and moves to the next iteration.
-- The return statement exits a function and can return a value to the calling code.
+```cpp
+for (const auto& value : readings) {
+    std::cout << value << "\n";
+}
+```
+
+To modify the elements in place, take a non-const reference:
+
+```cpp
+for (auto& value : readings) {
+    value *= 2;
+}
+```
+
+---
+
+## `break`, `continue`, `return`
+
+These three change the flow inside a loop or function.
+
+```cpp
+for (int i = 0; i < 100; ++i) {
+    if (i == 10) {
+        break;     // exit the loop entirely
+    }
+    if (i % 2 == 0) {
+        continue;  // skip the rest of this iteration, go to the next
+    }
+    std::cout << i << "\n";
+}
+```
+
+- `break` exits the **innermost** loop or `switch`.
+- `continue` skips the rest of the current iteration and moves to the next.
+- `return` exits the function entirely (and optionally returns a value).
+
+---
+
+## Choosing the right tool
+
+| Situation | Use |
+|-----------|-----|
+| Two or three branches based on a condition | `if` / `else if` / `else` |
+| Many branches on one integer-like value | `switch` |
+| Repeat until a condition becomes false | `while` |
+| Loop body must run at least once | `do-while` |
+| Fixed number of iterations with a counter | `for` |
+| Visit every element of a container | range-based `for` |
+| Exit a loop early | `break` |
+| Skip to the next iteration | `continue` |

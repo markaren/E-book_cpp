@@ -1,6 +1,6 @@
 # Strings
 
-Text in C++ is handled by `std::string`. You will use it everywhere, for filenames, sensor IDs, log messages, command parsing, error descriptions. It behaves like any other value type: copying makes a real copy; passing by value is safe but potentially expensive.
+Text in C++ is handled by `std::string`. You will use it everywhere: for filenames, sensor IDs, log messages, command parsing, error descriptions. It behaves like any other value type: copying makes a real copy; passing by value is safe but potentially expensive.
 
 This page is a quick reference for the operations you will reach for most. The full API is on [cppreference's std::string page](https://en.cppreference.com/w/cpp/string/basic_string).
 
@@ -40,7 +40,7 @@ s.front();            // 'r'
 s.back();             // 's'
 ```
 
-`length()` and `size()` are identical, `std::string` carries both names for historical reasons. Use whichever reads better.
+`length()` and `size()` are identical; `std::string` carries both names for historical reasons. Use whichever reads better.
 
 ---
 
@@ -135,7 +135,7 @@ std::string b = std::format("{:>8}", 42);         // "      42" (right-aligned)
 std::string c = std::format("{:#x}", 255);        // "0xff"
 ```
 
-`std::stoi` and friends throw if the input is not a number, wrap them in `try`/`catch` or check the input first if that matters.
+`std::stoi` and friends throw if the input is not a number; wrap them in `try`/`catch` or check the input first if that matters.
 
 ---
 
@@ -158,8 +158,8 @@ The comparison is byte-by-byte. It is case-sensitive (`"Apple" != "apple"`) and 
 
 The C-style "string" is a pointer to a null-terminated array of characters. You will see them in two places:
 
-1. **String literals** in your code, `"hello"` is a `const char*`.
-2. **Old C APIs**, many libraries (especially embedded ones) take `const char*` parameters.
+1. **String literals** in your code. `"hello"` is a `const char*`.
+2. **Old C APIs.** Many libraries (especially embedded ones) take `const char*` parameters.
 
 `std::string` converts to and from these freely:
 

@@ -114,7 +114,7 @@ sim.installMotor(std::move(motor));
 // motor is now empty; sim owns the Motor
 ```
 
-`unique_ptr` cannot be copied, copying would create a second owner, so `std::move` is the *only* way to hand one over.
+`unique_ptr` cannot be copied (copying would create a second owner), so `std::move` is the *only* way to hand one over.
 
 ---
 
@@ -144,10 +144,10 @@ A simple rule of thumb: treat a moved-from variable as if it has been freshly de
 
 ## Summary
 
-- A **copy** duplicates the underlying data, potentially expensive.
-- A **move** transfers ownership of the underlying data, cheap (a few pointer writes).
+- A **copy** duplicates the underlying data; potentially expensive.
+- A **move** transfers ownership of the underlying data; cheap (a few pointer writes).
 - The compiler inserts moves automatically for returns and temporaries.
 - Write `std::move` yourself when you have a named variable whose contents you want to hand off.
-- Do **not** `std::move` a return value of a local variable, it disables RVO.
-- Use moves when transferring `unique_ptr`s, they cannot be copied.
+- Do **not** `std::move` a return value of a local variable; it disables RVO.
+- Use moves when transferring `unique_ptr`s; they cannot be copied.
 - A moved-from object is valid but unspecified; assign to it or destroy it.

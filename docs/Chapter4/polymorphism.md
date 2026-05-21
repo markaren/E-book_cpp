@@ -60,7 +60,7 @@ private:
 };
 ```
 
-Now any code that works against `Logger&` or `std::unique_ptr<Logger>` works with both implementations, and any future implementation you add as well:
+Any code that works against `Logger&` or `std::unique_ptr<Logger>` now works with both implementations, and with any future implementation you add:
 
 ```cpp
 class Simulation {
@@ -92,7 +92,7 @@ int main() {
 }
 ```
 
-`Simulation` knows nothing about files or terminals. To add a `NetworkLogger` later you write the class; that is it. No change to `Simulation`.
+`Simulation` knows nothing about files or terminals. To add a `NetworkLogger` later you write the class. That is it. No change to `Simulation`.
 
 The rest of this chapter explains how every piece of that example works.
 

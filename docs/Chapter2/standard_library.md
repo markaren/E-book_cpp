@@ -4,7 +4,7 @@ The C++ Standard Library is the set of containers, algorithms, and utilities tha
 
 Knowing it well is the difference between writing fluent, idiomatic C++ and reinventing the wheel. The library has been refined for decades; whatever you are thinking of writing, there is a very good chance it is already there.
 
-This chapter is a guided tour of the parts you will use this semester. It is not a reference, see [cppreference.com](https://en.cppreference.com/) for that. The aim here is to know *what exists* so that you can look it up when you need it.
+This chapter is a guided tour of the parts you will use this semester. It is not a reference; for that, see [cppreference.com](https://en.cppreference.com/). The aim here is to know *what exists* so that you can look it up when you need it.
 
 ---
 
@@ -12,15 +12,15 @@ This chapter is a guided tour of the parts you will use this semester. It is not
 
 Everything in the standard library lives in the `std` namespace. You write `std::vector`, not `vector`. The prefix tells readers (and the compiler) that you mean *the* standard library type, not something you wrote yourself.
 
-You can omit the prefix by writing `using namespace std;` at the top of a file, and you should not. In small programs it is harmless; in larger ones it brings every standard-library name into scope and creates name clashes with your own code. Get used to writing `std::` everywhere.
+You can omit the prefix by writing `using namespace std;` at the top of a file. You should not. In small programs it is harmless; in larger ones it brings every standard-library name into scope and creates name clashes with your own code. Get used to writing `std::` everywhere.
 
 ---
 
-## Containers, collections of values
+## Containers: collections of values
 
 A container holds a collection of values. The choice between them depends on what you need to do with them.
 
-### `std::vector<T>`, a resizable array
+### `std::vector<T>`: a resizable array
 
 The container you will use 80% of the time. Elements are stored contiguously in memory, you can grow and shrink it at runtime, and indexed access is constant-time.
 
@@ -47,7 +47,7 @@ for (int value : readings) {
 
 **When to use:** by default, for any "list of things." Reach for something else only if measurement says you need to.
 
-### `std::array<T, N>`, a fixed-size array
+### `std::array<T, N>`: a fixed-size array
 
 A safer replacement for the C-style array. Size is fixed at compile time, so it lives on the stack.
 
@@ -61,7 +61,7 @@ readings[2];        // 99
 
 **When to use:** the number of elements is known at compile time and won't change. Useful for fixed-length sensor data, lookup tables, and matrix dimensions.
 
-### `std::string`, a string of characters
+### `std::string`: a string of characters
 
 Text. Everywhere you would have used `char[]` in C, use `std::string` in C++.
 
@@ -77,7 +77,7 @@ name.find("Smith");          // 6, the index where "Smith" starts
 
 See the [Strings reference page](../strings.md) for a tour of the operations you will reach for most.
 
-### `std::map<K, V>`, a sorted key-value store
+### `std::map<K, V>`: a sorted key-value store
 
 Maps keys to values. Keys are kept sorted, so lookup is O(log n).
 
@@ -94,7 +94,7 @@ for (const auto& [word, count] : wordCount) {
 }
 ```
 
-### `std::unordered_map<K, V>`, a hash-based key-value store
+### `std::unordered_map<K, V>`: a hash-based key-value store
 
 Same interface as `std::map`, but unsorted and faster on average (constant-time lookup).
 
@@ -109,7 +109,7 @@ fast["temperature"] = 22;
 
 ### `std::set` and `std::unordered_set`
 
-Like `map` and `unordered_map`, but storing just *keys*, no values. Use when you need to keep track of "have I seen this before?", duplicates are silently discarded.
+Like `map` and `unordered_map`, but storing just *keys*, no values. Use when you need to keep track of "have I seen this before?" — duplicates are silently discarded.
 
 ```cpp
 #include <set>
@@ -122,11 +122,11 @@ uniqueReadings.contains(42); // true
 
 ### Other containers
 
-`std::list` (doubly linked list), `std::deque` (double-ended queue), `std::stack`, and `std::queue` exist for the cases where `vector` does not fit. For a first semester, treat them as "I will look this up if I need it", `vector` and `map` cover almost everything.
+`std::list` (doubly linked list), `std::deque` (double-ended queue), `std::stack`, and `std::queue` exist for the cases where `vector` does not fit. For a first semester, treat them as "I will look this up if I need it"; `vector` and `map` cover almost everything.
 
 ---
 
-## Algorithms, reusable operations on containers
+## Algorithms: reusable operations on containers
 
 The `<algorithm>` header contains dozens of free functions that work on *any* container (via iterators). A handful you will reach for repeatedly:
 
@@ -155,7 +155,7 @@ The `.begin()`/`.end()` pair appears everywhere. It says "operate on this whole 
 
 ## Other handy types
 
-### `std::optional<T>`, a value that might be absent
+### `std::optional<T>`: a value that might be absent
 
 ```cpp
 #include <optional>
@@ -175,7 +175,7 @@ if (r) {
 
 Covered in detail in the [error handling chapter](../Chapter5/error_handling.md#stdoptional-when-failure-is-expected).
 
-### `std::chrono`, time and durations
+### `std::chrono`: time and durations
 
 ```cpp
 #include <chrono>
@@ -190,7 +190,7 @@ std::cout << "took " << ms << " ms\n";
 std::this_thread::sleep_for(std::chrono::milliseconds(500));
 ```
 
-### `std::filesystem`, files and directories
+### `std::filesystem`: files and directories
 
 ```cpp
 #include <filesystem>
@@ -206,7 +206,7 @@ for (const auto& entry : fs::directory_iterator(".")) {
 }
 ```
 
-### `<cmath>`, mathematical functions
+### `<cmath>`: mathematical functions
 
 ```cpp
 #include <cmath>
@@ -226,7 +226,7 @@ C++ I/O is done through stream objects: `std::cout` for console output, `std::ci
 
 ## How to learn the library
 
-You will not memorise the standard library. Nobody has. What you build over time is **awareness**, you remember that *something* exists for a given task, and you look up the exact spelling on cppreference.
+You will not memorise the standard library. Nobody has. What you build over time is **awareness**: you remember that *something* exists for a given task, and you look up the exact spelling on cppreference.
 
 Two habits to start now:
 
@@ -239,6 +239,6 @@ Two habits to start now:
 
 - The standard library lives in the `std::` namespace. Always write the prefix.
 - `std::vector` is your default container. `std::string` for text. `std::map` / `std::unordered_map` for key-value lookups.
-- `<algorithm>` has dozens of functions that work on any container, sort, find, count, accumulate.
+- `<algorithm>` has dozens of functions that work on any container: sort, find, count, accumulate.
 - `<optional>`, `<chrono>`, `<filesystem>`, `<cmath>` cover most everyday needs beyond containers.
 - Look things up on cppreference instead of memorising signatures.

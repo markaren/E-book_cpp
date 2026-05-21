@@ -93,9 +93,9 @@ Used to combine boolean expressions:
 
 | Operator | Meaning |
 |----------|---------|
-| `&&`     | AND, true only if both sides are true |
-| `\|\|`   | OR, true if either side is true       |
-| `!`      | NOT, flips true and false             |
+| `&&`     | AND: true only if both sides are true |
+| `\|\|`   | OR: true if either side is true       |
+| `!`      | NOT: flips true and false             |
 
 ```cpp
 if (temperature > 80 && pressure < 5) {
@@ -107,7 +107,7 @@ if (!ready) {
 }
 ```
 
-`&&` and `||` are **short-circuiting**: they evaluate the right-hand side only if needed. This is useful, and occasionally essential:
+`&&` and `||` are **short-circuiting**: they evaluate the right-hand side only if needed. This is useful — and occasionally essential:
 
 ```cpp
 if (ptr != nullptr && ptr->isActive()) {
@@ -127,11 +127,11 @@ A compact `if`/`else` that produces a value:
 int max = (a > b) ? a : b;
 ```
 
-Reads as: "if `a > b`, the value is `a`; otherwise it is `b`." Convenient for short choices. For anything more complex, use a real `if`/`else` statement, readability beats brevity.
+Reads as: "if `a > b`, the value is `a`; otherwise it is `b`." Convenient for short choices. For anything more complex, use a real `if`/`else` statement; readability beats brevity.
 
 ---
 
-## Precedence, and why parentheses save you
+## Precedence: why parentheses save you
 
 When several operators appear in the same expression, **precedence** decides which binds tighter.
 
@@ -150,7 +150,7 @@ A real bug:
 int hours = totalSeconds / 60 * 60;
 ```
 
-Looks like "divide by 60, then multiply by 60", back where you started, right? Yes, but `/` and `*` have the same precedence and evaluate left-to-right, so this *is* what's written. Now consider:
+Looks like "divide by 60, then multiply by 60" — back where you started, right? Yes, but `/` and `*` have the same precedence and evaluate left-to-right, so this *is* what's written. Now consider:
 
 ```cpp
 double rate = a + b / c + d;
@@ -170,7 +170,7 @@ double d = 2.0;
 double result = i + d;   // i is promoted to double; result is 7.0
 ```
 
-That is the safe direction, `int` to `double` loses nothing.
+That is the safe direction: `int` to `double` loses nothing.
 
 ```cpp
 double pi = 3.14;
@@ -191,8 +191,8 @@ int n = static_cast<int>(pi);
 
 - Arithmetic on integers truncates; mix in a `double` to get decimal results.
 - `==` compares, `=` assigns. They are not the same.
-- `&&` and `||` short-circuit, useful for guarding against null/invalid values.
+- `&&` and `||` short-circuit, which is useful for guarding against null/invalid values.
 - Precedence exists, but parentheses are free. Use them.
-- Conversions from larger to smaller types lose data silently, make casts explicit.
+- Conversions from larger to smaller types lose data silently; make casts explicit.
 
 Floating-point arithmetic has surprises of its own: `0.1 + 0.2` does not exactly equal `0.3`, and comparing floats with `==` is almost never what you want. See the [Floating-Point Pitfalls](../floating_point.md) reference for the full list of gotchas.

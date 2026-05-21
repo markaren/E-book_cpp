@@ -7,7 +7,7 @@ A **unit test** is a program that calls your code, gives it specific inputs, and
 Benefits you will notice quickly:
 
 - Catch bugs before they reach other parts of the program.
-- Change code confidently, if you break something, a test tells you immediately.
+- Change code confidently: if you break something, a test tells you immediately.
 - Tests double as documentation: they show *how* a function is meant to be used.
 
 ---
@@ -132,8 +132,8 @@ Create `tests/test_calculator.cpp`. The only header you need is:
 | Macro | Behaviour |
 |-------|-----------|
 | `TEST_CASE("description")` | Declares a named, independent test |
-| `REQUIRE(expression)` | Asserts `expression` is true, stops the test immediately on failure |
-| `CHECK(expression)` | Asserts `expression` is true, continues running even on failure |
+| `REQUIRE(expression)` | Asserts `expression` is true; stops the test immediately on failure |
+| `CHECK(expression)` | Asserts `expression` is true; continues running even on failure |
 | `REQUIRE_THROWS(expression)` | Asserts that `expression` throws any exception |
 
 ### A complete test file
@@ -174,7 +174,7 @@ TEST_CASE("division by zero throws an exception") {
 }
 ```
 
-Each `TEST_CASE` is independent, it creates its own `Calculator` object and runs from scratch.
+Each `TEST_CASE` is independent: it creates its own `Calculator` object and runs from scratch.
 
 ---
 
@@ -187,7 +187,7 @@ cmake -S . -B build
 cmake --build build
 ```
 
-**Option 1, run the test binary directly:**
+**Option 1: run the test binary directly.**
 
 ```bash
 ./build/tests
@@ -209,7 +209,7 @@ with expansion:
   5.0 == 6.0
 ```
 
-**Option 2, use CTest** (the CMake test runner):
+**Option 2: use CTest** (the CMake test runner):
 
 ```bash
 ctest --test-dir build
@@ -221,7 +221,7 @@ CTest is the standard way to run tests in CMake projects and what most automated
 
 ---
 
-## SECTION. Grouping Related Checks
+## `SECTION`: grouping related checks
 
 When multiple checks share setup code, you can group them using `SECTION`. Each `SECTION` runs independently, but all share the same `TEST_CASE` setup at the top.
 
@@ -256,7 +256,7 @@ The `Calculator calc;` line runs once for each section, giving every section a f
 
 **Test the edges, not just the middle.** Zero, negative numbers, empty strings, and maximum values are where bugs hide. Happy-path tests alone miss most real problems.
 
-**Test error cases.** If your code is supposed to throw, or return an error, write a test that verifies it actually does.
+**Test error cases.** If your code is supposed to throw (or return an error), write a test that verifies it actually does.
 
 **Keep tests independent.** No test should rely on another test running first, or on any global state left over from a previous test. Independent tests can run in any order and still give correct results.
 

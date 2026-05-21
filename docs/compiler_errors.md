@@ -1,6 +1,6 @@
 # Reading Compiler Errors
 
-The single fastest way to get better at C++ is to learn to read error messages. Beginners freeze at the wall of red text; experienced programmers skim it, find the line, and fix the problem in seconds. The difference is not intelligence, it is knowing what to look for.
+The single fastest way to get better at C++ is to learn to read error messages. Beginners freeze at the wall of red text; experienced programmers skim it, find the line, and fix the problem in seconds. The difference is not intelligence; it is knowing what to look for.
 
 This page is a guide to reading typical C++ compiler output, the most common errors you will hit, and what to do about each.
 
@@ -76,7 +76,7 @@ note: candidate function not viable: no known conversion
       int add(int a, int b);
 ```
 
-The fix is in the `note: candidate ...` line, read it for what the compiler *expected* and compare to what you passed.
+The fix is in the `note: candidate ...` line: read it for what the compiler *expected* and compare to what you passed.
 
 ### `expected '}' at end of input`
 
@@ -121,7 +121,7 @@ if (x = 5) { }              // also a warning, see below
 
 ### Linker errors: `undefined reference to ...`
 
-Different from compile errors, these come from the **linker**, the next stage of the build. The compiler accepted your code, but when it came time to assemble the final program, it could not find the implementation of something:
+Different from compile errors: these come from the **linker**, the next stage of the build. The compiler accepted your code, but when it came time to assemble the final program, it could not find the implementation of something:
 
 ```
 undefined reference to `Motor::start()'
@@ -133,13 +133,13 @@ Usual causes:
 2. **The `.cpp` containing the implementation is not in your `CMakeLists.txt`.**
 3. **You forgot to link against a library** (`target_link_libraries` missing).
 
-Linker errors do *not* include line numbers in your source, they refer to symbols.
+Linker errors do *not* include line numbers in your source; they refer to symbols.
 
 ---
 
 ## Warnings
 
-Warnings are not errors, the build succeeds. But warnings almost always indicate a real bug or a smell:
+Warnings are not errors; the build succeeds. But warnings almost always indicate a real bug or a smell:
 
 ```
 warning: control reaches end of non-void function

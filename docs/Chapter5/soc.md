@@ -30,11 +30,11 @@ void monitorLoop() {
 }
 ```
 
-What is wrong with it? Nothing, mechanically, it works. But three different concerns are tangled together:
+What is wrong with it? Nothing, mechanically — it works. But three different concerns are tangled together:
 
-1. **Hardware access**, reading the sensor, writing to the LED.
-2. **Domain logic**, converting raw ADC values to temperature, deciding what counts as overheating.
-3. **Reporting**, writing to a log file, printing to the console.
+1. **Hardware access:** reading the sensor, writing to the LED.
+2. **Domain logic:** converting raw ADC values to temperature, deciding what counts as overheating.
+3. **Reporting:** writing to a log file, printing to the console.
 
 To test the domain logic without a real sensor, you cannot. To send alerts somewhere other than a file, you have to edit this function. To use a different sensor with a different conversion formula, ditto. Every concern is welded to every other.
 
@@ -107,7 +107,7 @@ void monitorLoop(TemperatureSensor& sensor,
 
 Each class has one job. The function that pulls them together knows about *what* must happen but nothing about *how*. It has no idea whether the temperature comes from an analog pin or a simulated sensor, no idea whether alerts go to a file or a network socket, no idea what threshold is in effect.
 
-Want to test the policy? Construct an `OverheatPolicy` and call `isOverheating` with values, no hardware required. Want to switch from a file to a console alert? Write a `ConsoleAlertSink` and pass it in instead. Want to test the orchestrator? Pass it a fake sensor that returns scripted values and a fake sink that records the alerts.
+Want to test the policy? Construct an `OverheatPolicy` and call `isOverheating` with values; no hardware required. Want to switch from a file to a console alert? Write a `ConsoleAlertSink` and pass it in instead. Want to test the orchestrator? Pass it a fake sensor that returns scripted values and a fake sink that records the alerts.
 
 ---
 
@@ -125,7 +125,7 @@ Other concerns are more subtle and emerge over time. You will recognise mixed co
 
 - A small change to one part forces edits in unrelated parts.
 - Writing a test for one piece requires setting up things that have nothing to do with the test.
-- A function's name needs the word "and", `readSensorAndAlertIfHot`.
+- A function's name needs the word "and" (`readSensorAndAlertIfHot`).
 - A single class talks to the network, the database, and the user interface.
 
 When you spot these, you have a candidate for splitting.
@@ -168,7 +168,7 @@ A class groups data with the operations that act on it. Reach for a class when s
 
 ### Interfaces (abstract base classes)
 
-When the orchestrator does not need to know which concrete implementation it is talking to, hide it behind an interface. The example above uses `TemperatureSensor` and `AlertSink` exactly this way, `monitorLoop` works with anything that fulfils those interfaces. Swap implementations without touching the orchestrator.
+When the orchestrator does not need to know which concrete implementation it is talking to, hide it behind an interface. The example above uses `TemperatureSensor` and `AlertSink` exactly this way: `monitorLoop` works with anything that fulfils those interfaces. Swap implementations without touching the orchestrator.
 
 This is also what makes code testable: the interface lets you substitute a fake implementation in tests.
 
@@ -183,7 +183,7 @@ Once a logical piece grows beyond a screen, give it its own file. Header + imple
 It is possible to over-do this. A program with thirty classes for the same job five would handle is not "separated"; it is shattered. Two rules of thumb:
 
 1. **Separate when you have a reason.** If your `readSensor` function never changes and you only call it from one place, leaving it inline is fine.
-2. **Look for the friction.** When you find yourself wanting to test something but not being able to, or wanting to swap something out and not being able to, that is where to draw the line.
+2. **Look for the friction.** When you find yourself wanting to test something but not being able to, or wanting to swap something out and not being able to — that is where to draw the line.
 
 Good design is not the design with the most classes. It is the design where each class has a clear job, and where introducing a new requirement does not force you to rewrite everything.
 
@@ -193,6 +193,6 @@ Good design is not the design with the most classes. It is the design where each
 
 - **Each piece of code should be responsible for one thing.**
 - When you find a function doing more than one thing, split it.
-- Use interfaces to decouple "what" from "how", `TemperatureSensor` does not know which sensor; `monitorLoop` does not know which sensor either.
+- Use interfaces to decouple "what" from "how": `TemperatureSensor` does not know which sensor; `monitorLoop` does not know which sensor either.
 - Separation makes code easier to test, easier to change, and easier to read.
 - Do not separate just for the sake of it. The signal is friction: testing, changing, swapping.

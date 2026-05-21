@@ -78,13 +78,13 @@ int* p = &x;     // p holds the address of x
 
 | Symbol | Meaning |
 |--------|---------|
-| `int*`  | "pointer to int", the type of `p` |
-| `&x`    | "address of x", produces a pointer |
-| `*p`    | "what `p` points to", dereference |
+| `int*`  | "pointer to int"; the type of `p` |
+| `&x`    | "address of x"; produces a pointer |
+| `*p`    | "what `p` points to"; dereference  |
 
 Pointers differ from references in three important ways:
 
-- A pointer can be `nullptr`, pointing to nothing.
+- A pointer can be `nullptr`, meaning it points to nothing.
 - A pointer can be reassigned to point elsewhere.
 - A pointer can be dangerous: dereferencing a null or invalid pointer is undefined behaviour.
 
@@ -122,7 +122,7 @@ int main() {
 }
 ```
 
-Both functions return a handle to memory that no longer belongs to anyone. Reading from `bad1` or `bad2` is undefined behaviour. Modern compilers warn about exactly this pattern, pay attention to the warnings.
+Both functions return a handle to memory that no longer belongs to anyone. Reading from `bad1` or `bad2` is undefined behaviour. Modern compilers warn about exactly this pattern; pay attention to the warnings.
 
 The fix: return by value (you get your own copy) or pass a reference *into* the function so the caller controls the lifetime.
 
@@ -167,8 +167,8 @@ For data members of a class, the rules of thumb are similar:
 
 | Situation | Use |
 |-----------|-----|
-| Class owns the data | Plain value member, `std::vector<int> data_` |
-| Class observes data owned by something else | A reference or raw pointer, but think carefully about who keeps it alive |
+| Class owns the data | Plain value member (e.g. `std::vector<int> data_`) |
+| Class observes data owned by something else | A reference or raw pointer — but think carefully about who keeps it alive |
 | Class shares ownership with others | `std::shared_ptr<T>` (see [Memory](../Chapter4/memory.md)) |
 
 ---
@@ -178,6 +178,6 @@ For data members of a class, the rules of thumb are similar:
 - **Value** types copy. Safe, sometimes expensive.
 - **References** are aliases. Cannot be null, cannot be rebound, must be initialised.
 - **Pointers** are addresses. Can be null, can be reassigned, must be checked.
-- A reference or pointer outliving the thing it points to is undefined behaviour, the single most common cause of crashes.
+- A reference or pointer outliving the thing it points to is undefined behaviour — the single most common cause of crashes.
 - For function parameters: small types by value, large types by `const T&`, modify-the-input cases by `T&`.
 - For ownership across class boundaries, prefer smart pointers over raw ones.

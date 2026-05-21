@@ -4,14 +4,14 @@ Programs rarely run in a perfect world. Files go missing, users enter invalid da
 
 Good error handling separates two distinct responsibilities:
 
-1. **Detection**, recognising that something went wrong.
-2. **Recovery**, deciding what to do about it.
+1. **Detection:** recognising that something went wrong.
+2. **Recovery:** deciding what to do about it.
 
 Keeping these two concerns separate, often in different parts of your code, leads to cleaner and more maintainable programs.
 
 ---
 
-## Return Codes. The Simple Approach
+## Return codes: the simple approach
 
 The most straightforward way to signal failure is to return a special value from a function.
 
@@ -37,16 +37,16 @@ int main() {
 
 This works for simple cases, but has real limitations as programs grow:
 
-- The caller can **silently ignore** the return value, the error disappears.
+- The caller can **silently ignore** the return value, and the error disappears.
 - The sentinel value (`-1` here) might also be a legitimate result in other contexts.
 - Every call site must check the return value, cluttering the code.
 - There is no easy way to carry a descriptive error message alongside the result.
 
 ---
 
-## Exceptions, the C++ Approach
+## Exceptions: the C++ approach
 
-C++ provides a dedicated mechanism for error handling: **exceptions**. Think of it like a fire alarm. You don't constantly check for fire while cooking, but if the alarm goes off, everyone stops what they are doing and deals with it immediately.
+C++ provides a dedicated mechanism for error handling: **exceptions**. Think of it like a fire alarm: you don't constantly check for fire while cooking, but if the alarm goes off, everyone stops what they are doing and deals with it immediately.
 
 There are three keywords:
 
@@ -78,7 +78,7 @@ int main() {
 }
 ```
 
-When `throw` executes, the program immediately stops running the current function and searches up the call stack for a matching `catch` block. This process is called **stack unwinding**, every local object that has gone out of scope has its destructor called along the way (see [RAII](../Chapter3/raii.md)).
+When `throw` executes, the program immediately stops running the current function and searches up the call stack for a matching `catch` block. This process is called **stack unwinding**: every local object that has gone out of scope has its destructor called along the way (see [RAII](../Chapter3/raii.md)).
 
 > If no matching `catch` is found anywhere in the call stack, the program calls `std::terminate()` and aborts. Always catch exceptions at a level where you can meaningfully handle them.
 
@@ -113,7 +113,7 @@ Commonly used types from `<stdexcept>`:
 | `std::logic_error` | A bug in program logic (precondition violated) |
 | `std::bad_alloc` | Memory allocation with `new` failed |
 
-You can also catch _any_ exception with `catch (...)`, but use this sparingly, it discards all information about the error:
+You can also catch _any_ exception with `catch (...)`, but use this sparingly; it discards all information about the error:
 
 ```cpp
 try {
@@ -129,7 +129,7 @@ try {
 
 ## Custom Exceptions
 
-For library or application code, you can define your own exception types. Inheriting from `std::runtime_error` is the easiest approach, the constructor takes a message string and `.what()` works automatically.
+For library or application code, you can define your own exception types. Inheriting from `std::runtime_error` is the easiest approach: the constructor takes a message string and `.what()` works automatically.
 
 ```cpp
 #include <iostream>
@@ -199,7 +199,7 @@ int main() {
 
 ---
 
-## `std::optional`. When Failure Is Expected
+## `std::optional`: when failure is expected
 
 Sometimes the absence of a result is not an error. It is a normal outcome. For example, searching a list for a value might simply find nothing. Throwing an exception in this case would be misleading, since nothing went wrong.
 
@@ -255,7 +255,7 @@ catch (const std::runtime_error& e) { ... }   // catch by const reference
 
 ### Exceptions are for exceptional situations
 
-Do not use exceptions to control normal program flow (e.g. exiting a loop). Exceptions are for conditions that represent a failure, something the caller cannot be expected to deal with locally. For expected "no result" situations, prefer `std::optional`.
+Do not use exceptions to control normal program flow (e.g. exiting a loop). Exceptions are for conditions that represent a failure — something the caller cannot be expected to deal with locally. For expected "no result" situations, prefer `std::optional`.
 
 ### Catch at the right level
 

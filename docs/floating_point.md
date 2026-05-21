@@ -77,7 +77,7 @@ std::cout << total << "\n";        // 999999.999999...  (not 1,000,000)
 The error in each addition is tiny; ten million of them add up. For sums of millions of samples, consider:
 
 1. **Use `double`, not `float`.** `double` has roughly 15-16 decimal digits of precision; `float` has 6-7.
-2. **Use `std::accumulate` with care**, or look up Kahan summation if accuracy matters more than speed.
+2. **Use `std::accumulate` with care.** Or look up Kahan summation if accuracy matters more than speed.
 3. **Where you can, count in integers** and convert to a float only at the end.
 
 For control loops that integrate over time, drift is something to watch for over long runs.
@@ -106,7 +106,7 @@ double z = std::sin(y);          // NaN
 if (z < 1.0) { /* ... */ }       // false! NaN compares false with everything
 ```
 
-NaN poisons every expression it touches and silently fails every comparison, even `nan == nan` is false. If your sensor pipeline starts producing zeros and you see no errors, suspect a NaN.
+NaN poisons every expression it touches and silently fails every comparison: even `nan == nan` is false. If your sensor pipeline starts producing zeros and you see no errors, suspect a NaN.
 
 To check explicitly:
 
@@ -184,7 +184,7 @@ For debugging precision issues, set a high precision explicitly. For user-facing
 - Floats and doubles are approximations of decimal numbers. They are not exact.
 - **Never use `==` to compare floats.** Use a tolerance or a range.
 - Long sums accumulate error. Use `double` (not `float`) and consider Kahan summation for high-precision sums.
-- Division by zero is well-defined for floats, produces infinity or `NaN`.
+- Division by zero is well-defined for floats; it produces infinity or `NaN`.
 - `NaN` poisons every expression it touches and compares unequal to everything, including itself.
 - Default to `double`. Use `float` only with reason.
 - For timing, use `std::chrono` (integer-based).

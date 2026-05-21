@@ -1,6 +1,6 @@
 # AIS1003 E-book
 
-Welcome to the e-book for the course [AIS1003. Object-Oriented Programming with C++](https://www.ntnu.no/studier/emner/AIS1003#tab=omEmnet).
+Welcome to the e-book for the course [AIS1003 — Object-Oriented Programming with C++](https://www.ntnu.no/studier/emner/AIS1003#tab=omEmnet).
 
 The book is updated regularly throughout the semester. Use the sidebar to navigate between chapters, or jump straight to a topic with the search box above.
 
@@ -27,14 +27,14 @@ While written to support your learning, this book is not a complete reference. S
 
 ### Books
 
-- **C++ Primer, Fifth Edition**, a comprehensive and widely-used introductory book on C++ programming, covering essential concepts and techniques for beginners.
-- **A Tour of C++**, a concise, high-level overview of modern C++ features, focusing on important language elements and programming principles for intermediate programmers.
+- **C++ Primer, Fifth Edition.** A comprehensive and widely-used introductory book on C++ programming, covering essential concepts and techniques for beginners.
+- **A Tour of C++.** A concise, high-level overview of modern C++ features, focusing on important language elements and programming principles for intermediate programmers.
 
 ### Online
 
-- [**cppreference**](https://en.cppreference.com/w/), reliable online reference with detailed, up-to-date documentation on C++ language features and the standard library.
-- [**LearnCpp**](https://www.learncpp.com/), step-by-step tutorials and practical examples for beginners.
-- [**Stack Overflow**](https://stackoverflow.com/), community Q&A platform where most programming questions have already been asked and answered.
+- [**cppreference**](https://en.cppreference.com/w/). Reliable online reference with detailed, up-to-date documentation on C++ language features and the standard library.
+- [**LearnCpp**](https://www.learncpp.com/). Step-by-step tutorials and practical examples for beginners.
+- [**Stack Overflow**](https://stackoverflow.com/). Community Q&A platform where most programming questions have already been asked and answered.
 
 ## Quick links
 

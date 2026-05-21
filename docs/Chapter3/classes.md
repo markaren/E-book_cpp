@@ -258,7 +258,7 @@ No destructor. No copy or move operations. The defaults work because `std::strin
 
 ### Rule of Three (the C++03 rule)
 
-> If you write a destructor, you almost certainly also need a copy constructor and a copy assignment operator, and vice versa.
+> If you write a destructor, you almost certainly also need a copy constructor and a copy assignment operator (and vice versa).
 
 The classical reason: a class with a destructor probably manages a resource (memory, a file, a lock). The compiler-generated copy operations just shallow-copy the resource handle, which means two objects now think they own the same thing. Disaster on destruction.
 
@@ -283,7 +283,7 @@ BadBuffer b = a;     // SAME pointer in both! double-delete on destruction
 
 > If you write any of the five (destructor, copy ctor, copy assignment, move ctor, move assignment), you probably need to think about all five.
 
-Modern C++ added move operations. If you write a destructor and copy operations, the compiler stops generating move operations for you, which can quietly make your class slower than it should be.
+Modern C++ added move operations. If you write a destructor and copy operations, the compiler stops generating move operations for you. That can quietly make your class slower than it should be.
 
 The practical advice for this course: **aim for the Rule of Zero**. If you can't, write all five explicitly. If you find yourself implementing a destructor, ask whether you can replace the raw resource with a smart pointer or a standard container instead.
 
@@ -293,7 +293,7 @@ The practical advice for this course: **aim for the Rule of Zero**. If you can't
 
 Everything we have written so far has had the implementation inside the class body. For longer functions, you usually split them out:
 
-**motor.hpp**, the declaration:
+**motor.hpp** — the declaration:
 
 ```cpp
 #pragma once
@@ -316,7 +316,7 @@ private:
 };
 ```
 
-**motor.cpp**, the implementation:
+**motor.cpp** — the implementation:
 
 ```cpp
 #include "motor.hpp"
@@ -344,7 +344,7 @@ std::string Motor::describe() const {
 
 `Motor::` in front of each function name says "this function belongs to the `Motor` class." The header is what other files `#include`; the implementation file is compiled separately.
 
-For short functions, one-liners, simple getters, it is fine to keep them inside the class. For anything bigger, split. Compile times improve and the header stays readable.
+For short functions (one-liners, simple getters) it is fine to keep them inside the class. For anything bigger, split. Compile times improve and the header stays readable.
 
 ---
 

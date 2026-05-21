@@ -1,8 +1,8 @@
 site_name: AIS1003 E-book
 site_description: Course e-book for AIS1003 — Object-Oriented Programming with C++
-site_url: https://ais1003-h-2023.github.io/E-book/
-repo_url: https://github.com/AIS1003-H-2023/E-book
-repo_name: AIS1003-H-2023/E-book
+site_url: https://markaren.github.io/E-book_cpp/
+repo_url: https://github.com/markaren/E-book_cpp
+repo_name: markaren/E-book_cpp
 edit_uri: edit/main/docs/
 
 theme:
@@ -111,7 +111,7 @@ nav:
 extra:
   social:
     - icon: fontawesome/brands/github
-      link: https://github.com/AIS1003-H-2023/E-book
+      link: https://github.com/markaren/E-book_cpp
   generator: false
 
 copyright: >

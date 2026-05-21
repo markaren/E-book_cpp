@@ -2,7 +2,7 @@
 
 Welcome to the E-book for the course [AIS1003](https://www.ntnu.no/studier/emner/AIS1003#tab=omEmnet).
 
-**Read online: [ais1003-h-2023.github.io/E-book](https://ais1003-h-2023.github.io/E-book/)**
+**Read online: [markaren.github.io/E-book_cpp](https://markaren.github.io/E-book_cpp/)**
 
 The book will be updated regularly throughout the semester. Make sure to bookmark it!
 

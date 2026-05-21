@@ -24,7 +24,7 @@ The standard library adds a few more types you will use constantly. They are not
 
 | Type          | Holds                       | Header        |
 |---------------|-----------------------------|---------------|
-| `std::string` | text                        | `<string>`    |
+| `std::string` | text — see [Strings reference](../strings.md) | `<string>`    |
 | `std::vector` | a resizable list of values  | `<vector>`    |
 
 For a complete reference, see [cppreference's entry on Fundamental types](https://en.cppreference.com/w/cpp/language/types).

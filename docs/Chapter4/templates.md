@@ -158,6 +158,19 @@ Most "scary" template errors are really just type mismatches with a lot of suppo
 
 ---
 
+## Lambdas — templates' close cousin
+
+Many of the algorithms templates power — `std::sort`, `std::find_if`, `std::count_if` — take a function argument. **Lambda expressions** are how you write those function arguments inline:
+
+```cpp
+std::vector<int> v = {5, 2, 8, 1, 9, 3};
+std::sort(v.begin(), v.end(), [](int a, int b) { return a > b; });   // descending
+```
+
+See the [Lambda Expressions](../lambdas.md) reference for the full story.
+
+---
+
 ## When to write a template yourself
 
 For small course projects you mostly *use* templates rather than write them. Two cases where writing one is genuinely the right tool:

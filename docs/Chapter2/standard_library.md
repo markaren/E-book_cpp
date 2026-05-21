@@ -75,7 +75,7 @@ name.substr(0, 5);          // "Alice"
 name.find("Smith");          // 6 — the index where "Smith" starts
 ```
 
-Strings have a rich set of operations — concatenation with `+` and `+=`, comparison with the usual operators, conversion from numbers with `std::to_string`, conversion to numbers with `std::stoi`/`std::stod`. They behave like a value type: copying makes a real copy.
+See the [Strings reference page](../strings.md) for a tour of the operations you will reach for most.
 
 ### `std::map<K, V>` — a sorted key-value store
 

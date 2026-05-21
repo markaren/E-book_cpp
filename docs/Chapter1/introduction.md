@@ -92,7 +92,7 @@ We will not write a class today. Chapter 3 covers them properly. For now, keep t
 
 ## How to use this book
 
-Read each chapter, then write code. Type the examples by hand rather than copy-pasting — the typos you make are how you learn what the compiler complains about. When you get an error you do not understand, search the exact error text; almost every compiler error has been asked about on Stack Overflow.
+Read each chapter, then write code. Type the examples by hand rather than copy-pasting — the typos you make are how you learn what the compiler complains about. When you get an error you do not understand, see the [Reading Compiler Errors](../compiler_errors.md) reference, then search the exact error text — almost every compiler error has been asked about on Stack Overflow.
 
 When this book gives a recommendation, it is the one you should follow unless you have a specific reason not to. C++ has many ways to do most things, and a beginner who tries to learn *all* of them ends up confused. Learn the one good way first.
 

@@ -194,3 +194,5 @@ int n = static_cast<int>(pi);
 - `&&` and `||` short-circuit — useful for guarding against null/invalid values.
 - Precedence exists, but parentheses are free. Use them.
 - Conversions from larger to smaller types lose data silently — make casts explicit.
+
+Floating-point arithmetic has surprises of its own: `0.1 + 0.2` does not exactly equal `0.3`, and comparing floats with `==` is almost never what you want. See the [Floating-Point Pitfalls](../floating_point.md) reference for the full list of gotchas.

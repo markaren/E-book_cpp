@@ -101,6 +101,10 @@ nav:
     - Testing: Chapter5/testing.md
     - Error Handling: Chapter5/error_handling.md
   - Reference:
+    - Reading Compiler Errors: compiler_errors.md
+    - Strings: strings.md
+    - Lambda Expressions: lambdas.md
+    - Floating-Point Pitfalls: floating_point.md
     - Common Terms: terms.md
     - FAQ: faq.md
 

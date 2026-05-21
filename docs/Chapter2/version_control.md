@@ -2,7 +2,7 @@
 
 Version control is the system that lets you take **snapshots** of your project as it evolves: every time you reach a working state, you save it. If you break something later, you can return to the snapshot. If you work with others, version control coordinates everyone's changes so they do not overwrite each other.
 
-The tool you will use for this — in this course, in your degree, and in industry — is **Git**.
+The tool you will use for this, in this course, in your degree, and in industry, is **Git**.
 
 This chapter introduces the concepts, then walks through the commands you need on day one.
 
@@ -21,7 +21,7 @@ A **commit** is one snapshot. Each commit records:
 
 A **branch** is a line of development. The default branch is called `main`. You can create new branches to work on a feature without disturbing `main`, then merge your work back when it is ready.
 
-A **remote** is a copy of your repo on another machine — usually GitHub. You **push** your commits up to the remote to share them; you **pull** to get commits others have pushed.
+A **remote** is a copy of your repo on another machine, usually GitHub. You **push** your commits up to the remote to share them; you **pull** to get commits others have pushed.
 
 That is the whole model. Repo, commits, branches, remotes.
 
@@ -59,7 +59,7 @@ git status                          # check what is staged
 git commit -m "Initial Hello World" # record a snapshot with a message
 ```
 
-`git add` does *not* save anything yet — it just marks files for inclusion. `git commit` is the snapshot. The `-m` flag attaches a short message.
+`git add` does *not* save anything yet, it just marks files for inclusion. `git commit` is the snapshot. The `-m` flag attaches a short message.
 
 > Write commit messages that explain *why* you made the change, not just *what* changed. "Fix off-by-one in motor PID loop" is far more useful three months later than "fix bug" or "update file."
 
@@ -168,7 +168,7 @@ git commit --amend -m "corrected message"
 
 (Only amend a commit you have not yet pushed. Once it is shared, leave it alone.)
 
-For everything else — merge conflicts, lost work, "what happened?" — the answer is almost always:
+For everything else, merge conflicts, lost work, "what happened?", the answer is almost always:
 
 ```bash
 git status     # what git thinks the state is
@@ -194,13 +194,13 @@ cmake-build-release/
 *.obj
 ```
 
-Never commit build outputs, IDE settings, or credentials. The repo should contain only source — what you wrote and need to share.
+Never commit build outputs, IDE settings, or credentials. The repo should contain only source, what you wrote and need to share.
 
 ---
 
 ## Further reading
 
-Git has more depth than fits in one chapter. The single best free resource is the official Git Book ([git-scm.com/book](https://git-scm.com/book/en/v2)) — chapters 2 and 3 cover the day-to-day workflow in detail.
+Git has more depth than fits in one chapter. The single best free resource is the official Git Book ([git-scm.com/book](https://git-scm.com/book/en/v2)), chapters 2 and 3 cover the day-to-day workflow in detail.
 
 - [Official Git tutorial](https://git-scm.com/docs/gittutorial)
 - ["Become a Git Guru" by Atlassian](https://www.atlassian.com/git/tutorials)

@@ -65,7 +65,7 @@ switch (gear) {
 
 Two things to know:
 
-1. **Always include `break`** at the end of each case unless you specifically want execution to fall through to the next case. Forgetting `break` is a classic bug — execution silently continues into the next case.
+1. **Always include `break`** at the end of each case unless you specifically want execution to fall through to the next case. Forgetting `break` is a classic bug, execution silently continues into the next case.
 2. `switch` only works with integer-like values (`int`, `char`, enumerations). It cannot switch on a `std::string` or a `double`.
 
 If a case needs to declare its own local variables, wrap its body in braces:
@@ -101,7 +101,7 @@ The number-one bug with `while` loops is forgetting to make progress toward the 
 int i = 0;
 while (i < 10) {
     std::cout << i << "\n";
-    // forgot ++i — infinite loop
+    // forgot ++i, infinite loop
 }
 ```
 
@@ -138,9 +138,9 @@ for (int i = 0; i < 5; ++i) {
 
 The three parts inside the parentheses are:
 
-1. **Initialisation** — `int i = 0` — runs once, before the loop starts.
-2. **Condition** — `i < 5` — checked before each iteration. Loop ends when false.
-3. **Update** — `++i` — runs after each iteration.
+1. **Initialisation**, `int i = 0`, runs once, before the loop starts.
+2. **Condition**, `i < 5`, checked before each iteration. Loop ends when false.
+3. **Update**, `++i`, runs after each iteration.
 
 A `for` loop is just a `while` loop with the parts arranged for visibility. Use it whenever you have a counter.
 

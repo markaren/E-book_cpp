@@ -26,9 +26,9 @@ This chapter covers the operators you will use day-to-day, and the rule that dec
 **Integer division truncates.** This is the single most common arithmetic surprise:
 
 ```cpp
-int    a = 10 / 3;        // 3 — fractional part discarded
-double b = 10 / 3;        // still 3.0! — division happens in int, then converted
-double c = 10.0 / 3;      // 3.333… — at least one operand is double
+int    a = 10 / 3;        // 3, fractional part discarded
+double b = 10 / 3;        // still 3.0!, division happens in int, then converted
+double c = 10.0 / 3;      // 3.333…, at least one operand is double
 ```
 
 If you want a decimal result, at least one operand must be a `double` or `float`.
@@ -51,7 +51,7 @@ The compound forms `+=`, `-=`, `*=`, `/=`, `%=` all work the same way: read the 
 
 ```cpp
 int i = 0;
-++i;   // i is now 1 — preferred form
+++i;   // i is now 1, preferred form
 i++;   // also works, prefer ++i when used on its own
 ```
 
@@ -79,7 +79,7 @@ bool adult = (age >= 18);
 **The most common bug here:** writing `=` (assignment) when you mean `==` (comparison).
 
 ```cpp
-if (x = 5) { ... }   // assigns 5 to x, then tests if 5 is true — always runs
+if (x = 5) { ... }   // assigns 5 to x, then tests if 5 is true, always runs
 if (x == 5) { ... }  // tests whether x equals 5
 ```
 
@@ -93,9 +93,9 @@ Used to combine boolean expressions:
 
 | Operator | Meaning |
 |----------|---------|
-| `&&`     | AND — true only if both sides are true |
-| `\|\|`   | OR — true if either side is true       |
-| `!`      | NOT — flips true and false             |
+| `&&`     | AND, true only if both sides are true |
+| `\|\|`   | OR, true if either side is true       |
+| `!`      | NOT, flips true and false             |
 
 ```cpp
 if (temperature > 80 && pressure < 5) {
@@ -107,7 +107,7 @@ if (!ready) {
 }
 ```
 
-`&&` and `||` are **short-circuiting**: they evaluate the right-hand side only if needed. This is useful — and occasionally essential:
+`&&` and `||` are **short-circuiting**: they evaluate the right-hand side only if needed. This is useful, and occasionally essential:
 
 ```cpp
 if (ptr != nullptr && ptr->isActive()) {
@@ -127,16 +127,16 @@ A compact `if`/`else` that produces a value:
 int max = (a > b) ? a : b;
 ```
 
-Reads as: "if `a > b`, the value is `a`; otherwise it is `b`." Convenient for short choices. For anything more complex, use a real `if`/`else` statement — readability beats brevity.
+Reads as: "if `a > b`, the value is `a`; otherwise it is `b`." Convenient for short choices. For anything more complex, use a real `if`/`else` statement, readability beats brevity.
 
 ---
 
-## Precedence — and why parentheses save you
+## Precedence, and why parentheses save you
 
 When several operators appear in the same expression, **precedence** decides which binds tighter.
 
 ```cpp
-int x = 2 + 3 * 4;   // 14, not 20 — * binds tighter than +
+int x = 2 + 3 * 4;   // 14, not 20, * binds tighter than +
 ```
 
 The full precedence table is long. You do not need to memorise it. You need to remember **two rules** and you will not get in trouble:
@@ -150,7 +150,7 @@ A real bug:
 int hours = totalSeconds / 60 * 60;
 ```
 
-Looks like "divide by 60, then multiply by 60" — back where you started, right? Yes, but `/` and `*` have the same precedence and evaluate left-to-right, so this *is* what's written. Now consider:
+Looks like "divide by 60, then multiply by 60", back where you started, right? Yes, but `/` and `*` have the same precedence and evaluate left-to-right, so this *is* what's written. Now consider:
 
 ```cpp
 double rate = a + b / c + d;
@@ -170,11 +170,11 @@ double d = 2.0;
 double result = i + d;   // i is promoted to double; result is 7.0
 ```
 
-That is the safe direction — `int` to `double` loses nothing.
+That is the safe direction, `int` to `double` loses nothing.
 
 ```cpp
 double pi = 3.14;
-int    n  = pi;          // truncates to 3 — fractional part lost
+int    n  = pi;          // truncates to 3, fractional part lost
 ```
 
 Going the other direction (`double` to `int`) silently loses information. Brace initialisation refuses it; ordinary assignment does not. If you *want* to truncate, make it explicit with a **cast**:
@@ -191,8 +191,8 @@ int n = static_cast<int>(pi);
 
 - Arithmetic on integers truncates; mix in a `double` to get decimal results.
 - `==` compares, `=` assigns. They are not the same.
-- `&&` and `||` short-circuit — useful for guarding against null/invalid values.
+- `&&` and `||` short-circuit, useful for guarding against null/invalid values.
 - Precedence exists, but parentheses are free. Use them.
-- Conversions from larger to smaller types lose data silently — make casts explicit.
+- Conversions from larger to smaller types lose data silently, make casts explicit.
 
 Floating-point arithmetic has surprises of its own: `0.1 + 0.2` does not exactly equal `0.3`, and comparing floats with `==` is almost never what you want. See the [Floating-Point Pitfalls](../floating_point.md) reference for the full list of gotchas.

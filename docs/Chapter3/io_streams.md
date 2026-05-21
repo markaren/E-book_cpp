@@ -28,9 +28,9 @@ int main() {
 }
 ```
 
-`<<` reads "put this *into* the stream"; `>>` reads "extract from the stream *into* this variable." You can chain them — the operators return the stream itself so the next one can be applied immediately.
+`<<` reads "put this *into* the stream"; `>>` reads "extract from the stream *into* this variable." You can chain them, the operators return the stream itself so the next one can be applied immediately.
 
-> **A note on `std::endl` vs `"\n"`:** Both produce a newline. `std::endl` also *flushes* the stream — forces any buffered output to appear immediately. Flushing is expensive; in tight loops, prefer `"\n"`. Reach for `endl` only when you specifically want to flush.
+> **A note on `std::endl` vs `"\n"`:** Both produce a newline. `std::endl` also *flushes* the stream, forces any buffered output to appear immediately. Flushing is expensive; in tight loops, prefer `"\n"`. Reach for `endl` only when you specifically want to flush.
 
 ---
 
@@ -45,11 +45,11 @@ std::cin >> a >> b;
 std::cout << "Sum: " << (a + b) << "\n";
 ```
 
-The user can type `3 5`, `3<tab>5`, or even press Enter between them — `>>` will pick up both.
+The user can type `3 5`, `3<tab>5`, or even press Enter between them, `>>` will pick up both.
 
 ### When extraction fails
 
-If the user types `hello` when you asked for an integer, `>>` fails silently — the stream enters an error state and subsequent extractions also fail. You can check the stream like a boolean:
+If the user types `hello` when you asked for an integer, `>>` fails silently, the stream enters an error state and subsequent extractions also fail. You can check the stream like a boolean:
 
 ```cpp
 int n;
@@ -63,7 +63,7 @@ if (!(std::cin >> n)) {
 
 ## Reading whole lines
 
-`>>` stops at whitespace. To read an entire line — including spaces — use `std::getline`:
+`>>` stops at whitespace. To read an entire line, including spaces, use `std::getline`:
 
 ```cpp
 #include <string>
@@ -104,13 +104,13 @@ int main() {
     while (std::getline(in, line)) {
         std::cout << line << "\n";
     }
-    // No explicit close needed — RAII closes the file when `in` goes out of scope.
+    // No explicit close needed, RAII closes the file when `in` goes out of scope.
 }
 ```
 
 The `if (!in)` check uses the stream's bool conversion: a "good" stream is truthy, a stream that failed to open or has hit an error is falsy.
 
-`std::ifstream` is a great example of [RAII](raii.md) in action: opening the file in the constructor, closing it in the destructor. You do not have to remember to call `close()` — it happens automatically, even if an exception is thrown mid-function.
+`std::ifstream` is a great example of [RAII](raii.md) in action: opening the file in the constructor, closing it in the destructor. You do not have to remember to call `close()`, it happens automatically, even if an exception is thrown mid-function.
 
 ### Writing a file
 
@@ -123,7 +123,7 @@ out << "Std dev: "   << stddev    << "\n";
 // closed automatically when `out` goes out of scope
 ```
 
-By default `std::ofstream` *truncates* the file — any previous contents are lost. To append instead:
+By default `std::ofstream` *truncates* the file, any previous contents are lost. To append instead:
 
 ```cpp
 std::ofstream out("results.txt", std::ios::app);
@@ -155,7 +155,7 @@ int main() {
 
 Two things to notice:
 
-- The first parameter is `std::ostream&` (the base class of `std::cout`, `std::ofstream`, etc.) — so the same overload works with any output stream.
+- The first parameter is `std::ostream&` (the base class of `std::cout`, `std::ofstream`, etc.), so the same overload works with any output stream.
 - The function returns the stream so that `<<` calls can be chained.
 
 The same pattern with `std::istream&` and `>>` lets you parse your own type from input.
@@ -177,7 +177,7 @@ std::cout << std::setw(10) << 42 << "\n";                       // "        42"
 std::cout << std::hex << 255 << "\n";                            // ff
 ```
 
-Manipulators are "sticky" — once you set them on a stream, they stay set until you change them. If you only need formatting for a single value, save and restore — or, much more cleanly, use `std::format` from `<format>`:
+Manipulators are "sticky", once you set them on a stream, they stay set until you change them. If you only need formatting for a single value, save and restore, or, much more cleanly, use `std::format` from `<format>`:
 
 ```cpp
 #include <format>
@@ -187,7 +187,7 @@ std::cout << std::format("{:>10}\n", 42);          // right-aligned in 10 column
 std::cout << std::format("{:#x}\n", 255);          // 0xff
 ```
 
-The format string follows Python-style placeholders: `{}` for the next argument, with optional spec after `:`. Prefer this over manipulators when you only need one formatted value — no sticky state to clean up.
+The format string follows Python-style placeholders: `{}` for the next argument, with optional spec after `:`. Prefer this over manipulators when you only need one formatted value, no sticky state to clean up.
 
 `printf`-style formatting from `<cstdio>` is also available, and a common choice in embedded code.
 

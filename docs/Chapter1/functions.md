@@ -16,10 +16,10 @@ int add(int a, int b) {
 
 Four parts:
 
-- **Return type** — `int`. What type of value the function gives back. `void` means "nothing."
-- **Name** — `add`. What you call it.
-- **Parameter list** — `(int a, int b)`. The inputs, each with a type and a name.
-- **Body** — `{ return a + b; }`. The code that runs.
+- **Return type**, `int`. What type of value the function gives back. `void` means "nothing."
+- **Name**, `add`. What you call it.
+- **Parameter list**, `(int a, int b)`. The inputs, each with a type and a name.
+- **Body**, `{ return a + b; }`. The code that runs.
 
 Calling the function looks like this:
 
@@ -41,7 +41,7 @@ int square(int x) {
 }
 ```
 
-If the return type is `void`, the function returns nothing — `return;` (with no value) just exits early:
+If the return type is `void`, the function returns nothing, `return;` (with no value) just exits early:
 
 ```cpp
 void warn(bool overheating) {
@@ -61,16 +61,16 @@ A non-`void` function must return a value on every path. Forgetting to do so is 
 In larger programs you often split a function across files. The **declaration** tells the compiler the function exists and what its signature is; the **definition** provides the actual code.
 
 ```cpp
-// Declaration — usually in a header file
+// Declaration, usually in a header file
 int add(int a, int b);
 
-// Definition — usually in a .cpp file
+// Definition, usually in a .cpp file
 int add(int a, int b) {
     return a + b;
 }
 ```
 
-For short programs that live in one file, the declaration and definition are the same line — you just write the full function and use it. Chapter 2 covers splitting code across files properly.
+For short programs that live in one file, the declaration and definition are the same line, you just write the full function and use it. Chapter 2 covers splitting code across files properly.
 
 ---
 
@@ -93,7 +93,7 @@ int main() {
 }
 ```
 
-This is called **overloading**. Use it when the operation is conceptually the same across types — `add` two `int`s, `add` two `double`s. Do not overload to mean different things; pick distinct names for distinct operations.
+This is called **overloading**. Use it when the operation is conceptually the same across types, `add` two `int`s, `add` two `double`s. Do not overload to mean different things; pick distinct names for distinct operations.
 
 ---
 

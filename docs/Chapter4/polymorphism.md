@@ -1,6 +1,6 @@
 # Polymorphism
 
-**Polymorphism** — "many forms" — is the ability to treat different concrete types through a common interface. Code written against the common interface does not need to know which specific type it is dealing with.
+**Polymorphism** ("many forms") is the ability to treat different concrete types through a common interface. Code written against the common interface does not need to know which specific type it is dealing with.
 
 This is the feature that lets you swap one implementation for another without touching the code that uses it: replace a console logger with a file logger, swap a real sensor for a simulated one in tests, add a new shape to a drawing program without rewriting the renderer.
 
@@ -11,7 +11,7 @@ C++ has two kinds:
 | Compile-time polymorphism | Compile time | Function overloading, templates |
 | Runtime polymorphism | Run time | Virtual functions through inheritance |
 
-Compile-time polymorphism is faster (no indirection at runtime) but every concrete type must be known when the code is built. Runtime polymorphism is slightly slower but allows behaviour to be selected — or even loaded — after the program has started.
+Compile-time polymorphism is faster (no indirection at runtime) but every concrete type must be known when the code is built. Runtime polymorphism is slightly slower but allows behaviour to be selected (or even loaded) after the program has started.
 
 ---
 
@@ -37,7 +37,7 @@ public:
 };
 ```
 
-`Logger` is an **abstract base class** — `= 0` marks `log` as a **pure virtual function**, meaning derived classes are required to provide their own implementation. You cannot create a `Logger` directly; you create something that *is* a `Logger`.
+`Logger` is an **abstract base class**. The `= 0` marks `log` as a **pure virtual function**, meaning derived classes are required to provide their own implementation. You cannot create a `Logger` directly; you create something that *is* a `Logger`.
 
 ```cpp
 class ConsoleLogger : public Logger {
@@ -60,7 +60,7 @@ private:
 };
 ```
 
-Now any code that works against `Logger&` or `std::unique_ptr<Logger>` works with both implementations — and any future implementation you add:
+Now any code that works against `Logger&` or `std::unique_ptr<Logger>` works with both implementations, and any future implementation you add as well:
 
 ```cpp
 class Simulation {
@@ -92,7 +92,7 @@ int main() {
 }
 ```
 
-`Simulation` knows nothing about files or terminals. To add a `NetworkLogger` later you write the class — that's it. No change to `Simulation`.
+`Simulation` knows nothing about files or terminals. To add a `NetworkLogger` later you write the class; that is it. No change to `Simulation`.
 
 The rest of this chapter explains how every piece of that example works.
 
@@ -120,13 +120,13 @@ c.honk();    // defined on Car
 
 The `public` after the colon is the **access specifier**. For 99% of cases (including everything in this course) you want `public` inheritance. `private` and `protected` inheritance exist but are rare and surprising.
 
-Inheritance models "**is-a**" — a `Car` *is a* `Vehicle`. If you find yourself reaching for inheritance to model "**has-a**" — a `Car` *has an* engine — use a member variable instead.
+Inheritance models the "**is-a**" relationship: a `Car` *is a* `Vehicle`. If you find yourself reaching for inheritance to model "**has-a**" (a `Car` *has an* engine), use a member variable instead.
 
 ---
 
 ## Virtual functions
 
-A regular function call is resolved based on the *static* type of the variable. A `virtual` function call is resolved based on the *dynamic* type of the object — the actual type at runtime.
+A regular function call is resolved based on the *static* type of the variable. A `virtual` function call is resolved based on the *dynamic* type of the object: the actual type at runtime.
 
 ```cpp
 class Shape {
@@ -150,7 +150,7 @@ void render(Shape& shape) {
 }
 ```
 
-`override` is not strictly required, but always write it. It tells the compiler "I mean to be overriding a base-class function" — and if you mistype the name, change a parameter type, or get the const-ness wrong, the compiler will reject the file rather than silently introducing a brand-new unrelated function.
+`override` is not strictly required, but always write it. It tells the compiler "I mean to be overriding a base-class function." If you mistype the name, change a parameter type, or get the const-ness wrong, the compiler will reject the file rather than silently introducing a brand-new unrelated function.
 
 ### Pure virtual = abstract
 
@@ -163,13 +163,13 @@ public:
 };
 ```
 
-A class with at least one pure virtual function is **abstract** — you cannot instantiate it directly. Concrete derived classes must implement the function before they can be instantiated. This is how `Logger` enforces "every concrete logger must implement `log`."
+A class with at least one pure virtual function is **abstract**: you cannot instantiate it directly. Concrete derived classes must implement the function before they can be instantiated. This is how `Logger` enforces "every concrete logger must implement `log`."
 
 ---
 
 ## The virtual destructor rule
 
-A class designed for polymorphic use — one whose derived objects may be deleted through a base-class pointer — **must** have a virtual destructor:
+A class designed for polymorphic use (one whose derived objects may be deleted through a base-class pointer) **must** have a virtual destructor:
 
 ```cpp
 class Logger {
@@ -179,7 +179,7 @@ public:
 };
 ```
 
-Without it, deleting a `FileLogger` through a `std::unique_ptr<Logger>` runs only `Logger`'s destructor, never `FileLogger`'s — leaking the open file, never calling derived destructors, generally undefined behaviour. The compiler does not warn you.
+Without it, deleting a `FileLogger` through a `std::unique_ptr<Logger>` runs only `Logger`'s destructor, never `FileLogger`'s. The open file leaks, derived destructors never run, and you are in undefined-behaviour territory. The compiler does not warn you.
 
 Rule of thumb: every class with any `virtual` function should also have a `virtual` destructor.
 
@@ -191,15 +191,15 @@ If you copy a derived object into a base-class *value*, the derived parts are si
 
 ```cpp
 Circle c;
-Shape s = c;   // SLICING — s is just a Shape now, the Circle-ness is gone
-s.draw();      // does NOT call Circle::draw() — calls Shape::draw() if it had one
+Shape s = c;   // SLICING: s is just a Shape now, the Circle-ness is gone
+s.draw();      // does NOT call Circle::draw(); calls Shape::draw() if it had one
 ```
 
 This is one reason you almost always use **pointers or references** when working with polymorphic types:
 
 ```cpp
 Circle c;
-Shape& ref = c;            // OK — reference, no slicing
+Shape& ref = c;            // OK: reference, no slicing
 std::unique_ptr<Shape> p = std::make_unique<Circle>();  // also fine
 ```
 
@@ -209,7 +209,7 @@ Pass by `Shape&` (or `const Shape&`), store as `std::unique_ptr<Shape>`. Never b
 
 ## Compile-time polymorphism: overloading
 
-For completeness, the other kind of polymorphism — chosen by the compiler based on argument types, not by the runtime type of the receiver:
+For completeness, the other kind of polymorphism is chosen by the compiler based on argument types, not by the runtime type of the receiver:
 
 ### Function overloading
 
@@ -245,7 +245,7 @@ Complex b(3, 4);
 Complex sum = a + b;    // calls a.operator+(b)
 ```
 
-Overload operators when the meaning is obvious. For a `Complex` number, `+` is natural. For an `Employee`, it is not — don't overload it just to be clever.
+Overload operators when the meaning is obvious. For a `Complex` number, `+` is natural. For an `Employee`, it is not, don't overload it just to be clever.
 
 ---
 
@@ -258,4 +258,4 @@ Overload operators when the meaning is obvious. For a `Complex` number, `+` is n
 | One operation conceptually "the same" across types (`add(int)`, `add(double)`) | Overloading |
 | Mathematical-style notation on a custom type | Operator overloading |
 
-Inheritance is powerful but expensive in design terms — it ties your derived classes to the base class's contract forever. Reach for it when you have a genuine "is-a" relationship and a clear interface that multiple implementations will share. For everything else, plain functions, composition, and templates are usually cleaner.
+Inheritance is powerful but expensive in design terms, it ties your derived classes to the base class's contract forever. Reach for it when you have a genuine "is-a" relationship and a clear interface that multiple implementations will share. For everything else, plain functions, composition, and templates are usually cleaner.

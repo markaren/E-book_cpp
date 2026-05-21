@@ -1,6 +1,6 @@
 # Lambda Expressions
 
-A **lambda expression** is a function written inline, often used in places where you want to pass behaviour as an argument. They were added in C++11 and are now everywhere — particularly in standard library algorithms, callbacks, and short helper functions that do not deserve their own name.
+A **lambda expression** is a function written inline, often used in places where you want to pass behaviour as an argument. They were added in C++11 and are now everywhere, particularly in standard library algorithms, callbacks, and short helper functions that do not deserve their own name.
 
 This page introduces the syntax and the cases where lambdas make code dramatically cleaner.
 
@@ -47,7 +47,7 @@ The behaviour you want is right there at the call site. No detour, no naming, no
 |------|--------------|
 | `[capture]` | Which variables from the enclosing scope the lambda can use |
 | `(parameters)` | Like a function's parameter list |
-| `-> return_type` | The return type (optional — usually deduced) |
+| `-> return_type` | The return type (optional, usually deduced) |
 | `{ body }` | The code that runs when the lambda is called |
 
 The simplest form has empty captures and no return type:
@@ -57,7 +57,7 @@ auto sayHello = []() { std::cout << "Hello\n"; };
 sayHello();    // prints Hello
 ```
 
-The square brackets are what make a lambda a lambda — even an empty `[]` is required.
+The square brackets are what make a lambda a lambda, even an empty `[]` is required.
 
 ---
 
@@ -70,11 +70,11 @@ int threshold = 5;
 
 auto isLarge = [threshold](int x) { return x > threshold; };
 //             ^^^^^^^^^^^
-//             capture threshold by value — the lambda has its own copy
+//             capture threshold by value, the lambda has its own copy
 
 isLarge(7);   // true
 threshold = 100;
-isLarge(7);   // still true — the lambda's copy is still 5
+isLarge(7);   // still true, the lambda's copy is still 5
 ```
 
 By reference, with `&`:
@@ -98,7 +98,7 @@ Two shorthand forms:
 | `[=, &count]` | Everything by value, but `count` by reference |
 | `[&, threshold]` | Everything by reference, but `threshold` by value |
 
-The shorthand forms are convenient but lose precision. Prefer naming the captures explicitly — it documents intent.
+The shorthand forms are convenient but lose precision. Prefer naming the captures explicitly, it documents intent.
 
 > **Beware of `[&]` outliving the captured variables.** A lambda that captures by reference holds references to the variables; if the lambda is stored and called *after* those variables go out of scope, you get a dangling reference. Capture by value when you are not sure.
 
@@ -150,7 +150,7 @@ button.setOnClick([&](){ count++; updateDisplay(); });
 
 Two ways:
 
-**`auto`** — when you store and use the lambda in the same scope:
+**`auto`**, when you store and use the lambda in the same scope:
 
 ```cpp
 auto add = [](int a, int b) { return a + b; };
@@ -159,7 +159,7 @@ int sum = add(2, 3);
 
 Each lambda has a unique compiler-generated type. You cannot write the type out by hand, which is why `auto` is the natural fit.
 
-**`std::function<...>`** — when you need to store lambdas of the same call signature in a container, or hand one across an API boundary:
+**`std::function<...>`**, when you need to store lambdas of the same call signature in a container, or hand one across an API boundary:
 
 ```cpp
 #include <functional>
@@ -215,8 +215,8 @@ Both lambdas are tiny and live exactly where they are used. The intent reads top
 ## Summary
 
 - A lambda is an inline function with an explicit list of captured variables.
-- Syntax: `[captures](params) { body }` — the brackets are what make it a lambda.
+- Syntax: `[captures](params) { body }`, the brackets are what make it a lambda.
 - Capture by value (`[x]`), by reference (`[&x]`), or implicitly (`[=]` or `[&]`).
-- Pair them with `<algorithm>` — `sort`, `find_if`, `count_if`, `transform` — for clean, expressive code.
+- Pair them with `<algorithm>`, `sort`, `find_if`, `count_if`, `transform`, for clean, expressive code.
 - Store small lambdas with `auto`; reach for `std::function` only when you need type erasure.
 - Capturing by reference is dangerous if the lambda outlives the captured variables.

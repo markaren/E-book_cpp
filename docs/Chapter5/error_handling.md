@@ -4,14 +4,14 @@ Programs rarely run in a perfect world. Files go missing, users enter invalid da
 
 Good error handling separates two distinct responsibilities:
 
-1. **Detection** — recognising that something went wrong.
-2. **Recovery** — deciding what to do about it.
+1. **Detection**, recognising that something went wrong.
+2. **Recovery**, deciding what to do about it.
 
 Keeping these two concerns separate, often in different parts of your code, leads to cleaner and more maintainable programs.
 
 ---
 
-## Return Codes — The Simple Approach
+## Return Codes. The Simple Approach
 
 The most straightforward way to signal failure is to return a special value from a function.
 
@@ -37,16 +37,16 @@ int main() {
 
 This works for simple cases, but has real limitations as programs grow:
 
-- The caller can **silently ignore** the return value — the error disappears.
+- The caller can **silently ignore** the return value, the error disappears.
 - The sentinel value (`-1` here) might also be a legitimate result in other contexts.
 - Every call site must check the return value, cluttering the code.
 - There is no easy way to carry a descriptive error message alongside the result.
 
 ---
 
-## Exceptions — the C++ Approach
+## Exceptions, the C++ Approach
 
-C++ provides a dedicated mechanism for error handling: **exceptions**. Think of it like a fire alarm. You don't constantly check for fire while cooking — but if the alarm goes off, everyone stops what they are doing and deals with it immediately.
+C++ provides a dedicated mechanism for error handling: **exceptions**. Think of it like a fire alarm. You don't constantly check for fire while cooking, but if the alarm goes off, everyone stops what they are doing and deals with it immediately.
 
 There are three keywords:
 
@@ -78,7 +78,7 @@ int main() {
 }
 ```
 
-When `throw` executes, the program immediately stops running the current function and searches up the call stack for a matching `catch` block. This process is called **stack unwinding** — every local object that has gone out of scope has its destructor called along the way (see [RAII](../Chapter3/raii.md)).
+When `throw` executes, the program immediately stops running the current function and searches up the call stack for a matching `catch` block. This process is called **stack unwinding**, every local object that has gone out of scope has its destructor called along the way (see [RAII](../Chapter3/raii.md)).
 
 > If no matching `catch` is found anywhere in the call stack, the program calls `std::terminate()` and aborts. Always catch exceptions at a level where you can meaningfully handle them.
 
@@ -113,7 +113,7 @@ Commonly used types from `<stdexcept>`:
 | `std::logic_error` | A bug in program logic (precondition violated) |
 | `std::bad_alloc` | Memory allocation with `new` failed |
 
-You can also catch _any_ exception with `catch (...)`, but use this sparingly — it discards all information about the error:
+You can also catch _any_ exception with `catch (...)`, but use this sparingly, it discards all information about the error:
 
 ```cpp
 try {
@@ -129,7 +129,7 @@ try {
 
 ## Custom Exceptions
 
-For library or application code, you can define your own exception types. Inheriting from `std::runtime_error` is the easiest approach — the constructor takes a message string and `.what()` works automatically.
+For library or application code, you can define your own exception types. Inheriting from `std::runtime_error` is the easiest approach, the constructor takes a message string and `.what()` works automatically.
 
 ```cpp
 #include <iostream>
@@ -151,7 +151,7 @@ int main() {
     try {
         openFile("config.txt");
     } catch (const FileNotFoundError& e) {
-        std::cout << "Could not open file — " << e.what() << "\n";
+        std::cout << "Could not open file: " << e.what() << "\n";
     } catch (const std::exception& e) {
         std::cout << "Other error: " << e.what() << "\n";
     }
@@ -167,7 +167,7 @@ Defining your own exception types lets callers catch _specific_ failure modes an
 
 You already learned about [RAII](../Chapter3/raii.md). One of its greatest benefits is that it makes code **exception-safe** automatically.
 
-When an exception is thrown, C++ guarantees that the destructors of all local objects are run as the stack unwinds. If a resource — a file, a lock, a heap allocation — is managed by an RAII wrapper, it will be released correctly even if an exception is thrown mid-function.
+When an exception is thrown, C++ guarantees that the destructors of all local objects are run as the stack unwinds. If a resource (a file, a lock, a heap allocation) is managed by an RAII wrapper, it will be released correctly even if an exception is thrown mid-function.
 
 ```cpp
 #include <iostream>
@@ -183,7 +183,7 @@ void processFile(const std::string& filename) {
 
     // ... process the file ...
 
-} // `file` destructor closes the file here — even if an exception was thrown above
+} // `file` destructor closes the file here, even if an exception was thrown above
 
 int main() {
     try {
@@ -199,9 +199,9 @@ int main() {
 
 ---
 
-## `std::optional` — When Failure Is Expected
+## `std::optional`. When Failure Is Expected
 
-Sometimes the absence of a result is not an error — it is a normal outcome. For example, searching a list for a value might simply find nothing. Throwing an exception in this case would be misleading, since nothing went wrong.
+Sometimes the absence of a result is not an error. It is a normal outcome. For example, searching a list for a value might simply find nothing. Throwing an exception in this case would be misleading, since nothing went wrong.
 
 C++17 introduced `std::optional<T>`, which holds either a value of type `T` or nothing at all (`std::nullopt`).
 
@@ -215,10 +215,10 @@ std::optional<int> findIndex(const std::vector<std::string>& items,
                              const std::string& target) {
     for (int i = 0; i < static_cast<int>(items.size()); ++i) {
         if (items[i] == target) {
-            return i; // found — return the index
+            return i; // found, return the index
         }
     }
-    return std::nullopt; // not found — no value
+    return std::nullopt; // not found, no value
 }
 
 int main() {
@@ -255,7 +255,7 @@ catch (const std::runtime_error& e) { ... }   // catch by const reference
 
 ### Exceptions are for exceptional situations
 
-Do not use exceptions to control normal program flow (e.g. exiting a loop). Exceptions are for conditions that represent a failure — something the caller cannot be expected to deal with locally. For expected "no result" situations, prefer `std::optional`.
+Do not use exceptions to control normal program flow (e.g. exiting a loop). Exceptions are for conditions that represent a failure, something the caller cannot be expected to deal with locally. For expected "no result" situations, prefer `std::optional`.
 
 ### Catch at the right level
 
@@ -271,4 +271,4 @@ Catch an exception where you can **meaningfully recover** from it. Catching an e
 
 ### Use RAII to guarantee cleanup
 
-Never manually call cleanup code (`delete`, `fclose`, etc.) in a `catch` block — you will forget to duplicate it on every code path. Instead, wrap resources in RAII types so they clean themselves up automatically, whether or not an exception is thrown.
+Never manually call cleanup code (`delete`, `fclose`, etc.) in a `catch` block. You will forget to duplicate it on every code path. Instead, wrap resources in RAII types so they clean themselves up automatically, whether or not an exception is thrown.

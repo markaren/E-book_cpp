@@ -320,7 +320,7 @@ private:
 
 ```cpp
 #include "motor.hpp"
-#include <sstream>
+#include <format>
 
 Motor::Motor(int id, double maxRpm)
     : id_(id), maxRpm_(maxRpm) {}
@@ -338,9 +338,7 @@ bool Motor::isRunning() const {
 }
 
 std::string Motor::describe() const {
-    std::ostringstream out;
-    out << "Motor " << id_ << " (max " << maxRpm_ << " RPM)";
-    return out.str();
+    return std::format("Motor {} (max {} RPM)", id_, maxRpm_);
 }
 ```
 

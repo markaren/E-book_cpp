@@ -57,15 +57,31 @@ greeting += name;                            // greeting is now "Hello, Alice"
 greeting += '!';                             // appending a single char also works
 ```
 
-For building up long strings piece by piece, repeated `+=` is fine. For combining many small pieces (especially with non-string types mixed in), `std::ostringstream` is often cleaner:
+For building up long strings piece by piece, repeated `+=` is fine. For combining several small pieces — especially with non-string types mixed in — `std::format` is the cleanest option:
 
 ```cpp
-#include <sstream>
+#include <format>
 
+std::string message = std::format("Motor {} at {} RPM", id, rpm);
+```
+
+The placeholders (`{}`) take the arguments in order and convert each to text automatically. No string concatenation, no `std::to_string`, no temporary streams.
+
+Two older alternatives you will still see in existing code:
+
+```cpp
+// std::ostringstream — pre-C++20 idiom
+#include <sstream>
 std::ostringstream out;
 out << "Motor " << id << " at " << rpm << " RPM";
 std::string message = out.str();
+
+// Concatenation with std::to_string — works but reads poorly
+std::string message = "Motor " + std::to_string(id)
+                    + " at "    + std::to_string(rpm) + " RPM";
 ```
+
+Prefer `std::format` in new code.
 
 ---
 
@@ -111,7 +127,13 @@ std::string a = std::to_string(42);    // "42"
 std::string b = std::to_string(3.14);  // "3.140000"  (note: 6 decimal places by default)
 ```
 
-`std::to_string` is fine for quick conversions but its formatting is fixed. For precise formatting, use `std::ostringstream` with `<iomanip>` manipulators, or `std::format` (C++20).
+`std::to_string` is fine for quick conversions but its formatting is fixed (and for `double` it always prints 6 decimal places, often more than you want). For precise formatting use `std::format`:
+
+```cpp
+std::string a = std::format("{:.2f}", 3.14159);   // "3.14"
+std::string b = std::format("{:>8}", 42);         // "      42" — right-aligned
+std::string c = std::format("{:#x}", 255);        // "0xff"
+```
 
 `std::stoi` and friends throw if the input is not a number — wrap them in `try`/`catch` or check the input first if that matters.
 
@@ -175,6 +197,6 @@ Wrap one side in `std::string` to force a value comparison: `if (std::string(a) 
 - `std::string` is the everyday string type. Use it for all text.
 - Concatenate with `+` and `+=`; search with `find`; slice with `substr`.
 - Convert to and from numbers with `std::to_string` / `std::stoi` / `std::stod`.
-- For combining many pieces of mixed types, `std::ostringstream` reads better than chained `+=`.
+- For combining many pieces of mixed types, `std::format` reads cleaner than chained `+=` or `std::ostringstream`.
 - `find` returns `std::string::npos` when nothing is found.
 - `c_str()` gives you a `const char*` for C APIs.

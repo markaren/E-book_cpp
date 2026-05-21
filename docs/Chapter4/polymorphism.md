@@ -72,7 +72,7 @@ public:
     void step(double dt) {
         // ... do work ...
         if (logger_) {
-            logger_->log("Step t=" + std::to_string(t_));
+            logger_->log(std::format("Step t={}", t_));
         }
         t_ += dt;
     }

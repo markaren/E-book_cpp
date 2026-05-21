@@ -96,4 +96,4 @@ Read each chapter, then write code. Type the examples by hand rather than copy-p
 
 When this book gives a recommendation, it is the one you should follow unless you have a specific reason not to. C++ has many ways to do most things, and a beginner who tries to learn *all* of them ends up confused. Learn the one good way first.
 
-Up next: [Getting Started](../getting_started.md) walks you through installing CLion and compiling your first program.
+Up next: [Basic Structure](basic_structure.md) breaks down a complete C++ program piece by piece. If you have not yet installed CLion, see [Getting Started](../getting_started.md) first.

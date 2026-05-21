@@ -177,13 +177,19 @@ std::cout << std::setw(10) << 42 << "\n";                       // "        42"
 std::cout << std::hex << 255 << "\n";                            // ff
 ```
 
-Manipulators are "sticky" — once you set them on a stream, they stay set until you change them. If you only need formatting for a single value, save and restore — or use `std::format` (C++20) for clean local formatting:
+Manipulators are "sticky" — once you set them on a stream, they stay set until you change them. If you only need formatting for a single value, save and restore — or, much more cleanly, use `std::format` from `<format>`:
 
 ```cpp
-std::cout << std::format("{:.2f}\n", pi);   // C++20
+#include <format>
+
+std::cout << std::format("{:.2f}\n", pi);          // 3.14
+std::cout << std::format("{:>10}\n", 42);          // right-aligned in 10 columns
+std::cout << std::format("{:#x}\n", 255);          // 0xff
 ```
 
-(C++17 — the standard for this course — does not have `std::format` yet. `printf`-style formatting from `<cstdio>` is also available, and a common choice in embedded code.)
+The format string follows Python-style placeholders: `{}` for the next argument, with optional spec after `:`. Prefer this over manipulators when you only need one formatted value — no sticky state to clean up.
+
+`printf`-style formatting from `<cstdio>` is also available, and a common choice in embedded code.
 
 ---
 

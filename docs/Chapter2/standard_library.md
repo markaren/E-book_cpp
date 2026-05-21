@@ -117,7 +117,7 @@ Like `map` and `unordered_map`, but storing just *keys*, no values. Use when you
 std::set<int> uniqueReadings;
 uniqueReadings.insert(42);
 uniqueReadings.insert(42);   // ignored — already present
-uniqueReadings.contains(42); // true (C++20)
+uniqueReadings.contains(42); // true
 ```
 
 ### Other containers

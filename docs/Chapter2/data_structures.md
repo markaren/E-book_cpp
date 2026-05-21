@@ -110,7 +110,7 @@ sensorOffsets["temp"]    = -0.5;
 sensorOffsets["voltage"] = 0.01;
 
 double t = sensorOffsets["temp"];       // -0.5
-sensorOffsets.contains("temp");          // true (C++20)
+sensorOffsets.contains("temp");          // true
 
 for (const auto& [name, offset] : sensorOffsets) {
     // iterates in alphabetical order of key

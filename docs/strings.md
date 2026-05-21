@@ -81,8 +81,8 @@ if (s.find("world") != std::string::npos) {
     // found
 }
 
-s.starts_with("hello"); // true  (C++20)
-s.ends_with("world");   // true  (C++20)
+s.starts_with("hello"); // true
+s.ends_with("world");   // true
 s.contains("o");        // true  (C++23)
 ```
 

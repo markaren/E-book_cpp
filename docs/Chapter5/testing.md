@@ -49,7 +49,7 @@ Catch2 must be downloaded and linked before your tests can use it. The snippet b
 cmake_minimum_required(VERSION 3.14)
 project(MyProject)
 
-set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD 20)
 
 # --- Fetch Catch2 from GitHub ---
 include(FetchContent)

@@ -18,9 +18,9 @@ import re
 from typing import Match
 
 
-# GCC 13.2 with C++17 — matches the course standard. To bump, change here.
+# GCC 13.2 with C++20 — matches the course standard. To bump, change here.
 COMPILER_ID = "g132"
-COMPILER_OPTIONS = "-std=c++17 -O0 -Wall -Wextra -pedantic"
+COMPILER_OPTIONS = "-std=c++20 -O0 -Wall -Wextra -pedantic"
 
 
 # Match a fenced cpp block, with or without trailing attributes on the opener.

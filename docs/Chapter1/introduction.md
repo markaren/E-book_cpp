@@ -39,7 +39,7 @@ You will hear that C++ is a "difficult" language. There is truth to that — it 
 - **Game engines and graphics** — Unreal, large parts of Unity's runtime.
 - **Operating systems and drivers** — code that talks to hardware directly.
 
-The language has also evolved a lot. **Modern C++** (C++11 and later) is far friendlier than the C++ of twenty years ago. This course teaches C++17, which is what you should be writing today.
+The language has also evolved a lot. **Modern C++** (C++11 and later) is far friendlier than the C++ of twenty years ago. This course teaches C++20, which is what you should be writing today.
 
 ---
 

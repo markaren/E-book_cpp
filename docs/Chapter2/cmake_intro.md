@@ -41,13 +41,13 @@ The default standard depends on the compiler, and it is rarely the one you want.
 cmake_minimum_required(VERSION 3.15)
 project(hello)
 
-set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 add_executable(hello main.cpp)
 ```
 
-`CMAKE_CXX_STANDARD 17` tells the compiler to use C++17 (the standard this course teaches). `CMAKE_CXX_STANDARD_REQUIRED ON` makes it a hard requirement — without it, an older compiler would silently fall back to whatever it supports.
+`CMAKE_CXX_STANDARD 20` tells the compiler to use C++20 (the standard this course teaches). `CMAKE_CXX_STANDARD_REQUIRED ON` makes it a hard requirement — without it, an older compiler would silently fall back to whatever it supports.
 
 ---
 
@@ -184,7 +184,7 @@ For a more elaborate convention used in larger industry projects, see [the Pitch
 
 - `CMakeLists.txt` describes your project; CMake turns the description into platform-specific build files.
 - Three lines suffice for a single-file program: `cmake_minimum_required`, `project`, `add_executable`.
-- Set `CMAKE_CXX_STANDARD 17` explicitly.
+- Set `CMAKE_CXX_STANDARD 20` explicitly.
 - Add more source files by listing them in `add_executable`. Headers do not need to be listed.
 - Use `target_include_directories` when headers live in a separate folder.
 - Use `add_library` and `target_link_libraries` once you have code shared between executables.

@@ -81,10 +81,10 @@ nav:
   - 1. Introduction:
     - Introduction: Chapter1/introduction.md
     - Basic Structure: Chapter1/basic_structure.md
-    - Control Statements: Chapter1/control_statements.md
     - Variables and Basic Types: Chapter1/variables.md
-    - Functions: Chapter1/functions.md
     - Operators and Expressions: Chapter1/operators_expressions.md
+    - Control Statements: Chapter1/control_statements.md
+    - Functions: Chapter1/functions.md
   - 2. Tooling & Standard Library:
     - CMake Introduction: Chapter2/cmake_intro.md
     - Version Control & Git: Chapter2/version_control.md

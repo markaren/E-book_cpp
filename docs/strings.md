@@ -97,10 +97,11 @@ if (s.find("world") != std::string::npos) {
     // found
 }
 
-s.starts_with("hello"); // true
-s.ends_with("world");   // true
-s.contains("o");        // true  (C++23)
+s.starts_with("hello"); // true   (C++20)
+s.ends_with("world");   // true   (C++20)
 ```
+
+To test whether a string contains a substring, use `find` as shown above: `s.find("o") != std::string::npos`. C++23 adds a shorter `s.contains("o")`, but this course targets C++20.
 
 `std::string::npos` is the sentinel value all `find`-family functions return on failure. Always compare against it explicitly.
 

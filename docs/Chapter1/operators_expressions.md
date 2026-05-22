@@ -110,12 +110,12 @@ if (!ready) {
 `&&` and `||` are **short-circuiting**: they evaluate the right-hand side only if needed. This is useful — and occasionally essential:
 
 ```cpp
-if (ptr != nullptr && ptr->isActive()) {
-    // safe: we only call ->isActive() if ptr is not null
+if (count != 0 && total / count > threshold) {
+    // safe: total / count runs only when count is not zero
 }
 ```
 
-If `ptr` is null, the right side never runs. Swap the order and the program crashes.
+If `count` is zero, the right side never runs, so the division is skipped. Swap the two conditions and the program divides by zero.
 
 ---
 

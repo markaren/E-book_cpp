@@ -71,7 +71,7 @@ public:
             std::error_code ec;
             std::filesystem::remove_all(directoryPath_, ec);
             if (ec) {
-                std::cerr << "Failed to delete temporary directory: " << ec.message() << std::endl;
+                std::cerr << "Failed to delete temporary directory: " << ec.message() << "\n";
             }
         }
     }
@@ -87,16 +87,16 @@ int main() {
           // Create a TemporaryDirectory object, which creates a temporary directory
           TemporaryDirectory tempDir;
   
-          std::cout << "Temporary directory path: " << tempDir.getPath() << std::endl;
+          std::cout << "Temporary directory path: " << tempDir.getPath() << "\n";
   
           // Use the temporary directory for some operations...
 
         } // `tempDir` goes out of scope and is destructed (deleting the created directory in the process).
 
-        std::cout << "Temporary directory deleted." << std::endl;
+        std::cout << "Temporary directory deleted." << "\n";
 
     } catch (const std::exception& e) {
-        std::cerr << "Error: " << e.what() << std::endl;
+        std::cerr << "Error: " << e.what() << "\n";
         return 1; // signal error
     }
 

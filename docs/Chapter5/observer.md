@@ -76,7 +76,7 @@ public:
     }
 
     void update(int newState) override {
-        std::cout << "Observer received update. New state: " << newState << std::endl;
+        std::cout << "Observer received update. New state: " << newState << "\n";
     }
 
 private:

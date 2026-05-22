@@ -128,7 +128,7 @@ The fix: return by value (you get your own copy) or pass a reference *into* the 
 
 ### Pointers and references into class internals
 
-Returning a reference or pointer to a class's private data also breaks encapsulation:
+Returning a reference or pointer to a class's private data also breaks **encapsulation**. (Classes are the next chapter; for now you only need the idea that a class keeps some data *private*, reachable only through its own functions.)
 
 ```cpp
 class Demo {

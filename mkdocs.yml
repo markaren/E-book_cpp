@@ -92,9 +92,9 @@ nav:
     - C++ Standard Library: Chapter2/standard_library.md
     - Data Structures: Chapter2/data_structures.md
   - 3. Classes & Types:
+    - Values, References & Pointers: Chapter3/types_refs_ptrs.md
     - Classes: Chapter3/classes.md
     - RAII: Chapter3/raii.md
-    - Values, References & Pointers: Chapter3/types_refs_ptrs.md
     - IO & Streams: Chapter3/io_streams.md
   - 4. Memory & Polymorphism:
     - Memory Management: Chapter4/memory.md

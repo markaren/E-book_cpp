@@ -108,6 +108,7 @@ nav:
     - Testing: Chapter5/testing.md
     - Error Handling: Chapter5/error_handling.md
   - Reference:
+    - Coming from Python: python_to_cpp.md
     - Reading Compiler Errors: compiler_errors.md
     - Using a Debugger: debugger.md
     - Using AI for Coding: using_ai.md

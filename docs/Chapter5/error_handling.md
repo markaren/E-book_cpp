@@ -241,6 +241,47 @@ You can check whether an `optional` holds a value using `if (result)` or `result
 
 ---
 
+## Assertions: catching bugs, not handling errors
+
+Not everything that "goes wrong" is an *error* to recover from. Some conditions should be **impossible** if your code is correct — a function receiving an argument the caller promised never to pass, an index the surrounding logic guarantees is valid. When one of those is violated you do not have a bad input to handle gracefully; you have a **bug** to find and fix.
+
+`assert` (from `<cassert>`) is the tool for that. You give it a condition that must be true. If it ever is not, the program prints the failing condition, file, and line, and aborts immediately:
+
+```cpp
+#include <cassert>
+#include <iostream>
+
+// Precondition: percent must be between 0 and 100
+int dutyCycle(int percent) {
+    assert(percent >= 0 && percent <= 100);   // a bug if this is ever false
+    return percent * 255 / 100;                // scale to the 0–255 range
+}
+
+int main() {
+    std::cout << dutyCycle(50) << "\n";   // 127
+    // dutyCycle(150);  // would abort in a debug build: assertion failed
+}
+```
+
+The point is to fail **loudly and early**, right where the mistake is, instead of returning a silently wrong value that crashes mysteriously three functions later.
+
+One crucial property: **assertions are removed from release builds.** When the program is compiled with `NDEBUG` defined (the standard "release" setting), every `assert` disappears and costs nothing at runtime. Two rules follow:
+
+- **Never put code with side effects inside an `assert`.** `assert(connect());` would stop connecting in a release build. Assert the *condition*, never an action.
+- **Never use `assert` for failures that happen in normal use** — bad user input, a missing file, a dropped connection. Those are *expected*; handle them with exceptions or `std::optional`. `assert` is only for "this cannot happen unless I made a mistake."
+
+### `static_assert`: checks at compile time
+
+A close relative, `static_assert`, checks a condition while the program is *compiling* rather than running. It is for assumptions about types and sizes — handy in portable or embedded code:
+
+```cpp
+static_assert(sizeof(int) >= 4, "this code assumes a 32-bit int");
+```
+
+If the condition is false the code simply does not compile, and you get the message. There is no runtime cost, because there is no runtime check.
+
+---
+
 ## Best Practices
 
 ### Throw by value, catch by reference
@@ -268,6 +309,7 @@ Catch an exception where you can **meaningfully recover** from it. Catching an e
 | Function might not find a result (normal case) | `std::optional` |
 | Something went wrong that the caller must deal with | Exception |
 | Performance-critical code, simple error signaling | Return code or `bool` |
+| A condition that should be impossible unless there is a bug | `assert` |
 
 ### Use RAII to guarantee cleanup
 

@@ -2,7 +2,7 @@
 
 Welcome to the e-book for the course [AIS1003 — Object-Oriented Programming with C++](https://www.ntnu.no/studier/emner/AIS1003#tab=omEmnet).
 
-The book is updated regularly throughout the semester. Use the sidebar to navigate between chapters, or jump straight to a topic with the search box above.
+Use the sidebar to navigate between chapters, or jump straight to a topic with the search box above.
 
 !!! note
     The book is in an early state of development. Consider it a preview.

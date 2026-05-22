@@ -1,6 +1,6 @@
 # Reading Compiler Errors
 
-The single fastest way to get better at C++ is to learn to read error messages. Beginners freeze at the wall of red text; experienced programmers skim it, find the line, and fix the problem in seconds. The difference is not intelligence — it is knowing what to look for.
+The single fastest way to get better at C++ is to learn to read error messages. Beginners freeze at the wall of red text; experienced programmers skim it, find the line, and fix the problem in seconds. The difference is not intelligence; it is knowing what to look for.
 
 This page is a guide to reading typical C++ compiler output, the most common errors you will hit, and what to do about each.
 
@@ -76,7 +76,7 @@ note: candidate function not viable: no known conversion
       int add(int a, int b);
 ```
 
-The fix is in the `note: candidate ...` line — read it for what the compiler *expected* and compare to what you passed.
+The fix is in the `note: candidate ...` line: read it for what the compiler *expected* and compare to what you passed.
 
 ### `expected '}' at end of input`
 
@@ -92,7 +92,7 @@ You defined the same thing twice. Common causes:
 
 ### `'X' was not declared in this scope`
 
-Same as "use of undeclared identifier" — a different compiler's phrasing for the same problem.
+Same as "use of undeclared identifier", a different compiler's phrasing for the same problem.
 
 ### `cannot convert 'X' to 'Y'`
 
@@ -116,12 +116,12 @@ You tried to write to something that cannot be written to: a `const` variable, t
 const int x = 5;
 x = 10;                     // expression is not assignable
 
-if (x = 5) { }              // also a warning — see below
+if (x = 5) { }              // also a warning, see below
 ```
 
 ### Linker errors: `undefined reference to ...`
 
-Different from compile errors — these come from the **linker**, the next stage of the build. The compiler accepted your code, but when it came time to assemble the final program, it could not find the implementation of something:
+Different from compile errors: these come from the **linker**, the next stage of the build. The compiler accepted your code, but when it came time to assemble the final program, it could not find the implementation of something:
 
 ```
 undefined reference to `Motor::start()'
@@ -133,13 +133,13 @@ Usual causes:
 2. **The `.cpp` containing the implementation is not in your `CMakeLists.txt`.**
 3. **You forgot to link against a library** (`target_link_libraries` missing).
 
-Linker errors do *not* include line numbers in your source — they refer to symbols.
+Linker errors do *not* include line numbers in your source; they refer to symbols.
 
 ---
 
 ## Warnings
 
-Warnings are not errors — the build succeeds. But warnings almost always indicate a real bug or a smell:
+Warnings are not errors; the build succeeds. But warnings almost always indicate a real bug or a smell:
 
 ```
 warning: control reaches end of non-void function
@@ -159,7 +159,7 @@ Three strategies, in this order:
 
 **2. Comment out the offending line and rebuild.** If the rest of the file then compiles cleanly, you have narrowed the problem.
 
-**3. Search the *exact* error text.** Copy the most specific part — usually starting with `error:` — and paste it into a search engine. Most error messages have been asked about on Stack Overflow several times over.
+**3. Search the *exact* error text.** Copy the most specific part, usually starting with `error:`, and paste it into a search engine. Most error messages have been asked about on Stack Overflow several times over.
 
 **4. Ask an AI to translate the message.** Pasting the *full* compiler output together with the offending code into an AI assistant is one of its best use cases. See [Using AI for Coding](using_ai.md) for the habits that keep this from turning into "the AI does my work."
 
@@ -193,6 +193,6 @@ main.cpp:4:13: error: expected ';' after expression
             ;
 ```
 
-Two errors. The first says line 5 has an "undeclared identifier `std`" — which is nonsense because `std` is declared by the `#include`. That is the giveaway: the compiler is so confused that obvious things have stopped making sense. Always look at the *first* error first. The second message points at line 4, which is missing its semicolon. Add the semicolon, recompile, and both errors disappear.
+Two errors. The first says line 5 has an "undeclared identifier `std`", which is nonsense because `std` is declared by the `#include`. That is the giveaway: the compiler is so confused that obvious things have stopped making sense. Always look at the *first* error first. The second message points at line 4, which is missing its semicolon. Add the semicolon, recompile, and both errors disappear.
 
 Once you have done this five or six times, you will start fixing missing semicolons before the compiler even finishes complaining about them.

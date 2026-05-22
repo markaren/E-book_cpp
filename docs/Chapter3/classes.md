@@ -1,6 +1,6 @@
 # Classes
 
-A **class** is a user-defined type. Where an `int` holds an integer and a `std::vector` holds a list of values, a class you write holds whatever data your problem needs — a motor, a controller, a sensor reading — together with the operations that make sense on that data.
+A **class** is a user-defined type. Where an `int` holds an integer and a `std::vector` holds a list of values, a class you write holds whatever data your problem needs (a motor, a controller, a sensor reading) together with the operations that make sense on that data.
 
 Classes are the unit of organisation in object-oriented C++. Everything else in this chapter, and most of the rest of the book, hangs off this idea: bundle related data and the operations that work on it into a single type.
 
@@ -22,9 +22,9 @@ private:
 
 Three parts to read off:
 
-- **The class name** — `Motor`. Capitalised by convention.
-- **Public members** — what code *outside* the class can use. Here: `start`, `stop`, `isRunning`.
-- **Private members** — internal state. Here: `running_`. The trailing underscore is a convention for "this is a class data member."
+- **The class name** (`Motor`). Capitalised by convention.
+- **Public members:** what code *outside* the class can use. Here: `start`, `stop`, `isRunning`.
+- **Private members:** internal state. Here: `running_`. The trailing underscore is a convention for "this is a class data member."
 
 Using it:
 
@@ -37,7 +37,7 @@ if (m.isRunning()) {
 m.stop();
 ```
 
-Outside code can call `m.start()` because `start` is public. Outside code cannot write `m.running_ = true;` directly — `running_` is private. This is the basic shape of **encapsulation**: the class owns its state and decides what the outside world is allowed to do with it.
+Outside code can call `m.start()` because `start` is public. Outside code cannot write `m.running_ = true;` directly, because `running_` is private. This is the basic shape of **encapsulation**: the class owns its state and decides what the outside world is allowed to do with it.
 
 ---
 
@@ -45,8 +45,8 @@ Outside code can call `m.start()` because `start` is public. Outside code cannot
 
 A class has two kinds of members:
 
-- **Data members** (often called fields, attributes, or instance variables) — the data each instance holds.
-- **Member functions** (often called methods) — the operations the class supports.
+- **Data members** (also called fields, attributes, or instance variables): the data each instance holds.
+- **Member functions** (also called methods): the operations the class supports.
 
 ```cpp
 class Sensor {
@@ -60,7 +60,7 @@ private:
 };
 ```
 
-A `const` after the parameter list — like `read() const` — means "this function does not modify the object." Mark every member function `const` if it can be. The compiler enforces it, and it tells the reader "calling this is safe; it observes, it does not change."
+A `const` after the parameter list (`read() const`) means "this function does not modify the object." Mark every member function `const` if it can be. The compiler enforces it, and it tells the reader "calling this is safe; it observes, it does not change."
 
 ---
 
@@ -102,13 +102,13 @@ The part after the `:` and before the `{}` is the **member initialiser list**. I
 Prefer the member initialiser list over assignment in the constructor body:
 
 ```cpp
-// Less good — members are default-constructed and then assigned
+// Less good: members are default-constructed and then assigned
 Motor(int id, double maxRpm) {
     id_     = id;
     maxRpm_ = maxRpm;
 }
 
-// Better — members are constructed with the right value in one step
+// Better: members are constructed with the right value in one step
 Motor(int id, double maxRpm)
     : id_(id), maxRpm_(maxRpm) {}
 ```
@@ -167,7 +167,7 @@ The one case where you *do* need `this`: when a parameter shadows a member.
 class Motor {
 public:
     void setId(int id) {
-        this->id_ = id;   // disambiguate — but better to avoid the shadow:
+        this->id_ = id;   // disambiguate, but better to avoid the shadow:
     }
     // Cleaner:
     // void setId(int newId) { id_ = newId; }
@@ -183,7 +183,7 @@ Decorate your data members (the trailing-underscore convention) and shadowing ra
 
 ## Encapsulation in practice
 
-The point of making data private is not paranoia — it is that the class can enforce **invariants**: rules about the data that should never be broken.
+The point of making data private is not paranoia. It is that the class can enforce **invariants**: rules about the data that should never be broken.
 
 A bank account whose balance must never go negative; a sensor whose timestamp must never decrease; a motor whose RPM cannot exceed its rated maximum. If the data is public, every caller has to remember to check. If the data is private and only updated via member functions, the check lives in one place.
 
@@ -215,7 +215,7 @@ private:
 };
 ```
 
-`balance_` is private, so it can only change through `deposit` and `withdraw` — both of which check the operation before they apply it. The invariant "balance is never negative" is enforced in one place.
+`balance_` is private, so it can only change through `deposit` and `withdraw`. Both check the operation before they apply it. The invariant "balance is never negative" is enforced in one place.
 
 ---
 
@@ -258,7 +258,7 @@ No destructor. No copy or move operations. The defaults work because `std::strin
 
 ### Rule of Three (the C++03 rule)
 
-> If you write a destructor, you almost certainly also need a copy constructor and a copy assignment operator — and vice versa.
+> If you write a destructor, you almost certainly also need a copy constructor and a copy assignment operator (and vice versa).
 
 The classical reason: a class with a destructor probably manages a resource (memory, a file, a lock). The compiler-generated copy operations just shallow-copy the resource handle, which means two objects now think they own the same thing. Disaster on destruction.
 
@@ -267,7 +267,7 @@ class BadBuffer {
 public:
     BadBuffer(int size) : data_(new int[size]) {}
     ~BadBuffer()        { delete[] data_; }
-    // no copy constructor, no copy assignment — compiler generates broken ones
+    // no copy constructor, no copy assignment: compiler generates broken ones
 
 private:
     int* data_;
@@ -283,7 +283,7 @@ BadBuffer b = a;     // SAME pointer in both! double-delete on destruction
 
 > If you write any of the five (destructor, copy ctor, copy assignment, move ctor, move assignment), you probably need to think about all five.
 
-Modern C++ added move operations. If you write a destructor and copy operations, the compiler stops generating move operations for you — which can quietly make your class slower than it should be.
+Modern C++ added move operations. If you write a destructor and copy operations, the compiler stops generating move operations for you. That can quietly make your class slower than it should be.
 
 The practical advice for this course: **aim for the Rule of Zero**. If you can't, write all five explicitly. If you find yourself implementing a destructor, ask whether you can replace the raw resource with a smart pointer or a standard container instead.
 
@@ -344,7 +344,7 @@ std::string Motor::describe() const {
 
 `Motor::` in front of each function name says "this function belongs to the `Motor` class." The header is what other files `#include`; the implementation file is compiled separately.
 
-For short functions — one-liners, simple getters — it is fine to keep them inside the class. For anything bigger, split. Compile times improve and the header stays readable.
+For short functions (one-liners, simple getters) it is fine to keep them inside the class. For anything bigger, split. Compile times improve and the header stays readable.
 
 ---
 

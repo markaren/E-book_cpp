@@ -1,6 +1,6 @@
 # Strings
 
-Text in C++ is handled by `std::string`. You will use it everywhere — for filenames, sensor IDs, log messages, command parsing, error descriptions. It behaves like any other value type: copying makes a real copy; passing by value is safe but potentially expensive.
+Text in C++ is handled by `std::string`. You will use it everywhere: for filenames, sensor IDs, log messages, command parsing, error descriptions. It behaves like any other value type: copying makes a real copy; passing by value is safe but potentially expensive.
 
 This page is a quick reference for the operations you will reach for most. The full API is on [cppreference's std::string page](https://en.cppreference.com/w/cpp/string/basic_string).
 
@@ -15,14 +15,14 @@ std::string a;                          // empty
 std::string b = "hello";                // from a string literal
 std::string c{"hello"};                 // same, brace form
 std::string d(5, 'a');                  // "aaaaa"
-std::string e = std::to_string(42);     // "42" — convert a number
+std::string e = std::to_string(42);     // "42" (convert a number)
 ```
 
 A bare string literal in your source code (`"hello"`) is technically a `const char[]`, not a `std::string`. In most contexts it converts implicitly, but for the cases where it does not, you can force it:
 
 ```cpp
 auto x = std::string{"hello"};      // explicit construction
-auto y = "hello"s;                   // C++14 — needs `using namespace std::string_literals;`
+auto y = "hello"s;                   // C++14, needs `using namespace std::string_literals;`
 ```
 
 ---
@@ -32,15 +32,15 @@ auto y = "hello"s;                   // C++14 — needs `using namespace std::st
 ```cpp
 std::string s = "robotics";
 
-s.length();          // 8 — same as s.size()
+s.length();          // 8 (same as s.size())
 s.empty();           // false
-s[0];                 // 'r' — no bounds check
-s.at(0);              // 'r' — bounds-checked (throws if out of range)
+s[0];                 // 'r' (no bounds check)
+s.at(0);              // 'r' (bounds-checked, throws if out of range)
 s.front();            // 'r'
 s.back();             // 's'
 ```
 
-`length()` and `size()` are identical — `std::string` carries both names for historical reasons. Use whichever reads better.
+`length()` and `size()` are identical; `std::string` carries both names for historical reasons. Use whichever reads better.
 
 ---
 
@@ -57,7 +57,7 @@ greeting += name;                            // greeting is now "Hello, Alice"
 greeting += '!';                             // appending a single char also works
 ```
 
-For building up long strings piece by piece, repeated `+=` is fine. For combining several small pieces — especially with non-string types mixed in — `std::format` is the cleanest option:
+For building up long strings piece by piece, repeated `+=` is fine. For combining several small pieces, especially with non-string types mixed in, `std::format` is the cleanest option:
 
 ```cpp
 #include <format>
@@ -70,13 +70,13 @@ The placeholders (`{}`) take the arguments in order and convert each to text aut
 Two older alternatives you will still see in existing code:
 
 ```cpp
-// std::ostringstream — pre-C++20 idiom
+// std::ostringstream (pre-C++20 idiom)
 #include <sstream>
 std::ostringstream out;
 out << "Motor " << id << " at " << rpm << " RPM";
 std::string message = out.str();
 
-// Concatenation with std::to_string — works but reads poorly
+// Concatenation with std::to_string (works but reads poorly)
 std::string message = "Motor " + std::to_string(id)
                     + " at "    + std::to_string(rpm) + " RPM";
 ```
@@ -91,7 +91,7 @@ Prefer `std::format` in new code.
 std::string s = "hello world";
 
 s.find("world");      // 6
-s.find("xyz");        // std::string::npos — meaning "not found"
+s.find("xyz");        // std::string::npos, meaning "not found"
 
 if (s.find("world") != std::string::npos) {
     // found
@@ -112,8 +112,8 @@ To test whether a string contains a substring, use `find` as shown above: `s.fin
 ```cpp
 std::string s = "robotics";
 
-s.substr(0, 5);   // "robot"  — from index 0, take 5 characters
-s.substr(5);      // "ics"    — from index 5 to the end
+s.substr(0, 5);   // "robot"  (from index 0, take 5 characters)
+s.substr(5);      // "ics"    (from index 5 to the end)
 ```
 
 ---
@@ -132,11 +132,11 @@ std::string b = std::to_string(3.14);  // "3.140000"  (note: 6 decimal places by
 
 ```cpp
 std::string a = std::format("{:.2f}", 3.14159);   // "3.14"
-std::string b = std::format("{:>8}", 42);         // "      42" — right-aligned
+std::string b = std::format("{:>8}", 42);         // "      42" (right-aligned)
 std::string c = std::format("{:#x}", 255);        // "0xff"
 ```
 
-`std::stoi` and friends throw if the input is not a number — wrap them in `try`/`catch` or check the input first if that matters.
+`std::stoi` and friends throw if the input is not a number; wrap them in `try`/`catch` or check the input first if that matters.
 
 ---
 
@@ -148,7 +148,7 @@ std::string b = "banana";
 
 a == b;     // false
 a != b;     // true
-a < b;       // true  — lexicographic comparison
+a < b;       // true  (lexicographic comparison)
 ```
 
 The comparison is byte-by-byte. It is case-sensitive (`"Apple" != "apple"`) and locale-naïve (it does not understand language-specific sorting rules). If you need case-insensitive comparison, lowercase both sides first (loop with `std::tolower`).
@@ -159,8 +159,8 @@ The comparison is byte-by-byte. It is case-sensitive (`"Apple" != "apple"`) and 
 
 The C-style "string" is a pointer to a null-terminated array of characters. You will see them in two places:
 
-1. **String literals** in your code — `"hello"` is a `const char*`.
-2. **Old C APIs** — many libraries (especially embedded ones) take `const char*` parameters.
+1. **String literals** in your code. `"hello"` is a `const char*`.
+2. **Old C APIs.** Many libraries (especially embedded ones) take `const char*` parameters.
 
 `std::string` converts to and from these freely:
 

@@ -1,6 +1,6 @@
 # CMake
 
-So far you have run programs through CLion's green play button. That button is calling a build tool behind the scenes — and that tool is **CMake**.
+So far you have run programs through CLion's green play button. That button is calling a build tool behind the scenes, and that tool is **CMake**.
 
 CMake is not a compiler. It is one level above: you describe your project to CMake in a small file called `CMakeLists.txt`, and CMake generates the platform-specific instructions (Makefiles on Linux, Visual Studio project files on Windows, Xcode projects on macOS) that your compiler then follows. Write the project description once; build it anywhere.
 
@@ -47,7 +47,7 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 add_executable(hello main.cpp)
 ```
 
-`CMAKE_CXX_STANDARD 20` tells the compiler to use C++20 (the standard this course teaches). `CMAKE_CXX_STANDARD_REQUIRED ON` makes it a hard requirement — without it, an older compiler would silently fall back to whatever it supports.
+`CMAKE_CXX_STANDARD 20` tells the compiler to use C++20 (the standard this course teaches). `CMAKE_CXX_STANDARD_REQUIRED ON` makes it a hard requirement, without it, an older compiler would silently fall back to whatever it supports.
 
 ---
 
@@ -69,7 +69,7 @@ Just list the additional `.cpp` files in `add_executable`:
 add_executable(hello main.cpp motor.cpp)
 ```
 
-Header files (`.hpp` / `.h`) are *not* listed — they are pulled in by `#include` lines in the source files. CMake only needs to know which `.cpp` files to compile.
+Header files (`.hpp` / `.h`) are *not* listed, they are pulled in by `#include` lines in the source files. CMake only needs to know which `.cpp` files to compile.
 
 For larger projects you can glob, but glob-based source lists do not pick up new files until CMake re-runs. Explicit lists are clearer:
 
@@ -127,9 +127,9 @@ target_link_libraries(hello PRIVATE motor)
 
 What changed:
 
-- `add_library` defines a library target. The default is a **static** library — its contents are baked into anything that links it. (You can pass `STATIC`, `SHARED`, or `OBJECT` if you need a specific kind.)
+- `add_library` defines a library target. The default is a **static** library, its contents are baked into anything that links it. (You can pass `STATIC`, `SHARED`, or `OBJECT` if you need a specific kind.)
 - `target_link_libraries(hello PRIVATE motor)` tells CMake that the `hello` executable uses the `motor` library. The compiler now sees `motor`'s headers, and the linker now combines `motor`'s compiled code into `hello`.
-- The library uses `PUBLIC` for its include directory — meaning anyone linking to `motor` *also* gets `motor`'s `include/` folder on their search path. That is what you want for a library's public headers.
+- The library uses `PUBLIC` for its include directory, meaning anyone linking to `motor` *also* gets `motor`'s `include/` folder on their search path. That is what you want for a library's public headers.
 
 ---
 

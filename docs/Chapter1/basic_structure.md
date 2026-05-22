@@ -13,7 +13,7 @@ int main() {
 
 ---
 
-## `#include` — pulling in code
+## `#include`: pulling in code
 
 Lines that start with `#` are **preprocessor directives**. They are handled before the real compilation begins.
 
@@ -23,7 +23,7 @@ Angle brackets (`<iostream>`) are used for the standard library and system heade
 
 ---
 
-## `main` — where execution starts
+## `main`: where execution starts
 
 ```cpp
 int main() {
@@ -34,7 +34,7 @@ int main() {
 
 Every C++ program has exactly one function called `main`. The operating system calls it to start your program. The `int` in front declares that `main` returns an integer: `0` for success, anything non-zero to signal an error.
 
-The body of `main` — between `{` and `}` — is the code that actually runs.
+The body of `main`, between `{` and `}`, is the code that actually runs.
 
 ---
 
@@ -49,7 +49,7 @@ double sum = price * quantity;
 std::cout << "Total: " << sum << std::endl;
 ```
 
-Forgetting a semicolon is the single most common error a beginner gets. The compiler error usually points to the line *after* the missing semicolon, which is confusing the first time — always check the line above too.
+Forgetting a semicolon is the single most common error a beginner gets. The compiler error usually points to the line *after* the missing semicolon, which is confusing the first time. Always check the line above too.
 
 Semicolons also terminate class definitions:
 
@@ -63,7 +63,7 @@ class Motor {
 
 ## Blocks and scope
 
-A **block** is code wrapped in curly braces `{ ... }`. Blocks group statements together and define **scope** — the region of code in which a variable exists.
+A **block** is code wrapped in curly braces `{ ... }`. Blocks group statements together and define **scope**: the region of code in which a variable exists.
 
 ```cpp
 int main() {
@@ -84,7 +84,7 @@ Two rules cover almost every case you will meet:
 1. A variable declared in a block is destroyed when execution leaves that block.
 2. An inner block can see variables from the outer block, but not the reverse.
 
-If an inner block declares a variable with the same name as one outside, the inner one **shadows** the outer one — inside the inner block, the name refers to the new variable. Shadowing is legal but rarely what you want; pick distinct names.
+If an inner block declares a variable with the same name as one outside, the inner one **shadows** the outer one: inside the inner block, the name refers to the new variable. Shadowing is legal but rarely what you want; pick distinct names.
 
 ---
 

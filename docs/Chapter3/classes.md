@@ -151,9 +151,9 @@ Motor c(2, 5000.0);   // id and max RPM
 
 ---
 
-## The `this` pointer
+## The `this` keyword
 
-Inside any member function, `this` is a pointer to the object the function was called on. You rarely have to write it explicitly because members are accessible by their bare name:
+Inside any member function, `this` refers to the object the function was called on — technically it is a *pointer*, which the [next section](types_refs_ptrs.md) explains. You rarely need to write `this`, because members are accessible by their bare name:
 
 ```cpp
 void Motor::start() {
@@ -244,7 +244,7 @@ The rules of thumb are well-known:
 class Telemetry {
 public:
     Telemetry(std::string deviceId)
-        : deviceId_(std::move(deviceId)) {}
+        : deviceId_(deviceId) {}
 
     void record(double value) { samples_.push_back(value); }
 
@@ -256,36 +256,13 @@ private:
 
 No destructor. No copy or move operations. The defaults work because `std::string` and `std::vector` already know how to copy, move, and destroy themselves correctly. This is the cleanest possible class design and the goal for almost all your classes.
 
-### Rule of Three (the C++03 rule)
+### When you can't use the Rule of Zero
 
-> If you write a destructor, you almost certainly also need a copy constructor and a copy assignment operator (and vice versa).
+Occasionally a class manages a *raw* resource directly — a block of memory, a file handle, a lock. Then the compiler-generated copy and destroy operations are usually wrong: two objects end up owning the same thing, and the program crashes when both try to release it. Handling that correctly means writing several of the special members together — the classic **Rule of Three** and **Rule of Five**.
 
-The classical reason: a class with a destructor probably manages a resource (memory, a file, a lock). The compiler-generated copy operations just shallow-copy the resource handle, which means two objects now think they own the same thing. Disaster on destruction.
+You will rarely need to. The better fix is almost always to let a standard type own the resource for you — a `std::vector`, a `std::string`, or a smart pointer — which puts you straight back to the Rule of Zero. [Memory Management](../Chapter4/memory.md) and [Move Semantics](../Chapter4/move.md) cover raw resources, copying, and moving in full, once you have met pointers and the heap.
 
-```cpp
-class BadBuffer {
-public:
-    BadBuffer(int size) : data_(new int[size]) {}
-    ~BadBuffer()        { delete[] data_; }
-    // no copy constructor, no copy assignment: compiler generates broken ones
-
-private:
-    int* data_;
-};
-
-BadBuffer a(100);
-BadBuffer b = a;     // SAME pointer in both! double-delete on destruction
-```
-
-**Better solution:** don't own raw resources. Use `std::unique_ptr`, `std::vector`, or `std::string` for the resource, and you are back to the Rule of Zero.
-
-### Rule of Five (C++11 and later)
-
-> If you write any of the five (destructor, copy ctor, copy assignment, move ctor, move assignment), you probably need to think about all five.
-
-Modern C++ added move operations. If you write a destructor and copy operations, the compiler stops generating move operations for you. That can quietly make your class slower than it should be.
-
-The practical advice for this course: **aim for the Rule of Zero**. If you can't, write all five explicitly. If you find yourself implementing a destructor, ask whether you can replace the raw resource with a smart pointer or a standard container instead.
+The practical advice for this course: **aim for the Rule of Zero.**
 
 ---
 

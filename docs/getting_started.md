@@ -39,7 +39,7 @@ With CLion and a working compiler setup:
 >
 > Furthermore, paths with special characters (including Norwegian ones) are likely to lead to hard to understand errors at least on Windows. Also _try_ to avoid paths with spaces. 
 
-With the configuration done, CLion as now created a dummy "Hello world" project for you. It consists of two files:
+With the configuration done, CLion has now created a dummy "Hello world" project for you. It consists of two files:
 
 ##### CMakeLists.txt
 

@@ -147,7 +147,7 @@ warning: comparison of integer expressions of different signedness
 warning: '=' used in a context where '==' was probably intended
 ```
 
-**Treat warnings as errors.** Most compilers accept a flag (`-Wall -Wextra -Werror` for GCC and Clang) that promotes them. Once your code compiles warning-free, you will catch a class of bugs that would otherwise survive until runtime.
+**Treat warnings as errors.** Most compilers accept a flag (`-Wall -Wextra -Werror` for GCC and Clang) that promotes them — see [how to switch them on](Chapter2/cmake_intro.md#turn-on-compiler-warnings). Once your code compiles warning-free, you will catch a class of bugs that would otherwise survive until runtime.
 
 ---
 

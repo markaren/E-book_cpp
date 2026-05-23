@@ -149,6 +149,24 @@ Motor c(2, 5000.0);   // id and max RPM
 
 `= default` asks the compiler to generate a do-nothing default constructor for you. It is shorter than writing `Motor() {}` and signals intent.
 
+### Stopping silent conversions: `explicit`
+
+A constructor you can call with a *single* argument — like `Motor(int id)` above — doubles as an implicit conversion: the compiler will quietly turn an `int` into a `Motor` wherever one is expected. That is occasionally handy and often a source of surprising bugs. Put `explicit` in front to switch it off:
+
+```cpp
+class Motor {
+public:
+    explicit Motor(int id) : id_(id) {}
+private:
+    int id_ = 0;
+};
+
+Motor a(7);     // fine — you explicitly asked for a Motor
+Motor b = 7;    // compile error: no silent int-to-Motor conversion
+```
+
+The habit: mark single-argument constructors `explicit` unless you specifically want the conversion.
+
 ---
 
 ## The `this` keyword

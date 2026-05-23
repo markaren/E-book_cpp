@@ -51,6 +51,29 @@ add_executable(hello main.cpp)
 
 ---
 
+## Turn on compiler warnings
+
+Several pages in this book tell you to "turn warnings on." A **warning** is the compiler flagging code that is legal but probably a mistake — `if (x = 5)` instead of `==`, a variable you declared and never used, a function that forgets to `return`. They are some of the most valuable feedback the compiler gives you, and most of them are **off by default**.
+
+Switch them on for your project by adding one line to `CMakeLists.txt`:
+
+```cmake
+add_executable(hello main.cpp)
+target_compile_options(hello PRIVATE -Wall -Wextra)
+```
+
+`-Wall -Wextra` enable the common, worthwhile warnings. (Those are GCC and Clang flag names; CLion's bundled compiler is GCC, so they work out of the box. With Microsoft's MSVC you would write `/W4` instead.) Warnings now appear in CLion's build window every time you compile — read them.
+
+Once your code builds cleanly, you can make warnings **fatal**, so a warning stops the build instead of scrolling past:
+
+```cmake
+target_compile_options(hello PRIVATE -Wall -Wextra -Werror)
+```
+
+`-Werror` is stricter than you need on your first day, but it is a habit worth growing into: it guarantees you never ignore a warning by accident.
+
+---
+
 ## Multiple source files
 
 A real project quickly grows beyond one file. Suppose you have:

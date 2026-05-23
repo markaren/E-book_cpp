@@ -2,7 +2,7 @@
 
 Welcome to the e-book for the course [AIS1003 — Object-Oriented Programming with C++](https://www.ntnu.no/studier/emner/AIS1003#tab=omEmnet).
 
-Use the sidebar to navigate between chapters, or jump straight to a topic with the search box above. New here? Start with [Getting Started](getting_started.md), then open the [Introduction](Chapter1/introduction.md).
+Use the sidebar to navigate between chapters, or jump straight to a topic with the search box above. New here? Start with [Getting Started](getting_started.md), then the [Introduction](Chapter1/introduction.md). If files, paths, the terminal, and `PATH` are unfamiliar territory, read [Computer Basics](computer_basics.md) too — it covers the groundwork the rest of the book assumes.
 
 !!! note
     The book is in an early state of development. Consider it a preview.

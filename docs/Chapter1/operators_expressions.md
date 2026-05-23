@@ -83,7 +83,7 @@ if (x = 5) { ... }   // assigns 5 to x, then tests if 5 is true, always runs
 if (x == 5) { ... }  // tests whether x equals 5
 ```
 
-Modern compilers warn about this if you enable warnings. Turn them on.
+Modern compilers warn about this if you enable warnings. [Turn them on](../Chapter2/cmake_intro.md#turn-on-compiler-warnings).
 
 ---
 
@@ -185,6 +185,8 @@ int n = static_cast<int>(pi);
 
 `static_cast` is the polite way to ask for a conversion the compiler would otherwise warn about. It also flags to a reader that the truncation is intentional.
 
+> **Avoid the C-style cast.** You will also see the older form, `(int)pi`. Prefer `static_cast`: a C-style cast silently performs *whatever* conversion is needed — including unsafe ones that a named cast would reject — and a bare `(int)` is nearly impossible to search your code for. `static_cast<int>(pi)` states exactly what you mean and lets the compiler keep you honest.
+
 ---
 
 ## Summary
@@ -193,6 +195,6 @@ int n = static_cast<int>(pi);
 - `==` compares, `=` assigns. They are not the same.
 - `&&` and `||` short-circuit, which is useful for guarding against null/invalid values.
 - Precedence exists, but parentheses are free. Use them.
-- Conversions from larger to smaller types lose data silently; make casts explicit.
+- Conversions from larger to smaller types lose data silently; make them explicit with `static_cast`, not the old C-style `(int)x`.
 
 Floating-point arithmetic has surprises of its own: `0.1 + 0.2` does not exactly equal `0.3`, and comparing floats with `==` is almost never what you want. See the [Floating-Point Pitfalls](../floating_point.md) reference for the full list of gotchas.

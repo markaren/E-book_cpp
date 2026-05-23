@@ -120,7 +120,7 @@ ErrorCode code = ErrorCode::Overheat;
 int raw = static_cast<int>(code);   // 8
 ```
 
-> On a microcontroller, where every byte counts, you can pin the size of an enum by naming its underlying type: `enum class ErrorCode : std::uint8_t { ... };` (needs `<cstdint>`). You will not need this on the desktop.
+> On a microcontroller, where every byte counts, you can pin the size of an enum by naming its underlying type: `enum class ErrorCode : uint8_t { ... };` (the fixed-width type comes from `<stdint.h>`; see [Arduino vs. Desktop C++](../arduino_vs_desktop.md)). You will not need this on the desktop.
 
 ---
 

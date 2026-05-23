@@ -114,6 +114,7 @@ plugins:
             Error Handling: Feilhåndtering
             Reference: Referanse
             Coming from Python: Fra Python
+            Arduino vs. Desktop C++: Arduino vs. desktop-C++
             Reading Compiler Errors: Lese kompilatorfeil
             Using a Debugger: Bruke en debugger
             Using AI for Coding: Bruke KI til koding
@@ -174,6 +175,7 @@ nav:
     - Error Handling: Chapter6/error_handling.md
   - Reference:
     - Coming from Python: python_to_cpp.md
+    - Arduino vs. Desktop C++: arduino_vs_desktop.md
     - Reading Compiler Errors: compiler_errors.md
     - Using a Debugger: debugger.md
     - Using AI for Coding: using_ai.md

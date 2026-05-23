@@ -4,6 +4,8 @@ When you write C++ for a desktop computer, the compiler ships with your IDE and 
 
 **PlatformIO** is the tool that hides all of this complexity behind a unified interface. Pick your board, write your code, press build. PlatformIO knows which toolchain to use, which libraries to fetch, and how to upload to the device.
 
+This page is about the *tooling*. For how the C++ itself differs on a microcontroller — `setup()`/`loop()` instead of `main()`, tight memory, a largely missing standard library — see [Arduino vs. Desktop C++](../arduino_vs_desktop.md).
+
 ---
 
 ## Why use PlatformIO?

@@ -17,6 +17,14 @@ Filene dine ligger i **mapper** (også kalt **kataloger**), som ligger inni hver
 
 **Hjemmemappen** din er din personlige mappe: `C:\Users\<deg>` på Windows, `/Users/<deg>` på macOS, `/home/<deg>` på Linux. Den skrives ofte `~`.
 
+### Arbeidskatalogen
+
+**Arbeidskatalogen** din (eller "gjeldende katalog") er mappa et program er "i" akkurat nå — mappa som relative stier måles fra. I en terminal skriver `pwd` den ut og `cd` endrer den.
+
+Den har betydning for et kjørende program også. Når koden din åpner en fil med bare et navn — `std::ofstream out("report.txt")` — leter den ikke i prosjektmappa di; den leter i *arbeidskatalogen til det kjørende programmet*, og **når du starter programmet fra en IDE, er ikke det der du tror.** CLion kjører programmet ditt fra byggemappa (f.eks. `cmake-build-debug/`), så en `report.txt` programmet skriver havner *der*, og en `readings.txt` det leser må ligge *der* — ikke ved siden av kildekoden.
+
+Hvis et program "ikke finner" en fil som tydeligvis finnes, eller skriver en du så ikke finner igjen, er arbeidskatalogen nesten alltid grunnen. I CLion kan du se eller endre den under **Run → Edit Configurations → Working directory**.
+
 ### `/` kontra `\`
 
 En klassisk kilde til forvirring:
@@ -121,6 +129,7 @@ Så den feilen betyr nesten alltid én av to ting: programmet er **ikke installe
 
 - Hold prosjekter i en **kort, ren sti** nær rota av disken (`C:\dev\…`), ikke en dyp mappe full av mellomrom og norske bokstaver.
 - I C++-kode, skriv stier med **vanlige skråstreker** (`"C:/dev"`) eller escape de omvendte skråstrekene (`"C:\\dev"`).
+- Et program leser og skriver relative stier (som `"report.txt"`) fra **arbeidskatalogen** sin — som IDE-en ofte setter til byggemappa, ikke prosjektmappa.
 - **Terminalen** er verdt å lære: de fleste verktøy bor der, og den viser deg de egentlige feilene.
 - Et **skall** (PowerShell, bash, zsh, cmd) tolker kommandoene dine, og de er forskjellige — tilpass kopierte kommandoer til skallet ditt. På Windows, bruk PowerShell.
 - **`command not found`** betyr som regel "ikke installert" eller "ikke på `PATH`".

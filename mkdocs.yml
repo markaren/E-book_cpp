@@ -112,6 +112,7 @@ plugins:
             Separation of Concerns: Separasjon av ansvar
             Observer Pattern: Observatør-mønsteret
             Error Handling: Feilhåndtering
+            Capstone Project: Prosjekt
             Reference: Referanse
             Coming from Python: Fra Python
             Arduino vs. Desktop C++: Arduino vs. desktop-C++
@@ -173,6 +174,7 @@ nav:
     - Observer Pattern: Chapter6/observer.md
     - Testing: Chapter6/testing.md
     - Error Handling: Chapter6/error_handling.md
+  - Capstone Project: capstone.md
   - Reference:
     - Coming from Python: python_to_cpp.md
     - Arduino vs. Desktop C++: arduino_vs_desktop.md

@@ -17,6 +17,14 @@ Your files live in **folders** (also called **directories**), which nest inside 
 
 Your **home directory** is your personal folder: `C:\Users\<you>` on Windows, `/Users/<you>` on macOS, `/home/<you>` on Linux. It is often written `~`.
 
+### The working directory
+
+Your **working directory** (or "current directory") is the folder a program is "in" right now — the folder that relative paths are measured from. In a terminal, `pwd` prints it and `cd` changes it.
+
+It matters for a running program too. When your code opens a file by a plain name — `std::ofstream out("report.txt")` — it does not look in your project folder; it looks in the *working directory of the running program*, and **when you launch from an IDE, that is usually not where you expect.** CLion runs your program from the build folder (e.g. `cmake-build-debug/`), so a `report.txt` your program writes lands *there*, and a `readings.txt` it reads must live *there* too — not beside your source code.
+
+If a program "cannot find" a file that clearly exists, or writes one you then cannot find, the working directory is almost always why. In CLion you can see or change it under **Run → Edit Configurations → Working directory**.
+
 ### `/` versus `\`
 
 A classic source of confusion:
@@ -121,6 +129,7 @@ So that error almost always means one of two things: the program is **not instal
 
 - Keep projects in a **short, plain path** near the drive root (`C:\dev\…`), not a deep folder full of spaces and Norwegian letters.
 - In C++ code, write paths with **forward slashes** (`"C:/dev"`) or escape the backslashes (`"C:\\dev"`).
+- A program reads and writes relative paths (like `"report.txt"`) from its **working directory** — which your IDE often sets to the build folder, not your project folder.
 - The **terminal** is worth learning: most tools live there, and it shows you the real errors.
 - A **shell** (PowerShell, bash, zsh, cmd) interprets your commands, and they differ — match copied commands to your shell. On Windows, use PowerShell.
 - **`command not found`** usually means "not installed" or "not on `PATH`."

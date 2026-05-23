@@ -62,6 +62,7 @@ private:
 
 Any code that works against `Logger&` or `std::unique_ptr<Logger>` now works with both implementations, and with any future implementation you add:
 
+<!-- no-ce -->
 ```cpp
 class Simulation {
 public:

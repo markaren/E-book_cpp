@@ -16,6 +16,7 @@ Two stream objects, both in `<iostream>`:
 | `std::cin`  | input          | Read from the console (keyboard, usually)  |
 | `std::cerr` | output (error) | Print to the error stream                  |
 
+<!-- no-ce -->
 ```cpp
 #include <iostream>
 
@@ -88,6 +89,7 @@ Files use the same operators. Three classes in `<fstream>`:
 
 ### Reading a file line by line
 
+<!-- no-ce -->
 ```cpp
 #include <fstream>
 #include <iostream>

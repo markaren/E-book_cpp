@@ -105,6 +105,7 @@ The rule: a reference or pointer is only valid as long as what it refers to is s
 
 ### Returning a reference or pointer to a local
 
+<!-- no-ce -->
 ```cpp
 int& createIntRef() {
     int value = 1;

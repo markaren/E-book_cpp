@@ -5,7 +5,9 @@ Compiler Explorer URL that opens the code in an editor + executor pane (no
 assembly view) and inserts a small link immediately below the block.
 
 Blocks without `int main` are left alone — they are snippets, not standalone
-programs, and would not run on their own.
+programs, and would not run on their own. A block can also opt out explicitly
+with a `<!-- no-ce -->` comment on the line directly above its opening fence
+(for input-reading programs, deliberate compile errors, UB demos, skeletons).
 
 The Compiler Explorer state is encoded directly into the URL via the
 documented `/clientstate/<base64-json>` endpoint. No upload, no API call, no
@@ -27,7 +29,7 @@ COMPILER_OPTIONS = "-std=c++20 -O0 -Wall -Wextra -pedantic"
 # IMPORTANT: the attributes match uses [ \t]+ rather than \s+ — \s matches \n,
 # which would greedily eat the first source line as part of the "attributes".
 _CODE_BLOCK_RE = re.compile(
-    r"```cpp(?:[ \t]+[^\n]*)?\n(.*?)\n```",
+    r"(?P<noce><!--[ \t]*no-ce[ \t]*-->[ \t]*\n)?```cpp(?:[ \t]+[^\n]*)?\n(?P<source>.*?)\n```",
     re.DOTALL,
 )
 
@@ -72,7 +74,11 @@ def _make_url(source: str) -> str:
 
 def _replace(match: Match) -> str:
     full_block = match.group(0)
-    source = match.group(1)
+    # Opt-out: a `<!-- no-ce -->` comment directly above the fence suppresses the
+    # link for snippets that are not meant to be run.
+    if match.group("noce"):
+        return full_block
+    source = match.group("source")
     if "int main" not in source:
         return full_block
     url = _make_url(source)

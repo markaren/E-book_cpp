@@ -79,6 +79,8 @@ For short programs that live in one file, the declaration and definition are the
 You can have multiple functions with the same name as long as they take different parameters. The compiler picks the right one based on the argument types you pass.
 
 ```cpp
+#include <iostream>
+
 int add(int a, int b) {
     return a + b;
 }
@@ -90,6 +92,8 @@ double add(double a, double b) {
 int main() {
     int    sum1 = add(5, 3);       // calls the int version
     double sum2 = add(2.5, 3.7);   // calls the double version
+
+    std::cout << sum1 << " " << sum2 << "\n";
 }
 ```
 
@@ -104,6 +108,7 @@ This is called **overloading**. Use it when the operation is conceptually the sa
 - It must return `int`. By convention `0` means success and non-zero means an error.
 - There must be exactly one of them.
 
+<!-- no-ce -->
 ```cpp
 int main() {
     // ... your program ...
@@ -113,6 +118,7 @@ int main() {
 
 You can also accept command-line arguments:
 
+<!-- no-ce -->
 ```cpp
 int main(int argc, char* argv[]) {
     // argc = how many arguments

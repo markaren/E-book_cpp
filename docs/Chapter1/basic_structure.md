@@ -25,6 +25,7 @@ Angle brackets (`<iostream>`) are used for the standard library and system heade
 
 ## `main`: where execution starts
 
+<!-- no-ce -->
 ```cpp
 int main() {
     // ...
@@ -66,6 +67,8 @@ class Motor {
 A **block** is code wrapped in curly braces `{ ... }`. Blocks group statements together and define **scope**: the region of code in which a variable exists.
 
 ```cpp
+#include <iostream>
+
 int main() {
     int x = 5;
 
@@ -107,6 +110,7 @@ A good comment explains *why* the code does something, not what it does. The cod
 
 A complete program that reads two numbers from the user and prints their sum:
 
+<!-- no-ce -->
 ```cpp
 #include <iostream>
 

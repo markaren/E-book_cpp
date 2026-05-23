@@ -131,6 +131,7 @@ The single most intimidating thing about templates is their compile errors. A wr
 
 Take a simple mistake:
 
+<!-- no-ce -->
 ```cpp
 template <typename T>
 T add(T a, T b) { return a + b; }

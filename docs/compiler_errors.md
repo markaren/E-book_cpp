@@ -171,6 +171,7 @@ Template errors are a special case: they can be hundreds of lines long for a sin
 
 You compile this:
 
+<!-- no-ce -->
 ```cpp
 #include <iostream>
 

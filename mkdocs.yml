@@ -161,6 +161,7 @@ nav:
     - Values, References & Pointers: Chapter4/types_refs_ptrs.md
     - RAII: Chapter4/raii.md
     - IO & Streams: Chapter4/io_streams.md
+    - Exercises: Chapter4/exercises.md
   - 5. Memory & Polymorphism:
     - Memory Management: Chapter5/memory.md
     - Move Semantics: Chapter5/move.md

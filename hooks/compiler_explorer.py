@@ -82,6 +82,9 @@ def _replace(match: Match) -> str:
     if "int main" not in source:
         return full_block
     url = _make_url(source)
+    # NOTE: the label stays English on all languages — "Compiler Explorer" is the
+    # tool's name, and mkdocs-static-i18n does not expose the build locale to this
+    # hook, so a per-language label is left as a future enhancement.
     link = (
         f'<a href="{url}" target="_blank" rel="noopener" '
         f'class="ce-run-link">▶ Run on Compiler Explorer</a>'

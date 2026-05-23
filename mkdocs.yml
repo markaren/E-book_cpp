@@ -9,7 +9,6 @@ theme:
   name: material
   language: en
   features:
-    - navigation.instant
     - navigation.tracking
     - navigation.tabs
     - navigation.sections
@@ -68,6 +67,61 @@ markdown_extensions:
 
 plugins:
   - search
+  - i18n:
+      docs_structure: suffix
+      fallback_to_default: true
+      reconfigure_material: true
+      reconfigure_search: true
+      languages:
+        - locale: en
+          default: true
+          name: English
+          build: true
+        - locale: nb
+          name: Norsk (bokmål)
+          build: true
+          nav_translations:
+            Home: Hjem
+            Getting Started: Kom i gang
+            Computer Basics: Datamaskingrunnlag
+            "1. Introduction": "1. Introduksjon"
+            Introduction: Introduksjon
+            Basic Structure: Grunnstruktur
+            Variables and Basic Types: Variabler og grunntyper
+            Operators and Expressions: Operatorer og uttrykk
+            Control Statements: Kontrollstrukturer
+            Functions: Funksjoner
+            Enumerations: Enumerasjoner
+            Exercises: Oppgaver
+            "2. Tooling & Standard Library": "2. Verktøy og standardbibliotek"
+            CMake Introduction: CMake-introduksjon
+            Version Control & Git: Versjonskontroll og Git
+            C++ Standard Library: C++ standardbibliotek
+            Data Structures: Datastrukturer
+            "3. Classes & Types": "3. Klasser og typer"
+            Classes: Klasser
+            Values, References & Pointers: Verdier, referanser og pekere
+            IO & Streams: IO og strømmer
+            "4. Memory & Polymorphism": "4. Minne og polymorfisme"
+            Memory Management: Minnehåndtering
+            Move Semantics: Flyttesemantikk
+            Polymorphism: Polymorfisme
+            Templates: Maler
+            "5. Design & Quality": "5. Design og kvalitet"
+            Separation of Concerns: Separasjon av ansvar
+            Observer Pattern: Observatør-mønsteret
+            Error Handling: Feilhåndtering
+            Reference: Referanse
+            Coming from Python: Fra Python
+            Reading Compiler Errors: Lese kompilatorfeil
+            Using a Debugger: Bruke en debugger
+            Using AI for Coding: Bruke KI til koding
+            Strings: Strenger
+            Lambda Expressions: Lambda-uttrykk
+            Recursion: Rekursjon
+            Floating-Point Pitfalls: Flyttall-fallgruver
+            Common Terms: Vanlige begreper
+            FAQ: Ofte stilte spørsmål
 
 hooks:
   - hooks/compiler_explorer.py

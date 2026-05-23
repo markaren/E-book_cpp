@@ -1,0 +1,126 @@
+# Datamaskingrunnlag
+
+Programmeringsverktøy forutsetter at du allerede kan noen ting om datamaskinen din som de fleste aldri har trengt å lære: hvordan filer og stier egentlig fungerer, hva "terminalen" er, og hvordan systemet finner programmene du kjører. Emner underviser sjelden i dette, og likevel snubler nybegynnere stadig i det — en bygging som feiler på grunn av et mellomrom i et mappenavn, et `command not found` som egentlig er et PATH-problem, en kommando fra en veiledning som ikke gjør noe fordi den var skrevet for et annet skall.
+
+Denne siden dekker det laget alle tar for gitt: **filsystemet og stier, terminalen og skallene dens, og PATH-variabelen.** Du trenger ikke pugge det — skum gjennom nå, og kom tilbake når noe her biter deg.
+
+---
+
+## Filer, mapper og stier
+
+Filene dine ligger i **mapper** (også kalt **kataloger**), som ligger inni hverandre og danner et tre. En **sti** er adressen til en fil eller mappe: listen over mapper du går gjennom for å nå den.
+
+- En **absolutt sti** starter fra toppen ("roten") og er entydig:
+    - Windows: `C:\Users\ada\projects\hello\main.cpp`
+    - macOS / Linux: `/home/ada/projects/hello/main.cpp`
+- En **relativ sti** er relativ til der du er nå — din *arbeidskatalog*: `projects/hello/main.cpp`, eller `../other` for å gå opp ett nivå.
+
+**Hjemmemappen** din er din personlige mappe: `C:\Users\<deg>` på Windows, `/Users/<deg>` på macOS, `/home/<deg>` på Linux. Den skrives ofte `~`.
+
+### `/` kontra `\`
+
+En klassisk kilde til forvirring:
+
+- **Windows** skiller mapper med en **omvendt skråstrek** `\`.
+- **macOS og Linux** bruker en **vanlig skråstrek** `/`.
+
+Dette har betydning i C++, fordi inni en streng er en omvendt skråstrek et *escape-tegn*:
+
+```cpp
+std::string bad = "C:\dev\hello";    // FEIL: \d og \h er ikke gyldige escape-sekvenser
+std::string a   = "C:\\dev\\hello";  // virker: escape hver omvendte skråstrek
+std::string b   = "C:/dev/hello";    // enklere: vanlige skråstreker virker også på Windows
+```
+
+Windows' filfunksjoner godtar gjerne `/`, så når du må skrive en sti i kode, **foretrekk vanlige skråstreker** og slipp escape-hodebryet. (`std::filesystem::path` håndterer også skilletegnene for deg.)
+
+### Hold stier korte, enkle og rene
+
+Hvor du legger prosjektene dine betyr mer enn nybegynnere venter:
+
+- **Unngå lange, dypt nestede stier.** Windows har historisk begrenset en full sti til 260 tegn, og mange verktøy ryker fortsatt forbi det. Et prosjekt begravd under `Documents\University\Semester 1\AIS1003\Assignments\…` kan treffe taket. Legg koden et kort sted, som `C:\dev\`.
+- **Unngå mellomrom.** `My Projects` tvinger deg til å sette stien i hermetegn på kommandolinjen (`"My Projects"`), og noen verktøy håndterer det feil. Foretrekk `my-projects` eller `my_projects`.
+- **Unngå spesialtegn og ikke-engelske tegn.** Norske `æ`, `ø`, `å`, bokstaver med aksent og symboler som `#`, `&`, `(` forvirrer kompilatorer, byggeverktøy og skript på måter som gir uforståelige feil. Hold deg til vanlige bokstaver, sifre, `-` og `_`.
+- **Unngå skysynkroniserte mapper** (OneDrive, Dropbox, Google Drive) for kode: en bygging lager tusenvis av filer som synkroniseres hele tiden, og maskinspesifikke byggefiler skaper konflikter mellom datamaskiner.
+
+Et godt hjem for kursarbeidet ditt: `C:\dev\ais1003\` på Windows, eller `~/dev/ais1003/` på macOS/Linux.
+
+---
+
+## Terminalen
+
+**Terminalen** er et vindu der du styrer datamaskinen ved å *skrive kommandoer* i stedet for å klikke. Du skriver en kommando, trykker Enter, datamaskinen kjører den og skriver ut resultatet, og gir deg så et nytt **ledetegn** (prompt) for neste kommando:
+
+```
+C:\dev\hello>          (ledetegnet — her viser det også gjeldende mappe)
+```
+
+Hvorfor bry seg, når det finnes et helt greit grafisk grensesnitt?
+
+- **De fleste utviklerverktøy er kommandolinje først** — `git`, CMake, kompilatorer, pakkebehandlere. Knappene i IDE-en din kjører ofte bare disse kommandoene for deg.
+- **Det er presist og repeterbart.** En kommando er eksakt; den kan skrives ned, deles, skriptes og kjøres på nytt identisk. "Klikk her, så der, så …" kan ikke det.
+- **Det viser deg hva som skjer.** Når noe feiler, er terminalens utskrift der den egentlige feilmeldingen står.
+- **Det virker overalt**, også på fjernmaskiner og servere som ikke har noe grafisk grensesnitt i det hele tatt.
+
+Du trenger ikke forlate det grafiske grensesnittet — men en programmerer som nekter å ta i terminalen, jobber med én hånd bundet.
+
+En kommando er som regel et programnavn, eventuelt fulgt av **argumenter** (hva det skal handle på) og **valg** eller **flagg** (hvordan det skal handle). I:
+
+```
+git commit -m "Fix the bug"
+```
+
+er `git` programmet, `commit` en underkommando, `-m` et valg, og `"Fix the bug"` argumentet til det valget. Merk hermetegnene: hvis noe du skriver inneholder mellomrom, sett det i hermetegn så det behandles som ett element (`cd "My Folder"`).
+
+---
+
+## Skall: PowerShell, cmd, bash, zsh
+
+Folk sier "terminalen" løst, men det er egentlig to forskjellige ting:
+
+- **Terminalen** er *vinduet* — appen som viser tekst og tar imot tastetrykkene dine.
+- **Skallet** (shell) er *programmet som kjører inni det* og som faktisk tolker kommandoene du skriver.
+
+Flere skall finnes, og **kommandoene og syntaksen deres er forskjellige** — det er derfor en kommando kopiert fra en Linux-veiledning kan feile på Windows:
+
+| Skall | Hvor du møter det | Merknader |
+|-------|-------------------|-----------|
+| **Ledetekst (`cmd`)** | Windows (gammelt) | Begrenset; du vil sjelden velge det med vilje. |
+| **PowerShell** | Windows (moderne standard) | Kraftig; det du bør bruke på Windows. |
+| **bash** | Linux, Git Bash, WSL | Det klassiske Unix-skallet; de fleste eksempler på nett antar det. |
+| **zsh** | macOS (moderne standard) | Bash-likt til daglig bruk. |
+
+Noen forskjeller du faktisk vil støte på:
+
+| Oppgave | bash / zsh | PowerShell | cmd |
+|---------|------------|------------|-----|
+| Liste filer i en mappe | `ls` | `ls` eller `dir` | `dir` |
+| Vise gjeldende mappe | `pwd` | `pwd` | `cd` |
+| Lese en variabel | `$HOME` | `$env:USERPROFILE` | `%USERPROFILE%` |
+
+Den praktiske regelen: **vit hvilket skall du er i**, og når du kopierer en kommando fra nettet, sjekk at den passer. På Windows, foretrekk **PowerShell** — det er det terminalen innebygd i CLion bruker som standard. På macOS og Linux er standardskallet (zsh eller bash) helt greit.
+
+---
+
+## PATH: hvordan datamaskinen finner programmer
+
+Når du skriver `git` i en terminal, hvordan vet datamaskinen hvor `git` faktisk ligger på disken? Den sjekker en miljøvariabel kalt **`PATH`** — en liste over mapper den skal lete i, i rekkefølge, etter et program med det navnet.
+
+- Hvis `git` finnes i en av de mappene, kjøres det.
+- Hvis ikke, får du **`command not found`** (eller, på Windows, `'git' is not recognized…`).
+
+Så den feilen betyr nesten alltid én av to ting: programmet er **ikke installert**, eller det er installert, men **mappen ble aldri lagt til i `PATH`**. Mange installasjonsprogrammer legger seg selv til i `PATH` automatisk; noen — og de fleste manuelle installasjoner — gjør det ikke, og da må du legge til mappen selv.
+
+`PATH` er én av flere **miljøvariabler**: navngitte verdier systemet holder på for at programmer skal lese dem. Som nybegynner vil du mest møte `PATH`, og mest når et nyinstallert verktøy "ikke kan finnes".
+
+> Du vil sjelden trenge å redigere `PATH` for hånd i dette emnet — CLion har med verktøyene den trenger. Men når en veiledning sier "sørg for at X er på `PATH`", er det dette den mener.
+
+---
+
+## Tommelfingerregler
+
+- Hold prosjekter i en **kort, ren sti** nær rota av disken (`C:\dev\…`), ikke en dyp mappe full av mellomrom og norske bokstaver.
+- I C++-kode, skriv stier med **vanlige skråstreker** (`"C:/dev"`) eller escape de omvendte skråstrekene (`"C:\\dev"`).
+- **Terminalen** er verdt å lære: de fleste verktøy bor der, og den viser deg de egentlige feilene.
+- Et **skall** (PowerShell, bash, zsh, cmd) tolker kommandoene dine, og de er forskjellige — tilpass kopierte kommandoer til skallet ditt. På Windows, bruk PowerShell.
+- **`command not found`** betyr som regel "ikke installert" eller "ikke på `PATH`".

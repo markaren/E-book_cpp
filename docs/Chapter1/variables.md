@@ -117,6 +117,8 @@ maxRetries = 10; // compile error: cannot assign to const
 
 The compiler enforces this, which catches a class of bugs and also documents intent: "this is a value, not a setting."
 
+The same applies to ordinary local variables, not just named constants like `maxRetries`: if you compute a value and never change it again, make it `const`. Reaching for `const` by default — and dropping it only when you genuinely need to reassign — documents that the value is settled and lets the compiler stop you (or a future editor) from overwriting it by accident.
+
 ---
 
 ## Summary
@@ -124,7 +126,7 @@ The compiler enforces this, which catches a class of bugs and also documents int
 - Every variable has a type, fixed at declaration.
 - Always initialise; uninitialised reads are undefined behaviour.
 - Prefer `int` and `double` for arithmetic. Use `bool` for true/false. Use `std::string` for text.
-- Use `const` for values that should not change.
+- Prefer `const` for anything you don't reassign — not just named constants.
 - Pick descriptive names.
 
 Scope (the region in which a variable exists) was covered in [Basic Structure](basic_structure.md). The short version: variables declared in a block disappear when the block ends.

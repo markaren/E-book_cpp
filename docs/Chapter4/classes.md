@@ -62,6 +62,17 @@ private:
 
 A `const` after the parameter list (`read() const`) means "this function does not modify the object." Mark every member function `const` if it can be. The compiler enforces it, and it tells the reader "calling this is safe; it observes, it does not change."
 
+What "enforces it" means in practice: a `const` object — or a `const&` to one — can call **only** the member functions marked `const`.
+
+```cpp
+void printReading(const Sensor& s) {   // s is read-only
+    std::cout << s.read() << "\n";      // OK — read() is const
+    // s.update(2.0);                   // compile error — update() is not const
+}
+```
+
+The standard way to pass an object you only want to read is by `const&` (the [next section](types_refs_ptrs.md) explains why). So if you forget `const` on a getter like `read()`, anyone holding a `const Sensor&` cannot call it at all. Marking observers `const` and mutators non-`const` is what makes a class usable through a `const` reference — a discipline called **const-correctness**.
+
 ---
 
 ## Access specifiers

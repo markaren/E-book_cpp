@@ -81,6 +81,9 @@ A reference is a permanent alias for one variable; a pointer is a reseatable add
 **Why pass by `const&`?**
 It avoids copying a large object while promising not to change it — the standard way to pass anything bigger than a number. See [Values, References & Pointers](Chapter4/types_refs_ptrs.md).
 
+**What is const-correctness?**
+The habit of marking everything that does not change as `const`: member functions that only observe (`read() const`), parameters you only read (`const T&`), and locals you never reassign. It matters because a `const` object can call *only* `const` member functions — so consistent `const` lets you pass your own types by `const&` and lets the compiler catch accidental modifications. See [Classes](Chapter4/classes.md) and [Values, References & Pointers](Chapter4/types_refs_ptrs.md).
+
 **Why should I avoid raw `new` and `delete`?**
 They are easy to leak or double-free. Let `std::vector`, `std::string`, and smart pointers own memory for you (that is RAII). See [Memory Management](Chapter5/memory.md). (More: [Stack Overflow](https://stackoverflow.com/questions/6500313/why-should-c-programmers-minimize-use-of-new).)
 

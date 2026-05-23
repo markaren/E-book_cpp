@@ -17,6 +17,7 @@ Whether you are new to programming or just to C++, you will meet a lot of unfami
 | **class** | A user-defined type that bundles data together with the operations that work on it. See [Classes](Chapter4/classes.md). |
 | **compiler / compile** | The tool that translates your source code into a runnable program, *before* it runs. See [Introduction](Chapter1/introduction.md). |
 | **const** | A promise to the compiler that a value will not change; the compiler enforces it. See [Variables](Chapter1/variables.md). |
+| **const-correctness** | The discipline of marking everything that does not change as `const` — member functions that only observe, reference parameters you only read, locals you never reassign — so the compiler enforces what may be modified. A `const` object can call only `const` member functions. See [Classes](Chapter4/classes.md) and [Values, References & Pointers](Chapter4/types_refs_ptrs.md). |
 | **constructor** | A special member function that runs when an object is created, to set up its initial state. See [Classes](Chapter4/classes.md). |
 | **container** | A standard-library type that holds a collection of values, such as `std::vector`, `std::map`, or `std::set`. See [Data Structures](Chapter3/data_structures.md). |
 | **dangling reference / pointer** | A reference or pointer to something that has already been destroyed; using it is undefined behaviour and a common cause of crashes. See [Values, References & Pointers](Chapter4/types_refs_ptrs.md). |

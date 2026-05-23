@@ -4,7 +4,7 @@ So far you have run programs through CLion's green play button. That button is c
 
 CMake is not a compiler. It is one level above: you describe your project to CMake in a small file called `CMakeLists.txt`, and CMake generates the platform-specific instructions (Makefiles on Linux, Visual Studio project files on Windows, Xcode projects on macOS) that your compiler then follows. Write the project description once; build it anywhere.
 
-You will spend the rest of your career writing C++ inside CMake projects. This chapter teaches the minimum you need today, then shows how it grows as your project does.
+CMake is the most widely used build system for C++ — most cross-platform projects and libraries you meet will use it. This chapter teaches the minimum you need today, then shows how it grows as your project does.
 
 ---
 

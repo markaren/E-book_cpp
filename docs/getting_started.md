@@ -52,7 +52,7 @@ CLion also bundles **CMake** (the build tool the course uses), so you do not nee
 
 <!-- screenshot: New Project dialog with "C++ Executable" selected -->
 
-> **Where to put your project.** Avoid a folder inside cloud storage (OneDrive, Dropbox, Google Drive). Building generates a large number of files that would sync constantly, and if you use more than one PC the machine-specific build files cause conflicts. Also avoid paths with spaces or special characters — including Norwegian `æ`, `ø`, `å` — which cause confusing errors on Windows. A simple path such as `C:\dev\projects` is ideal.
+> **Where to put your project.** Avoid a folder inside cloud storage (OneDrive, Dropbox, Google Drive). Building generates a large number of files that would sync constantly, and if you use more than one PC the machine-specific build files cause conflicts. Also avoid paths with spaces or special characters — including Norwegian `æ`, `ø`, `å` — which cause confusing errors on Windows. A simple path such as `C:\dev\projects` is ideal. ([Computer Basics](computer_basics.md) explains why paths, spaces, and special characters matter.)
 
 CLion creates a starter "Hello, World!" project for you, with two files:
 

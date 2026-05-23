@@ -138,7 +138,7 @@ std::ofstream out("results.txt", std::ios::app);
 ```cpp
 #include <iostream>
 
-struct Vector3 {
+struct Vector3 {           // a struct is just a class with public members by default
     double x, y, z;
 };
 

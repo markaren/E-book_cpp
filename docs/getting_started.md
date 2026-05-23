@@ -13,7 +13,7 @@ This page gets you from nothing to a running "Hello, World!". JetBrains' [Quick 
 
 <!-- screenshot: CLion first-run / sign-in screen -->
 
-CLion also bundles **CMake** (the build tool the course uses), so you do not need to install that separately. The only piece that depends on your operating system is the compiler:
+CLion also bundles **CMake** (the build tool the course uses), so you do not need to install that separately. The only piece that depends on your operating system is the compiler — **click the tab for your OS**:
 
 === "Windows"
 
@@ -47,10 +47,10 @@ CLion also bundles **CMake** (the build tool the course uses), so you do not nee
 
 1. On the welcome screen choose **New Project** (or **File → New Project** if CLion is already open).
 2. Select **C++ Executable**.
-3. Set the **Language standard** to **C++20**.
+3. If the dialog shows a **Language standard** option, set it to **C++20**. (Some CLion versions don't — the generated `CMakeLists.txt` already sets C++20, so you are covered either way.)
 4. Choose a location for the project — but read the warning below first — and click **Create**.
 
-<!-- screenshot: New Project dialog with "C++ Executable" and the C++20 language-standard dropdown -->
+<!-- screenshot: New Project dialog with "C++ Executable" selected -->
 
 > **Where to put your project.** Avoid a folder inside cloud storage (OneDrive, Dropbox, Google Drive). Building generates a large number of files that would sync constantly, and if you use more than one PC the machine-specific build files cause conflicts. Also avoid paths with spaces or special characters — including Norwegian `æ`, `ø`, `å` — which cause confusing errors on Windows. A simple path such as `C:\dev\projects` is ideal.
 

@@ -144,13 +144,13 @@ The full precedence table is long. You do not need to memorise it. You need to r
 1. `*`, `/`, `%` bind tighter than `+` and `-` (standard maths).
 2. **When in doubt, use parentheses.** They cost nothing and make intent explicit.
 
-A real bug:
+Operators of equal precedence evaluate **left to right**, which can catch you out:
 
 ```cpp
-int hours = totalSeconds / 60 * 60;
+int result = totalSeconds / 60 * 60;
 ```
 
-Looks like "divide by 60, then multiply by 60" — back where you started, right? Yes, but `/` and `*` have the same precedence and evaluate left-to-right, so this *is* what's written. Now consider:
+You might read that as "divide by 60, then multiply by 60 — back where you started." It is not: the `/` runs first, and integer division discards the remainder. With `totalSeconds = 125`, `125 / 60` is `2`, and `2 * 60` is `120` — not `125`. Now a different trap, where the *grouping* is unclear:
 
 ```cpp
 double rate = a + b / c + d;

@@ -187,15 +187,26 @@ Rule of thumb: every class with any `virtual` function should also have a `virtu
 
 ## Object slicing
 
-If you copy a derived object into a base-class *value*, the derived parts are silently sliced off:
+`Shape` above is abstract, so the compiler will not even let you copy a `Circle` into a `Shape` *value* — `Shape s = c;` is a compile error. That is the language protecting you.
+
+The trap appears with a **concrete** base class (one you *can* instantiate): copying a derived object into a base value silently drops the derived parts.
 
 ```cpp
-Circle c;
-Shape s = c;   // SLICING: s is just a Shape now, the Circle-ness is gone
-s.draw();      // does NOT call Circle::draw(); calls Shape::draw() if it had one
+struct Base {
+    virtual ~Base() = default;
+    virtual std::string kind() const { return "base"; }
+};
+
+struct Derived : Base {
+    std::string kind() const override { return "derived"; }
+};
+
+Derived d;
+Base b = d;             // SLICING: only the Base part is copied
+std::cout << b.kind();  // "base" — the Derived-ness is gone
 ```
 
-This is one reason you almost always use **pointers or references** when working with polymorphic types:
+The rule is the same either way: work with polymorphic types through **pointers or references**, never by value:
 
 ```cpp
 Circle c;

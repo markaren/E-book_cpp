@@ -78,7 +78,7 @@ Motor is running
 Motor fault!
 ```
 
-There is a real payoff here. If you leave the `default` case off and later add a fifth state, the compiler — with warnings on (`-Wall`) — points straight at this `switch` and tells you a case is unhandled. That turns "I forgot to update one place" into a build-time reminder, which is exactly why you should leave `default` off a `switch` over an enum.
+There is a real payoff here. If you leave the `default` case off and later add a fifth state, most compilers — with warnings on (`-Wall`) — will point at this `switch` and tell you a case is unhandled. That turns "I forgot to update one place" into a build-time reminder, which is exactly why you should leave `default` off a `switch` over an enum.
 
 ---
 

@@ -321,6 +321,8 @@ std::string Motor::describe() const {
 
 `Motor::` in front of each function name says "this function belongs to the `Motor` class." The header is what other files `#include`; the implementation file is compiled separately.
 
+(`describe` uses `std::format`, which builds a string by filling each `{}` with the next argument — the modern way to assemble text. See [Strings](../strings.md).)
+
 For short functions (one-liners, simple getters) it is fine to keep them inside the class. For anything bigger, split. Compile times improve and the header stays readable.
 
 ---

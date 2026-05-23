@@ -89,7 +89,7 @@ wordCount["hello"] = 1;
 wordCount["world"] = 2;
 ++wordCount["hello"];        // now 2
 
-for (const auto& [word, count] : wordCount) {
+for (const auto& [word, count] : wordCount) {   // [word, count] splits each key/value pair
     std::cout << word << ": " << count << "\n";
 }
 ```
@@ -161,10 +161,10 @@ The `.begin()`/`.end()` pair appears everywhere. It says "operate on this whole 
 #include <optional>
 
 std::optional<int> findReading(int id) {
-    if (notFound) {
-        return std::nullopt;
+    if (id < 0) {
+        return std::nullopt;   // no reading for an invalid id
     }
-    return 42;
+    return 42;                 // pretend we found a reading
 }
 
 auto r = findReading(7);

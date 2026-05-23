@@ -86,9 +86,9 @@ nav:
     - Basic Structure: Chapter1/basic_structure.md
     - Variables and Basic Types: Chapter1/variables.md
     - Operators and Expressions: Chapter1/operators_expressions.md
-    - Enumerations: Chapter1/enums.md
     - Control Statements: Chapter1/control_statements.md
     - Functions: Chapter1/functions.md
+    - Enumerations: Chapter1/enums.md
     - Exercises: Chapter1/exercises.md
   - 2. Tooling & Standard Library:
     - CMake Introduction: Chapter2/cmake_intro.md

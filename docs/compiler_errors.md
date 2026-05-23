@@ -196,3 +196,7 @@ main.cpp:4:13: error: expected ';' after expression
 Two errors. The first says line 5 has an "undeclared identifier `std`", which is nonsense because `std` is declared by the `#include`. That is the giveaway: the compiler is so confused that obvious things have stopped making sense. Always look at the *first* error first. The second message points at line 4, which is missing its semicolon. Add the semicolon, recompile, and both errors disappear.
 
 Once you have done this five or six times, you will start fixing missing semicolons before the compiler even finishes complaining about them.
+
+---
+
+Compiler errors are about code that will not *build*. Once it builds but does the wrong thing when you run it, the tool you want is the [debugger](debugger.md).

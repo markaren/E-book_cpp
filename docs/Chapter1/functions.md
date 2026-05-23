@@ -141,3 +141,5 @@ A few habits that pay off immediately:
 - `return` produces the function's output; `void` functions have no output value.
 - Overloading lets multiple functions share a name when they take different argument types.
 - One job per function, descriptive names, keep them short.
+
+A function may also call *itself* — a technique called **recursion**. See [Recursion](../recursion.md).

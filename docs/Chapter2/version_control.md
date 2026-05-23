@@ -75,7 +75,7 @@ git log --oneline    # compact view
 When the project lives on GitHub:
 
 ```bash
-git clone git@github.com:owner/repo.git   # download the repo from GitHub
+git clone https://github.com/owner/repo.git   # download the repo from GitHub
 cd repo
 # make changes, git add, git commit ...
 git push                                   # send your commits back to GitHub

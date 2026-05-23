@@ -1,50 +1,64 @@
-# Getting started
+# Getting Started
 
-In order to get started with C++, you need a compiler. Simply put, a compiler is a software program that processes instructions written in a programming language 
-and creates a binary file that the machine’s CPU can understand and execute. Compilers for Windows, Linux and MacOS are typically different. 
+To write C++ you need two things: a **compiler** — the program that turns the C++ you type into an *executable*, a file your computer can actually run — and somewhere to write and run your code. This course uses **CLion**, an IDE (Integrated Development Environment: the application you write, build, run, and debug code in). CLion comes with everything you need bundled in, so setup is short.
 
-You are expected to use [CLion](https://www.jetbrains.com/clion/) in this course. CLion is a cross-platform IDE for C and C++, which is free for students. 
-CLion comes bundled with CMake, so you do not have to install that independently. On Windows it also comes with a working compiler that uses the MinGW toolchain. 
-However, you might consider using the MSVC compiler, which is tailored to Windows.
+This page gets you from nothing to a running "Hello, World!". JetBrains' [Quick Start Guide](https://www.jetbrains.com/help/clion/clion-quick-start-guide.html) shows the same steps with screenshots if you would like to follow along visually.
 
-## Windows
+---
 
-_Optional:_ Download [Visual Studio Community](https://visualstudio.microsoft.com/vs/community/). 
-This is the preferred compiler on Windows, however, you can opt to use the MinGW toolchain that come bundled with CLion.
+## 1. Install CLion
 
-## MacOS
-Apple supports C++ with the Apple Clang compiler (included in Xcode). 
+1. Download CLion from [jetbrains.com/clion](https://www.jetbrains.com/clion/) and run the installer with the default options.
+2. CLion is **free for students**. The first time it launches it will ask you to sign in — create a free JetBrains account and activate the free licence through the [JetBrains educational program](https://www.jetbrains.com/community/education/#students).
 
-## Linux 
-In Debian-based distributions, the most well-known C and C++ compilers are gcc and g++. If your system doesn’t have the build-essential package 
-installed in your system by default, you can install the latest available version from the default distribution repositories as follows:
+<!-- screenshot: CLion first-run / sign-in screen -->
 
-```
-sudo apt-get update && sudo apt-get install build-essential
-```
+CLion also bundles **CMake** (the build tool the course uses), so you do not need to install that separately. The only piece that depends on your operating system is the compiler:
 
+=== "Windows"
 
-## Your first project
+    **Nothing extra to install.** CLion comes with a working compiler (the *MinGW toolchain*) built in. Accept the defaults and you are ready.
 
-With CLion and a working compiler setup:
+    *Advanced, optional:* you can instead use Microsoft's MSVC compiler from [Visual Studio](https://visualstudio.microsoft.com/vs/community/). Skip this unless your instructor specifically asks for it — the bundled compiler is fine for everything in this book.
 
-1. Open CLion and choose `New Project`.
-2. Under C++, choose C++ executable.
-3. Specify the location of the project and set the language standard to C++20.
-4. A CMake settings window should appear. If not goto `File->Settings->Build, Execution, Deployment->CMake`. The default settings are likely OK.
-   - If you have installed Visual Studio under Windows, however, you might want to go `File->Settings->Build, Execution, Deployment->Toolchains` and add Visual Studio using the `+`. Make sure to select `x86_amd64` under `Architecture`.
+=== "macOS"
 
-> Note. It's not a good idea to specify the location as a folder under cloud storage. This will result a large number of files beeing synchronized during building,
-> and of you use multiple PC's you'll end up with synchronization issues as the build files generated are PC specific.
->
-> Furthermore, paths with special characters (including Norwegian ones) are likely to lead to hard to understand errors at least on Windows. Also _try_ to avoid paths with spaces. 
+    Install Apple's command-line developer tools, which include the Clang compiler. Open the **Terminal** app and run:
 
-With the configuration done, CLion has now created a dummy "Hello world" project for you. It consists of two files:
+    ```
+    xcode-select --install
+    ```
 
-##### CMakeLists.txt
+    Follow the prompt. CLion then detects the compiler automatically.
+
+=== "Linux"
+
+    Install the GCC compiler and build tools. On Debian/Ubuntu, open a terminal and run:
+
+    ```
+    sudo apt-get update && sudo apt-get install build-essential
+    ```
+
+    CLion then detects the compiler automatically.
+
+---
+
+## 2. Create your first project
+
+1. On the welcome screen choose **New Project** (or **File → New Project** if CLion is already open).
+2. Select **C++ Executable**.
+3. Set the **Language standard** to **C++20**.
+4. Choose a location for the project — but read the warning below first — and click **Create**.
+
+<!-- screenshot: New Project dialog with "C++ Executable" and the C++20 language-standard dropdown -->
+
+> **Where to put your project.** Avoid a folder inside cloud storage (OneDrive, Dropbox, Google Drive). Building generates a large number of files that would sync constantly, and if you use more than one PC the machine-specific build files cause conflicts. Also avoid paths with spaces or special characters — including Norwegian `æ`, `ø`, `å` — which cause confusing errors on Windows. A simple path such as `C:\dev\projects` is ideal.
+
+CLion creates a starter "Hello, World!" project for you, with two files:
 
 ```cmake
-cmake_minimum_required(VERSION 3.15)
+# CMakeLists.txt — tells the build tool how to build your program
+cmake_minimum_required(VERSION 3.20)
 project(demo)
 
 set(CMAKE_CXX_STANDARD 20)
@@ -52,9 +66,8 @@ set(CMAKE_CXX_STANDARD 20)
 add_executable(demo main.cpp)
 ```
 
-##### main.cpp
-
 ```cpp
+// main.cpp — your program
 #include <iostream>
 
 int main() {
@@ -63,10 +76,42 @@ int main() {
 }
 ```
 
-C++ needs to be compiled prior to execution.
+Do not worry about what each line means yet — [Basic Structure](Chapter1/basic_structure.md) breaks the program down piece by piece, and [CMake Introduction](Chapter2/cmake_intro.md) covers the `CMakeLists.txt`. (You will also learn there why this book usually prefers `'\n'` to `std::endl`; CLion just happens to generate `std::endl`.)
 
-> Click the green "hammer" in the upper right corner to build, or the green "play" button to build & run.
-> 
-> You may also right click somewhere inside the `main` function to get a "run" context action.
+---
 
-Executing the code should produce `Hello, World!` in the terminal window embedded in CLion (located in the lower panel).
+## 3. Build and run
+
+C++ has to be **compiled** into an executable before it can run. CLion does both with one click:
+
+- Click the green **▶ Run** button near the top-right corner (or press **Shift+F10**).
+- The hammer icon next to it *builds* without running, if you ever want that.
+
+<!-- screenshot: top-right toolbar showing the Run (play) and Build (hammer) buttons -->
+
+---
+
+## 4. Check it worked
+
+The **Run** tool window opens at the bottom of CLion and should show something like:
+
+```
+Hello, World!
+
+Process finished with exit code 0
+```
+
+`exit code 0` means the program ran successfully. If you see that, your setup is working and you are ready for the [Introduction](Chapter1/introduction.md).
+
+<!-- screenshot: Run tool window showing the output and "exit code 0" -->
+
+---
+
+## If something went wrong
+
+The most common first-run problems:
+
+- **"No toolchain configured" or the compiler is not found.** Open **File → Settings → Build, Execution, Deployment → Toolchains**. On Windows there should be a bundled **MinGW** entry; if it is missing, click **+** and add it. On macOS/Linux, make sure you installed the compiler from the tab in Step 1.
+- **A red error appears in the CMake panel at the bottom.** This is almost always a bad project location — a path with spaces or special characters, or a cloud-storage folder. Delete the project and recreate it in a simple path like `C:\dev\projects`.
+- **The Run button is greyed out or nothing happens.** CLion is probably still loading the project — wait for the progress bar at the bottom to finish, then try again.
+- **Still stuck on an error message.** Read [Reading Compiler Errors](compiler_errors.md), then copy the *exact* error text into a search engine — or into an AI assistant, following [Using AI for Coding](using_ai.md).

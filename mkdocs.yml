@@ -114,6 +114,7 @@ nav:
     - Using AI for Coding: using_ai.md
     - Strings: strings.md
     - Lambda Expressions: lambdas.md
+    - Recursion: recursion.md
     - Floating-Point Pitfalls: floating_point.md
     - Common Terms: terms.md
     - FAQ: faq.md

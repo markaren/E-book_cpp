@@ -75,6 +75,9 @@ hooks:
 extra_css:
   - stylesheets/extra.css
 
+extra_javascript:
+  - javascripts/spoiler.js
+
 nav:
   - Home: index.md
   - Getting Started: getting_started.md
@@ -86,6 +89,7 @@ nav:
     - Enumerations: Chapter1/enums.md
     - Control Statements: Chapter1/control_statements.md
     - Functions: Chapter1/functions.md
+    - Exercises: Chapter1/exercises.md
   - 2. Tooling & Standard Library:
     - CMake Introduction: Chapter2/cmake_intro.md
     - Version Control & Git: Chapter2/version_control.md

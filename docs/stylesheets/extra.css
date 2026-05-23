@@ -20,3 +20,24 @@
   border-color: var(--md-accent-fg-color);
   background: var(--md-default-bg-color);
 }
+
+/* Spoiler: a solution that stays blurred until clicked.
+   Paired with a collapsible "Show solution" block, revealing the answer
+   takes two deliberate clicks: expand, then un-blur. */
+.spoiler {
+  cursor: pointer;
+  filter: blur(5px);
+  user-select: none;
+  border-radius: 0.2rem;
+  transition: filter 0.15s ease;
+}
+
+.spoiler:hover {
+  filter: blur(3.5px);
+}
+
+.spoiler--revealed {
+  filter: none;
+  cursor: auto;
+  user-select: auto;
+}

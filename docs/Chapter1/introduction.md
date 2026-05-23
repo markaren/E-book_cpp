@@ -86,7 +86,7 @@ The key terms you will meet:
 | **Inheritance**   | Building a new class on top of an existing one.                                                  |
 | **Polymorphism**  | Treating different concrete types through a common interface.                                    |
 
-We will not write a class today. Chapter 3 covers them properly. For now, keep these words in the back of your mind.
+We will not write a class today. Chapter 4 covers them properly. For now, keep these words in the back of your mind.
 
 ---
 

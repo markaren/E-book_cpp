@@ -93,21 +93,22 @@ plugins:
             Functions: Funksjoner
             Enumerations: Enumerasjoner
             Exercises: Oppgaver
-            "2. Tooling & Standard Library": "2. Verktøy og standardbibliotek"
+            "2. Tooling": "2. Verktøy"
             CMake Introduction: CMake-introduksjon
             Version Control & Git: Versjonskontroll og Git
+            "3. Standard Library & Data Structures": "3. Standardbibliotek og datastrukturer"
             C++ Standard Library: C++ standardbibliotek
             Data Structures: Datastrukturer
-            "3. Classes & Types": "3. Klasser og typer"
+            "4. Classes & Types": "4. Klasser og typer"
             Classes: Klasser
             Values, References & Pointers: Verdier, referanser og pekere
             IO & Streams: IO og strømmer
-            "4. Memory & Polymorphism": "4. Minne og polymorfisme"
+            "5. Memory & Polymorphism": "5. Minne og polymorfisme"
             Memory Management: Minnehåndtering
             Move Semantics: Flyttesemantikk
             Polymorphism: Polymorfisme
             Templates: Maler
-            "5. Design & Quality": "5. Design og kvalitet"
+            "6. Design & Quality": "6. Design og kvalitet"
             Separation of Concerns: Separasjon av ansvar
             Observer Pattern: Observatør-mønsteret
             Error Handling: Feilhåndtering
@@ -145,27 +146,30 @@ nav:
     - Functions: Chapter1/functions.md
     - Enumerations: Chapter1/enums.md
     - Exercises: Chapter1/exercises.md
-  - 2. Tooling & Standard Library:
+  - 2. Tooling:
     - CMake Introduction: Chapter2/cmake_intro.md
     - Version Control & Git: Chapter2/version_control.md
     - PlatformIO: Chapter2/platformio.md
-    - C++ Standard Library: Chapter2/standard_library.md
-    - Data Structures: Chapter2/data_structures.md
-  - 3. Classes & Types:
-    - Classes: Chapter3/classes.md
-    - Values, References & Pointers: Chapter3/types_refs_ptrs.md
-    - RAII: Chapter3/raii.md
-    - IO & Streams: Chapter3/io_streams.md
-  - 4. Memory & Polymorphism:
-    - Memory Management: Chapter4/memory.md
-    - Move Semantics: Chapter4/move.md
-    - Polymorphism: Chapter4/polymorphism.md
-    - Templates: Chapter4/templates.md
-  - 5. Design & Quality:
-    - Separation of Concerns: Chapter5/soc.md
-    - Observer Pattern: Chapter5/observer.md
-    - Testing: Chapter5/testing.md
-    - Error Handling: Chapter5/error_handling.md
+    - Exercises: Chapter2/exercises.md
+  - 3. Standard Library & Data Structures:
+    - C++ Standard Library: Chapter3/standard_library.md
+    - Data Structures: Chapter3/data_structures.md
+    - Exercises: Chapter3/exercises.md
+  - 4. Classes & Types:
+    - Classes: Chapter4/classes.md
+    - Values, References & Pointers: Chapter4/types_refs_ptrs.md
+    - RAII: Chapter4/raii.md
+    - IO & Streams: Chapter4/io_streams.md
+  - 5. Memory & Polymorphism:
+    - Memory Management: Chapter5/memory.md
+    - Move Semantics: Chapter5/move.md
+    - Polymorphism: Chapter5/polymorphism.md
+    - Templates: Chapter5/templates.md
+  - 6. Design & Quality:
+    - Separation of Concerns: Chapter6/soc.md
+    - Observer Pattern: Chapter6/observer.md
+    - Testing: Chapter6/testing.md
+    - Error Handling: Chapter6/error_handling.md
   - Reference:
     - Coming from Python: python_to_cpp.md
     - Reading Compiler Errors: compiler_errors.md

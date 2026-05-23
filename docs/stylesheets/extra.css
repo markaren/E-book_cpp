@@ -28,16 +28,28 @@
   cursor: pointer;
   filter: blur(5px);
   user-select: none;
+  -webkit-user-select: none;
   border-radius: 0.2rem;
   transition: filter 0.15s ease;
 }
 
-.spoiler:hover {
+/* The answer is meant to be read and re-typed, not copied — the exercises
+   ask students to type solutions into CLion themselves. Suppress text
+   selection (above, kept even when revealed) and hide Material's code "copy"
+   button inside solutions, which would otherwise copy the text via JS and
+   bypass the blur entirely. */
+.spoiler .md-clipboard {
+  display: none;
+}
+
+/* Only the still-blurred spoiler reacts to hover. Once revealed, this
+   selector stops matching, so `.spoiler--revealed { filter: none }` wins
+   instead of being overridden by `:hover` (which is more specific). */
+.spoiler:not(.spoiler--revealed):hover {
   filter: blur(3.5px);
 }
 
 .spoiler--revealed {
   filter: none;
   cursor: auto;
-  user-select: auto;
 }

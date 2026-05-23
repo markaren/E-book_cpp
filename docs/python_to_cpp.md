@@ -17,10 +17,10 @@ These are the ones that catch Python programmers out:
 | a variable can change type (`x = 5`, then `x = "hi"`) | a variable's **type is fixed** at declaration |
 | indentation defines blocks | blocks are `{ }`; statements end in `;`; indentation is ignored |
 | `if xs:` is false for an empty list | containers have no truthiness — write `if (xs.empty())` |
-| `None` means "nothing" | `nullptr` (a pointer to nothing) or [`std::optional`](Chapter5/error_handling.md#stdoptional-when-failure-is-expected) (a missing value) |
+| `None` means "nothing" | `nullptr` (a pointer to nothing) or [`std::optional`](Chapter6/error_handling.md#stdoptional-when-failure-is-expected) (a missing value) |
 | `len(xs)` | `xs.size()` |
 | `int` grows without limit | `int` is fixed-width and **overflows silently** |
-| `print(obj)` always prints *something* (your own types get a default placeholder) | `std::cout << obj` **won't compile** for your own types until you define an [`operator<<`](Chapter3/io_streams.md) |
+| `print(obj)` always prints *something* (your own types get a default placeholder) | `std::cout << obj` **won't compile** for your own types until you define an [`operator<<`](Chapter4/io_streams.md) |
 
 ---
 
@@ -43,7 +43,7 @@ int main() {
 }
 ```
 
-In Python the equivalent would leave *both* at length 4. This **value semantics** is the single biggest adjustment. Having two names refer to the same object is Python's default. In C++ you ask for it explicitly, with a reference (`&`) or a pointer. See [Values, References, and Pointers](Chapter3/types_refs_ptrs.md).
+In Python the equivalent would leave *both* at length 4. This **value semantics** is the single biggest adjustment. Having two names refer to the same object is Python's default. In C++ you ask for it explicitly, with a reference (`&`) or a pointer. See [Values, References, and Pointers](Chapter4/types_refs_ptrs.md).
 
 ---
 
@@ -77,7 +77,7 @@ Two surprises worth knowing on day one:
 
 ## Nothing is cleaned up "later"
 
-Python frees memory whenever its garbage collector gets around to it. C++ destroys each object **deterministically**, the moment it goes out of scope — that is [RAII](Chapter3/raii.md), and it is why you never call a "free" yourself. The flip side: a reference or pointer to something that has *already* gone out of scope is a classic C++ crash, with no Python equivalent. See [the lifetime trap](Chapter3/types_refs_ptrs.md#the-big-lifetime-trap).
+Python frees memory whenever its garbage collector gets around to it. C++ destroys each object **deterministically**, the moment it goes out of scope — that is [RAII](Chapter4/raii.md), and it is why you never call a "free" yourself. The flip side: a reference or pointer to something that has *already* gone out of scope is a classic C++ crash, with no Python equivalent. See [the lifetime trap](Chapter4/types_refs_ptrs.md#the-big-lifetime-trap).
 
 ---
 
@@ -87,7 +87,7 @@ Python frees memory whenever its garbage collector gets around to it. C++ destro
 |--------|-----|
 | `for x in xs:` | `for (int x : xs)` — see [Control Statements](Chapter1/control_statements.md) |
 | `for i in range(n):` | `for (int i = 0; i < n; ++i)` |
-| `list` | [`std::vector`](Chapter2/standard_library.md) |
+| `list` | [`std::vector`](Chapter3/standard_library.md) |
 | `dict` | `std::map` / `std::unordered_map` |
 | `[f(x) for x in xs]` | `std::transform`, or a plain loop — see [Lambdas](lambdas.md) |
 

@@ -86,7 +86,7 @@ Sentrale begreper du vil møte:
 | **Arv** | Å bygge en ny klasse oppå en eksisterende. |
 | **Polymorfisme** | Å behandle ulike konkrete typer gjennom et felles grensesnitt. |
 
-Vi skal ikke skrive en klasse i dag. Kapittel 3 dekker dem ordentlig. For nå, hold disse ordene bakerst i tankene.
+Vi skal ikke skrive en klasse i dag. Kapittel 4 dekker dem ordentlig. For nå, hold disse ordene bakerst i tankene.
 
 ---
 

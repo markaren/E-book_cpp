@@ -123,7 +123,7 @@ Each fits a different moment:
 |------|-----------|
 | The program will not compile | [Read the compiler error](compiler_errors.md) |
 | It builds but does the wrong thing | The **debugger** |
-| You want to state "this can never happen" and be told the instant it does | [`assert`](Chapter5/error_handling.md#assertions-catching-bugs-not-handling-errors) |
+| You want to state "this can never happen" and be told the instant it does | [`assert`](Chapter6/error_handling.md#assertions-catching-bugs-not-handling-errors) |
 | A quick one-off peek, or no debugger available (embedded) | A `std::cout` print |
 
 ---

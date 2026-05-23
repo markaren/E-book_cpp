@@ -78,7 +78,7 @@ int main() {
 }
 ```
 
-When `throw` executes, the program immediately stops running the current function and searches up the call stack for a matching `catch` block. This process is called **stack unwinding**: every local object that has gone out of scope has its destructor called along the way (see [RAII](../Chapter3/raii.md)).
+When `throw` executes, the program immediately stops running the current function and searches up the call stack for a matching `catch` block. This process is called **stack unwinding**: every local object that has gone out of scope has its destructor called along the way (see [RAII](../Chapter4/raii.md)).
 
 > If no matching `catch` is found anywhere in the call stack, the program calls `std::terminate()` and aborts. Always catch exceptions at a level where you can meaningfully handle them.
 
@@ -165,7 +165,7 @@ Defining your own exception types lets callers catch _specific_ failure modes an
 
 ## RAII and Exception Safety
 
-You already learned about [RAII](../Chapter3/raii.md). One of its greatest benefits is that it makes code **exception-safe** automatically.
+You already learned about [RAII](../Chapter4/raii.md). One of its greatest benefits is that it makes code **exception-safe** automatically.
 
 When an exception is thrown, C++ guarantees that the destructors of all local objects are run as the stack unwinds. If a resource (a file, a lock, a heap allocation) is managed by an RAII wrapper, it will be released correctly even if an exception is thrown mid-function.
 

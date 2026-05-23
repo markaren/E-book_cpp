@@ -71,7 +71,7 @@ int    a = 3.7;   // compiles; silently truncates to 3
 int    b{3.7};    // compile error: narrowing from double to int
 ```
 
-For numeric types it is up to you. For class types (which you will meet in Chapter 3) brace initialisation often does the right thing more reliably.
+For numeric types it is up to you. For class types (which you will meet in Chapter 4) brace initialisation often does the right thing more reliably.
 
 ---
 

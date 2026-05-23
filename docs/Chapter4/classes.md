@@ -278,7 +278,7 @@ No destructor. No copy or move operations. The defaults work because `std::strin
 
 Occasionally a class manages a *raw* resource directly — a block of memory, a file handle, a lock. Then the compiler-generated copy and destroy operations are usually wrong: two objects end up owning the same thing, and the program crashes when both try to release it. Handling that correctly means writing several of the special members together — the classic **Rule of Three** and **Rule of Five**.
 
-You will rarely need to. The better fix is almost always to let a standard type own the resource for you — a `std::vector`, a `std::string`, or a smart pointer — which puts you straight back to the Rule of Zero. [Memory Management](../Chapter4/memory.md) and [Move Semantics](../Chapter4/move.md) cover raw resources, copying, and moving in full, once you have met pointers and the heap.
+You will rarely need to. The better fix is almost always to let a standard type own the resource for you — a `std::vector`, a `std::string`, or a smart pointer — which puts you straight back to the Rule of Zero. [Memory Management](../Chapter5/memory.md) and [Move Semantics](../Chapter5/move.md) cover raw resources, copying, and moving in full, once you have met pointers and the heap.
 
 The practical advice for this course: **aim for the Rule of Zero.**
 

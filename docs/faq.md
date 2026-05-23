@@ -16,7 +16,7 @@ A lot, underneath: static types, value semantics (`b = a` *copies*), manual scop
 As a tutor and a reviewer, yes; as a replacement for understanding, no — they are confidently wrong often enough that you must check everything. See [Using AI for Coding](using_ai.md).
 
 **Why split code into a header and a `.cpp`, instead of `#include`-ing a `.cpp` file?**
-A header shares *declarations*; including a `.cpp` copies its *definitions* into every file, causing "multiple definition" linker errors. See [Classes](Chapter3/classes.md). (More: [Stack Overflow](https://stackoverflow.com/questions/1686204/why-should-i-not-include-cpp-files-and-instead-use-a-header).)
+A header shares *declarations*; including a `.cpp` copies its *definitions* into every file, causing "multiple definition" linker errors. See [Classes](Chapter4/classes.md). (More: [Stack Overflow](https://stackoverflow.com/questions/1686204/why-should-i-not-include-cpp-files-and-instead-use-a-header).)
 
 **`#include <foo>` versus `#include "foo"`?**
 Angle brackets for standard and library headers; quotes for your own files. See [Basic Structure](Chapter1/basic_structure.md). (More: [Stack Overflow](https://stackoverflow.com/questions/21593/what-is-the-difference-between-include-filename-and-include-filename).)
@@ -45,7 +45,7 @@ Use the debugger: set a breakpoint, step through, and watch the variables until 
 Integer division throws the remainder away. Make one side a `double` (`10.0 / 3`) for a decimal result. See [Operators and Expressions](Chapter1/operators_expressions.md).
 
 **`std::endl` or `"\n"` — which should I use?**
-Both end the line; `std::endl` also flushes the stream, which is slower. Prefer `"\n"`. See [IO & Streams](Chapter3/io_streams.md). (More: [Stack Overflow](https://stackoverflow.com/questions/213907/stdendl-vs-n).)
+Both end the line; `std::endl` also flushes the stream, which is slower. Prefer `"\n"`. See [IO & Streams](Chapter4/io_streams.md). (More: [Stack Overflow](https://stackoverflow.com/questions/213907/stdendl-vs-n).)
 
 **Do I really need braces `{}` on a one-line `if`?**
 Yes — always brace. It is one extra line and removes a whole class of bugs when someone later adds a second statement. See [Control Statements](Chapter1/control_statements.md). (More: [Stack Overflow](https://stackoverflow.com/questions/2125066/is-it-a-bad-practice-to-use-an-if-statement-without-curly-braces).)
@@ -54,13 +54,13 @@ Yes — always brace. It is one extra line and removes a whole class of bugs whe
 Brace initialisation refuses "narrowing" conversions that silently lose data — `int x{3.7}` will not compile. See [Variables and Basic Types](Chapter1/variables.md). (More: [Stack Overflow](https://stackoverflow.com/questions/18222926/what-are-the-advantages-of-list-initialization-using-curly-braces).)
 
 **What does `explicit` mean on a constructor?**
-It stops that constructor being used for *silent* conversions. A one-argument constructor like `Motor(int)` normally lets the compiler turn a stray `int` into a `Motor` on its own; `explicit` switches that off, so the conversion happens only when you ask for it. Mark single-argument constructors `explicit` unless you want the conversion. See [Classes](Chapter3/classes.md). (More: [Stack Overflow](https://stackoverflow.com/questions/121162/what-does-the-explicit-keyword-mean).)
+It stops that constructor being used for *silent* conversions. A one-argument constructor like `Motor(int)` normally lets the compiler turn a stray `int` into a `Motor` on its own; `explicit` switches that off, so the conversion happens only when you ask for it. Mark single-argument constructors `explicit` unless you want the conversion. See [Classes](Chapter4/classes.md). (More: [Stack Overflow](https://stackoverflow.com/questions/121162/what-does-the-explicit-keyword-mean).)
 
 **Why is `using namespace std;` discouraged?**
-It dumps every standard-library name into your scope, inviting clashes and ambiguity. Write the `std::` prefix instead. See [C++ Standard Library](Chapter2/standard_library.md). (More: [Stack Overflow](https://stackoverflow.com/questions/1452721/why-is-using-namespace-std-considered-bad-practice).)
+It dumps every standard-library name into your scope, inviting clashes and ambiguity. Write the `std::` prefix instead. See [C++ Standard Library](Chapter3/standard_library.md). (More: [Stack Overflow](https://stackoverflow.com/questions/1452721/why-is-using-namespace-std-considered-bad-practice).)
 
 **What does `std::` mean, and why is it everywhere?**
-`std` is the namespace that holds the standard library; `std::cout` means "`cout`, from `std`." See [C++ Standard Library](Chapter2/standard_library.md).
+`std` is the namespace that holds the standard library; `std::cout` means "`cout`, from `std`." See [C++ Standard Library](Chapter3/standard_library.md).
 
 **Why isn't `0.1 + 0.2` exactly `0.3`?**
 Floating-point numbers are approximations, so tiny errors creep in — never compare them with `==`. See [Floating-Point Pitfalls](floating_point.md).
@@ -73,16 +73,16 @@ A small, unnamed function written inline, usually handed to an algorithm. See [L
 ## Pointers, references, and memory
 
 **What is the difference between a pointer and a reference?**
-A reference is a permanent alias for one variable; a pointer is a reseatable address that can be null. Prefer a reference unless you need null or reassignment. See [Values, References & Pointers](Chapter3/types_refs_ptrs.md). (More: [Stack Overflow](https://stackoverflow.com/questions/57483/what-are-the-differences-between-a-pointer-variable-and-a-reference-variable).)
+A reference is a permanent alias for one variable; a pointer is a reseatable address that can be null. Prefer a reference unless you need null or reassignment. See [Values, References & Pointers](Chapter4/types_refs_ptrs.md). (More: [Stack Overflow](https://stackoverflow.com/questions/57483/what-are-the-differences-between-a-pointer-variable-and-a-reference-variable).)
 
 **When do I use `.` versus `->`?**
-`.` on an object; `->` through a pointer to one (`p->x` is shorthand for `(*p).x`). See [Values, References & Pointers](Chapter3/types_refs_ptrs.md).
+`.` on an object; `->` through a pointer to one (`p->x` is shorthand for `(*p).x`). See [Values, References & Pointers](Chapter4/types_refs_ptrs.md).
 
 **Why pass by `const&`?**
-It avoids copying a large object while promising not to change it — the standard way to pass anything bigger than a number. See [Values, References & Pointers](Chapter3/types_refs_ptrs.md).
+It avoids copying a large object while promising not to change it — the standard way to pass anything bigger than a number. See [Values, References & Pointers](Chapter4/types_refs_ptrs.md).
 
 **Why should I avoid raw `new` and `delete`?**
-They are easy to leak or double-free. Let `std::vector`, `std::string`, and smart pointers own memory for you (that is RAII). See [Memory Management](Chapter4/memory.md). (More: [Stack Overflow](https://stackoverflow.com/questions/6500313/why-should-c-programmers-minimize-use-of-new).)
+They are easy to leak or double-free. Let `std::vector`, `std::string`, and smart pointers own memory for you (that is RAII). See [Memory Management](Chapter5/memory.md). (More: [Stack Overflow](https://stackoverflow.com/questions/6500313/why-should-c-programmers-minimize-use-of-new).)
 
 **Which cast should I use?**
 Avoid the old C-style cast `(int)x` — it silently does *whatever it takes* to force the conversion, which hides mistakes, and it is impossible to search for. Use a named cast instead: almost always `static_cast`; `dynamic_cast`, `const_cast`, and `reinterpret_cast` are rare and each needs a specific reason. See [Operators and Expressions](Chapter1/operators_expressions.md). (More: [Stack Overflow](https://stackoverflow.com/questions/332030/when-should-static-cast-dynamic-cast-const-cast-and-reinterpret-cast-be-used).)

@@ -55,7 +55,7 @@ Notice what is *not* in `main`: any call to close the connection. The `}` that e
 
 ## Cleanup that cannot be skipped
 
-The real power is that the destructor runs no matter how control leaves the scope — whether the block finishes normally, returns early, or throws an [exception](../Chapter5/error_handling.md) partway through:
+The real power is that the destructor runs no matter how control leaves the scope — whether the block finishes normally, returns early, or throws an [exception](../Chapter6/error_handling.md) partway through:
 
 ```cpp
 void useSensor() {
@@ -94,7 +94,7 @@ This is why you rarely need to write a destructor yourself: the right move is al
 
 ## RAII and memory
 
-The most important resource is memory. Allocating it by hand (`new`) and freeing it by hand (`delete`) is the classic source of leaks and double-frees. The next chapter's **smart pointers** — `std::unique_ptr` and `std::shared_ptr` — are simply RAII wrappers around memory: they free what they hold when they go out of scope. See [Memory Management](../Chapter4/memory.md).
+The most important resource is memory. Allocating it by hand (`new`) and freeing it by hand (`delete`) is the classic source of leaks and double-frees. The next chapter's **smart pointers** — `std::unique_ptr` and `std::shared_ptr` — are simply RAII wrappers around memory: they free what they hold when they go out of scope. See [Memory Management](../Chapter5/memory.md).
 
 RAII is also the reason C++ does not need a garbage collector: cleanup is *deterministic*, happening at the exact moment an object dies, not at some unpredictable time later.
 

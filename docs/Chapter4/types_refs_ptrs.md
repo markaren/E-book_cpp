@@ -20,7 +20,7 @@ b = 30;       // a is still 25
 
 This is the safest default and how every built-in type and most class types behave by default. Each variable has its own independent storage.
 
-The cost is the copy: for an `int` it is essentially free, for a 10 MB `std::vector` it is a heap allocation and a `memcpy`. (The [Move Semantics chapter](../Chapter4/move.md) explains how modern C++ avoids many of these copies automatically.)
+The cost is the copy: for an `int` it is essentially free, for a 10 MB `std::vector` it is a heap allocation and a `memcpy`. (The [Move Semantics chapter](../Chapter5/move.md) explains how modern C++ avoids many of these copies automatically.)
 
 ---
 
@@ -170,7 +170,7 @@ For data members of a class, the rules of thumb are similar:
 |-----------|-----|
 | Class owns the data | Plain value member (e.g. `std::vector<int> data_`) |
 | Class observes data owned by something else | A reference or raw pointer — but think carefully about who keeps it alive |
-| Class shares ownership with others | `std::shared_ptr<T>` (see [Memory](../Chapter4/memory.md)) |
+| Class shares ownership with others | `std::shared_ptr<T>` (see [Memory](../Chapter5/memory.md)) |
 
 ---
 

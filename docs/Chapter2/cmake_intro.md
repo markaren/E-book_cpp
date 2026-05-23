@@ -194,7 +194,7 @@ my_project/
 ├── .gitignore
 ├── include/        # public headers
 ├── src/            # implementation files
-└── tests/          # tests (see Chapter 5)
+└── tests/          # tests (see Chapter 6)
 ```
 
 You do not need all of these on day one. Start with one `main.cpp` and one `CMakeLists.txt`. Split into `src/` and `include/` when you have more than four or five files. Add `tests/` when you start writing tests. The point is to grow into the structure, not to set it all up before writing any code.

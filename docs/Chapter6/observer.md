@@ -104,7 +104,7 @@ The sensor knows nothing about displays, alarms, or logs — only that it holds 
 
 ## Watching out for lifetimes
 
-This is the one real hazard. A lambda can [capture](../lambdas.md#captures) variables from around it. If a captured object is destroyed *before* the sensor stops calling the callback, the callback is left referring to something that no longer exists — the same [dangling-reference trap](../Chapter3/types_refs_ptrs.md#the-big-lifetime-trap) from the references chapter.
+This is the one real hazard. A lambda can [capture](../lambdas.md#captures) variables from around it. If a captured object is destroyed *before* the sensor stops calling the callback, the callback is left referring to something that no longer exists — the same [dangling-reference trap](../Chapter4/types_refs_ptrs.md#the-big-lifetime-trap) from the references chapter.
 
 ```cpp
 TemperatureSensor sensor;
@@ -130,7 +130,7 @@ Two habits keep you safe:
 
 ## The classic object-oriented form
 
-You will also meet the Observer pattern written the older "Gang of Four" way: instead of a callback, each observer is an object implementing a shared interface — a direct application of the [polymorphism](../Chapter4/polymorphism.md) you have already seen.
+You will also meet the Observer pattern written the older "Gang of Four" way: instead of a callback, each observer is an object implementing a shared interface — a direct application of the [polymorphism](../Chapter5/polymorphism.md) you have already seen.
 
 ```cpp
 class TemperatureObserver {
@@ -142,7 +142,7 @@ public:
 
 A `Display`, an `Alarm`, and a `Logger` would each derive from `TemperatureObserver` and override `onReading`. The subject then stores a list of `TemperatureObserver` handles and calls `onReading` on each — the mechanics are identical to the callback version.
 
-The difference is **ownership**. Because polymorphism requires storing observers by pointer or reference (never by value — that would [slice](../Chapter4/polymorphism.md#object-slicing) them), the subject does not own its observers. You must guarantee each one outlives the sensor and is removed before it is destroyed — exactly the bookkeeping the callback version sidesteps.
+The difference is **ownership**. Because polymorphism requires storing observers by pointer or reference (never by value — that would [slice](../Chapter5/polymorphism.md#object-slicing) them), the subject does not own its observers. You must guarantee each one outlives the sensor and is removed before it is destroyed — exactly the bookkeeping the callback version sidesteps.
 
 For new code, prefer the callback form. Reach for the interface form when an observer is already a full-fledged object with several methods, or when a framework you are using expects it.
 

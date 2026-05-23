@@ -203,7 +203,7 @@ When in doubt, start with `std::vector` or `std::unordered_map`. They cover more
 
 You may notice that the standard library does *not* ship with a general-purpose tree or graph container. That is intentional: trees and graphs come in too many shapes (binary, n-ary, balanced, weighted, directed, …) for one container to fit them all.
 
-When you need a tree, build it out of nodes with `std::unique_ptr` children. (This snippet uses templates and `std::unique_ptr`, both from Chapters 3–4 — skim it for now.)
+When you need a tree, build it out of nodes with `std::unique_ptr` children. (This snippet uses templates and `std::unique_ptr`, both from Chapters 4–5 — skim it for now.)
 
 ```cpp
 template <typename T>

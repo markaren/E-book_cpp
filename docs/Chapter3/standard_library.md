@@ -173,7 +173,7 @@ if (r) {
 }
 ```
 
-Covered in detail in the [error handling chapter](../Chapter5/error_handling.md#stdoptional-when-failure-is-expected).
+Covered in detail in the [error handling chapter](../Chapter6/error_handling.md#stdoptional-when-failure-is-expected).
 
 ### `std::chrono`: time and durations
 
@@ -220,7 +220,7 @@ double e = std::exp(1.0);
 
 ## Streams
 
-C++ I/O is done through stream objects: `std::cout` for console output, `std::cin` for input, `std::ifstream` and `std::ofstream` for files. These get their own treatment in [IO & Streams](../Chapter3/io_streams.md).
+C++ I/O is done through stream objects: `std::cout` for console output, `std::cin` for input, `std::ifstream` and `std::ofstream` for files. These get their own treatment in [IO & Streams](../Chapter4/io_streams.md).
 
 ---
 

@@ -2,24 +2,10 @@
 
 Welcome to the e-book for the course [AIS1003 — Object-Oriented Programming with C++](https://www.ntnu.no/studier/emner/AIS1003#tab=omEmnet).
 
-Use the sidebar to navigate between chapters, or jump straight to a topic with the search box above.
+Use the sidebar to navigate between chapters, or jump straight to a topic with the search box above. New here? Start with [Getting Started](getting_started.md), then open the [Introduction](Chapter1/introduction.md).
 
 !!! note
     The book is in an early state of development. Consider it a preview.
-
-## How the book is organised
-
-| Week  | Topics                                                                                   |
-|-------|------------------------------------------------------------------------------------------|
-| 34    | Introduction, basic structure, control statements, variables, functions, operators       |
-| 35    | CMake, version control with Git, PlatformIO                                              |
-| 36    | C++ Standard Library, data structures                                                    |
-| 37–38 | Classes, RAII, values/references/pointers, IO & streams                                  |
-| 39–40 | Memory management, move semantics                                                        |
-| 41–42 | Polymorphism, templates                                                                  |
-| 43    | Separation of concerns, observer pattern, testing, error handling                        |
-
-Begin with [Getting Started](getting_started.md) if you are new, or open the [Introduction](Chapter1/introduction.md) to dive in.
 
 ## Additional resources
 

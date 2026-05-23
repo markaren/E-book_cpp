@@ -197,7 +197,7 @@ Catch2 prints a line per test and a summary at the end:
 
 ```
 ===============================================================================
-All tests passed (9 assertions in 5 test cases)
+All tests passed (11 assertions in 5 test cases)
 ```
 
 If a test fails, it shows the exact line and the values that did not match:

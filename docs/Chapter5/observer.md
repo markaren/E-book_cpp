@@ -142,7 +142,7 @@ public:
 
 A `Display`, an `Alarm`, and a `Logger` would each derive from `TemperatureObserver` and override `onReading`. The subject then stores a list of `TemperatureObserver` handles and calls `onReading` on each — the mechanics are identical to the callback version.
 
-The difference is **ownership**. Because polymorphism requires storing observers by pointer or reference (never by value — that would [slice](../Chapter4/polymorphism.md) them), the subject does not own its observers. You must guarantee each one outlives the sensor and is removed before it is destroyed — exactly the bookkeeping the callback version sidesteps.
+The difference is **ownership**. Because polymorphism requires storing observers by pointer or reference (never by value — that would [slice](../Chapter4/polymorphism.md#object-slicing) them), the subject does not own its observers. You must guarantee each one outlives the sensor and is removed before it is destroyed — exactly the bookkeeping the callback version sidesteps.
 
 For new code, prefer the callback form. Reach for the interface form when an observer is already a full-fledged object with several methods, or when a framework you are using expects it.
 

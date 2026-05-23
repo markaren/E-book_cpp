@@ -6,7 +6,7 @@ Every C++ program is built from the same handful of pieces. This chapter walks t
 #include <iostream>
 
 int main() {
-    std::cout << "Hello, world!" << std::endl;
+    std::cout << "Hello, world!" << "\n";
     return 0;
 }
 ```
@@ -47,7 +47,7 @@ A **statement** is one instruction. In C++, every statement ends with a semicolo
 int quantity = 10;
 double price = 5.40;
 double sum = price * quantity;
-std::cout << "Total: " << sum << std::endl;
+std::cout << "Total: " << sum << "\n";
 ```
 
 Forgetting a semicolon is the single most common error a beginner gets. The compiler error usually points to the line *after* the missing semicolon, which is confusing the first time. Always check the line above too.

@@ -333,7 +333,7 @@ bool Motor::isRunning() const {
 }
 
 std::string Motor::describe() const {
-    return std::format("Motor {} (max {} RPM)", id_, maxRpm_);
+    return std::format("Motor {} (max {} RPM)", id_, maxRpm_);  // std::format fills each {} with an argument, in order
 }
 ```
 

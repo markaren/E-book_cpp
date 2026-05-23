@@ -17,7 +17,7 @@ CLion also bundles **CMake** (the build tool the course uses), so you do not nee
 
 === "Windows"
 
-    **Nothing extra to install.** CLion comes with a working compiler (the *MinGW toolchain*) built in. Accept the defaults and you are ready.
+    **No separate compiler to install.** CLion provides a **MinGW** toolchain and sets it up on first launch — accept the default it offers. (If the toolchain list ever comes up empty, the *If something went wrong* section at the bottom shows how to add MinGW.)
 
     *Advanced, optional:* you can instead use Microsoft's MSVC compiler from [Visual Studio](https://visualstudio.microsoft.com/vs/community/). Skip this unless your instructor specifically asks for it — the bundled compiler is fine for everything in this book.
 
@@ -47,7 +47,7 @@ CLion also bundles **CMake** (the build tool the course uses), so you do not nee
 
 1. On the welcome screen choose **New Project** (or **File → New Project** if CLion is already open).
 2. Select **C++ Executable**.
-3. If the dialog shows a **Language standard** option, set it to **C++20**. (Some CLion versions don't — the generated `CMakeLists.txt` already sets C++20, so you are covered either way.)
+3. If the dialog offers a **Language standard** option, choose **C++20**. (Not every version does — either way, once the project opens, check that its `CMakeLists.txt` has `set(CMAKE_CXX_STANDARD 20)`; if the line shows a lower number like `14` or `17`, change it to `20`.)
 4. Choose a location for the project — but read the warning below first — and click **Create**.
 
 <!-- screenshot: New Project dialog with "C++ Executable" selected -->
@@ -76,7 +76,7 @@ int main() {
 }
 ```
 
-Do not worry about what each line means yet — [Basic Structure](Chapter1/basic_structure.md) breaks the program down piece by piece, and [CMake Introduction](Chapter2/cmake_intro.md) covers the `CMakeLists.txt`. (You will also learn there why this book usually prefers `'\n'` to `std::endl`; CLion just happens to generate `std::endl`.)
+Do not worry about what each line means yet — [Basic Structure](Chapter1/basic_structure.md) breaks the program down piece by piece, and [CMake Introduction](Chapter2/cmake_intro.md) covers the `CMakeLists.txt`. (CLion generates `std::endl`; this book usually writes `'\n'` instead. Both end the line — the difference does not matter yet.)
 
 ---
 

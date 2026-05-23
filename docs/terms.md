@@ -54,7 +54,7 @@ Whether you are new to programming or just to C++, you will meet a lot of unfami
 | **shell** | The program (PowerShell, bash, zsh, cmd) that interprets the commands you type in a terminal. See [Computer Basics](computer_basics.md). |
 | **smart pointer** | An RAII wrapper that owns heap memory and frees it automatically — `std::unique_ptr`, `std::shared_ptr`. See [Memory Management](Chapter4/memory.md). |
 | **stack overflow** | A crash caused by using up the call stack, for example a recursion with no reachable base case. See [Recursion](recursion.md). |
-| **standard library** (STL) | The large set of types and functions that ships with C++, all in the `std` namespace. See [C++ Standard Library](Chapter2/standard_library.md). |
+| **standard library** | The large set of types and functions that ships with C++, all in the `std` namespace. (Its containers and algorithms part is informally called the *STL*.) See [C++ Standard Library](Chapter2/standard_library.md). |
 | **statement** | One instruction; in C++ it ends with a semicolon. See [Basic Structure](Chapter1/basic_structure.md). |
 | **std** | The namespace of the standard library. `std::cout` means "`cout`, from `std`." See [C++ Standard Library](Chapter2/standard_library.md). |
 | **template** | A blueprint that generates functions or classes for whatever type you use, like `std::vector<T>`. See [Templates](Chapter4/templates.md). |

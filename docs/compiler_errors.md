@@ -153,7 +153,7 @@ warning: '=' used in a context where '==' was probably intended
 
 ## When the message still does not make sense
 
-Three strategies, in this order:
+Four strategies, in this order:
 
 **1. Read the line above the one the error points to.** Many errors (especially missing-semicolon errors) are actually one line earlier than where the compiler complains.
 

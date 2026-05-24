@@ -95,9 +95,23 @@ ben.addChild("Dan");
 
 TreeNode<std::string>& eve = family.addChild("Eve");
 eve.addChild("Finn");
+eve.addChild("Gwen");
 
 print(family);
 std::cout << countNodes(family) << " people in the tree\n";
+```
+
+That code builds this tree:
+
+```mermaid
+%%{init: {'flowchart': {'curve': 'linear'}}}%%
+graph TD
+    Ada --> Ben
+    Ada --> Eve
+    Ben --> Cara
+    Ben --> Dan
+    Eve --> Finn
+    Eve --> Gwen
 ```
 
 (The names are plain ASCII on purpose — see [Computer Basics](computer_basics.md#ascii) for why non-English letters in source code invite trouble.)
@@ -154,6 +168,7 @@ int main() {
 
     TreeNode<std::string>& eve = family.addChild("Eve");
     eve.addChild("Finn");
+    eve.addChild("Gwen");
 
     print(family);
     std::cout << countNodes(family) << " people in the tree\n";
@@ -169,7 +184,8 @@ Ada
     Dan
   Eve
     Finn
-6 people in the tree
+    Gwen
+7 people in the tree
 ```
 
 Notice what is *not* there: no `delete`, no destructor, no cleanup code. When `family` goes out of scope at the end of `main`, its `unique_ptr` children release the whole tree automatically.

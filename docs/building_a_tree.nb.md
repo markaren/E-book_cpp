@@ -95,9 +95,23 @@ ben.addChild("Dan");
 
 TreeNode<std::string>& eve = family.addChild("Eve");
 eve.addChild("Finn");
+eve.addChild("Gwen");
 
 print(family);
 std::cout << countNodes(family) << " people in the tree\n";
+```
+
+Den koden bygger dette treet:
+
+```mermaid
+%%{init: {'flowchart': {'curve': 'linear'}}}%%
+graph TD
+    Ada --> Ben
+    Ada --> Eve
+    Ben --> Cara
+    Ben --> Dan
+    Eve --> Finn
+    Eve --> Gwen
 ```
 
 (Navnene er ren ASCII med vilje — se [Datamaskingrunnlag](computer_basics.md#ascii) for hvorfor ikke-engelske bokstaver i kildekode inviterer til trøbbel.)
@@ -154,6 +168,7 @@ int main() {
 
     TreeNode<std::string>& eve = family.addChild("Eve");
     eve.addChild("Finn");
+    eve.addChild("Gwen");
 
     print(family);
     std::cout << countNodes(family) << " people in the tree\n";
@@ -169,7 +184,8 @@ Ada
     Dan
   Eve
     Finn
-6 people in the tree
+    Gwen
+7 people in the tree
 ```
 
 Legg merke til hva som *ikke* er der: ingen `delete`, ingen destruktor, ingen oppryddingskode. Når `family` går ut av virkeområdet på slutten av `main`, frigjør dens `unique_ptr`-barn hele treet automatisk.

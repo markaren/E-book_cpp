@@ -4,6 +4,22 @@ So far you have run programs through CLion's green play button. That button is c
 
 CMake is not a compiler. It is one level above: you describe your project to CMake in a small file called `CMakeLists.txt`, and CMake generates the platform-specific instructions (Makefiles on Linux, Visual Studio project files on Windows, Xcode projects on macOS) that your compiler then follows. Write the project description once; build it anywhere.
 
+Under that one button your code passes through several stages, and CMake's job is to drive them in order:
+
+```mermaid
+graph LR
+    SRC["Your code (.cpp / .hpp)"] --> PRE[Preprocessor]
+    PRE --> COMP[Compiler]
+    COMP --> OBJ["Object files (.o)"]
+    OBJ --> LINK[Linker]
+    LINK --> EXE[Executable]
+
+    COMP -.->|"syntax / type errors"| CE([compiler errors])
+    LINK -.->|"undefined reference / multiple definition"| LE([linker errors])
+```
+
+The stages also tell you *where* an error came from: the compiler complains about one file's syntax or types, while the linker complains only when it tries to stitch the object files together — see [Reading Compiler Errors](../compiler_errors.md).
+
 CMake is the most widely used build system for C++ — most cross-platform projects and libraries you meet will use it. This chapter teaches the minimum you need today, then shows how it grows as your project does.
 
 ---

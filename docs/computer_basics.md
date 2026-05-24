@@ -81,6 +81,16 @@ Where you put your projects matters more than beginners expect:
 
 A good home for your coursework: `C:\dev\ais1003\` on Windows, or `~/dev/ais1003/` on macOS/Linux.
 
+### Show file extensions and hidden files
+
+Out of the box, your operating system hides some of this from you — file extensions, and certain files and folders — on the assumption that you are a consumer who would only be confused by them. The moment you start programming, that assumption stops holding: those hidden details are exactly the ones you now need to see. Switching the hiding off is one of the first things to do on a machine you write code on — an engineer sets up the tool to show what is really there.
+
+**File name extensions.** The letters after the dot — `.cpp`, `.h`, `.txt`, `.exe` — are how you *and your tools* tell one kind of file from another: your build lists `main.cpp` by that exact name, your editor picks C++ highlighting from the `.cpp`, and double-clicking an `.exe` runs it. Yet Windows hides these extensions by default, so `main.cpp` shows up as plain `main`, and you cannot tell a `report.txt` from a `report.exe` from a folder named `report`. Hence the classic beginner trap: you tell Notepad to "save as `main.cpp`" but — the real extension being hidden — never notice it actually wrote `main.cpp.txt`; your build still looks for `main.cpp`, does not find it, and fails before it compiles a thing. With extensions shown, the slip is obvious at a glance.
+
+**Hidden files.** Names beginning with a dot — `.git`, `.gitignore`, `.idea` — are concealed by default, and they are precisely the files you are about to start caring about: the `.git` folder that holds your entire [version history](Chapter2/version_control.md), and the `.gitignore` next to it that lists what to leave out. When a file you know you created seems to have vanished, it is often merely hidden.
+
+To switch both on — **Windows 11:** in File Explorer, open the **View → Show** menu and tick **File name extensions** and **Hidden items** (on Windows 10, use the **View** ribbon tab and the checkboxes of the same name). **macOS:** Finder hides them too — show extensions under **Finder → Settings → Advanced → Show all filename extensions**, and toggle hidden files with **⌘ + Shift + .** (the period key).
+
 ---
 
 ## The terminal
@@ -156,6 +166,7 @@ So that error almost always means one of two things: the program is **not instal
 ## Rules of thumb
 
 - Keep projects in a **short, plain path** near the drive root (`C:\dev\…`), not a deep folder full of spaces and Norwegian letters.
+- **Show file extensions and hidden files** in your file manager — a programmer needs to see `main.cpp`, `.git`, and `.gitignore` for what they are.
 - In C++ code, write paths with **forward slashes** (`"C:/dev"`) or escape the backslashes (`"C:\\dev"`).
 - A program reads and writes relative paths (like `"report.txt"`) from its **working directory** — which your IDE often sets to the build folder, not your project folder.
 - The **terminal** is worth learning: most tools live there, and it shows you the real errors.

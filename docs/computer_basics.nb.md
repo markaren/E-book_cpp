@@ -81,6 +81,16 @@ Hvor du legger prosjektene dine betyr mer enn nybegynnere venter:
 
 Et godt hjem for kursarbeidet ditt: `C:\dev\ais1003\` på Windows, eller `~/dev/ais1003/` på macOS/Linux.
 
+### Vis filendelser og skjulte filer
+
+Rett ut av boksen skjuler operativsystemet noe av dette for deg — filendelser, og enkelte filer og mapper — ut fra en antakelse om at du er en forbruker som bare ville blitt forvirret av dem. I det øyeblikket du begynner å programmere, slutter den antakelsen å holde: de skjulte detaljene er nettopp dem du nå trenger å se. Å skru av skjulingen er noe av det første du bør gjøre på en maskin du skriver kode på — en ingeniør setter opp verktøyet sitt til å vise det som faktisk er der.
+
+**Filnavnutvidelser.** Bokstavene etter punktumet — `.cpp`, `.h`, `.txt`, `.exe` — er måten du *og verktøyene dine* skiller én filtype fra en annen på: byggingen din lister opp `main.cpp` med akkurat det navnet, redigereren velger C++-utheving ut fra `.cpp`-en, og dobbeltklikk på en `.exe` kjører den. Likevel skjuler Windows disse endelsene som standard, så `main.cpp` vises som bare `main`, og du kan ikke skille en `report.txt` fra en `report.exe` fra en mappe som heter `report`. Derav den klassiske nybegynnerfella: du ber Notisblokk "lagre som `main.cpp`", men — siden den egentlige endelsen er skjult — merker du aldri at den faktisk skrev `main.cpp.txt`; byggingen leter fortsatt etter `main.cpp`, finner den ikke, og feiler før den kompilerer noe som helst. Med endelser synlige er glippen åpenbar ved første øyekast.
+
+**Skjulte filer.** Navn som begynner med et punktum — `.git`, `.gitignore`, `.idea` — er skjult som standard, og de er nettopp filene du straks vil begynne å bry deg om: `.git`-mappa som rommer hele [versjonshistorikken](Chapter2/version_control.md) din, og `.gitignore` ved siden av som lister opp hva som skal holdes utenfor. Når en fil du vet du har laget ser ut til å ha forsvunnet, er den ofte bare skjult.
+
+For å skru på begge — **Windows 11:** i Filutforsker, åpne menyen **Vis → Vis** (*View → Show*) og huk av **Filnavnutvidelser** og **Skjulte elementer** (på Windows 10 bruker du **Vis**-fanen i båndet og avkrysningsboksene med samme navn). **macOS:** Finder skjuler dem også — vis endelser under **Finder → Innstillinger → Avansert → Vis alle filnavnutvidelser**, og veksle skjulte filer med **⌘ + Shift + .** (punktum-tasten).
+
 ---
 
 ## Terminalen
@@ -156,6 +166,7 @@ Så den feilen betyr nesten alltid én av to ting: programmet er **ikke installe
 ## Tommelfingerregler
 
 - Hold prosjekter i en **kort, ren sti** nær rota av disken (`C:\dev\…`), ikke en dyp mappe full av mellomrom og norske bokstaver.
+- **Vis filendelser og skjulte filer** i filbehandleren — en programmerer må se `main.cpp`, `.git` og `.gitignore` for det de er.
 - I C++-kode, skriv stier med **vanlige skråstreker** (`"C:/dev"`) eller escape de omvendte skråstrekene (`"C:\\dev"`).
 - Et program leser og skriver relative stier (som `"report.txt"`) fra **arbeidskatalogen** sin — som IDE-en ofte setter til byggemappa, ikke prosjektmappa.
 - **Terminalen** er verdt å lære: de fleste verktøy bor der, og den viser deg de egentlige feilene.

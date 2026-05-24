@@ -122,6 +122,7 @@ plugins:
             Strings: Strenger
             Lambda Expressions: Lambda-uttrykk
             Recursion: Rekursjon
+            Building a Tree: Bygge et tre
             Floating-Point Pitfalls: Flyttall-fallgruver
             Common Terms: Vanlige begreper
             FAQ: Ofte stilte spørsmål
@@ -184,6 +185,7 @@ nav:
     - Strings: strings.md
     - Lambda Expressions: lambdas.md
     - Recursion: recursion.md
+    - Building a Tree: building_a_tree.md
     - Floating-Point Pitfalls: floating_point.md
     - Common Terms: terms.md
     - FAQ: faq.md

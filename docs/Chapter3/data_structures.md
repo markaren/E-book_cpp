@@ -215,7 +215,7 @@ struct TreeNode {
 
 When you need a graph, an "adjacency list" — `std::unordered_map<NodeId, std::vector<NodeId>>` — is usually all you need. Specialised libraries exist (Boost.Graph, for example) when the algorithms get serious.
 
-Implementing these from scratch is a fine learning exercise, but for production code, prefer the library where one exists.
+Implementing these from scratch is a fine learning exercise, but for production code, prefer the library where one exists. Still curious? [Building a Tree](../building_a_tree.md) turns that `TreeNode` into a small, reusable container and demonstrates it with a family tree.
 
 ---
 

@@ -136,17 +136,17 @@ The rule: a reference or pointer is only valid as long as what it refers to is s
 ```cpp
 int& createIntRef() {
     int value = 1;
-    return value;     // bad, `value` is destroyed when the function returns
+    return value;     // bad — `value` is destroyed when the function returns
 }
 
 int* createIntPtr() {
     int value = 1;
-    return &value;    // bad, same problem
+    return &value;    // bad — same problem
 }
 
 int main() {
-    int& bad1 = createIntRef();    // dangling reference, undefined behaviour
-    int* bad2 = createIntPtr();    // dangling pointer , undefined behaviour
+    int& bad1 = createIntRef();    // dangling reference — undefined behaviour
+    int* bad2 = createIntPtr();    // dangling pointer — undefined behaviour
 }
 ```
 
@@ -161,7 +161,7 @@ Returning a reference or pointer to a class's private data also breaks the **enc
 ```cpp
 class Demo {
 public:
-    int  getValue() const   { return value_; }   // safe, returns a copy
+    int  getValue() const   { return value_; }   // safe — returns a copy
     int& getValueRef()      { return value_; }   // hands out write access
     int* getValuePtr()      { return &value_; }  // hands out write access
 

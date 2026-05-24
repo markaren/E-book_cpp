@@ -10,7 +10,7 @@ This page covers that taken-for-granted layer: **what bits and bytes are, the fi
 
 Everything a computer stores — numbers, text, images, your program itself — is ultimately just **bits**. A bit is the smallest possible piece of information: a single `0` or `1`, like a switch that is either off or on.
 
-Bits are grouped into **bytes** of eight. Eight on/off switches can be arranged in **256** different patterns (2 multiplied by itself eight times), so one byte can hold any of 256 distinct values — for example a whole number from 0 to 255, or a single text character.
+Bits are grouped into **bytes** of eight. Eight on/off switches can be arranged in **256** different patterns (2 to the power of 8), so one byte can hold any of 256 distinct values — for example a whole number from 0 to 255, or a single text character.
 
 Larger values simply use more bytes:
 

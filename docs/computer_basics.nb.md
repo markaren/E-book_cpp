@@ -10,7 +10,7 @@ Denne siden dekker det laget alle tar for gitt: **hva bits og bytes er, filsyste
 
 Alt en datamaskin lagrer — tall, tekst, bilder, selve programmet ditt — er til syvende og sist bare **bits**. En bit er den minste informasjonsbiten som finnes: et enkelt `0` eller `1`, som en bryter som er enten av eller på.
 
-Bits grupperes i **byte** på åtte. Åtte av/på-brytere kan settes opp i **256** forskjellige mønstre (2 ganget med seg selv åtte ganger), så én byte kan holde hvilken som helst av 256 ulike verdier — for eksempel et heltall fra 0 til 255, eller ett enkelt teksttegn.
+Bits grupperes i **byte** på åtte. Åtte av/på-brytere kan settes opp i **256** forskjellige mønstre (2 opphøyd i 8), så én byte kan holde hvilken som helst av 256 ulike verdier — for eksempel et heltall fra 0 til 255, eller ett enkelt teksttegn.
 
 Større verdier bruker bare flere byte:
 

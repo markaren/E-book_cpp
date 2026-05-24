@@ -82,6 +82,33 @@ int* p = &x;     // p holds the address of x
 | `&x`    | "address of x"; produces a pointer |
 | `*p`    | "what `p` points to"; dereference  |
 
+A reference and a pointer can both refer to the same variable `x`, but the mechanics differ — a reference gives `x` a second *name*, while a pointer is a separate cell that stores `x`'s *address*:
+
+<svg viewBox="0 0 500 175" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Referring to the variable x: a reference (int ampersand r = x) gives x's cell a second name r; a pointer (int star p = ampersand x) is a separate cell holding x's address, reached by following the arrow." style="display:block;margin:1rem auto;max-width:500px;width:100%;height:auto;font-family:var(--md-code-font-family,monospace);font-size:13px;" fill="none" stroke="currentColor" stroke-width="1.5">
+  <defs>
+    <marker id="rp-arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="currentColor" stroke="none"/>
+    </marker>
+  </defs>
+  <text x="40" y="28" stroke="none" fill="currentColor" font-weight="bold">int&amp; r = x;</text>
+  <rect x="40" y="50" width="120" height="56" rx="4"/>
+  <line x1="40" y1="76" x2="160" y2="76"/>
+  <text x="100" y="68" stroke="none" fill="currentColor" text-anchor="middle">x &#183; r</text>
+  <text x="100" y="97" stroke="none" fill="currentColor" text-anchor="middle" font-size="15">7</text>
+  <text x="40" y="140" stroke="none" fill="currentColor" font-size="11" opacity="0.7">r is another name for x</text>
+  <text x="280" y="28" stroke="none" fill="currentColor" font-weight="bold">int* p = &amp;x;</text>
+  <rect x="280" y="50" width="70" height="56" rx="4"/>
+  <line x1="280" y1="76" x2="350" y2="76"/>
+  <text x="315" y="68" stroke="none" fill="currentColor" text-anchor="middle">p</text>
+  <text x="315" y="97" stroke="none" fill="currentColor" text-anchor="middle">&amp;x</text>
+  <rect x="410" y="50" width="70" height="56" rx="4"/>
+  <line x1="410" y1="76" x2="480" y2="76"/>
+  <text x="445" y="68" stroke="none" fill="currentColor" text-anchor="middle">x</text>
+  <text x="445" y="97" stroke="none" fill="currentColor" text-anchor="middle" font-size="15">7</text>
+  <line x1="350" y1="92" x2="408" y2="92" marker-end="url(#rp-arrow)"/>
+  <text x="280" y="140" stroke="none" fill="currentColor" font-size="11" opacity="0.7">p stores x's address</text>
+</svg>
+
 Pointers differ from references in three important ways:
 
 - A pointer can be `nullptr`, meaning it points to nothing.

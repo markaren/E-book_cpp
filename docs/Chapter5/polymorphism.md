@@ -233,6 +233,23 @@ Base b = d;             // SLICING: only the Base part is copied
 std::cout << b.kind();  // "base" — the Derived-ness is gone
 ```
 
+A `Derived` object is laid out as a `Base` part plus the fields `Derived` adds. A `Base` *value* has room for only the `Base` part, so the copy keeps that and drops the rest on the floor:
+
+<svg viewBox="0 0 440 168" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="A Derived object holds a Base part and a Derived part. Assigning it to a Base value (Base b = d) copies only the Base part; the Derived part is sliced off and discarded." style="display:block;margin:1rem auto;max-width:440px;width:100%;height:auto;font-family:var(--md-code-font-family,monospace);font-size:13px;" fill="none" stroke="currentColor" stroke-width="1.5">
+  <text x="40" y="26" stroke="none" fill="currentColor" font-weight="bold">Derived d;</text>
+  <rect x="40" y="44" width="130" height="80" rx="4"/>
+  <line x1="40" y1="84" x2="170" y2="84"/>
+  <text x="105" y="69" stroke="none" fill="currentColor" text-anchor="middle">Base part</text>
+  <text x="105" y="109" stroke="none" fill="currentColor" text-anchor="middle">Derived part</text>
+  <text x="40" y="150" stroke="none" fill="currentColor" font-size="11" opacity="0.7">object has both parts</text>
+  <text x="270" y="26" stroke="none" fill="currentColor" font-weight="bold">Base b = d;</text>
+  <rect x="270" y="44" width="130" height="40" rx="4"/>
+  <text x="335" y="69" stroke="none" fill="currentColor" text-anchor="middle">Base part</text>
+  <rect x="270" y="92" width="130" height="40" rx="4" stroke-dasharray="4 3" opacity="0.4"/>
+  <text x="335" y="117" stroke="none" fill="currentColor" text-anchor="middle" opacity="0.4">Derived part</text>
+  <text x="270" y="150" stroke="none" fill="currentColor" font-size="11" opacity="0.7">Derived part sliced off</text>
+</svg>
+
 The rule is the same either way: work with polymorphic types through **pointers or references**, never by value:
 
 ```cpp

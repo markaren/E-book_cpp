@@ -92,6 +92,34 @@ jobs.push_front(0);
 
 In practice, `std::list` is rarely the right choice. Modern hardware loves contiguous memory; the constant-factor cost of pointer-chasing through a linked list often outweighs the algorithmic advantage. **Use only when** you specifically need to splice items between lists, or remove from the middle while holding an iterator to the item.
 
+The difference is the *shape* in memory: a `vector` packs its elements side by side in one block, while a `list` scatters them and links each to the next with a pointer:
+
+<svg viewBox="0 0 300 215" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="A vector stores its elements in one contiguous block reached by index; a list stores them as separate nodes linked by pointers, reached by following the links." style="display:block;margin:1rem auto;max-width:320px;width:100%;height:auto;font-family:var(--md-code-font-family,monospace);font-size:13px;" fill="none" stroke="currentColor" stroke-width="1.5">
+  <defs>
+    <marker id="cs-arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="currentColor" stroke="none"/>
+    </marker>
+  </defs>
+  <text x="20" y="22" stroke="none" fill="currentColor" font-weight="bold">vector</text>
+  <rect x="20" y="36" width="156" height="40" rx="2"/>
+  <line x1="72" y1="36" x2="72" y2="76"/>
+  <line x1="124" y1="36" x2="124" y2="76"/>
+  <text x="46" y="61" stroke="none" fill="currentColor" text-anchor="middle">3</text>
+  <text x="98" y="61" stroke="none" fill="currentColor" text-anchor="middle">1</text>
+  <text x="150" y="61" stroke="none" fill="currentColor" text-anchor="middle">4</text>
+  <text x="20" y="98" stroke="none" fill="currentColor" font-size="11" opacity="0.7">contiguous — reach any element in one step</text>
+  <text x="20" y="130" stroke="none" fill="currentColor" font-weight="bold">list</text>
+  <rect x="20" y="144" width="52" height="40" rx="4"/>
+  <rect x="110" y="144" width="52" height="40" rx="4"/>
+  <rect x="200" y="144" width="52" height="40" rx="4"/>
+  <text x="46" y="169" stroke="none" fill="currentColor" text-anchor="middle">3</text>
+  <text x="136" y="169" stroke="none" fill="currentColor" text-anchor="middle">1</text>
+  <text x="226" y="169" stroke="none" fill="currentColor" text-anchor="middle">4</text>
+  <line x1="72" y1="164" x2="108" y2="164" marker-end="url(#cs-arrow)"/>
+  <line x1="162" y1="164" x2="198" y2="164" marker-end="url(#cs-arrow)"/>
+  <text x="20" y="206" stroke="none" fill="currentColor" font-size="11" opacity="0.7">linked — follow a pointer to the next node</text>
+</svg>
+
 ---
 
 ## Associative containers

@@ -2,7 +2,35 @@
 
 Programming tools assume you already know a few things about your computer that most people never had to learn: how files and paths really work, what the "terminal" is, and how the system finds the programs you run. Courses rarely teach these, yet they trip up beginners constantly — a build that fails because of a space in a folder name, a `command not found` that is really a PATH problem, a tutorial command that does nothing because it was written for a different shell.
 
-This page covers that taken-for-granted layer: **the filesystem and paths, the terminal and its shells, and the PATH variable.** You do not need to memorise it — skim it now, and come back when something here bites you.
+This page covers that taken-for-granted layer: **what bits and bytes are, the filesystem and paths, the terminal and its shells, and the PATH variable.** You do not need to memorise it — skim it now, and come back when something here bites you.
+
+---
+
+## Bits and bytes
+
+Everything a computer stores — numbers, text, images, your program itself — is ultimately just **bits**. A bit is the smallest possible piece of information: a single `0` or `1`, like a switch that is either off or on.
+
+Bits are grouped into **bytes** of eight. Eight on/off switches can be arranged in **256** different patterns (2 multiplied by itself eight times), so one byte can hold any of 256 distinct values — for example a whole number from 0 to 255, or a single text character.
+
+Larger values simply use more bytes:
+
+| Unit | Size | A rough sense of it |
+|------|------|---------------------|
+| **bit** | `0` or `1` | one on/off switch |
+| **byte** | 8 bits | one character, or a number 0–255 |
+| **kilobyte** (KB) | ~1 000 bytes | a page of plain text |
+| **megabyte** (MB) | ~1 000 KB | a photo or a song |
+| **gigabyte** (GB) | ~1 000 MB | a movie; your computer's RAM is measured in these |
+
+This is why every type in C++ has a **size**. A `bool` needs just one byte; an `int` is usually four bytes (32 bits); a `double` is eight. The size sets a hard limit on what fits: a 32-bit `int` can count to roughly ±2 billion, and pushing past that makes it **overflow** and wrap around. It is also why a microcontroller with only a few **kilobytes** of memory (see [Arduino vs. Desktop C++](arduino_vs_desktop.md)) forces a frugality that a desktop with gigabytes does not. The exact type sizes are in [Variables and Basic Types](Chapter1/variables.md).
+
+### Text and ASCII {#ascii}
+
+If a byte is just a number, how does it hold a *letter*? By agreement: an **encoding** maps each character to a number. The oldest and most universal is **ASCII**, which assigns the values 0–127 to the English letters, digits, punctuation, and a few control codes — so `'A'` is 65, `'a'` is 97, and `'0'` is 48 — the [full ASCII table](https://www.ascii-code.com/) lists all 128. (It is also why C++'s `char` is really just a one-byte integer.)
+
+But ASCII covers only 128 characters — enough for US English, with no room for `æ`, `ø`, `å`, accented letters, or emoji. Those belong to the far larger **Unicode** set, normally stored as **UTF-8**, where one such character takes *two or more* bytes.
+
+That gap causes a very practical headache. ASCII is the lowest common denominator every tool, compiler, and operating system agrees on; everything beyond it is handled less consistently. A program or build tool that assumes plain ASCII and meets a stray `ø` may print garbled text (`Ã¸`) or fail outright. That is exactly why the path rules further down tell you to keep filenames and folders to plain ASCII — and why source code stays in English.
 
 ---
 
@@ -48,7 +76,7 @@ Where you put your projects matters more than beginners expect:
 
 - **Avoid long, deeply-nested paths.** Windows has historically capped a full path at 260 characters, and many tools still break past that. A project buried under `Documents\University\Semester 1\AIS1003\Assignments\…` can hit the wall. Put your code somewhere short, like `C:\dev\`.
 - **Avoid spaces.** `My Projects` forces you to quote the path on the command line (`"My Projects"`) and some tools mishandle it. Prefer `my-projects` or `my_projects`.
-- **Avoid special and non-English characters.** Norwegian `æ`, `ø`, `å`, accented letters, and symbols like `#`, `&`, `(` confuse compilers, build tools, and scripts in ways that produce baffling errors. Stick to plain letters, digits, `-`, and `_`.
+- **Avoid special and non-English characters.** Norwegian `æ`, `ø`, `å`, accented letters, and symbols like `#`, `&`, `(` confuse compilers, build tools, and scripts in ways that produce baffling errors — they fall outside [ASCII](#ascii). Stick to plain letters, digits, `-`, and `_`.
 - **Avoid cloud-synced folders** (OneDrive, Dropbox, Google Drive) for code: a build creates thousands of files that sync constantly, and machine-specific build files cause conflicts across computers.
 
 A good home for your coursework: `C:\dev\ais1003\` on Windows, or `~/dev/ais1003/` on macOS/Linux.

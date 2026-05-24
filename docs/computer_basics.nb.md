@@ -2,7 +2,35 @@
 
 Programmeringsverktøy forutsetter at du allerede kan noen ting om datamaskinen din som de fleste aldri har trengt å lære: hvordan filer og stier egentlig fungerer, hva "terminalen" er, og hvordan systemet finner programmene du kjører. Emner underviser sjelden i dette, og likevel snubler nybegynnere stadig i det — en bygging som feiler på grunn av et mellomrom i et mappenavn, et `command not found` som egentlig er et PATH-problem, en kommando fra en veiledning som ikke gjør noe fordi den var skrevet for et annet skall.
 
-Denne siden dekker det laget alle tar for gitt: **filsystemet og stier, terminalen og skallene dens, og PATH-variabelen.** Du trenger ikke pugge det — skum gjennom nå, og kom tilbake når noe her biter deg.
+Denne siden dekker det laget alle tar for gitt: **hva bits og bytes er, filsystemet og stier, terminalen og skallene dens, og PATH-variabelen.** Du trenger ikke pugge det — skum gjennom nå, og kom tilbake når noe her biter deg.
+
+---
+
+## Bits og bytes
+
+Alt en datamaskin lagrer — tall, tekst, bilder, selve programmet ditt — er til syvende og sist bare **bits**. En bit er den minste informasjonsbiten som finnes: et enkelt `0` eller `1`, som en bryter som er enten av eller på.
+
+Bits grupperes i **byte** på åtte. Åtte av/på-brytere kan settes opp i **256** forskjellige mønstre (2 ganget med seg selv åtte ganger), så én byte kan holde hvilken som helst av 256 ulike verdier — for eksempel et heltall fra 0 til 255, eller ett enkelt teksttegn.
+
+Større verdier bruker bare flere byte:
+
+| Enhet | Størrelse | Omtrent |
+|-------|-----------|---------|
+| **bit** | `0` eller `1` | én av/på-bryter |
+| **byte** | 8 bits | ett tegn, eller et tall 0–255 |
+| **kilobyte** (KB) | ~1 000 byte | en side med ren tekst |
+| **megabyte** (MB) | ~1 000 KB | et bilde eller en sang |
+| **gigabyte** (GB) | ~1 000 MB | en film; datamaskinens RAM måles i disse |
+
+Det er derfor hver type i C++ har en **størrelse**. En `bool` trenger bare én byte; en `int` er vanligvis fire byte (32 bits); en `double` er åtte. Størrelsen setter en hard grense for hva som får plass: en 32-bits `int` kan telle til omtrent ±2 milliarder, og går du forbi det, **renner den over** (overflow) og ruller rundt. Det er også derfor en mikrokontroller med bare noen få **kilobyte** minne (se [Arduino vs. desktop-C++](arduino_vs_desktop.md)) tvinger fram en nøysomhet som en datamaskin med gigabyte ikke gjør. De nøyaktige typestørrelsene står i [Variabler og grunntyper](Chapter1/variables.md).
+
+### Tekst og ASCII {#ascii}
+
+Hvis en byte bare er et tall, hvordan kan den holde en *bokstav*? Ved avtale: en **tegnkoding** knytter hvert tegn til et tall. Den eldste og mest universelle er **ASCII**, som tildeler verdiene 0–127 til de engelske bokstavene, sifrene, skilletegnene og noen få kontrolltegn — så `'A'` er 65, `'a'` er 97, og `'0'` er 48 — [hele ASCII-tabellen](https://www.ascii-code.com/) lister alle 128. (Det er også derfor `char` i C++ egentlig bare er et heltall på én byte.)
+
+Men ASCII dekker bare 128 tegn — nok for amerikansk engelsk, men uten plass til `æ`, `ø`, `å`, bokstaver med aksent eller emoji. De hører til det langt større **Unicode**-settet, vanligvis lagret som **UTF-8**, der ett slikt tegn tar *to eller flere* byte.
+
+Det gapet gir et svært praktisk hodebry. ASCII er den minste felles nevneren som alle verktøy, kompilatorer og operativsystemer er enige om; alt utenfor håndteres mindre konsekvent. Et program eller byggeverktøy som forutsetter ren ASCII og møter en løs `ø`, kan skrive ut forvrengt tekst (`Ã¸`) eller feile helt. Det er nettopp derfor stireglene lenger ned ber deg holde filnavn og mapper til ren ASCII — og hvorfor kildekoden holdes på engelsk.
 
 ---
 
@@ -48,7 +76,7 @@ Hvor du legger prosjektene dine betyr mer enn nybegynnere venter:
 
 - **Unngå lange, dypt nestede stier.** Windows har historisk begrenset en full sti til 260 tegn, og mange verktøy ryker fortsatt forbi det. Et prosjekt begravd under `Documents\University\Semester 1\AIS1003\Assignments\…` kan treffe taket. Legg koden et kort sted, som `C:\dev\`.
 - **Unngå mellomrom.** `My Projects` tvinger deg til å sette stien i hermetegn på kommandolinjen (`"My Projects"`), og noen verktøy håndterer det feil. Foretrekk `my-projects` eller `my_projects`.
-- **Unngå spesialtegn og ikke-engelske tegn.** Norske `æ`, `ø`, `å`, bokstaver med aksent og symboler som `#`, `&`, `(` forvirrer kompilatorer, byggeverktøy og skript på måter som gir uforståelige feil. Hold deg til vanlige bokstaver, sifre, `-` og `_`.
+- **Unngå spesialtegn og ikke-engelske tegn.** Norske `æ`, `ø`, `å`, bokstaver med aksent og symboler som `#`, `&`, `(` forvirrer kompilatorer, byggeverktøy og skript på måter som gir uforståelige feil — de faller utenfor [ASCII](#ascii). Hold deg til vanlige bokstaver, sifre, `-` og `_`.
 - **Unngå skysynkroniserte mapper** (OneDrive, Dropbox, Google Drive) for kode: en bygging lager tusenvis av filer som synkroniseres hele tiden, og maskinspesifikke byggefiler skaper konflikter mellom datamaskiner.
 
 Et godt hjem for kursarbeidet ditt: `C:\dev\ais1003\` på Windows, eller `~/dev/ais1003/` på macOS/Linux.

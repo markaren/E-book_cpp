@@ -194,6 +194,24 @@ A class with at least one pure virtual function is **abstract**: you cannot inst
 
 ---
 
+## An honest is-a
+
+`render` above takes a `Shape&` and calls `draw()` on it, trusting that *whatever* shape arrives behaves like a `Shape`. That trust is the whole basis of runtime polymorphism, and it places a quiet obligation on every class you derive: **a derived class must be usable anywhere its base is, without surprising the code that relies on the base.**
+
+Declaring `Circle` *is-a* `Shape` is a promise, not just syntax. If `Circle::draw()` did something unlike drawing — threw an exception, say, or quietly did nothing — then every function written against `Shape&` would break the moment a `Circle` reached it. The hierarchy would compile, but it would lie.
+
+A derived class keeps the promise when it:
+
+- accepts everything the base accepts — it does not reject inputs the base would have handled;
+- does what the base's function is meant to do — no throwing where the base would not, no unrelated behaviour;
+- preserves whatever the base guarantees.
+
+The classic trap is a `Square` that inherits from a `Rectangle` with independent `setWidth` and `setHeight`. A square must keep its sides equal, so it cannot honestly stand in for a rectangle whose width and height move on their own — code that sets them separately breaks. The fix is to rethink the relationship (a square and a rectangle are *siblings*, not parent and child), not to force the inheritance.
+
+> This rule has a formal name — the **Liskov Substitution Principle** — and honouring it is what lets you trust a base-class reference without knowing the exact type behind it.
+
+---
+
 ## The virtual destructor rule
 
 A class designed for polymorphic use (one whose derived objects may be deleted through a base-class pointer) **must** have a virtual destructor:

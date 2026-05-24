@@ -171,7 +171,7 @@ for (const auto& op : ops) {
 }
 ```
 
-`std::function` er mer fleksibel, men har en liten kjøretidskostnad (et virtuelt kall). Grip etter den når `auto` ikke fungerer; bruk `auto` som standard.
+`std::function` er mer fleksibel, men har en liten kjøretidskostnad. Grip etter den når `auto` ikke fungerer; bruk `auto` som standard.
 
 ---
 

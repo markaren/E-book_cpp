@@ -76,7 +76,7 @@ int main() {
 }
 ```
 
-Do not worry about what each line means yet — [Basic Structure](Chapter1/basic_structure.md) breaks the program down piece by piece, and [CMake Introduction](Chapter2/cmake_intro.md) covers the `CMakeLists.txt`. (CLion generates `std::endl`; this book usually writes `'\n'` instead. Both end the line — the difference does not matter yet.)
+Do not worry about what each line means yet — [Basic Structure](Chapter1/basic_structure.md) breaks the program down piece by piece, and [CMake Introduction](Chapter2/cmake_intro.md) covers the `CMakeLists.txt`. (CLion generates `std::endl`; this book usually writes `"\n"` instead. Both end the line — the difference does not matter yet.)
 
 ---
 

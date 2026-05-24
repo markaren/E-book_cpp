@@ -221,7 +221,7 @@ A bank account whose balance must never go negative; a sensor whose timestamp mu
 ```cpp
 class BankAccount {
 public:
-    BankAccount(double initialBalance)
+    explicit BankAccount(double initialBalance)
         : balance_(initialBalance) {}
 
     void deposit(double amount) {

@@ -189,7 +189,7 @@ Four things make it correct:
 
 **Mark the move operations `noexcept`.** It promises they cannot throw — true here, since they only shuffle a handle around. This matters in practice: `std::vector` will only *move* your objects when it grows (rather than copy them) if their move constructor is `noexcept`.
 
-This is the **Rule of Five** from [Memory Management](memory.md#the-rule-of-zero): once you write a destructor and the move operations, the compiler stops filling in the rest, so you account for all five — here, by deleting the copies.
+This is the **Rule of Five**: once you write a destructor and the move operations, the compiler stops filling in the rest, so you account for all five — here, by deleting the copies. (The [Rule of Zero](memory.md#the-rule-of-zero) is how you usually avoid all of this.)
 
 > **Prefer the Rule of Zero even here.** All of this disappears if the resource lives in a `std::unique_ptr` member (with a custom deleter for a C API) or a standard container: the generated moves are correct, copying is disabled for free, and you write *none* of the five. Hand-write the operations only for a raw resource that nothing else wraps — and keep that wrapper as small as you can.
 

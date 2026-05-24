@@ -89,6 +89,8 @@ std::vector<int>::iterator it = numbers.begin();
 auto it = numbers.begin();
 ```
 
+(`std::vector` and iterators are [Chapter 3](../Chapter3/standard_library.md) material — here they just supply a deliberately long type name, so the value of `auto` is obvious.)
+
 `auto` lets the compiler deduce the type for you. It is not "dynamic typing"; the type is still fixed and checked at compile time. Use `auto` when the type is verbose or when the exact type does not matter to the reader; spell it out when the explicit type helps clarity.
 
 ---

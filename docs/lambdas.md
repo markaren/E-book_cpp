@@ -171,7 +171,7 @@ for (const auto& op : ops) {
 }
 ```
 
-`std::function` is more flexible but has a small runtime overhead (a virtual call). Reach for it when `auto` does not work; default to `auto`.
+`std::function` is more flexible but has a small runtime overhead. Reach for it when `auto` does not work; default to `auto`.
 
 ---
 

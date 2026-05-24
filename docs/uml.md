@@ -2,7 +2,7 @@
 
 Code shows you one class at a time, from the inside. A **UML diagram** shows a whole design from above: which classes exist, what each one holds, and how they connect. UML ("Unified Modeling Language") is the box-and-arrow shorthand engineers use to sketch a design on a whiteboard before writing it, or to explain an existing one to a colleague.
 
-There are many kinds of UML diagram. This page covers the one you will actually meet and use: the **class diagram**. It is the notation behind every `classDiagram` figure in this book (the [Polymorphism](Chapter5/polymorphism.md) and [Observer](Chapter6/observer.md) chapters, for example), and the kind CLion can generate from your code.
+There are many kinds of UML diagram. This page covers the one you will actually meet and use: the **class diagram**. It is the notation behind every `classDiagram` figure in this book (the [Polymorphism](Chapter5/polymorphism.md) chapter, for example), and the kind CLion can generate from your code.
 
 You do not need to memorise the whole language. The goal here is narrow: **read a class diagram, and sketch a simple one yourself**, with each symbol tied back to the C++ it stands for.
 

@@ -6,6 +6,8 @@ Code written this way is easier to read, easier to test, and easier to change. C
 
 This chapter explains the principle and shows what it looks like in code.
 
+> The code on this page is **illustrative**: it mixes Arduino-style hardware calls (`analogRead`, `digitalWrite`) with desktop facilities (`std::ofstream`, `std::cout`) and omits the `#include`s, to keep the spotlight on *structure* rather than on a program you can paste and compile.
+
 ---
 
 ## The smell of mixed concerns
@@ -181,7 +183,7 @@ Once a logical piece grows beyond a screen, give it its own file. Header + imple
 
 ## How far to take it
 
-It is possible to over-do this. A program with thirty classes for the same job five would handle is not "separated"; it is shattered. Two rules of thumb:
+It is possible to over-do this. A program with thirty classes for the same job that five would handle is not "separated"; it is shattered. Two rules of thumb:
 
 1. **Separate when you have a reason.** If your `readSensor` function never changes and you only call it from one place, leaving it inline is fine.
 2. **Look for the friction.** When you find yourself wanting to test something but not being able to, or wanting to swap something out and not being able to — that is where to draw the line.

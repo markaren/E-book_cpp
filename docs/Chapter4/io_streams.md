@@ -8,7 +8,7 @@ The operators `<<` and `>>` move data into and out of streams. Once you know the
 
 ## Console I/O
 
-Two stream objects, both in `<iostream>`:
+Three stream objects, all in `<iostream>`:
 
 | Stream      | Direction      | Purpose                                    |
 |-------------|----------------|--------------------------------------------|

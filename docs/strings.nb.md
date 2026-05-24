@@ -22,7 +22,6 @@ En naken strengliteral i kildekoden din (`"hello"`) er teknisk sett en `const ch
 
 ```cpp
 auto x = std::string{"hello"};      // explicit construction
-auto y = "hello"s;                   // C++14, needs `using namespace std::string_literals;`
 ```
 
 ---

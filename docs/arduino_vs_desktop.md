@@ -113,7 +113,7 @@ With 2 KB of RAM you cannot be casual about memory. That drives the next two dif
 On a small board, the parts of the standard library this book leans on are **not available, or not advisable**:
 
 - **No `<iostream>`** — print with `Serial` (above).
-- **`std::vector`, `std::map`, `std::string`** are typically unavailable on AVR, and where they exist they allocate on the heap — risky with 2 KB of RAM. Prefer **fixed-size arrays** (`std::array` or a plain C array) and **fixed buffers**.
+- **`std::vector`, `std::map`, `std::string`** are typically unavailable on AVR, and where they exist they allocate on the heap — risky with 2 KB of RAM. Prefer **plain fixed-size arrays** (`int buf[32]`) and **fixed buffers**.
 - **Exceptions and RTTI** (`dynamic_cast`, `typeid`) are usually switched **off** by default.
 - **Avoid `new` / `delete` and deep recursion** — heap fragmentation and stack overflow are real hazards on a 2 KB device.
 
@@ -192,6 +192,6 @@ On a 32-bit board with hundreds of KB of RAM, the code looks much more like the 
 - Arduino *is* C++ — same language, different environment.
 - You write `setup()` (once) and `loop()` (forever) instead of `main()`.
 - Print with `Serial`, not `std::cout`.
-- Small 8-bit boards have ~2 KB of RAM: avoid the heap, `std::string`, and `std::vector`; prefer fixed buffers and `std::array`.
+- Small 8-bit boards have ~2 KB of RAM: avoid the heap, `std::string`, and `std::vector`; prefer fixed buffers and plain arrays.
 - `int` is 16-bit on AVR — use fixed-width types (`uint8_t`, `int32_t`, …, from `<stdint.h>`) when size matters.
 - 32-bit boards (ESP32, Teensy, Pico) lift most of these limits and feel much closer to desktop C++.

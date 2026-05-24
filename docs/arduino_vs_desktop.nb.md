@@ -113,7 +113,7 @@ Med 2 KB RAM kan du ikke ta lett på minne. Det driver de to neste forskjellene.
 På et lite kort er de delene av standardbiblioteket denne boka lener seg på **ikke tilgjengelige, eller ikke tilrådelige**:
 
 - **Ingen `<iostream>`** — skriv ut med `Serial` (over).
-- **`std::vector`, `std::map`, `std::string`** er som regel utilgjengelige på AVR, og der de finnes, allokerer de på heap — risikabelt med 2 KB RAM. Foretrekk **arrayer med fast størrelse** (`std::array` eller en vanlig C-array) og **faste buffere**.
+- **`std::vector`, `std::map`, `std::string`** er som regel utilgjengelige på AVR, og der de finnes, allokerer de på heap — risikabelt med 2 KB RAM. Foretrekk **vanlige arrayer med fast størrelse** (`int buf[32]`) og **faste buffere**.
 - **Unntak og RTTI** (`dynamic_cast`, `typeid`) er vanligvis slått **av** som standard.
 - **Unngå `new` / `delete` og dyp rekursjon** — heap-fragmentering og stack-overflyt er reelle farer på en 2 KB-enhet.
 
@@ -192,6 +192,6 @@ På et 32-bits kort med hundrevis av KB RAM ser koden mye mer ut som desktop-C++
 - Arduino *er* C++ — samme språk, annet miljø.
 - Du skriver `setup()` (én gang) og `loop()` (for alltid) i stedet for `main()`.
 - Skriv ut med `Serial`, ikke `std::cout`.
-- Små 8-bits kort har ~2 KB RAM: unngå heap, `std::string` og `std::vector`; foretrekk faste buffere og `std::array`.
+- Små 8-bits kort har ~2 KB RAM: unngå heap, `std::string` og `std::vector`; foretrekk faste buffere og vanlige arrayer.
 - `int` er 16-bits på AVR — bruk typer med fast bredde (`uint8_t`, `int32_t`, …, fra `<stdint.h>`) når størrelsen betyr noe.
 - 32-bits kort (ESP32, Teensy, Pico) opphever de fleste av disse begrensningene og føles mye nærmere desktop-C++.

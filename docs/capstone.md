@@ -533,7 +533,7 @@ Add `tests.cpp` that checks the logic with **Catch2**, built as a second executa
 !!! example "Run `tests` — you should see"
 
     ```
-    All tests passed (13 assertions in 5 test cases)
+    All tests passed (11 assertions in 5 test cases)
     ```
 
 !!! note "The first build downloads Catch2"

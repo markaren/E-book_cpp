@@ -22,7 +22,6 @@ A bare string literal in your source code (`"hello"`) is technically a `const ch
 
 ```cpp
 auto x = std::string{"hello"};      // explicit construction
-auto y = "hello"s;                   // C++14, needs `using namespace std::string_literals;`
 ```
 
 ---

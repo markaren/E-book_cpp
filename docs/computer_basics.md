@@ -28,7 +28,9 @@ This is why every type in C++ has a **size**. A `bool` needs just one byte; an `
 
 If a byte is just a number, how does it hold a *letter*? By agreement: an **encoding** maps each character to a number. The oldest and most universal is **ASCII**, which assigns the values 0–127 to the English letters, digits, punctuation, and a few control codes — so `'A'` is 65, `'a'` is 97, and `'0'` is 48 — the [full ASCII table](https://www.ascii-code.com/) lists all 128. (It is also why C++'s `char` is really just a one-byte integer.)
 
-But ASCII covers only 128 characters — enough for US English, with no room for `æ`, `ø`, `å`, accented letters, or emoji. Those belong to the far larger **Unicode** set, normally stored as **UTF-8**, where one such character takes *two or more* bytes.
+**Why only 0–127, when a byte holds up to 255?** ASCII was designed as a **7-bit** code: it uses only seven of a byte's eight bits, which gives exactly 128 values. That leaves the byte's upper half (128–255) outside ASCII — and for years different systems filled it with their own incompatible characters, one reason the world eventually moved to Unicode.
+
+And 128 characters were never going to be enough for the world's writing: there is no room for `æ`, `ø`, `å`, accented letters, or emoji. Those belong to the far larger **Unicode** set, normally stored as **UTF-8**, where one such character takes *two or more* bytes.
 
 That gap causes a very practical headache. ASCII is the lowest common denominator every tool, compiler, and operating system agrees on; everything beyond it is handled less consistently. A program or build tool that assumes plain ASCII and meets a stray `ø` may print garbled text (`Ã¸`) or fail outright. That is exactly why the path rules further down tell you to keep filenames and folders to plain ASCII — and why source code stays in English.
 

@@ -28,7 +28,9 @@ Det er derfor hver type i C++ har en **størrelse**. En `bool` trenger bare én 
 
 Hvis en byte bare er et tall, hvordan kan den holde en *bokstav*? Ved avtale: en **tegnkoding** knytter hvert tegn til et tall. Den eldste og mest universelle er **ASCII**, som tildeler verdiene 0–127 til de engelske bokstavene, sifrene, skilletegnene og noen få kontrolltegn — så `'A'` er 65, `'a'` er 97, og `'0'` er 48 — [hele ASCII-tabellen](https://www.ascii-code.com/) lister alle 128. (Det er også derfor `char` i C++ egentlig bare er et heltall på én byte.)
 
-Men ASCII dekker bare 128 tegn — nok for amerikansk engelsk, men uten plass til `æ`, `ø`, `å`, bokstaver med aksent eller emoji. De hører til det langt større **Unicode**-settet, vanligvis lagret som **UTF-8**, der ett slikt tegn tar *to eller flere* byte.
+**Hvorfor bare 0–127, når en byte rommer opptil 255?** ASCII ble designet som en **7-bits** kode: den bruker bare sju av en bytes åtte bits, noe som gir nøyaktig 128 verdier. Det lar bytens øvre halvdel (128–255) ligge utenfor ASCII — og i mange år fylte ulike systemer den med sine egne inkompatible tegn, én grunn til at verden til slutt gikk over til Unicode.
+
+Og 128 tegn kom aldri til å bli nok for verdens skriftspråk: det er ingen plass til `æ`, `ø`, `å`, bokstaver med aksent eller emoji. De hører til det langt større **Unicode**-settet, vanligvis lagret som **UTF-8**, der ett slikt tegn tar *to eller flere* byte.
 
 Det gapet gir et svært praktisk hodebry. ASCII er den minste felles nevneren som alle verktøy, kompilatorer og operativsystemer er enige om; alt utenfor håndteres mindre konsekvent. Et program eller byggeverktøy som forutsetter ren ASCII og møter en løs `ø`, kan skrive ut forvrengt tekst (`Ã¸`) eller feile helt. Det er nettopp derfor stireglene lenger ned ber deg holde filnavn og mapper til ren ASCII — og hvorfor kildekoden holdes på engelsk.
 

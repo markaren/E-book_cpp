@@ -121,11 +121,13 @@ double Calculator::divide(double a, double b) {
 
 ## Writing Tests with Catch2
 
-Create `tests/test_calculator.cpp`. The only header you need is:
+Create `tests/test_calculator.cpp`. The macros these tests use — `TEST_CASE`, `REQUIRE`, `CHECK`, `REQUIRE_THROWS` — all live in one Catch2 header:
 
 ```cpp
 #include <catch2/catch_test_macros.hpp>
 ```
+
+On top of that you `#include` whatever you are testing (here, `calculator.hpp` — see the complete file below). Catch2 keeps more advanced tools, such as matchers and generators, in separate headers, but you will not need those yet.
 
 ### Core macros
 
@@ -261,3 +263,109 @@ The `Calculator calc;` line runs once for each section, giving every section a f
 **Keep tests independent.** No test should rely on another test running first, or on any global state left over from a previous test. Independent tests can run in any order and still give correct results.
 
 **Name tests like sentences.** `"division by zero throws an exception"` is far more useful than `"test3"` when a test fails at 2 a.m. on a deadline.
+
+---
+
+## Test behaviour, not implementation
+
+A test should pin down *what* your code does — its observable behaviour through its public interface — not *how* it does it inside. Test that `divide(10, 2)` returns `5`; do not try to check which private variable it touched along the way.
+
+The reason is that **behaviour is the promise; the internals are free to change.** A test written against behaviour survives a rewrite — you can replace the insides completely, and as long as the result is unchanged, the test still passes and still protects you. A test welded to the internals breaks every time you tidy the code, and a suite that fails on harmless refactors is one people quietly stop trusting.
+
+---
+
+## What about private functions?
+
+This is the question that comes up most: *how do I test a private member function?* You cannot call it from a test — that is what `private` means — and the instinct is to make it public, or reach in with a trick. Resist it. The honest answers, in order of preference:
+
+1. **Test it through the public functions that use it.** A private helper exists to serve the public interface; exercise that interface thoroughly and the private code runs as part of it.
+2. **If a private is complex enough to deserve its own tests, that is a signal — extract it into its own unit.** Pull the logic out into a free function (or a small separate class). Now it is public, pure, and trivially testable, and the original class is simpler too:
+
+```cpp
+// Before: a tricky calculation hidden in a private method — awkward to test
+class Thermostat {
+public:
+    void update(int raw) { latest_ = toCelsius(raw); }
+private:
+    double toCelsius(int raw) const { return (raw * 5.0 / 1023.0 - 0.5) * 100.0; }
+    double latest_ = 0.0;
+};
+
+// After: the calculation is a free function — public, pure, easy to test
+double rawToCelsius(int raw) {
+    return (raw * 5.0 / 1023.0 - 0.5) * 100.0;
+}
+
+class Thermostat {
+public:
+    void update(int raw) { latest_ = rawToCelsius(raw); }
+private:
+    double latest_ = 0.0;
+};
+```
+
+A test for `rawToCelsius` just passes a number and checks the result — no object, no hidden state. The pull to test a private is usually the code telling you that a piece of it wants to be a unit of its own.
+
+You may have seen tricks for reaching into a class's private members — a `friend` declaration, or `#define private public` before the `#include`. They compile, but they bolt your tests onto the very internals you are trying to keep free to change, so a behaviour-preserving refactor can still break them. Prefer the two options above.
+
+---
+
+## Testable code is well-designed code
+
+Here is the part that surprises people: the hardest thing about testing is usually not writing the test — it is the *code*. When a function is painful to test, that difficulty is information about the **design**, not the test. The common causes:
+
+- **It does too many things at once** — low **cohesion**. A function that reads a sensor, converts units, *and* writes a file forces you to set up all three before you can check any one. Split it.
+- **It reaches out to hardware, files, the clock, or the network** — tight **coupling**, with hidden inputs. The fix is **dependency injection**: take those dependencies in (as parameters, or behind an interface) instead of creating them inside, so a test can pass a fake — worth seeing in full, next.
+- **It depends on [global state](../Chapter1/functions.md#global-variables).** A global is an invisible input and a shared output: tests of code that touches one interfere with each other and turn fragile.
+
+Code that is easy to test is almost always small, focused, and loosely coupled — the very properties the Separation of Concerns chapter argues for on their own merits. So tests are not only a safety net for catching bugs; **writing them early is a design tool.** When something resists testing, treat it as an alarm and fix the *design*, not the test. Getting the tests right and getting the structure right turn out to be the same job.
+
+---
+
+## Injecting a fake
+
+Take a `FrostAlarm` that decides whether it is freezing. If it reached out and read a real thermometer itself, it would be welded to hardware — untestable without a cold room. So instead it depends on a small interface, and whoever creates it supplies the thermometer:
+
+```cpp
+class Thermometer {
+public:
+    virtual ~Thermometer() = default;
+    virtual double celsius() = 0;
+};
+
+class FrostAlarm {
+public:
+    explicit FrostAlarm(Thermometer& thermometer) : thermometer_(thermometer) {}
+
+    bool triggered() { return thermometer_.celsius() < 0.0; }
+
+private:
+    Thermometer& thermometer_;
+};
+```
+
+In the real program you hand `FrostAlarm` a thermometer that reads a pin. In a test you hand it a **fake** — one that returns whatever value the test needs, with no hardware in sight:
+
+```cpp
+class FakeThermometer : public Thermometer {
+public:
+    explicit FakeThermometer(double value) : value_(value) {}
+    double celsius() override { return value_; }
+private:
+    double value_;
+};
+
+TEST_CASE("the alarm fires below freezing") {
+    FakeThermometer cold(-5.0);
+    FrostAlarm alarm(cold);
+    REQUIRE(alarm.triggered());
+}
+
+TEST_CASE("the alarm stays quiet above freezing") {
+    FakeThermometer warm(5.0);
+    FrostAlarm alarm(warm);
+    REQUIRE(!alarm.triggered());
+}
+```
+
+Because `FrostAlarm` is *handed* its thermometer instead of building one, the test can slot in a `FakeThermometer` and drive it to any temperature — just below freezing, just above — instantly and repeatably. That hand-it-in move is **dependency injection** (the same technique [Separation of Concerns](soc.md) uses to keep `monitorLoop` independent of any one sensor), and it is what makes hardware-facing code testable at all. A fake that simply returns canned values like this is the simplest kind of *test double*; you will hear "stub" and "mock" for richer ones, but a plain fake covers most of what you need early on.

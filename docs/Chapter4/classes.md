@@ -212,6 +212,51 @@ Decorate your data members (the trailing-underscore convention) and shadowing ra
 
 ---
 
+## Static members
+
+Every member so far has belonged to an *object*: each `Motor` has its own `id_`, its own `running_`. A **static** member belongs to the **class itself** — there is just one, shared by every instance.
+
+A common use is handing each new object a unique id from a shared counter:
+
+```cpp
+class Motor {
+public:
+    Motor() : id_(++count_) {}              // each new Motor takes the next number
+    int id() const { return id_; }
+
+    static int count() { return count_; }   // how many Motors have been created
+
+private:
+    int id_;
+    static inline int count_ = 0;           // ONE counter, shared by all Motors
+};
+
+Motor a;   // id 1
+Motor b;   // id 2
+std::cout << a.id() << ", " << b.id() << "\n";   // 1, 2
+std::cout << Motor::count() << "\n";              // 2
+```
+
+Two static things are going on:
+
+- **`count_` is a static data member** — it is not part of any single `Motor`; there is exactly one, and every constructor increments the same one. (The `inline` lets you give it its value right here in the class; without it you would have to define it separately in a `.cpp`.)
+- **`count()` is a static member function** — you call it on the class, `Motor::count()`, with no object at all. Having no object, it has no `this` and cannot touch the per-object members like `id_`; it may only use the static members. Static functions are handy for class-wide queries like this, and for *factory functions* that build and return an object.
+
+The safest and most common static member is a **constant** that belongs to the type:
+
+```cpp
+class Motor {
+public:
+    static constexpr double maxRpm = 10000.0;     // shared, and never changes
+};
+
+double limit = Motor::maxRpm;
+```
+
+> **A mutable static member is a global in disguise.** Shared, class-wide, changeable state carries all the hazards of a [global variable](../Chapter1/functions.md#global-variables): any code can change it, and it makes the class harder to reason about and to test. Reach for mutable static data rarely; a `static constexpr` constant, which never changes, is the safe everyday case.
+
+---
+
 ## Encapsulation in practice
 
 The point of making data private is not paranoia. It is that the class can enforce **invariants**: rules about the data that should never be broken.

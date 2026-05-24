@@ -35,6 +35,14 @@ What we want instead: the sensor announces "here is a new reading," and whoever 
 
 One subject, many observers — a *one-to-many* relationship where the subject never has to name the observers individually.
 
+```mermaid
+%%{init: {'flowchart': {'curve': 'linear'}}}%%
+graph TD
+    S["TemperatureSensor (subject)"] -->|notifies| D[Display]
+    S -->|notifies| A[Alarm]
+    S -->|notifies| L[Logger]
+```
+
 ---
 
 ## A modern implementation

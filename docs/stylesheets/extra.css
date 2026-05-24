@@ -53,3 +53,13 @@
   filter: none;
   cursor: auto;
 }
+
+/* Mermaid diagrams render left-aligned by default; center them on the page.
+   text-align handles an inline-level SVG; margin:auto handles a block-level one. */
+.mermaid {
+  text-align: center;
+}
+
+.mermaid svg {
+  margin: 0 auto;
+}

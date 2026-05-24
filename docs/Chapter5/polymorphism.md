@@ -151,6 +151,24 @@ void render(Shape& shape) {
 }
 ```
 
+One base interface, several concrete types — the shape of every runtime-polymorphic hierarchy:
+
+```mermaid
+classDiagram
+    class Shape {
+        <<abstract>>
+        +draw()
+    }
+    class Circle {
+        +draw()
+    }
+    class Square {
+        +draw()
+    }
+    Shape <|-- Circle
+    Shape <|-- Square
+```
+
 `override` is not strictly required, but always write it. It tells the compiler "I mean to be overriding a base-class function." If you mistype the name, change a parameter type, or get the const-ness wrong, the compiler will reject the file rather than silently introducing a brand-new unrelated function.
 
 ### Pure virtual = abstract

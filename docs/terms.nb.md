@@ -36,6 +36,7 @@ Enten du er ny til programmering eller bare til C++, vil du møte mange ukjente 
 | **iterator** | Et objekt som brukes til å gå gjennom elementene i en beholder. Se [C++ standardbibliotek](Chapter3/standard_library.md). |
 | **lambda** | En liten, navnløs funksjon skrevet rett i koden, ofte gitt til en algoritme. Se [Lambda-uttrykk](lambdas.md). |
 | **linker / linking** | Byggetrinnet som kombinerer de kompilerte delene og bibliotekene til det ferdige programmet. "Undefined reference" er en linkerfeil. Se [Lese kompilatorfeil](compiler_errors.md). |
+| **Liskovs substitusjonsprinsipp** | Designregelen om at en avledet klasse må kunne brukes overalt hvor grunntypen brukes, uten å overraske kode som stoler på grunntypen — en *ærlig* is-a. Se [Polymorfisme](Chapter5/polymorphism.md). |
 | **LLM / KI-assistent** | En stor språkmodell (ChatGPT, Claude, …) som kan generere kode — nyttig, men selvsikkert feil ofte nok til at du må sjekke den. Se [Bruke KI til koding](using_ai.md). |
 | **main** | Funksjonen operativsystemet kaller for å starte programmet ditt. Hvert program har nøyaktig én. Se [Grunnstruktur](Chapter1/basic_structure.md). |
 | **medlemsfunksjon** (metode) | En operasjon definert inni en klasse og kalt på et objekt. "Metode" er et synonym. Se [Klasser](Chapter4/classes.md). |

@@ -36,6 +36,7 @@ Whether you are new to programming or just to C++, you will meet a lot of unfami
 | **iterator** | An object used to walk through the elements of a container. See [C++ Standard Library](Chapter3/standard_library.md). |
 | **lambda** | A small, unnamed function written inline, often passed to an algorithm. See [Lambda Expressions](lambdas.md). |
 | **linker / linking** | The build stage that combines the compiled pieces and libraries into the final program. "Undefined reference" is a linker error. See [Reading Compiler Errors](compiler_errors.md). |
+| **Liskov Substitution Principle** | The design rule that a derived class must be usable anywhere its base type is, without surprising code that relies on the base — an *honest* is-a. See [Polymorphism](Chapter5/polymorphism.md). |
 | **LLM / AI assistant** | A large language model (ChatGPT, Claude, …) that can generate code — useful, but confidently wrong often enough that you must check it. See [Using AI for Coding](using_ai.md). |
 | **main** | The function the operating system calls to start your program. Each program has exactly one. See [Basic Structure](Chapter1/basic_structure.md). |
 | **member function** (method) | An operation defined inside a class and called on an object. "Method" is a synonym. See [Classes](Chapter4/classes.md). |

@@ -153,6 +153,56 @@ The `.begin()`/`.end()` pair appears everywhere. It says "operate on this whole 
 
 ---
 
+## Iterators
+
+You may have noticed that every algorithm above took `v.begin()` and `v.end()`, not `v` itself. Those are **iterators** — the standard library's way of referring to a *position* in a container.
+
+Picture an iterator as a bookmark:
+
+- `v.begin()` marks the first element.
+- `v.end()` marks *one past* the last — a stop marker, not a real element.
+- `*it` reads the element at that position (just like dereferencing a pointer).
+- `++it` advances to the next element.
+
+Walking a container by hand looks like this:
+
+```cpp
+for (auto it = v.begin(); it != v.end(); ++it) {
+    std::cout << *it << "\n";
+}
+```
+
+That is exactly what the range-based `for (int x : v)` you already use does under the hood, so you rarely write this loop yourself. But it explains *why* algorithms take a `begin, end` pair rather than the container itself: by speaking only "iterator," one `std::sort` works on a `vector`, an `array`, a `std::string`, or anything that can hand out iterators. The container and the algorithm never have to know about each other — iterators are the glue between them.
+
+---
+
+## Ranges (C++20)
+
+Passing `v.begin(), v.end()` every time is noise; you almost always mean "the whole thing." C++20's **ranges** let you say exactly that. Every algorithm from the previous section has a `std::ranges::` version (in the same `<algorithm>` header) that takes the container directly:
+
+```cpp
+std::ranges::sort(v);                  // instead of std::sort(v.begin(), v.end())
+auto it = std::ranges::find(v, 4);     // instead of std::find(v.begin(), v.end(), 4)
+```
+
+Prefer these in new code — this course uses C++20 — because they are shorter and close a real footgun: you can no longer accidentally pair `begin()` from one container with `end()` from another.
+
+Ranges also add **views** (from `<ranges>`): lazy, composable steps you chain with the `|` pipe. Nothing is computed or copied until you iterate the result.
+
+```cpp
+std::vector<int> v = {1, 2, 3, 4, 5, 6};
+
+// the squares of just the even numbers, computed on demand
+for (int n : v | std::views::filter([](int x) { return x % 2 == 0; })
+                | std::views::transform([](int x) { return x * x; })) {
+    std::cout << n << " ";          // 4 16 36
+}
+```
+
+Those `[](int x) { … }` pieces are [lambdas](../lambdas.md) — small inline functions. Views are powerful and you will meet them more as you go; for now, just recognise the `|` style when you see it, and reach for `std::ranges::sort(v)` and friends to skip the `begin()`/`end()` boilerplate.
+
+---
+
 ## Other handy types
 
 ### `std::optional<T>`: a value that might be absent
@@ -240,5 +290,6 @@ Two habits to start now:
 - The standard library lives in the `std::` namespace. Always write the prefix.
 - `std::vector` is your default container. `std::string` for text. `std::map` / `std::unordered_map` for key-value lookups.
 - `<algorithm>` has dozens of functions that work on any container: sort, find, count, accumulate.
+- Algorithms reach containers through **iterators** (`begin()`/`end()`); C++20 **ranges** let you pass the container directly — `std::ranges::sort(v)`.
 - `<optional>`, `<chrono>`, `<filesystem>`, `<cmath>` cover most everyday needs beyond containers.
 - Look things up on cppreference instead of memorising signatures.

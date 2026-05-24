@@ -93,16 +93,17 @@ If an inner block declares a variable with the same name as one outside, the inn
 
 ## Comments
 
-Comments are notes for human readers. The compiler ignores them.
+Comments are notes for human readers; the compiler ignores them. C++ has two forms — `//` runs to the end of the line, and `/* … */` can span several:
 
 ```cpp
-// Single-line comment
+int retries = 5;          // the sensor often drops its first read, so retry a few times
 
-/* Multi-line comment
-   that spans several lines */
+/* The handshake must finish within one second, or the
+   controller treats the device as missing and moves on. */
+int timeoutMs = 1000;
 ```
 
-A good comment explains *why* the code does something, not what it does. The code already says what; if a future reader can't tell why, that is where a comment helps. Beginner code tends to have too many "this adds two numbers"-style comments. Resist the temptation.
+Notice what those comments do: they explain *why* the values are `5` and `1000` — something the numbers alone cannot tell a future reader. **A good comment explains *why*, not *what*.** The code already says what it does; one that merely restates it — `int retries = 5;  // set retries to 5` — adds nothing. Beginner code collects that kind; resist it, and spend comments on the reasoning, the trade-off, or the surprise.
 
 ---
 

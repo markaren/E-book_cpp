@@ -164,6 +164,7 @@ nav:
   - 3. Standard Library:
     - C++ Standard Library: Chapter3/standard_library.md
     - Data Structures: Chapter3/data_structures.md
+    - Lambda Expressions: lambdas.md
     - Exercises: Chapter3/exercises.md
   - 4. Classes:
     - Classes: Chapter4/classes.md
@@ -191,7 +192,6 @@ nav:
     - Code Style: style.md
     - UML Diagrams: uml.md
     - Strings: strings.md
-    - Lambda Expressions: lambdas.md
     - Recursion: recursion.md
     - Building a Tree: building_a_tree.md
     - Floating-Point Pitfalls: floating_point.md

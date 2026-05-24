@@ -14,7 +14,7 @@ You have a vector of sensor readings and you want to sort them by absolute value
 std::vector<double> readings = {-3.2, 1.0, 4.5, -7.1, 0.5};
 ```
 
-`std::sort` needs to know what "smaller than" means. The default uses `<`, which would sort `-7.1` first. To sort by *absolute* value, you need to give it a custom comparison.
+`std::ranges::sort` needs to know what "smaller than" means. The default uses `<`, which would sort `-7.1` first. To sort by *absolute* value, you need to give it a custom comparison.
 
 Without lambdas, you have to write a separate function or a function object:
 
@@ -23,14 +23,13 @@ bool compareAbs(double a, double b) {
     return std::abs(a) < std::abs(b);
 }
 
-std::sort(readings.begin(), readings.end(), compareAbs);
+std::ranges::sort(readings, compareAbs);
 ```
 
 That works, but `compareAbs` is now floating around at namespace scope when it is only used once. With a lambda, the comparison goes right where it is used:
 
 ```cpp
-std::sort(readings.begin(), readings.end(),
-          [](double a, double b) { return std::abs(a) < std::abs(b); });
+std::ranges::sort(readings, [](double a, double b) { return std::abs(a) < std::abs(b); });
 ```
 
 The behaviour you want is right there at the call site. No detour, no naming, no separate function.
@@ -77,7 +76,7 @@ threshold = 100;
 isLarge(7);   // still true, the lambda's copy is still 5
 ```
 
-By reference, with `&`:
+By reference, with `&`, the lambda shares the *original* variable instead of taking its own copy — the same `&` you met in `for (auto& value : readings)`. Changes it makes are then visible outside the lambda:
 
 ```cpp
 int count = 0;
@@ -100,7 +99,7 @@ Two shorthand forms:
 
 The shorthand forms are convenient but lose precision. Prefer naming the captures explicitly; it documents intent.
 
-> **Beware of `[&]` outliving the captured variables.** A lambda that captures by reference holds references to the variables; if the lambda is stored and called *after* those variables go out of scope, you get a dangling reference. Capture by value when you are not sure.
+> **Beware of `[&]` outliving the captured variables.** A lambda that captures by reference holds references to the variables; if the lambda is stored and called *after* those variables go out of scope, you get a dangling reference. (References, and this lifetime trap, get the full treatment in [Values, References & Pointers](Chapter4/types_refs_ptrs.md#the-big-lifetime-trap).) Capture by value when you are not sure.
 
 ---
 
@@ -112,13 +111,13 @@ The shorthand forms are convenient but lose precision. Prefer naming the capture
 std::vector<int> v = {5, 2, 8, 1, 9, 3};
 
 // sort descending
-std::sort(v.begin(), v.end(), [](int a, int b) { return a > b; });
+std::ranges::sort(v, [](int a, int b) { return a > b; });
 
 // count values greater than 4
-int n = std::count_if(v.begin(), v.end(), [](int x) { return x > 4; });
+int n = std::ranges::count_if(v, [](int x) { return x > 4; });
 
 // find the first value greater than 7
-auto it = std::find_if(v.begin(), v.end(), [](int x) { return x > 7; });
+auto it = std::ranges::find_if(v, [](int x) { return x > 7; });
 ```
 
 This is the most common use of lambdas in everyday C++. Any algorithm with a `_if` suffix takes a predicate; lambdas make those predicates concise.
@@ -131,9 +130,8 @@ This is the most common use of lambdas in everyday C++. Any algorithm with a `_i
 std::vector<double> celsius = { -10, 0, 22, 37 };
 std::vector<double> fahrenheit(celsius.size());
 
-std::transform(celsius.begin(), celsius.end(),
-               fahrenheit.begin(),
-               [](double c) { return c * 9.0 / 5.0 + 32.0; });
+std::ranges::transform(celsius, fahrenheit.begin(),
+                       [](double c) { return c * 9.0 / 5.0 + 32.0; });
 ```
 
 ### Short callbacks
@@ -182,7 +180,6 @@ for (const auto& op : ops) {
 Process a list of sensor readings, keeping only the valid ones and computing the mean:
 
 ```cpp
-#include <algorithm>
 #include <numeric>
 #include <vector>
 #include <iostream>
@@ -192,17 +189,14 @@ int main() {
     const double sentinel = -999.0;
 
     // remove sentinel values
-    readings.erase(
-        std::remove_if(readings.begin(), readings.end(),
-                       [sentinel](double v) { return v == sentinel; }),
-        readings.end());
+    std::erase_if(readings, [sentinel](double v) { return v == sentinel; });
 
     if (readings.empty()) {
         std::cout << "no valid readings\n";
         return 0;
     }
 
-    double sum  = std::accumulate(readings.begin(), readings.end(), 0.0);
+    double sum  = std::accumulate(readings.begin(), readings.end(), 0.0);  // accumulate has no ranges form in C++20
     double mean = sum / static_cast<double>(readings.size());
     std::cout << "mean: " << mean << "\n";
 }

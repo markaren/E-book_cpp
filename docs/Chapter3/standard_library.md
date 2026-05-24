@@ -199,7 +199,7 @@ for (int n : v | std::views::filter([](int x) { return x % 2 == 0; })
 }
 ```
 
-Those `[](int x) { … }` pieces are [lambdas](../lambdas.md) — small inline functions. Views are powerful and you will meet them more as you go; for now, just recognise the `|` style when you see it, and reach for `std::ranges::sort(v)` and friends to skip the `begin()`/`end()` boilerplate.
+Those `[](int x) { … }` pieces are [lambdas](../lambdas.md) — small inline functions, covered in detail later in this chapter. Views are powerful and you will meet them more as you go; for now, just recognise the `|` style when you see it, and reach for `std::ranges::sort(v)` and friends to skip the `begin()`/`end()` boilerplate.
 
 ---
 

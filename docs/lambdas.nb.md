@@ -14,7 +14,7 @@ Du har en vektor med sensoravlesninger, og du vil sortere dem etter absoluttverd
 std::vector<double> readings = {-3.2, 1.0, 4.5, -7.1, 0.5};
 ```
 
-`std::sort` trenger å vite hva "mindre enn" betyr. Standarden bruker `<`, som ville sortert `-7.1` først. For å sortere etter *absolutt* verdi må du gi den en egendefinert sammenligning.
+`std::ranges::sort` trenger å vite hva "mindre enn" betyr. Standarden bruker `<`, som ville sortert `-7.1` først. For å sortere etter *absolutt* verdi må du gi den en egendefinert sammenligning.
 
 Uten lambdaer må du skrive en separat funksjon eller et funksjonsobjekt:
 
@@ -23,14 +23,13 @@ bool compareAbs(double a, double b) {
     return std::abs(a) < std::abs(b);
 }
 
-std::sort(readings.begin(), readings.end(), compareAbs);
+std::ranges::sort(readings, compareAbs);
 ```
 
 Det virker, men `compareAbs` flyter nå rundt i navnerommets virkeområde selv om den bare brukes én gang. Med en lambda havner sammenligningen rett der den brukes:
 
 ```cpp
-std::sort(readings.begin(), readings.end(),
-          [](double a, double b) { return std::abs(a) < std::abs(b); });
+std::ranges::sort(readings, [](double a, double b) { return std::abs(a) < std::abs(b); });
 ```
 
 Oppførselen du vil ha, står rett ved kallstedet. Ingen omvei, ingen navngiving, ingen separat funksjon.
@@ -77,7 +76,7 @@ threshold = 100;
 isLarge(7);   // fortsatt true, lambdaens kopi er fortsatt 5
 ```
 
-Som referanse, med `&`:
+Som referanse, med `&`, deler lambdaen den *opprinnelige* variabelen i stedet for å ta sin egen kopi — det samme `&` som du møtte i `for (auto& value : readings)`. Endringer den gjør er da synlige utenfor lambdaen:
 
 ```cpp
 int count = 0;
@@ -100,7 +99,7 @@ To kortformer:
 
 Kortformene er bekvemme, men mister presisjon. Foretrekk å navngi fangstene eksplisitt; det dokumenterer hensikten.
 
-> **Pass på at `[&]` ikke overlever de fangede variablene.** En lambda som fanger som referanse, holder referanser til variablene; hvis lambdaen lagres og kalles *etter* at de variablene har gått ut av virkeområdet, får du en dinglende referanse. Fang som verdi når du er usikker.
+> **Pass på at `[&]` ikke overlever de fangede variablene.** En lambda som fanger som referanse, holder referanser til variablene; hvis lambdaen lagres og kalles *etter* at de variablene har gått ut av virkeområdet, får du en dinglende referanse. (Referanser, og denne levetidsfellen, får full behandling i [Verdier, referanser og pekere](Chapter4/types_refs_ptrs.md#the-big-lifetime-trap).) Fang som verdi når du er usikker.
 
 ---
 
@@ -112,13 +111,13 @@ Kortformene er bekvemme, men mister presisjon. Foretrekk å navngi fangstene eks
 std::vector<int> v = {5, 2, 8, 1, 9, 3};
 
 // sorter synkende
-std::sort(v.begin(), v.end(), [](int a, int b) { return a > b; });
+std::ranges::sort(v, [](int a, int b) { return a > b; });
 
 // tell verdier større enn 4
-int n = std::count_if(v.begin(), v.end(), [](int x) { return x > 4; });
+int n = std::ranges::count_if(v, [](int x) { return x > 4; });
 
 // finn den første verdien større enn 7
-auto it = std::find_if(v.begin(), v.end(), [](int x) { return x > 7; });
+auto it = std::ranges::find_if(v, [](int x) { return x > 7; });
 ```
 
 Dette er den vanligste bruken av lambdaer i dagligdags C++. Enhver algoritme med en `_if`-endelse tar et predikat; lambdaer gjør de predikatene konsise.
@@ -131,9 +130,8 @@ Dette er den vanligste bruken av lambdaer i dagligdags C++. Enhver algoritme med
 std::vector<double> celsius = { -10, 0, 22, 37 };
 std::vector<double> fahrenheit(celsius.size());
 
-std::transform(celsius.begin(), celsius.end(),
-               fahrenheit.begin(),
-               [](double c) { return c * 9.0 / 5.0 + 32.0; });
+std::ranges::transform(celsius, fahrenheit.begin(),
+                       [](double c) { return c * 9.0 / 5.0 + 32.0; });
 ```
 
 ### Korte tilbakekall
@@ -182,7 +180,6 @@ for (const auto& op : ops) {
 Behandle en liste med sensoravlesninger, behold bare de gyldige og regn ut gjennomsnittet:
 
 ```cpp
-#include <algorithm>
 #include <numeric>
 #include <vector>
 #include <iostream>
@@ -192,17 +189,14 @@ int main() {
     const double sentinel = -999.0;
 
     // fjern sentinel-verdier
-    readings.erase(
-        std::remove_if(readings.begin(), readings.end(),
-                       [sentinel](double v) { return v == sentinel; }),
-        readings.end());
+    std::erase_if(readings, [sentinel](double v) { return v == sentinel; });
 
     if (readings.empty()) {
         std::cout << "no valid readings\n";
         return 0;
     }
 
-    double sum  = std::accumulate(readings.begin(), readings.end(), 0.0);
+    double sum  = std::accumulate(readings.begin(), readings.end(), 0.0);  // accumulate har ingen ranges-form i C++20
     double mean = sum / static_cast<double>(readings.size());
     std::cout << "mean: " << mean << "\n";
 }

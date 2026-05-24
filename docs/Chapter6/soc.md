@@ -127,6 +127,7 @@ Other concerns are more subtle and emerge over time. You will recognise mixed co
 - Writing a test for one piece requires setting up things that have nothing to do with the test.
 - A function's name needs the word "and" (`readSensorAndAlertIfHot`).
 - A single class talks to the network, the database, and the user interface.
+- Several functions reach into and modify the same **global variable**, so no one piece owns that state.
 
 When you spot these, you have a candidate for splitting.
 

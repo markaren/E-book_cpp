@@ -26,6 +26,7 @@ Whether you are new to programming or just to C++, you will meet a lot of unfami
 | **exception** | A way to signal and handle errors, using `throw`, `try`, and `catch`. See [Error Handling](Chapter6/error_handling.md). |
 | **expression** | Anything that evaluates to a value — a literal, a variable, a function call, or these joined by operators (`i + j`). See [Operators](Chapter1/operators_expressions.md). |
 | **function** | A named, reusable piece of code that performs one task. See [Functions](Chapter1/functions.md). |
+| **global variable** | A variable declared outside every function, visible everywhere. Shared, mutable globals make code hard to follow and test; prefer locals, parameters, and return values, and keep lasting state inside an object. Global *constants* are fine. See [Functions](Chapter1/functions.md#global-variables). |
 | **header** | A file (usually `.hpp`) whose declarations are shared across source files via `#include`. See [Classes](Chapter4/classes.md). |
 | **IDE** | Integrated Development Environment — the application you write, build, run, and debug code in. This course uses CLion. See [Getting Started](getting_started.md). |
 | **inheritance** | Building a new class on top of an existing one (`class Dog : public Animal`). See [Polymorphism](Chapter5/polymorphism.md). |

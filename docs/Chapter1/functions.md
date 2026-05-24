@@ -141,11 +141,70 @@ A few habits that pay off immediately:
 
 ---
 
+## Global variables
+
+Every variable so far has lived *inside* a function. You can also declare one **outside** every function, at the top of the file, where every function below can see it. That is a **global variable**:
+
+```cpp
+#include <iostream>
+
+int counter = 0;        // global: visible to every function below it
+
+void tick()  { counter++; }    // any function can change it...
+void reset() { counter = 0; }  // ...from anywhere
+
+int main() {
+    tick();
+    tick();
+    reset();
+    std::cout << counter << "\n";   // to know what prints, you must trace every call
+}
+```
+
+It compiles, it runs, and it feels convenient. It is also a habit worth breaking early, because shared, mutable state that *any* function can touch causes trouble out of proportion to the convenience:
+
+- **You cannot tell what changes it.** To know `counter`'s value at some point, you have to read *every* function that might write it. The bigger the program, the worse this gets.
+- **Bugs depend on order.** Two pieces of code that both write the same global interfere, and the result depends on which ran first — the hardest kind of bug to reproduce.
+- **It resists testing.** A function that reads a global has a hidden input you must set up first; one that writes a global leaves a hidden output that leaks into the next test.
+
+The cure is the rest of this chapter, applied on purpose:
+
+- **Declare each variable in the smallest scope that needs it** — normally a local inside the function that uses it.
+- **Pass what a function needs as parameters, and return its result** (the no-side-effects habit above). Then a function's inputs and outputs are exactly its parameter list and return value, with nothing hidden:
+
+```cpp
+#include <iostream>
+
+int tick(int counter) {     // input in...
+    return counter + 1;     // ...result out, nothing hidden
+}
+
+int main() {
+    int counter = 0;        // lives only as long as main needs it
+    counter = tick(counter);
+    counter = tick(counter);
+    std::cout << counter << "\n";   // prints 2 — everything that changed it is in view
+}
+```
+
+When several functions genuinely must share state that outlives a single call, the answer is still **not** a global: bundle that state inside an object that owns it and controls how it changes. That is what a [class](../Chapter4/classes.md) is for, and why [separation of concerns](../Chapter6/soc.md) matters.
+
+One exception: a global **constant** is fine. A value that never changes cannot cause any of the problems above.
+
+```cpp
+constexpr double gravity = 9.81;   // global, but constant — safe and useful
+```
+
+> Coming from Arduino? This is the habit to adjust most consciously. Arduino sketches keep state in globals because it has to survive between `setup()` and `loop()`; on the desktop you have better options. See [Arduino vs. Desktop C++](../arduino_vs_desktop.md).
+
+---
+
 ## Summary
 
 - A function has a return type, name, parameter list, and body.
 - `return` produces the function's output; `void` functions have no output value.
 - Overloading lets multiple functions share a name when they take different argument types.
 - One job per function, descriptive names, keep them short.
+- Prefer local variables, parameters, and return values over **global state**; reserve globals for constants.
 
 A function may also call *itself* — a technique called **recursion**. See [Recursion](../recursion.md).

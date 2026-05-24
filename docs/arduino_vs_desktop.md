@@ -54,6 +54,32 @@ Behind the scenes the Arduino core's `main()` is roughly: initialise the hardwar
 
 ---
 
+## Sharing state between `setup()` and `loop()`
+
+`loop()` runs from the top every time, but your data has to survive from one call to the next. With no `main()` whose local variables could hold it, Arduino sketches keep that state in **global variables**, declared outside both functions:
+
+```cpp
+int  blinkCount = 0;     // global: survives from one loop() call to the next
+bool ledOn      = false;
+
+void setup() {
+    pinMode(LED_BUILTIN, OUTPUT);
+}
+
+void loop() {
+    ledOn = !ledOn;
+    digitalWrite(LED_BUILTIN, ledOn ? HIGH : LOW);
+    ++blinkCount;
+    delay(500);
+}
+```
+
+On a small board this is normal and often unavoidable. But it is the one desktop habit to **un-learn carefully**: on the desktop, [global variables are a trap](Chapter1/functions.md#global-variables) — any function can change them, so you can no longer tell what touches your state. There you keep state local to `main`, or, better, bundle it inside a [class](Chapter4/classes.md) that owns it.
+
+The good news: you can do exactly that on Arduino too. Group related globals into a small `struct` or `class` so the state has one clear owner — the language is identical; only the constraint (it must persist across `loop()`) is new.
+
+---
+
 ## Printing: `Serial` instead of `std::cout`
 
 There is no console and no `<iostream>` on a small board. To print — usually for debugging, sent over the USB cable to your PC — use the `Serial` object:

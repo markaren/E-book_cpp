@@ -123,6 +123,14 @@ The `public` after the colon is the **access specifier**. For 99% of cases (incl
 
 Inheritance models the "**is-a**" relationship: a `Car` *is a* `Vehicle`. If you find yourself reaching for inheritance to model "**has-a**" (a `Car` *has an* engine), use a member variable instead.
 
+```mermaid
+%%{init: {'class': {'hideEmptyMembersBox': true}}}%%
+classDiagram
+    direction LR
+    Vehicle <|-- Car : is-a
+    Car *-- Engine : has-a
+```
+
 ---
 
 ## Virtual functions

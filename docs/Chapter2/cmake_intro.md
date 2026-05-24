@@ -164,6 +164,15 @@ add_executable(hello src/main.cpp)
 target_link_libraries(hello PRIVATE motor)
 ```
 
+One library, compiled once, shared by every executable that links it:
+
+```mermaid
+%%{init: {'flowchart': {'curve': 'linear'}}}%%
+graph TD
+    APP["hello (executable)"] -->|links| LIB["motor (library)"]
+    TESTS["tests (executable)"] -->|links| LIB
+```
+
 What changed:
 
 - `add_library` defines a library target. The default is a **static** library, its contents are baked into anything that links it. (You can pass `STATIC`, `SHARED`, or `OBJECT` if you need a specific kind.)

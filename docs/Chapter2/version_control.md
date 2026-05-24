@@ -97,6 +97,20 @@ git switch main                       # go back to main
 git merge new-controller-tuning       # bring the branch's commits into main
 ```
 
+That sequence looks like this — work forks off `main`, gathers its own commits, then merges back:
+
+```mermaid
+%%{init: {'gitGraph': {'showCommitLabel': false}, 'themeVariables': {'git0': '#3f51b5', 'git1': '#26a69a', 'gitBranchLabel0': '#ffffff', 'gitBranchLabel1': '#ffffff'}}}%%
+gitGraph
+    commit
+    commit
+    branch new-controller-tuning
+    commit
+    commit
+    checkout main
+    merge new-controller-tuning
+```
+
 (`git switch` is the modern, clearer command. The older `git checkout` does the same thing and you will see it in tutorials.)
 
 If you regret a branch, just throw it away:

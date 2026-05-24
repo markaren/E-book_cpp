@@ -75,7 +75,7 @@ name.substr(0, 5);          // "Alice"
 name.find("Smith");          // 6, the index where "Smith" starts
 ```
 
-See the [Strings reference page](../strings.md) for a tour of the operations you will reach for most.
+See [Strings](../strings.md), later in this chapter, for a tour of the operations you will reach for most.
 
 ### `std::map<K, V>`: a sorted key-value store
 

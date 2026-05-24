@@ -135,7 +135,7 @@ std::string b = std::format("{:>8}", 42);         // "      42" (right-aligned)
 std::string c = std::format("{:#x}", 255);        // "0xff"
 ```
 
-`std::stoi` og slektningene kaster hvis inndataen ikke er et tall; pakk dem inn i `try`/`catch` eller sjekk inndataen først hvis det betyr noe.
+`std::stoi` og slektningene kaster et *unntak* hvis inndataen ikke er et tall. Inntil du har møtt [Feilhåndtering](Chapter6/error_handling.md), sjekk at inndataen er gyldig først; etterpå kan du pakke kallet inn i `try`/`catch`.
 
 ---
 

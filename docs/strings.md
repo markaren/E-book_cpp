@@ -135,7 +135,7 @@ std::string b = std::format("{:>8}", 42);         // "      42" (right-aligned)
 std::string c = std::format("{:#x}", 255);        // "0xff"
 ```
 
-`std::stoi` and friends throw if the input is not a number; wrap them in `try`/`catch` or check the input first if that matters.
+`std::stoi` and friends throw an *exception* if the input is not a number. Until you have met [Error Handling](Chapter6/error_handling.md), check the input is valid first; afterwards you can wrap the call in `try`/`catch`.
 
 ---
 

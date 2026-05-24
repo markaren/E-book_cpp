@@ -285,7 +285,7 @@ You can define what the built-in operators (`+`, `-`, `*`, `==`, `<<`, …) mean
 ```cpp
 class Complex {
 public:
-    Complex(int real = 0, int imag = 0) : real_(real), imag_(imag) {}
+    Complex(int real = 0, int imag = 0) : real_(real), imag_(imag) {}   // deliberately not explicit
 
     Complex operator+(const Complex& other) const {
         return Complex(real_ + other.real_, imag_ + other.imag_);
@@ -299,6 +299,8 @@ Complex a(1, 2);
 Complex b(3, 4);
 Complex sum = a + b;    // calls a.operator+(b)
 ```
+
+That constructor is deliberately **not** `explicit`. [Classes](../Chapter4/classes.md) told you to mark single-argument constructors `explicit` — but a number type is the classic exception: you *want* a bare `5` to become `5 + 0i`, so here the implicit conversion is a feature, not a trap. (The standard library's `std::complex` leaves it open for the same reason.)
 
 Overload operators when the meaning is obvious. For a `Complex` number, `+` is natural. For an `Employee`, it is not, don't overload it just to be clever.
 

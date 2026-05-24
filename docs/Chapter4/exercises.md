@@ -223,3 +223,153 @@ Define a `struct Point` with `int` members `x` and `y`. Overload `operator<<` so
     The overload takes the stream by reference as `std::ostream&` — the base type of `std::cout`, `std::ofstream`, and the rest — so the same function prints to the console or to a file. It returns that stream so the next `<<` in the chain has something to write to; that is why `std::cout << "a = " << a << "\n"` works left to right. Taking `const Point&` avoids copying and promises not to change the point.
 
     </div>
+
+---
+
+## 5. Three ways to build a rectangle
+
+*Practises: [Classes](classes.md)*
+
+Write a class `Rectangle` with a `width` and a `height`. Give it **three** constructors and one query:
+
+- a default constructor, making a `0 × 0` rectangle;
+- a single-argument constructor `Rectangle(side)` that makes a **square**;
+- a two-argument constructor `Rectangle(width, height)`;
+- `area() const`, returning `width × height`.
+
+Mark the single-argument constructor `explicit`. In `main`, build one of each, print their areas, and work out why `Rectangle r = 4.0;` would not compile.
+
+> Hint: give the members default values (`= 0.0`) so the default constructor can be `= default`. The compiler picks the right constructor from the number and type of arguments you pass.
+
+??? success "Show solution"
+
+    <div class="spoiler" markdown title="Click to reveal">
+
+    ```cpp
+    #include <iostream>
+
+    class Rectangle {
+    public:
+        Rectangle() = default;                                            // 0 x 0
+        explicit Rectangle(double side) : width_(side), height_(side) {}  // a square
+        Rectangle(double width, double height) : width_(width), height_(height) {}
+
+        double area() const { return width_ * height_; }
+
+    private:
+        double width_  = 0.0;
+        double height_ = 0.0;
+    };
+
+    int main() {
+        Rectangle empty;            // 0 x 0
+        Rectangle square(4.0);      // 4 x 4
+        Rectangle rect(3.0, 5.0);   // 3 x 5
+        // Rectangle bad = 4.0;      // compile error: the 1-arg constructor is explicit
+
+        std::cout << empty.area()  << "\n";   // 0
+        std::cout << square.area() << "\n";   // 16
+        std::cout << rect.area()   << "\n";   // 15
+    }
+    ```
+
+    The three constructors share the name `Rectangle`; the compiler chooses one from the arguments you pass. `Rectangle() = default` asks for the do-nothing default constructor — the `0.0` member defaults stand. The single-argument constructor builds a square and is `explicit`, so `Rectangle bad = 4.0;` is rejected: you must write `Rectangle square(4.0)`, which states the intent. `area()` is `const` because measuring a rectangle does not change it.
+
+    </div>
+
+---
+
+## 6. The Rule of Zero in action
+
+*Practises: [Classes](classes.md)*
+
+Write a class `Recording` that stores a `std::string name` and a `std::vector<double> samples`. Give it `add(sample)`, `name() const`, and `count() const`. Write **no** destructor, copy constructor, or assignment operator.
+
+In `main`, make a recording and add two samples. Then make a **copy** of it, add a third sample to the *copy only*, and print both counts. They should differ — proving the copy is independent, even though you wrote no copying code.
+
+> Hint: just declare the two members and the three small functions. Do *not* write `~Recording`, a copy constructor, or `operator=` — that is the whole point.
+
+??? success "Show solution"
+
+    <div class="spoiler" markdown title="Click to reveal">
+
+    ```cpp
+    #include <iostream>
+    #include <string>
+    #include <vector>
+
+    class Recording {
+    public:
+        explicit Recording(const std::string& name) : name_(name) {}
+
+        void add(double sample) { samples_.push_back(sample); }
+
+        const std::string& name() const { return name_; }
+        int count() const { return static_cast<int>(samples_.size()); }
+
+    private:
+        std::string         name_;
+        std::vector<double> samples_;
+    };
+
+    int main() {
+        Recording original("run-1");
+        original.add(1.0);
+        original.add(2.0);
+
+        Recording copy = original;   // a copy — yet you wrote no copy constructor
+        copy.add(3.0);               // only the copy gets a third sample
+
+        std::cout << original.name() << ": " << original.count() << "\n";  // run-1: 2
+        std::cout << copy.name()     << ": " << copy.count()     << "\n";  // run-1: 3
+    }
+    ```
+
+    You wrote no special member functions, yet `Recording copy = original;` produces a genuine, independent copy: the third sample lands only in `copy`, and `original` still reports two. It works because the *members* do the copying — `std::string` and `std::vector` each know how to copy themselves, so the compiler-generated copy of `Recording` simply copies each member. That is the **Rule of Zero**: when every member manages its own resources, the compiler's defaults are correct and you write none of the special members yourself.
+
+    </div>
+
+---
+
+## 7. const-correctness
+
+*Practises: [Classes](classes.md)*
+
+Write a class `Thermometer` holding a reading in °C, starting at `20.0`. Give it `celsius()` (reports the reading) and `calibrate(offset)` (shifts the reading by `offset`). Then write a free function `void report(const Thermometer& t)` that prints `t.celsius()`.
+
+In `main`, build a thermometer, `report` it, `calibrate(-1.5)`, and `report` it again. The question to answer: which method *must* be `const`, and why does `report`'s `const&` parameter force it?
+
+> Hint: through a `const` reference you may call **only** `const` member functions. `report` takes `const Thermometer&`, so every method it calls must be `const`. Which of `celsius()` and `calibrate()` only observes?
+
+??? success "Show solution"
+
+    <div class="spoiler" markdown title="Click to reveal">
+
+    ```cpp
+    #include <iostream>
+
+    class Thermometer {
+    public:
+        double celsius() const { return celsius_; }               // observer → const
+        void   calibrate(double offset) { celsius_ += offset; }   // mutator → not const
+
+    private:
+        double celsius_ = 20.0;
+    };
+
+    void report(const Thermometer& t) {      // const& → may call only const methods
+        std::cout << t.celsius() << " C\n";  // OK: celsius() is const
+        // t.calibrate(1.0);                  // would NOT compile: calibrate is not const
+    }
+
+    int main() {
+        Thermometer t;
+        report(t);            // 20 C
+        t.calibrate(-1.5);
+        report(t);            // 18.5 C
+    }
+    ```
+
+    `report` takes its argument by `const Thermometer&` — the usual way to pass an object you only want to read, with no copy. But a `const` reference can call only `const` member functions, so `celsius()` **must** be marked `const` (it merely observes) for `report` to compile. `calibrate` changes the reading, so it is deliberately *not* `const` — and the commented-out call inside `report` would be a compile error, which is exactly the safety net const-correctness gives you. The rule of thumb: mark every observer `const`, and your class becomes usable through a `const` reference.
+
+    </div>

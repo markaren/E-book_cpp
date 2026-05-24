@@ -200,12 +200,60 @@ cmake --build build
 
 The `-B build` flag puts all generated files into `build/` so they stay out of your source tree. Add `build/` to your `.gitignore` (or use `*/build` if you have nested projects).
 
-For release builds with optimisations on:
+---
+
+## Build configurations: Debug and Release
+
+A *build configuration* controls **how** your code is compiled — chiefly whether the optimiser runs and whether debugging information is kept. Two are standard:
+
+| | Debug | Release |
+|---|-------|---------|
+| Optimisation | none (`-O0`) — quick to build, easy to step through | full (`-O2`/`-O3`) — quick to *run* |
+| Debug info | full (`-g`) — the debugger sees every variable | stripped down |
+| `assert` | active | removed (`NDEBUG` is defined — see [Error Handling](../Chapter6/error_handling.md#assertions-catching-bugs-not-handling-errors)) |
+| Reach for it when | developing and [debugging](../debugger.md) | measuring speed, shipping |
+
+Choose one when you configure the project:
 
 ```bash
-cmake -B build -DCMAKE_BUILD_TYPE=Release
+cmake -B build -DCMAKE_BUILD_TYPE=Debug      # or -DCMAKE_BUILD_TYPE=Release
 cmake --build build
 ```
+
+In CLion you do not type that — the toolbar has a configuration selector, and it keeps a separate folder per configuration (`cmake-build-debug/`, `cmake-build-release/`) so switching between them does not rebuild everything. **Develop in Debug; switch to Release to measure performance or hand the program to someone else.**
+
+> A program can pass in Debug and fail in Release (or the reverse). The usual culprit is an `assert` that caught the problem in Debug but is compiled out in Release, or the optimiser exposing a latent bug that happened to "work" unoptimised. That is a real bug in your code, not a compiler fault — hunt it down rather than retreating to the configuration that hid it.
+
+---
+
+## CMake options: making parts of the build optional
+
+Sometimes part of the build should be optional. The common case is the **tests**: someone who only wants to run your program should not be forced to download a test framework. `option()` declares a switch the user can flip on or off:
+
+```cmake
+option(BUILD_TESTS "Build the unit tests" ON)
+
+# the library and the program are always built
+add_library(motor src/motor.cpp)
+add_executable(app src/main.cpp)
+target_link_libraries(app PRIVATE motor)
+
+if(BUILD_TESTS)
+    # configured only when BUILD_TESTS is ON
+    add_executable(tests tests/test_motor.cpp)
+    target_link_libraries(tests PRIVATE motor Catch2::Catch2WithMain)
+endif()
+```
+
+`option(<NAME> "<description>" <default>)` creates a boolean that defaults to `ON` or `OFF`; everything inside the matching `if(<NAME>) … endif()` is configured only when it is on. The default holds unless someone overrides it on the command line:
+
+```bash
+cmake -B build -DBUILD_TESTS=OFF     # configure without the tests
+```
+
+This is how the [testing chapter](../Chapter6/testing.md)'s Catch2 setup is meant to be wired: put the Catch2 `FetchContent` lines *and* the test target inside the `if(BUILD_TESTS)` block, so the framework is downloaded and built **only** when you actually want to run tests.
+
+> **Prefix the name to avoid clashes.** A bare `BUILD_TESTS` can collide with an option of the same name if your project is ever built *inside* a larger one. The convention is to prefix it with your project's name — `option(MOTOR_SIM_BUILD_TESTS "Build the unit tests" ON)` — so it stays unambiguous.
 
 ---
 
@@ -238,3 +286,5 @@ For a more elaborate convention used in larger industry projects, see [the Pitch
 - Use `target_include_directories` when headers live in a separate folder.
 - Use `add_library` and `target_link_libraries` once you have code shared between executables.
 - Keep build artefacts in a separate `build/` folder; ignore it in git.
+- Pick a **build configuration** with `-DCMAKE_BUILD_TYPE` (or CLion's selector): **Debug** to develop and debug, **Release** to measure and ship.
+- Make parts of the build optional with `option(NAME "…" ON)` and an `if(NAME)` block — e.g. gate the tests behind `BUILD_TESTS`.

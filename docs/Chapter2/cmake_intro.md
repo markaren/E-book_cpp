@@ -194,7 +194,8 @@ cmake --build build
 
 # Run the executable (path varies slightly by platform)
 ./build/hello              # Linux / macOS
-./build/Debug/hello.exe    # Windows with MSVC
+./build/hello.exe          # Windows, CLion's bundled MinGW (single-config)
+./build/Debug/hello.exe    # Windows with MSVC (multi-config)
 ```
 
 The `-B build` flag puts all generated files into `build/` so they stay out of your source tree. Add `build/` to your `.gitignore` (or use `*/build` if you have nested projects).

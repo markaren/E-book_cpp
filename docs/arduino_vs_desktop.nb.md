@@ -54,6 +54,32 @@ Bak kulissene er Arduino-kjernens `main()` omtrent: initialiser maskinvaren, kal
 
 ---
 
+## Dele tilstand mellom `setup()` og `loop()`
+
+`loop()` starter fra toppen hver gang, men dataene dine må overleve fra ett kall til det neste. Siden det ikke finnes noen `main()` med lokale variabler som kan holde på dem, lagrer Arduino-skisser den tilstanden i **globale variabler**, deklarert utenfor begge funksjonene:
+
+```cpp
+int  blinkCount = 0;     // global: overlever fra ett loop()-kall til det neste
+bool ledOn      = false;
+
+void setup() {
+    pinMode(LED_BUILTIN, OUTPUT);
+}
+
+void loop() {
+    ledOn = !ledOn;
+    digitalWrite(LED_BUILTIN, ledOn ? HIGH : LOW);
+    ++blinkCount;
+    delay(500);
+}
+```
+
+På et lite kort er dette normalt og ofte uunngåelig. Men det er den ene desktop-vanen du må **avlære bevisst**: på desktop er [globale variabler en felle](Chapter1/functions.md#global-variables) — enhver funksjon kan endre dem, så du kan ikke lenger se hva som rører tilstanden din. Der holder du tilstanden lokal i `main`, eller — bedre — pakker den inn i en [klasse](Chapter4/classes.md) som eier den.
+
+Den gode nyheten: du kan gjøre nøyaktig det samme på Arduino. Samle beslektede globale variabler i en liten `struct` eller `class` slik at tilstanden har én tydelig eier — språket er identisk; bare betingelsen (den må overleve mellom `loop()`-kall) er ny.
+
+---
+
 ## Utskrift: `Serial` i stedet for `std::cout`
 
 Det finnes ingen konsoll og ingen `<iostream>` på et lite kort. For å skrive ut — vanligvis til feilsøking, sendt over USB-kabelen til PC-en din — bruk `Serial`-objektet:

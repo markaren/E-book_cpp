@@ -19,7 +19,7 @@ int main() {
 }
 ```
 
-Fem linjer, men hver del betyr noe:
+Noen få linjer, men hver del betyr noe:
 
 - `#include <iostream>` henter inn den delen av standardbiblioteket du trenger for å skrive til skjermen.
 - `int main()` angir **startpunktet**. Alle C++-programmer starter her.

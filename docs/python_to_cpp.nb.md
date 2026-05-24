@@ -70,7 +70,7 @@ Gevinsten: en hel kategori av Pythons `TypeError` under kjøring blir **kompiler
 
 To overraskelser verdt å kjenne fra dag én:
 
-- **Heltallsdivisjon kutter bort resten.** `10 / 3` er `3`, fordi begge operandene er `int`. Gjør den ene til en `double` (`10.0 / 3`) for å få `3.333…`. Pythons `/` er alltid flyttall; dens `//` tilsvarer C++ sin heltallsdivisjon. Se [Operatorer og uttrykk](Chapter1/operators_expressions.md).
+- **Heltallsdivisjon kutter bort resten.** `10 / 3` er `3`, fordi begge operandene er `int`. Gjør den ene til en `double` (`10.0 / 3`) for å få `3.333…`. Pythons `/` er alltid flyttall; dens `//` ligner mest på C++ sin heltallsdivisjon, men de runder negative tall ulikt (Python runder nedover, C++ kutter mot null). Se [Operatorer og uttrykk](Chapter1/operators_expressions.md).
 - **Heltall flyter over.** En C++ `int` rommer omtrent ±2 milliarder; Python-heltall vokser uten grense. Gå forbi området, og en C++ `int` ruller stille rundt. For det meste av automasjonsarbeid er `int` helt greit — bare vit at kanten finnes.
 
 ---

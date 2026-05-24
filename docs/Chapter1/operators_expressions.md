@@ -27,7 +27,7 @@ This chapter covers the operators you will use day-to-day, and the rule that dec
 
 ```cpp
 int    a = 10 / 3;        // 3, fractional part discarded
-double b = 10 / 3;        // still 3.0!, division happens in int, then converted
+double b = 10 / 3;        // 3.0, not 3.333 — divided as int first, then converted
 double c = 10.0 / 3;      // 3.333…, at least one operand is double
 ```
 

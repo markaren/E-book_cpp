@@ -70,7 +70,7 @@ The payoff: a whole category of Python's runtime `TypeError`s become **compile e
 
 Two surprises worth knowing on day one:
 
-- **Integer division truncates.** `10 / 3` is `3`, because both operands are `int`. Make one a `double` (`10.0 / 3`) to get `3.333…`. Python's `/` is always floating-point; its `//` is the equivalent of C++'s integer division. See [Operators and Expressions](Chapter1/operators_expressions.md).
+- **Integer division truncates.** `10 / 3` is `3`, because both operands are `int`. Make one a `double` (`10.0 / 3`) to get `3.333…`. Python's `/` is always floating-point; its `//` is the closest match to C++'s integer division, though they round negatives differently (Python floors, C++ truncates toward zero). See [Operators and Expressions](Chapter1/operators_expressions.md).
 - **Integers overflow.** A C++ `int` holds roughly ±2 billion; Python integers grow without limit. Go past the range and a C++ `int` silently wraps around. For most automation work `int` is fine — just know the edge exists.
 
 ---

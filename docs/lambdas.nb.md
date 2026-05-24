@@ -117,8 +117,8 @@ std::sort(v.begin(), v.end(), [](int a, int b) { return a > b; });
 // tell verdier større enn 4
 int n = std::count_if(v.begin(), v.end(), [](int x) { return x > 4; });
 
-// finn den første negative avlesningen
-auto it = std::find_if(v.begin(), v.end(), [](int x) { return x < 0; });
+// finn den første verdien større enn 7
+auto it = std::find_if(v.begin(), v.end(), [](int x) { return x > 7; });
 ```
 
 Dette er den vanligste bruken av lambdaer i dagligdags C++. Enhver algoritme med en `_if`-endelse tar et predikat; lambdaer gjør de predikatene konsise.

@@ -19,7 +19,7 @@ int main() {
 }
 ```
 
-Five lines, but every part matters:
+A few lines, but every part matters:
 
 - `#include <iostream>` pulls in the part of the standard library you need to print to the screen.
 - `int main()` declares the **entry point**. Every C++ program starts here.

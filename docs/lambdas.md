@@ -117,8 +117,8 @@ std::sort(v.begin(), v.end(), [](int a, int b) { return a > b; });
 // count values greater than 4
 int n = std::count_if(v.begin(), v.end(), [](int x) { return x > 4; });
 
-// find the first negative reading
-auto it = std::find_if(v.begin(), v.end(), [](int x) { return x < 0; });
+// find the first value greater than 7
+auto it = std::find_if(v.begin(), v.end(), [](int x) { return x > 7; });
 ```
 
 This is the most common use of lambdas in everyday C++. Any algorithm with a `_if` suffix takes a predicate; lambdas make those predicates concise.

@@ -26,6 +26,7 @@ Enten du er ny til programmering eller bare til C++, vil du møte mange ukjente 
 | **unntak** | En måte å signalisere og håndtere feil på, ved hjelp av `throw`, `try` og `catch`. Se [Feilhåndtering](Chapter6/error_handling.md). |
 | **uttrykk** | Alt som evalueres til en verdi — en literal, en variabel, et funksjonskall, eller disse satt sammen med operatorer (`i + j`). Se [Operatorer og uttrykk](Chapter1/operators_expressions.md). |
 | **funksjon** | En navngitt, gjenbrukbar kodebit som utfører én oppgave. Se [Funksjoner](Chapter1/functions.md). |
+| **global variabel** | En variabel deklarert utenfor alle funksjoner, synlig overalt. Delte, muterbare globale variabler gjør koden vanskelig å følge og teste; foretrekk lokale variabler, parametere og returverdier, og hold varig tilstand inne i et objekt. Globale *konstanter* er greit. Se [Funksjoner](Chapter1/functions.md#global-variables). |
 | **header** | En fil (vanligvis `.hpp`) hvis deklarasjoner deles på tvers av kildefiler via `#include`. Se [Klasser](Chapter4/classes.md). |
 | **IDE** | Integrert utviklingsmiljø (Integrated Development Environment) — applikasjonen du skriver, bygger, kjører og debugger kode i. Dette emnet bruker CLion. Se [Kom i gang](getting_started.md). |
 | **arv** | Å bygge en ny klasse oppå en eksisterende (`class Dog : public Animal`). Se [Polymorfisme](Chapter5/polymorphism.md). |

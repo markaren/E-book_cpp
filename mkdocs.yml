@@ -124,6 +124,7 @@ plugins:
             Using a Debugger: Bruke en debugger
             Using AI for Coding: Bruke KI til koding
             Code Style: Kodestil
+            UML Diagrams: UML-diagrammer
             Strings: Strenger
             Lambda Expressions: Lambda-uttrykk
             Recursion: Rekursjon
@@ -188,6 +189,7 @@ nav:
     - Using a Debugger: debugger.md
     - Using AI for Coding: using_ai.md
     - Code Style: style.md
+    - UML Diagrams: uml.md
     - Strings: strings.md
     - Lambda Expressions: lambdas.md
     - Recursion: recursion.md

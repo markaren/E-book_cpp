@@ -39,6 +39,8 @@ m.stop();
 
 Outside code can call `m.start()` because `start` is public. Outside code cannot write `m.running_ = true;` directly, because `running_` is private. This is the basic shape of **encapsulation**: the class owns its state and decides what the outside world is allowed to do with it.
 
+> Those three parts — the name, the public operations, the private data — are exactly what a **UML class diagram** draws as a labelled box. UML is the visual shorthand engineers use to sketch a design and the relationships between classes; this book uses it for the diagrams in later chapters. See [UML Class Diagrams](../uml.md) for how to read and draw them.
+
 ---
 
 ## Members: data and functions

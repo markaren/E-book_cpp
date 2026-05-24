@@ -268,6 +268,24 @@ double e = std::exp(1.0);
 
 ---
 
+## The C standard library
+
+`<cmath>` above is one slice of the **C standard library**, which C++ inherits in full. Each C header comes in two spellings: the original C name `<xxx.h>`, and a C++ name `<cxxx>` that provides the same things through the `std::` namespace.
+
+| C header | C++ header | Gives you |
+|----------|------------|-----------|
+| `<math.h>`   | `<cmath>`   | `std::sqrt`, `std::sin`, `std::pow` |
+| `<stdlib.h>` | `<cstdlib>` | `std::abs`, `std::atoi`, `std::rand` |
+| `<string.h>` | `<cstring>` | `std::strlen`, `std::memcpy` |
+| `<stdint.h>` | `<cstdint>` | `std::uint8_t`, `std::int32_t` |
+| `<stdio.h>`  | `<cstdio>`  | `std::printf`, `std::fopen` |
+
+On the desktop, **always prefer the `<cxxx>` form** and write the `std::` names (`std::sqrt`, `std::uint8_t`). It keeps C-library calls consistent with the rest of the standard library; the `<xxx.h>` form drops the same names into the global namespace instead.
+
+(One exception: a small microcontroller often ships only the C `<xxx.h>` headers — there you use `<stdint.h>` and a bare `uint8_t`. See [Arduino vs. Desktop C++](../arduino_vs_desktop.md).)
+
+---
+
 ## Streams
 
 C++ I/O is done through stream objects: `std::cout` for console output, `std::cin` for input, `std::ifstream` and `std::ofstream` for files. These get their own treatment in [IO & Streams](../Chapter4/io_streams.md).
@@ -292,4 +310,5 @@ Two habits to start now:
 - `<algorithm>` has dozens of functions that work on any container: sort, find, count, accumulate.
 - Algorithms reach containers through **iterators** (`begin()`/`end()`); C++20 **ranges** let you pass the container directly — `std::ranges::sort(v)`.
 - `<optional>`, `<chrono>`, `<filesystem>`, `<cmath>` cover most everyday needs beyond containers.
+- The whole **C standard library** is available; on the desktop prefer the `<cXX>` spelling (`<cmath>`, `<cstdint>`, …) so its names stay behind `std::`.
 - Look things up on cppreference instead of memorising signatures.

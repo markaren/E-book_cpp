@@ -56,6 +56,14 @@ int main() {
 }
 ```
 
+The pointer and the value it points to live in different places — the pointer on the stack, the `int` it was handed on the heap:
+
+```text
+   STACK (freed automatically)        HEAP (you must free it)
+
+       heapInt  ●───────────────────────►  [ 42 ]
+```
+
 `new` allocates memory on the heap and returns a pointer to it. `delete` releases the memory. You must call `delete` exactly once for every `new`, no matter what, including when an exception is thrown halfway through your function.
 
 This is harder than it sounds.
@@ -123,6 +131,14 @@ Watch what happens when you copy a `Buffer`:
 Buffer a(100);
 Buffer b = a;     // copies the pointer, not the underlying memory
 // `a.data_` and `b.data_` now point at the SAME array
+```
+
+```text
+   STACK                         HEAP
+
+   a.data_  ●─────────┐
+                      ├────────►  [  the one int array  ]
+   b.data_  ●─────────┘
 ```
 
 When `a` and `b` are destroyed, the same array is `delete[]`d twice. That is undefined behaviour. The default copy that C++ provides is a shallow copy: it copies the *pointer*, not what the pointer points to.

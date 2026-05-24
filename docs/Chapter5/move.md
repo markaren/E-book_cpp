@@ -54,6 +54,17 @@ Now C++ does this:
 
 That is it. No 10 MB allocation, no `memcpy`, no thousand copy constructors. Three pointer-sized writes, regardless of the size of the data.
 
+```text
+   before move
+
+       log  ●──►  [ 10 MB of text ]
+
+   after move
+
+       log   (empty)
+       copy ●──►  [ 10 MB of text ]   ← same buffer, not copied
+```
+
 After the move, `copy` owns the 10 MB and `log` is in a **valid but unspecified state** (usually empty). You may assign to it or destroy it, but you should not assume any particular contents.
 
 ---

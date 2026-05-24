@@ -179,8 +179,8 @@ nav:
   - 6. Design & Quality:
     - Separation of Concerns: Chapter6/soc.md
     - Observer Pattern: Chapter6/observer.md
-    - Testing: Chapter6/testing.md
     - Error Handling: Chapter6/error_handling.md
+    - Testing: Chapter6/testing.md
   - Capstone Project: capstone.md
   - Reference:
     - Coming from Python: python_to_cpp.md

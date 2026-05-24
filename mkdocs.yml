@@ -179,6 +179,7 @@ nav:
     - Move Semantics: Chapter5/move.md
     - Polymorphism: Chapter5/polymorphism.md
     - Templates: Chapter5/templates.md
+    - Exercises: Chapter5/exercises.md
   - 6. Design & Quality:
     - Separation of Concerns: Chapter6/soc.md
     - Observer Pattern: Chapter6/observer.md

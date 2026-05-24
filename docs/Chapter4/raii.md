@@ -100,6 +100,8 @@ RAII is also the reason C++ does not need a garbage collector: cleanup is *deter
 
 It also explains the **Rule of Zero** from the [Classes](classes.md) chapter: if every data member is already an RAII type (a `vector`, a `string`, a smart pointer), your class needs no destructor of its own — the members clean up after themselves.
 
+The flip side is the rarer class that owns a *raw* resource directly — one no standard type wraps. It cannot lean on the Rule of Zero, and is usually best made **move-only**: you transfer the resource rather than copy it. [Designing a movable class](../Chapter5/move.md#designing-a-movable-class) (next chapter) shows how, using this very `SensorConnection`.
+
 ---
 
 ## Summary

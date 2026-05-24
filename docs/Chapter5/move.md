@@ -137,6 +137,64 @@ If you write your own class and follow the [Rule of Zero](memory.md#the-rule-of-
 
 ---
 
+## Designing a movable class
+
+The Rule of Zero covers almost everything. But occasionally a class owns a **raw resource** that no standard type already wraps — a handle from a C API, a hardware connection, a lock. Then the compiler-generated operations are wrong, and you must write the move operations yourself.
+
+Take the `SensorConnection` from [RAII](../Chapter4/raii.md): it opens a connection in its constructor and closes it in its destructor. A connection is *unique* — there is one physical link, and copying the object cannot duplicate it. So the right design is **move-only**: you can transfer the connection out of one object into another, but you cannot copy it. This is exactly how `std::unique_ptr` behaves.
+
+```cpp
+class SensorConnection {
+public:
+    explicit SensorConnection(int id) : id_(id) {
+        std::cout << "Opened connection to sensor " << id_ << "\n";
+    }
+
+    ~SensorConnection() {
+        if (id_ != -1) {                       // a moved-from object owns nothing
+            std::cout << "Closed connection to sensor " << id_ << "\n";
+        }
+    }
+
+    SensorConnection(SensorConnection&& other) noexcept    // move constructor
+        : id_(other.id_) {
+        other.id_ = -1;                        // leave the source empty
+    }
+
+    SensorConnection& operator=(SensorConnection&& other) noexcept {   // move assignment
+        if (this != &other) {                  // guard against `x = std::move(x)`
+            if (id_ != -1) {
+                std::cout << "Closed connection to sensor " << id_ << "\n";   // release ours first
+            }
+            id_ = other.id_;                   // steal the other's
+            other.id_ = -1;                    // leave it empty
+        }
+        return *this;
+    }
+
+    SensorConnection(const SensorConnection&)            = delete;    // no copying
+    SensorConnection& operator=(const SensorConnection&) = delete;
+
+private:
+    int id_ = -1;                              // -1 means "owns no connection"
+};
+```
+
+Four things make it correct:
+
+- **A way to represent "empty."** After being moved from, an object must own nothing, so its destructor does nothing. Here `id_ == -1` is that state, and the destructor checks for it.
+- **The move constructor steals.** It takes the handle out of `other` and then sets `other` to empty — no connection is opened or closed, just two integer writes.
+- **Move assignment releases, then steals.** It closes the connection it currently holds before taking the other's, and guards against self-assignment (`x = std::move(x)`).
+- **Copying is `= delete`d.** That states the move-only intent and turns any attempt to copy into a compile error, rather than a silent, broken duplicate.
+
+**Mark the move operations `noexcept`.** It promises they cannot throw — true here, since they only shuffle a handle around. This matters in practice: `std::vector` will only *move* your objects when it grows (rather than copy them) if their move constructor is `noexcept`.
+
+This is the **Rule of Five** from [Memory Management](memory.md#the-rule-of-zero): once you write a destructor and the move operations, the compiler stops filling in the rest, so you account for all five — here, by deleting the copies.
+
+> **Prefer the Rule of Zero even here.** All of this disappears if the resource lives in a `std::unique_ptr` member (with a custom deleter for a C API) or a standard container: the generated moves are correct, copying is disabled for free, and you write *none* of the five. Hand-write the operations only for a raw resource that nothing else wraps — and keep that wrapper as small as you can.
+
+---
+
 ## A note on the moved-from object
 
 After `std::move(x)`, `x` is still a valid object. You can destroy it; you can assign a new value to it. But you should **not** assume anything about its current value.
@@ -161,4 +219,5 @@ A simple rule of thumb: treat a moved-from variable as if it has been freshly de
 - Write `std::move` yourself when you have a named variable whose contents you want to hand off.
 - Do **not** `std::move` a return value of a local variable; it disables RVO.
 - Use moves when transferring `unique_ptr`s; they cannot be copied.
+- Own a **raw resource**? Make the class **move-only** — `noexcept` move operations, copies `= delete`d — or wrap it in a `unique_ptr` and write none of them (Rule of Zero).
 - A moved-from object is valid but unspecified; assign to it or destroy it.

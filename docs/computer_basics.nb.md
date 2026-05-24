@@ -148,7 +148,7 @@ Den praktiske regelen: **vit hvilket skall du er i**, og når du kopierer en kom
 
 ---
 
-## PATH: hvordan datamaskinen finner programmer
+## PATH: hvordan datamaskinen finner programmer {#path-how-the-computer-finds-programs}
 
 Når du skriver `git` i en terminal, hvordan vet datamaskinen hvor `git` faktisk ligger på disken? Den sjekker en miljøvariabel kalt **`PATH`** — en liste over mapper den skal lete i, i rekkefølge, etter et program med det navnet.
 

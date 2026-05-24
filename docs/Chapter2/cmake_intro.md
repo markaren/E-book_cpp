@@ -175,9 +175,29 @@ graph TD
 
 What changed:
 
-- `add_library` defines a library target. The default is a **static** library, its contents are baked into anything that links it. (You can pass `STATIC`, `SHARED`, or `OBJECT` if you need a specific kind.)
+- `add_library` defines a library target. By default it is a **static** library — its compiled code is baked into anything that links it (more on **static vs shared** just below).
 - `target_link_libraries(hello PRIVATE motor)` tells CMake that the `hello` executable uses the `motor` library. The compiler now sees `motor`'s headers, and the linker now combines `motor`'s compiled code into `hello`.
 - The library uses `PUBLIC` for its include directory, meaning anyone linking to `motor` *also* gets `motor`'s `include/` folder on their search path. That is what you want for a library's public headers.
+
+### Static vs shared libraries
+
+`add_library` builds a **static** library by default, and for your projects that is the right choice. The difference is *when* the library's compiled code joins your program:
+
+- A **static** library (`.a`, or `.lib` on Windows) is copied *into* every executable that links it, at build time. You get one self-contained program — nothing extra to ship, and nothing that can go missing when it runs. The price is a larger executable, and you must relink to pick up a change in the library.
+- A **shared** (or *dynamic*) library — `.dll` on Windows, `.so` on Linux, `.dylib` on macOS — stays a separate file. The executable only records that it *needs* it, and the system loads it when the program starts. Executables stay small, several programs can share one copy, and you can drop in a new version of the library without rebuilding them.
+
+You pick with a keyword:
+
+```cmake
+add_library(motor STATIC src/motor.cpp)   # baked into the executable (the default)
+add_library(motor SHARED src/motor.cpp)   # a separate .dll / .so / .dylib
+```
+
+The catch with shared libraries is the one that bites beginners: the program must *find* that library file at run time. On Windows it has to sit next to the `.exe`, or in a folder on your [PATH](../computer_basics.md#path-how-the-computer-finds-programs); Linux and macOS have their own library search paths. If the system cannot find it, the program refuses to start — *"DLL not found"* on Windows, *"error while loading shared libraries"* on Linux — even though it compiled and linked perfectly. A static build has nothing to locate at run time, so it never fails this way.
+
+**Prefer static for course projects:** one file, nothing to lose, nothing to locate. Shared libraries earn their keep in larger systems — when many programs share one big library, or when a library must be updated on its own — and when a third-party dependency ships only as a `.dll`/`.so`, in which case you must place it where your program will find it.
+
+> CMake also has a global switch, `BUILD_SHARED_LIBS`. Turn it `ON` and every `add_library` that does not say `STATIC` or `SHARED` explicitly builds shared; leave it alone and you get static — the sensible default here.
 
 ---
 
@@ -285,6 +305,7 @@ For a more elaborate convention used in larger industry projects, see [the Pitch
 - Add more source files by listing them in `add_executable`. Headers do not need to be listed.
 - Use `target_include_directories` when headers live in a separate folder.
 - Use `add_library` and `target_link_libraries` once you have code shared between executables.
+- Libraries are **static** by default — baked into the executable, nothing to ship; prefer that, and reach for a **shared** library (`.dll`/`.so`) only when you need it (and then the program must find it at run time).
 - Keep build artefacts in a separate `build/` folder; ignore it in git.
 - Pick a **build configuration** with `-DCMAKE_BUILD_TYPE` (or CLion's selector): **Debug** to develop and debug, **Release** to measure and ship.
 - Make parts of the build optional with `option(NAME "…" ON)` and an `if(NAME)` block — e.g. gate the tests behind `BUILD_TESTS`.

@@ -1,13 +1,15 @@
 """MkDocs hook: append a "Run on Compiler Explorer" link to runnable C++ blocks.
 
-For every fenced ```cpp block whose source contains `int main`, generates a
-Compiler Explorer URL that opens the code in an editor + executor pane (no
-assembly view) and inserts a small link immediately below the block.
+For every top-level fenced ```cpp block whose source contains `int main`,
+generates a Compiler Explorer URL that opens the code in an editor + executor
+pane (no assembly view) and inserts a small link immediately below the block.
 
 Blocks without `int main` are left alone — they are snippets, not standalone
-programs, and would not run on their own. A block can also opt out explicitly
-with a `<!-- no-ce -->` comment on the line directly above its opening fence
-(for input-reading programs, deliberate compile errors, UB demos, skeletons).
+programs, and would not run on their own. Indented blocks are skipped too: code
+inside an admonition, a `??? success` spoiler, or a tabbed block is a snippet or
+worked solution, not a program to run. A block can also opt out explicitly with
+a `<!-- no-ce -->` comment on the line directly above its opening fence (for
+input-reading programs, deliberate compile errors, UB demos, skeletons).
 
 The Compiler Explorer state is encoded directly into the URL via the
 documented `/clientstate/<base64-json>` endpoint. No upload, no API call, no
@@ -28,9 +30,17 @@ COMPILER_OPTIONS = "-std=c++20 -O0 -Wall -Wextra -pedantic"
 # Match a fenced cpp block, with or without trailing attributes on the opener.
 # IMPORTANT: the attributes match uses [ \t]+ rather than \s+ — \s matches \n,
 # which would greedily eat the first source line as part of the "attributes".
+#
+# The opening fence is anchored to the start of a line (^ with re.MULTILINE) so
+# that ONLY top-level blocks match. Indented fences — code inside an admonition,
+# a `??? success` spoiler, or a tabbed block — are deliberately skipped: they are
+# snippets or worked solutions, not standalone programs. (Without this anchor the
+# opener matched indented fences too, while the closer `\n```` still required a
+# column-0 fence, so the lazy `.*?` would run forward and swallow everything up to
+# the next top-level fence — corrupting the page.)
 _CODE_BLOCK_RE = re.compile(
-    r"(?P<noce><!--[ \t]*no-ce[ \t]*-->[ \t]*\n)?```cpp(?:[ \t]+[^\n]*)?\n(?P<source>.*?)\n```",
-    re.DOTALL,
+    r"^(?P<noce><!--[ \t]*no-ce[ \t]*-->[ \t]*\n)?```cpp(?:[ \t]+[^\n]*)?\n(?P<source>.*?)\n```",
+    re.DOTALL | re.MULTILINE,
 )
 
 

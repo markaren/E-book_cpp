@@ -49,7 +49,7 @@ public:
 
 class FileLogger : public Logger {
 public:
-    FileLogger(const std::filesystem::path& path) : out_(path) {}
+    explicit FileLogger(const std::filesystem::path& path) : out_(path) {}
 
     void log(const std::string& message) override {
         out_ << message << "\n";

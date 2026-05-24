@@ -33,7 +33,7 @@ A reading over 50 is `CRITICAL`, over 30 is `WARNING`, otherwise `OK`. A value o
 Create a project with a `CMakeLists.txt` (see [CMake](Chapter2/cmake_intro.md)) and an empty `main.cpp`:
 
 ```cmake
-cmake_minimum_required(VERSION 3.15)
+cmake_minimum_required(VERSION 3.16)
 project(sensor_monitor)
 
 set(CMAKE_CXX_STANDARD 20)
@@ -627,7 +627,7 @@ Add `tests.cpp` that checks the logic with **Catch2**, built as a second executa
     **`CMakeLists.txt`**
 
     ```cmake
-    cmake_minimum_required(VERSION 3.14)
+    cmake_minimum_required(VERSION 3.16)
     project(sensor_monitor)
 
     set(CMAKE_CXX_STANDARD 20)

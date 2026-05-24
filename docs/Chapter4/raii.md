@@ -17,7 +17,7 @@ RAII is just this: **acquire the resource in the constructor, release it in the 
 
 class SensorConnection {
 public:
-    SensorConnection(int id) : id_(id) {
+    explicit SensorConnection(int id) : id_(id) {
         std::cout << "Opened connection to sensor " << id_ << "\n";   // acquire
     }
 

@@ -56,7 +56,7 @@ public:
 
 class AnalogTemperatureSensor : public TemperatureSensor {
 public:
-    AnalogTemperatureSensor(int pin) : pin_(pin) {}
+    explicit AnalogTemperatureSensor(int pin) : pin_(pin) {}
     double readCelsius() override {
         int raw = analogRead(pin_);
         return (raw * 5.0 / 1023.0 - 0.5) * 100.0;
@@ -68,7 +68,7 @@ private:
 // --- Concern 2: domain logic ---
 class OverheatPolicy {
 public:
-    OverheatPolicy(double threshold) : threshold_(threshold) {}
+    explicit OverheatPolicy(double threshold) : threshold_(threshold) {}
     bool isOverheating(double celsius) const {
         return celsius > threshold_;
     }
@@ -85,7 +85,7 @@ public:
 
 class FileAlertSink : public AlertSink {
 public:
-    FileAlertSink(const std::filesystem::path& path) : out_(path, std::ios::app) {}
+    explicit FileAlertSink(const std::filesystem::path& path) : out_(path, std::ios::app) {}
     void overheatDetected(double celsius) override {
         out_ << "[ALERT] " << celsius << " C\n";
     }

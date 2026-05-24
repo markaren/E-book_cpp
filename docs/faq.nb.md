@@ -50,8 +50,8 @@ Begge avslutter linjen; `std::endl` tømmer også strømmen (flush), som er treg
 **Trenger jeg virkelig krøllparenteser `{}` på en `if` på én linje?**
 Ja — alltid krøllparenteser. Det er én ekstra linje og fjerner en hel klasse feil når noen senere legger til en setning til. Se [Kontrollstrukturer](Chapter1/control_statements.md). (Mer: [Stack Overflow](https://stackoverflow.com/questions/2125066/is-it-a-bad-practice-to-use-an-if-statement-without-curly-braces).)
 
-**Hvorfor initialisere med krøllparenteser, `int x{5}`?**
-Krøllparentes-initialisering nekter "innsnevrende" (narrowing) konverteringer som stille mister data — `int x{3.7}` vil ikke kompilere. Se [Variabler og grunntyper](Chapter1/variables.md). (Mer: [Stack Overflow](https://stackoverflow.com/questions/18222926/what-are-the-advantages-of-list-initialization-using-curly-braces).)
+**Hvorfor skulle jeg initialisere med krøllparenteser, `int x{5}`?**
+Mest for sikkerhet: krøllparentes-initialisering nekter "innsnevrende" (narrowing) konverteringer som stille mister data — `int x{3.7}` vil ikke kompilere, mens `int x = 3.7;` stille kutter til `3`. Denne boka bruker vanlig `=` til daglig initialisering og griper til `{}` når det å avvise narrowing er viktig. Se [Variabler og grunntyper](Chapter1/variables.md). (Mer: [Stack Overflow](https://stackoverflow.com/questions/18222926/what-are-the-advantages-of-list-initialization-using-curly-braces).)
 
 **Hva betyr `explicit` på en konstruktør?**
 Den hindrer at konstruktøren brukes til *stille* konverteringer. En konstruktør med ett argument som `Motor(int)` lar normalt kompilatoren gjøre en løs `int` om til en `Motor` på egen hånd; `explicit` slår det av, så konverteringen skjer bare når du ber om den. Merk konstruktører med ett argument `explicit` med mindre du ønsker konverteringen. Se [Klasser](Chapter4/classes.md). (Mer: [Stack Overflow](https://stackoverflow.com/questions/121162/what-does-the-explicit-keyword-mean).)

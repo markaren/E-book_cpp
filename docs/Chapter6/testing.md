@@ -46,7 +46,7 @@ Catch2 must be downloaded and linked before your tests can use it. The snippet b
 > We will cover dependency management in depth in a later chapter. For now, you can use this CMakeLists.txt as a ready-made template for any project that uses Catch2.
 
 ```cmake
-cmake_minimum_required(VERSION 3.14)
+cmake_minimum_required(VERSION 3.16)
 project(MyProject)
 
 set(CMAKE_CXX_STANDARD 20)

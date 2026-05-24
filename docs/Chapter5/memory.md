@@ -113,7 +113,7 @@ A common beginner pattern: a class allocates something with `new` in its constru
 ```cpp
 class Buffer {
 public:
-    Buffer(int size) : data_(new int[size]) {}
+    explicit Buffer(int size) : data_(new int[size]) {}
     ~Buffer()        { delete[] data_; }
 
     int* data() { return data_; }
@@ -169,7 +169,7 @@ The C++ standard library provides three, all in `<memory>`:
 
 class Motor {
 public:
-    Motor(int id) : id_(id) {
+    explicit Motor(int id) : id_(id) {
         std::cout << "Motor " << id_ << " constructed\n";
     }
     ~Motor() {
@@ -243,7 +243,7 @@ Now reconsider the `Buffer` class from earlier, written with a `unique_ptr` inst
 ```cpp
 class Buffer {
 public:
-    Buffer(int size) : data_(std::make_unique<int[]>(size)) {}
+    explicit Buffer(int size) : data_(std::make_unique<int[]>(size)) {}
 
     int* data() { return data_.get(); }
 

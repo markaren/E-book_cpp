@@ -19,7 +19,7 @@ You want to keep two of your Chapter 1 solutions — `ex1.cpp` and `ex2.cpp` —
     <div class="spoiler" markdown title="Click to reveal">
 
     ```cmake
-    cmake_minimum_required(VERSION 3.15)
+    cmake_minimum_required(VERSION 3.16)
     project(chapter1_solutions)
 
     set(CMAKE_CXX_STANDARD 20)

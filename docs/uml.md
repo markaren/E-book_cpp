@@ -70,7 +70,7 @@ The `+`, `-`, and `#` in front of each member are the **visibility markers**. Th
 | `-`    | private   | `private:`   |
 | `#`    | protected | `protected:` |
 
-A quick note on the small stuff so it does not trip you up later: tools vary in how they print a type. The textbook order is `name : type` (as above), but many tools — including the diagrams in this book — mirror C++ and put the type first (`double balance_`). Both mean the same thing.
+A quick note on the small stuff so it does not trip you up later: tools vary in how they print a member's type. The textbook UML order is `name : type` (as in the box above); other tools — including the Mermaid diagrams later on this page — mirror C++ and put the type first (`double balance_`). Both mean the same thing.
 
 ---
 

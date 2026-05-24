@@ -53,7 +53,7 @@ The same idea applies to classes. A simple wrapper:
 template <typename T>
 class Box {
 public:
-    Box(T value) : value_(std::move(value)) {}
+    explicit Box(T value) : value_(std::move(value)) {}
 
     const T& get() const { return value_; }
     void     set(T v)    { value_ = std::move(v); }

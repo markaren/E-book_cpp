@@ -50,8 +50,8 @@ Both end the line; `std::endl` also flushes the stream, which is slower. Prefer 
 **Do I really need braces `{}` on a one-line `if`?**
 Yes — always brace. It is one extra line and removes a whole class of bugs when someone later adds a second statement. See [Control Statements](Chapter1/control_statements.md). (More: [Stack Overflow](https://stackoverflow.com/questions/2125066/is-it-a-bad-practice-to-use-an-if-statement-without-curly-braces).)
 
-**Why initialise with curly braces, `int x{5}`?**
-Brace initialisation refuses "narrowing" conversions that silently lose data — `int x{3.7}` will not compile. See [Variables and Basic Types](Chapter1/variables.md). (More: [Stack Overflow](https://stackoverflow.com/questions/18222926/what-are-the-advantages-of-list-initialization-using-curly-braces).)
+**Why would I initialise with curly braces, `int x{5}`?**
+Mostly for safety: brace initialisation refuses "narrowing" conversions that silently lose data — `int x{3.7}` will not compile, whereas `int x = 3.7;` quietly truncates to `3`. This book uses plain `=` for everyday initialisation and reaches for `{}` when rejecting narrowing matters. See [Variables and Basic Types](Chapter1/variables.md). (More: [Stack Overflow](https://stackoverflow.com/questions/18222926/what-are-the-advantages-of-list-initialization-using-curly-braces).)
 
 **What does `explicit` mean on a constructor?**
 It stops that constructor being used for *silent* conversions. A one-argument constructor like `Motor(int)` normally lets the compiler turn a stray `int` into a `Motor` on its own; `explicit` switches that off, so the conversion happens only when you ask for it. Mark single-argument constructors `explicit` unless you want the conversion. See [Classes](Chapter4/classes.md). (More: [Stack Overflow](https://stackoverflow.com/questions/121162/what-does-the-explicit-keyword-mean).)

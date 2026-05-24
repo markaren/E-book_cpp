@@ -29,7 +29,7 @@ CMake is the most widely used build system for C++ — most cross-platform proje
 A single-file program needs three lines:
 
 ```cmake
-cmake_minimum_required(VERSION 3.15)
+cmake_minimum_required(VERSION 3.16)
 project(hello)
 
 add_executable(hello main.cpp)
@@ -41,7 +41,7 @@ What each line does:
 
 | Line | Meaning |
 |------|---------|
-| `cmake_minimum_required(VERSION 3.15)` | The oldest CMake version that can build this project. 3.15 is a sensible floor for modern C++. |
+| `cmake_minimum_required(VERSION 3.16)` | The oldest CMake version that can build this project. 3.16 is a sensible floor for modern C++. |
 | `project(hello)` | Names the project. Must come before any targets. |
 | `add_executable(hello main.cpp)` | Define an executable target named `hello`, built from `main.cpp`. |
 
@@ -54,7 +54,7 @@ You will copy this template into many projects. Get familiar with it.
 The default standard depends on the compiler, and it is rarely the one you want. Set it explicitly:
 
 ```cmake
-cmake_minimum_required(VERSION 3.15)
+cmake_minimum_required(VERSION 3.16)
 project(hello)
 
 set(CMAKE_CXX_STANDARD 20)

@@ -15,11 +15,13 @@ Enten du er ny til programmering eller bare til C++, vil du møte mange ukjente 
 | **capture** | `[ ]`-delen av en lambda som lister hvilke omkringliggende variabler den kan bruke, ved verdi eller ved referanse. Se [Lambda-uttrykk](lambdas.md). |
 | **cast** | En eksplisitt typekonvertering, f.eks. `static_cast<int>(x)`. Se [Operatorer og uttrykk](Chapter1/operators_expressions.md). |
 | **klasse** | En brukerdefinert type som bunter sammen data med operasjonene som virker på dem. Se [Klasser](Chapter4/classes.md). |
+| **kohesjon** | Hvor sterkt delene av én kodebit hører sammen — hvor fokusert den er på én oppgave. Høy kohesjon (ett klart ansvar) er målet. Se [Separasjon av ansvar](Chapter6/soc.md). |
 | **kompilator / kompilere** | Verktøyet som oversetter kildekoden din til et kjørbart program, *før* det kjører. Se [Introduksjon](Chapter1/introduction.md). |
 | **const** | Et løfte til kompilatoren om at en verdi ikke vil endre seg; kompilatoren håndhever det. Se [Variabler og grunntyper](Chapter1/variables.md). |
 | **const-korrekthet** | Vanen med å merke alt som ikke endrer seg som `const` — medlemsfunksjoner som bare observerer, referanseparametere du bare leser, lokale variabler du aldri tilordner på nytt — så kompilatoren håndhever hva som kan endres. Et `const`-objekt kan kalle bare `const`-medlemsfunksjoner. Se [Klasser](Chapter4/classes.md) og [Verdier, referanser og pekere](Chapter4/types_refs_ptrs.md). |
 | **konstruktør** | En spesiell medlemsfunksjon som kjører når et objekt opprettes, for å sette opp dets opprinnelige tilstand. Se [Klasser](Chapter4/classes.md). |
 | **beholder** | En type fra standardbiblioteket som holder en samling verdier, som `std::vector`, `std::map` eller `std::set`. Se [Datastrukturer](Chapter3/data_structures.md). |
+| **kobling** | Hvor mye én kodebit avhenger av detaljene i en annen. Løs (lav) kobling — biter koblet sammen bare gjennom smale grensesnitt — er målet. Se [Separasjon av ansvar](Chapter6/soc.md). |
 | **dinglende referanse / peker** | En referanse eller peker til noe som allerede er ødelagt; å bruke den er udefinert oppførsel og en vanlig årsak til krasj. Se [Verdier, referanser og pekere](Chapter4/types_refs_ptrs.md). |
 | **innkapsling** | Å skjule en types indre virkemåte bak et rent grensesnitt ved å gjøre dataene dens `private`. Se [Klasser](Chapter4/classes.md). |
 | **enum class** | En type med et fast sett navngitte verdier (en *scoped enumerasjon*); den moderne, typesikre varianten av enum. Se [Enumerasjoner](Chapter1/enums.md). |

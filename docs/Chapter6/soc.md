@@ -113,6 +113,19 @@ Want to test the policy? Construct an `OverheatPolicy` and call `isOverheating` 
 
 ---
 
+## Cohesion and coupling
+
+The before-and-after you just saw has a name — two, in fact — and they are the vocabulary you will hear whenever people talk about design:
+
+- **Cohesion** is how strongly the parts of one piece belong together: how focused it is on a single job. `OverheatPolicy` is *highly cohesive* — it decides one thing, whether a temperature is too high, and nothing else. The original `monitorLoop` had *low* cohesion: it read hardware, converted units, and wrote files all at once.
+- **Coupling** is how much one piece depends on the details of another. The separated `monitorLoop` is *loosely coupled*: it reaches its parts only through the `TemperatureSensor` and `AlertSink` interfaces, so a real sensor swaps for a fake one without touching it. The original was *tightly coupled* — the alert welded to a specific file, the reading to a specific pin.
+
+What you are always aiming for is **high cohesion, low coupling**: each piece does one job well, and leans on the others as little as it can, through narrow interfaces. Nearly every technique in this chapter — splitting a function, hiding a detail behind an interface, giving a class one responsibility — is a way to push in that direction.
+
+Of the two, tight coupling does the most damage: when everything depends on everything, one change ripples everywhere and nothing can be tested or replaced on its own. The symptoms in the next section are how low cohesion and tight coupling show up in real code.
+
+---
+
 ## What "concern" means in practice
 
 A **concern** is one thing a program is responsible for. Some concerns are obvious:
@@ -195,6 +208,7 @@ Good design is not the design with the most classes. It is the design where each
 ## Summary
 
 - **Each piece of code should be responsible for one thing.**
+- Aim for **high cohesion** (each piece focused on one job) and **low coupling** (pieces connected only through narrow interfaces).
 - When you find a function doing more than one thing, split it.
 - Use interfaces to decouple "what" from "how": `TemperatureSensor` does not know which sensor; `monitorLoop` does not know which sensor either.
 - Separation makes code easier to test, easier to change, and easier to read.

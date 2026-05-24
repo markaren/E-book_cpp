@@ -119,6 +119,7 @@ plugins:
             Reading Compiler Errors: Lese kompilatorfeil
             Using a Debugger: Bruke en debugger
             Using AI for Coding: Bruke KI til koding
+            Code Style: Kodestil
             Strings: Strenger
             Lambda Expressions: Lambda-uttrykk
             Recursion: Rekursjon
@@ -182,6 +183,7 @@ nav:
     - Reading Compiler Errors: compiler_errors.md
     - Using a Debugger: debugger.md
     - Using AI for Coding: using_ai.md
+    - Code Style: style.md
     - Strings: strings.md
     - Lambda Expressions: lambdas.md
     - Recursion: recursion.md

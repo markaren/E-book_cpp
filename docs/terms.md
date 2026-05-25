@@ -8,6 +8,7 @@ Whether you are new to programming or just to C++, you will meet a lot of unfami
 | **argument** | A value you pass to a function when you call it. Inside the function it arrives as a *parameter*. See [Functions](Chapter1/functions.md). |
 | **assertion** (`assert`) | A check for a condition that must always be true; if it is false the program aborts. A tool for catching bugs, removed in release builds. See [Error Handling](Chapter6/error_handling.md). |
 | **assignment** | Replacing a variable's current value with a new one, e.g. `x = 5`. See [Operators](Chapter1/operators_expressions.md). |
+| **auto** | A keyword that lets the compiler deduce a variable's type from its initialiser (`auto x = 5;` makes `x` an `int`). The type is still fixed and checked at compile time. See [Variables](Chapter1/variables.md). |
 | **base case** | The case in a recursive function that can be answered directly, without recursing — it is what stops the recursion. See [Recursion](recursion.md). |
 | **block** | A group of statements wrapped in curly braces `{ }`. A block defines a *scope*. See [Basic Structure](Chapter1/basic_structure.md). |
 | **breakpoint** | A marker that pauses a running program in the debugger so you can inspect it. See [Using a Debugger](debugger.md). |
@@ -16,6 +17,7 @@ Whether you are new to programming or just to C++, you will meet a lot of unfami
 | **cast** | An explicit type conversion, e.g. `static_cast<int>(x)`. See [Operators](Chapter1/operators_expressions.md). |
 | **class** | A user-defined type that bundles data together with the operations that work on it. See [Classes](Chapter4/classes.md). |
 | **cohesion** | How strongly the parts of one piece of code belong together — how focused it is on a single job. High cohesion (one clear responsibility) is the goal. See [Separation of Concerns](Chapter6/soc.md). |
+| **compile time / run time** | *Compile time* is while the compiler is building your program; *run time* is while the finished program is executing. C++ catches many mistakes at compile time, before the program ever runs. See [Introduction](Chapter1/introduction.md). |
 | **compiler / compile** | The tool that translates your source code into a runnable program, *before* it runs. See [Introduction](Chapter1/introduction.md). |
 | **const** | A promise to the compiler that a value will not change; the compiler enforces it. See [Variables](Chapter1/variables.md). |
 | **const-correctness** | The discipline of marking everything that does not change as `const` — member functions that only observe, reference parameters you only read, locals you never reassign — so the compiler enforces what may be modified. A `const` object can call only `const` member functions. See [Classes](Chapter4/classes.md) and [Values, References & Pointers](Chapter4/types_refs_ptrs.md). |
@@ -30,6 +32,7 @@ Whether you are new to programming or just to C++, you will meet a lot of unfami
 | **function** | A named, reusable piece of code that performs one task. See [Functions](Chapter1/functions.md). |
 | **global variable** | A variable declared outside every function, visible everywhere. Shared, mutable globals make code hard to follow and test; prefer locals, parameters, and return values, and keep lasting state inside an object. Global *constants* are fine. See [Functions](Chapter1/functions.md#global-variables). |
 | **header** | A file (usually `.hpp`) whose declarations are shared across source files via `#include`. See [Classes](Chapter4/classes.md). |
+| **heap** | The region of memory for values whose size or lifetime is decided as the program runs; containers and smart pointers manage it for you (avoid raw `new`/`delete`). Contrast the *stack*. See [Memory Management](Chapter5/memory.md). |
 | **IDE** | Integrated Development Environment — the application you write, build, run, and debug code in. This course uses CLion. See [Getting Started](getting_started.md). |
 | **inheritance** | Building a new class on top of an existing one (`class Dog : public Animal`). See [Polymorphism](Chapter5/polymorphism.md). |
 | **initialise** | Give a variable a value at the moment it is created. Always do this. See [Variables](Chapter1/variables.md). |
@@ -44,8 +47,11 @@ Whether you are new to programming or just to C++, you will meet a lot of unfami
 | **move** | Transferring a resource from one object into another instead of copying it. See [Move Semantics](Chapter5/move.md). |
 | **namespace** | A named region that groups names to avoid clashes. The standard library lives in the namespace `std`. See [C++ Standard Library](Chapter3/standard_library.md). |
 | **NaN** | "Not a Number" — a floating-point result of invalid maths (e.g. `0.0 / 0.0`). It compares as *false* against everything, even itself. See [Floating-Point Pitfalls](floating_point.md). |
+| **nullptr** | The literal for a pointer that points at nothing. Check a pointer is not `nullptr` before using it. See [Values, References & Pointers](Chapter4/types_refs_ptrs.md). |
+| **object / instance** | A concrete value of a class type, created from its blueprint — "instance" is a synonym. A specific `Motor` in memory is an object of the `Motor` class. See [Classes](Chapter4/classes.md). |
 | **operator** | A symbol such as `+`, `==`, or `&&` that performs an action within an expression. See [Operators](Chapter1/operators_expressions.md). |
 | **overloading** | Defining several functions with the same name but different parameter types; the compiler picks the right one. See [Functions](Chapter1/functions.md). |
+| **override** | A keyword marking a member function that replaces a base class's *virtual function*; the compiler checks that one really exists to override. See [Polymorphism](Chapter5/polymorphism.md). |
 | **parameter** | A named input in a function's definition. The value supplied at the call site is the *argument*. See [Functions](Chapter1/functions.md). |
 | **PATH** | The list of folders the shell searches to find a program you run by name. A "command not found" is often a PATH problem. See [Computer Basics](computer_basics.md). |
 | **pointer** | A variable that holds a memory address. It can be `nullptr` (pointing at nothing) and must be checked before use. See [Values, References & Pointers](Chapter4/types_refs_ptrs.md). |
@@ -57,11 +63,14 @@ Whether you are new to programming or just to C++, you will meet a lot of unfami
 | **Rule of Zero** | Design classes whose members manage themselves (containers, smart pointers) so you need write no special member functions. See [Classes](Chapter4/classes.md). |
 | **scope** | The region of code in which a name is valid. A variable declared in a block disappears when the block ends. See [Basic Structure](Chapter1/basic_structure.md). |
 | **shell** | The program (PowerShell, bash, zsh, cmd) that interprets the commands you type in a terminal. See [Computer Basics](computer_basics.md). |
+| **signature** | A function's name together with the number and types of its parameters — what tells one *overload* from another. See [Functions](Chapter1/functions.md). |
 | **smart pointer** | An RAII wrapper that owns heap memory and frees it automatically — `std::unique_ptr`, `std::shared_ptr`. See [Memory Management](Chapter5/memory.md). |
+| **stack** | The region of memory where local variables and function calls live; entries are freed automatically when they go out of scope. Contrast the *heap*. See [Memory Management](Chapter5/memory.md). |
 | **stack overflow** | A crash caused by using up the call stack, for example a recursion with no reachable base case. See [Recursion](recursion.md). |
 | **standard library** | The large set of types and functions that ships with C++, all in the `std` namespace. (Its containers and algorithms part is informally called the *STL*.) See [C++ Standard Library](Chapter3/standard_library.md). |
 | **statement** | One instruction; in C++ it ends with a semicolon. See [Basic Structure](Chapter1/basic_structure.md). |
 | **std** | The namespace of the standard library. `std::cout` means "`cout`, from `std`." See [C++ Standard Library](Chapter3/standard_library.md). |
+| **struct** | The same as a `class` except its members default to `public`. By convention used for simple bundles of data. See [Classes](Chapter4/classes.md). |
 | **template** | A blueprint that generates functions or classes for whatever type you use, like `std::vector<T>`. See [Templates](Chapter5/templates.md). |
 | **terminal** | A text window where you control the computer by typing commands instead of clicking. See [Computer Basics](computer_basics.md). |
 | **undefined behaviour** | Code the language makes no promises about: it may crash, print garbage, or seem to work and break later. Avoid it. See [Variables](Chapter1/variables.md). |

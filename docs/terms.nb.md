@@ -8,6 +8,7 @@ Enten du er ny til programmering eller bare til C++, vil du møte mange ukjente 
 | **argument** | En verdi du sender til en funksjon når du kaller den. Inni funksjonen kommer den fram som en *parameter*. Se [Funksjoner](Chapter1/functions.md). |
 | **assertion** (`assert`) | En sjekk av en betingelse som alltid må være sann; hvis den er usann, avbryter programmet. Et verktøy for å fange feil, fjernet i release-bygg. Se [Feilhåndtering](Chapter6/error_handling.md). |
 | **tilordning** | Å erstatte en variabels nåværende verdi med en ny, f.eks. `x = 5`. Se [Operatorer og uttrykk](Chapter1/operators_expressions.md). |
+| **auto** | Et nøkkelord som lar kompilatoren utlede typen til en variabel fra initialiseringen (`auto x = 5;` gjør `x` til en `int`). Typen er fortsatt fast og sjekkes ved kompilering. Se [Variabler og grunntyper](Chapter1/variables.md). |
 | **grunntilfelle** | Tilfellet i en rekursiv funksjon som kan besvares direkte, uten å rekursere — det er det som stopper rekursjonen. Se [Rekursjon](recursion.md). |
 | **blokk** | En gruppe setninger pakket inn i krøllparenteser `{ }`. En blokk definerer et *virkeområde*. Se [Grunnstruktur](Chapter1/basic_structure.md). |
 | **breakpoint** | En markør som pauser et kjørende program i debuggeren så du kan inspisere det. Se [Bruke en debugger](debugger.md). |
@@ -16,6 +17,7 @@ Enten du er ny til programmering eller bare til C++, vil du møte mange ukjente 
 | **cast** | En eksplisitt typekonvertering, f.eks. `static_cast<int>(x)`. Se [Operatorer og uttrykk](Chapter1/operators_expressions.md). |
 | **klasse** | En brukerdefinert type som bunter sammen data med operasjonene som virker på dem. Se [Klasser](Chapter4/classes.md). |
 | **kohesjon** | Hvor sterkt delene av én kodebit hører sammen — hvor fokusert den er på én oppgave. Høy kohesjon (ett klart ansvar) er målet. Se [Separasjon av ansvar](Chapter6/soc.md). |
+| **kompileringstid / kjøretid** | *Kompileringstid* er mens kompilatoren bygger programmet ditt; *kjøretid* er mens det ferdige programmet kjører. C++ fanger mange feil ved kompileringstid, før programmet i det hele tatt kjører. Se [Introduksjon](Chapter1/introduction.md). |
 | **kompilator / kompilere** | Verktøyet som oversetter kildekoden din til et kjørbart program, *før* det kjører. Se [Introduksjon](Chapter1/introduction.md). |
 | **const** | Et løfte til kompilatoren om at en verdi ikke vil endre seg; kompilatoren håndhever det. Se [Variabler og grunntyper](Chapter1/variables.md). |
 | **const-korrekthet** | Vanen med å merke alt som ikke endrer seg som `const` — medlemsfunksjoner som bare observerer, referanseparametere du bare leser, lokale variabler du aldri tilordner på nytt — så kompilatoren håndhever hva som kan endres. Et `const`-objekt kan kalle bare `const`-medlemsfunksjoner. Se [Klasser](Chapter4/classes.md) og [Verdier, referanser og pekere](Chapter4/types_refs_ptrs.md). |
@@ -30,6 +32,7 @@ Enten du er ny til programmering eller bare til C++, vil du møte mange ukjente 
 | **funksjon** | En navngitt, gjenbrukbar kodebit som utfører én oppgave. Se [Funksjoner](Chapter1/functions.md). |
 | **global variabel** | En variabel deklarert utenfor alle funksjoner, synlig overalt. Delte, muterbare globale variabler gjør koden vanskelig å følge og teste; foretrekk lokale variabler, parametere og returverdier, og hold varig tilstand inne i et objekt. Globale *konstanter* er greit. Se [Funksjoner](Chapter1/functions.md#global-variables). |
 | **header** | En fil (vanligvis `.hpp`) hvis deklarasjoner deles på tvers av kildefiler via `#include`. Se [Klasser](Chapter4/classes.md). |
+| **heap** | Minneregionen for verdier hvis størrelse eller levetid bestemmes mens programmet kjører; beholdere og smartpekere håndterer den for deg (unngå rå `new`/`delete`). Kontrast *stacken*. Se [Minnehåndtering](Chapter5/memory.md). |
 | **IDE** | Integrert utviklingsmiljø (Integrated Development Environment) — applikasjonen du skriver, bygger, kjører og debugger kode i. Dette emnet bruker CLion. Se [Kom i gang](getting_started.md). |
 | **arv** | Å bygge en ny klasse oppå en eksisterende (`class Dog : public Animal`). Se [Polymorfisme](Chapter5/polymorphism.md). |
 | **initialisere** | Gi en variabel en verdi i det øyeblikket den opprettes. Gjør alltid dette. Se [Variabler og grunntyper](Chapter1/variables.md). |
@@ -44,8 +47,11 @@ Enten du er ny til programmering eller bare til C++, vil du møte mange ukjente 
 | **move** | Å overføre en ressurs fra ett objekt til et annet i stedet for å kopiere den. Se [Flyttesemantikk](Chapter5/move.md). |
 | **namespace** | En navngitt region som grupperer navn for å unngå kollisjoner. Standardbiblioteket bor i navnerommet `std`. Se [C++ standardbibliotek](Chapter3/standard_library.md). |
 | **NaN** | "Not a Number" — et flyttallsresultat av ugyldig matematikk (f.eks. `0.0 / 0.0`). Det sammenlignes som *usant* mot alt, til og med seg selv. Se [Flyttall-fallgruver](floating_point.md). |
+| **nullptr** | Literalen for en peker som peker på ingenting. Sjekk at en peker ikke er `nullptr` før du bruker den. Se [Verdier, referanser og pekere](Chapter4/types_refs_ptrs.md). |
+| **objekt / instans** | En konkret verdi av en klassetype, laget fra tegningen dens — "instans" er et synonym. En bestemt `Motor` i minnet er et objekt av klassen `Motor`. Se [Klasser](Chapter4/classes.md). |
 | **operator** | Et symbol som `+`, `==` eller `&&` som utfører en handling inni et uttrykk. Se [Operatorer og uttrykk](Chapter1/operators_expressions.md). |
 | **overlasting** | Å definere flere funksjoner med samme navn, men forskjellige parametertyper; kompilatoren velger den riktige. Se [Funksjoner](Chapter1/functions.md). |
+| **override** | Et nøkkelord som markerer en medlemsfunksjon som erstatter en *virtuell funksjon* i en baseklasse; kompilatoren sjekker at det faktisk finnes en å overstyre. Se [Polymorfisme](Chapter5/polymorphism.md). |
 | **parameter** | En navngitt inndata i en funksjons definisjon. Verdien som oppgis på kallstedet, er *argumentet*. Se [Funksjoner](Chapter1/functions.md). |
 | **PATH** | Listen over mapper skallet leter gjennom for å finne et program du kjører ved navn. En "command not found" er ofte et PATH-problem. Se [Datamaskingrunnlag](computer_basics.md). |
 | **peker** | En variabel som holder en minneadresse. Den kan være `nullptr` (peker på ingenting) og må sjekkes før bruk. Se [Verdier, referanser og pekere](Chapter4/types_refs_ptrs.md). |
@@ -57,11 +63,14 @@ Enten du er ny til programmering eller bare til C++, vil du møte mange ukjente 
 | **Regelen om null** (Rule of Zero) | Utform klasser hvis medlemmer styrer seg selv (beholdere, smartpekere) så du ikke trenger å skrive noen spesielle medlemsfunksjoner. Se [Klasser](Chapter4/classes.md). |
 | **virkeområde** | Regionen av kode der et navn er gyldig. En variabel deklarert i en blokk forsvinner når blokken slutter. Se [Grunnstruktur](Chapter1/basic_structure.md). |
 | **skall** | Programmet (PowerShell, bash, zsh, cmd) som tolker kommandoene du skriver i en terminal. Se [Datamaskingrunnlag](computer_basics.md). |
+| **signatur** | En funksjons navn sammen med antallet og typene til parameterne dens — det som skiller én *overlasting* fra en annen. Se [Funksjoner](Chapter1/functions.md). |
 | **smartpeker** | En RAII-innpakning som eier heap-minne og frigjør det automatisk — `std::unique_ptr`, `std::shared_ptr`. Se [Minnehåndtering](Chapter5/memory.md). |
+| **stack** | Minneregionen der lokale variabler og funksjonskall lever; oppføringer frigjøres automatisk når de går ut av virkeområdet. Kontrast *heapen*. Se [Minnehåndtering](Chapter5/memory.md). |
 | **stack overflow** | Et krasj forårsaket av å bruke opp kallstacken, for eksempel en rekursjon uten et nåbart grunntilfelle. Se [Rekursjon](recursion.md). |
 | **standardbibliotek** | Det store settet av typer og funksjoner som følger med C++, alle i navnerommet `std`. (Beholder- og algoritmedelen kalles uformelt *STL*.) Se [C++ standardbibliotek](Chapter3/standard_library.md). |
 | **setning** | Én instruksjon; i C++ avsluttes den med semikolon. Se [Grunnstruktur](Chapter1/basic_structure.md). |
 | **std** | Navnerommet til standardbiblioteket. `std::cout` betyr "`cout`, fra `std`". Se [C++ standardbibliotek](Chapter3/standard_library.md). |
+| **struct** | Det samme som en `class` bortsett fra at medlemmene som standard er `public`. Brukes etter konvensjon for enkle databunter. Se [Klasser](Chapter4/classes.md). |
 | **template** | En mal som genererer funksjoner eller klasser for hvilken type du enn bruker, som `std::vector<T>`. Se [Maler](Chapter5/templates.md). |
 | **terminal** | Et tekstvindu der du styrer datamaskinen ved å skrive kommandoer i stedet for å klikke. Se [Datamaskingrunnlag](computer_basics.md). |
 | **udefinert oppførsel** | Kode språket ikke gir noen løfter om: den kan krasje, skrive ut søppel, eller virke og bryte sammen senere. Unngå den. Se [Variabler og grunntyper](Chapter1/variables.md). |

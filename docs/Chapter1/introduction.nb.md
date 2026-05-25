@@ -30,6 +30,37 @@ Når du kjører dette, leser kompilatoren kildekoden, sjekker den for feil, over
 
 ---
 
+## En kort historie
+
+Datamaskiner forstår egentlig bare én ting: **maskinkode**, lange rekker med 1-ere og 0-er som svarer til de mest grunnleggende operasjonene prosessoren kan utføre — legg sammen disse to tallene, flytt denne verdien, hopp til den instruksjonen. De første programmererne skrev disse tallene for hånd. Det fungerte, men det var tregt, uleselig og bundet til én bestemt maskin.
+
+Historien om programmeringsspråk er historien om å klatre vekk fra de 1-erne og 0-ene mot noe et menneske kan lese og resonnere om, mens et verktøy tar seg av oversettelsen tilbake ned til maskinen.
+
+- **Maskinkode** (1940-tallet). Rå numeriske instruksjoner. Raskt for datamaskinen, elendig for mennesket.
+- **Assembly** (1950-tallet). Korte forkortelser som `ADD` og `MOV` står for tallene. Lettere å lese, men fortsatt én linje per maskininstruksjon og fortsatt bundet til én type prosessor.
+- **Høynivåspråk** (fra slutten av 1950-tallet). FORTRAN, og mange etter det, lot deg skrive noe nærmere menneskelige ideer — `x = a + b` i stedet for en sekvens av registeroperasjoner. En **kompilator** oversetter hele programmet ned til maskinkode, så du kunne skrive det én gang og, i prinsippet, kjøre det på ulike maskiner.
+- **C** (1972). Dennis Ritchie ved Bell Labs lagde C for å skrive operativsystemet Unix. Det var høynivå nok til å være leselig, men holdt seg samtidig nær maskinvaren, så det produserte raske, kompakte programmer. C ble et av de mest innflytelsesrike språkene som noen gang er skrevet: syntaksen er stamfaren til C++, Java, C# og JavaScript. `{ }`, `;`-ene og `int main()` du så ovenfor kommer alle fra C.
+
+### Fra C til C++
+
+I 1979 ønsket **Bjarne Stroustrup**, også ved Bell Labs, C-ens hastighet og lavnivåkontroll *pluss* en måte å organisere store programmer rundt **klasser** — den objektorienterte ideen, lånt fra et eldre språk kalt Simula. Han begynte med å utvide C og kalte det **"C with Classes."** I 1983 ble det omdøpt til **C++**: `++` er C-operatoren som betyr "legg til én", så navnet er en liten spøk — *én mer enn C*.
+
+C++ ble en internasjonal standard i 1998 (**C++98**), slik at hver kompilator skulle være enig om hva språket betydde. Deretter sto det nokså stille i over et tiår.
+
+Vendepunktet var **C++11**. Det moderniserte språket så grundig at folk nå snakker om "gammel C++" og **"moderne C++"** nærmest som forskjellige språk. Moderne C++ la til funksjoner som gjør språket tryggere og langt mindre tungvint å skrive — du vil møte dem gjennom hele denne boken. Siden C++11 har en ny standard kommet omtrent hvert tredje år:
+
+| Standard      | År          | Merknad                        |
+|---------------|-------------|--------------------------------|
+| C++98 / C++03 | 1998 / 2003 | Den første standardiserte C++. |
+| **C++11**     | 2011        | Spranget til "moderne C++".    |
+| C++14 / C++17 | 2014 / 2017 | Jevne forbedringer.            |
+| **C++20**     | 2020        | Det dette emnet underviser i.  |
+| C++23         | 2023        | Den nåværende nyeste.          |
+
+Du trenger ikke å pugge dette. Lærdommen er enkel: **C++ er gammelt nok til å kjøre nesten alt, og moderne C++ er nytt nok til å være behagelig å skrive — så lenge du holder deg til den moderne stilen denne boken lærer bort.**
+
+---
+
 ## Hvorfor C++?
 
 Du vil høre at C++ er et "vanskelig" språk. Det er noe sant i det: det gir deg direkte kontroll over maskinen, og med den kontrollen følger flere måter å gjøre feil på enn i for eksempel Python. Men det er det rette verktøyet for det automasjonsingeniører faktisk driver med:
@@ -38,8 +69,6 @@ Du vil høre at C++ er et "vanskelig" språk. Det er noe sant i det: det gir deg
 - **Ytelseskritisk numerisk arbeid.** Reguleringssløyfer, signalbehandling, simuleringer.
 - **Spillmotorer og grafikk.** Unreal, store deler av kjøretidsmiljøet til Unity.
 - **Operativsystemer og drivere.** Kode som snakker direkte med maskinvaren.
-
-Språket har også utviklet seg mye. **Moderne C++** (C++11 og nyere) er langt vennligere enn C++ for tjue år siden. Dette emnet underviser i C++20, som er det du bør skrive i dag.
 
 ---
 

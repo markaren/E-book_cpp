@@ -30,6 +30,37 @@ When you run this, the compiler reads the source code, checks it for errors, tra
 
 ---
 
+## A short history
+
+Computers only understand one thing: **machine code**, long strings of 1s and 0s that correspond to the most primitive operations the processor can perform — add these two numbers, move this value, jump to that instruction. The first programmers wrote those numbers by hand. It worked, but it was slow, unreadable, and tied to one specific machine.
+
+The history of programming languages is the story of climbing away from those 1s and 0s toward something a human can read and reason about, while a tool handles the translation back down to the machine.
+
+- **Machine code** (1940s). Raw numeric instructions. Fast for the computer, miserable for the human.
+- **Assembly** (1950s). Short mnemonics like `ADD` and `MOV` stand in for the numbers. Easier to read, but still one line per machine instruction and still tied to one kind of processor.
+- **High-level languages** (late 1950s onward). FORTRAN, and many after it, let you write something closer to human ideas — `x = a + b` instead of a sequence of register operations. A **compiler** translates the whole program down to machine code, so you could write it once and, in principle, run it on different machines.
+- **C** (1972). Dennis Ritchie at Bell Labs created C to write the Unix operating system. It was high-level enough to be readable, yet stayed close to the hardware, so it produced fast, compact programs. C became one of the most influential languages ever written: its syntax is the ancestor of C++, Java, C#, and JavaScript. The `{ }`, the `;`, and the `int main()` you saw above all come from C.
+
+### From C to C++
+
+In 1979 **Bjarne Stroustrup**, also at Bell Labs, wanted C's speed and low-level control *plus* a way to organise large programs around **classes** — the object-oriented idea, borrowed from an older language called Simula. He began by extending C and called it **"C with Classes."** In 1983 it was renamed **C++**: `++` is the C operator that means "add one," so the name is a small joke — *one more than C*.
+
+C++ became an international standard in 1998 (**C++98**), so that every compiler would agree on what the language meant. Then it sat mostly still for over a decade.
+
+The turning point was **C++11**. It modernised the language so thoroughly that people now speak of "old C++" and **"modern C++"** almost as different languages. Modern C++ added features that make the language safer and far less tedious to write — you will meet them throughout this book. Since C++11, a new standard has arrived roughly every three years:
+
+| Standard      | Year        | Note                          |
+|---------------|-------------|-------------------------------|
+| C++98 / C++03 | 1998 / 2003 | The first standardised C++.   |
+| **C++11**     | 2011        | The leap to "modern C++."     |
+| C++14 / C++17 | 2014 / 2017 | Steady refinements.           |
+| **C++20**     | 2020        | What this course teaches.     |
+| C++23         | 2023        | The current latest.           |
+
+You do not need to memorise this. The takeaway is simple: **C++ is old enough to run almost everything, and modern C++ is new enough to be pleasant to write — as long as you stick to the modern style this book teaches.**
+
+---
+
 ## Why C++?
 
 You will hear that C++ is a "difficult" language. There is truth to that: it gives you direct control over the machine, and with that control comes more ways to make mistakes than in something like Python. But it is the right tool for what automation engineers actually do:
@@ -38,8 +69,6 @@ You will hear that C++ is a "difficult" language. There is truth to that: it giv
 - **High-performance numerical work.** Control loops, signal processing, simulations.
 - **Game engines and graphics.** Unreal, large parts of Unity's runtime.
 - **Operating systems and drivers.** Code that talks to hardware directly.
-
-The language has also evolved a lot. **Modern C++** (C++11 and later) is far friendlier than the C++ of twenty years ago. This course teaches C++20, which is what you should be writing today.
 
 ---
 

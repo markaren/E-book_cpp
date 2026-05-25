@@ -399,7 +399,9 @@ std::string Motor::describe() const {
 
 (`describe` uses `std::format`, which builds a string by filling each `{}` with the next argument — the modern way to assemble text. See [Strings](../strings.md).)
 
-For short functions (one-liners, simple getters) it is fine to keep them inside the class. For anything bigger, split. Compile times improve and the header stays readable.
+For short functions (one-liners, simple getters) it is fine to keep them inside the class. For anything bigger, split it out: the header stays readable, and compile times improve.
+
+**Why the compile times improve.** A header is pasted into *every* `.cpp` that `#include`s it. A function body left in the header is therefore compiled again in each of those files — and, worse, every time you edit that body the header counts as changed, so all of them have to be recompiled. Move the body into `motor.cpp` and it is compiled just once; editing it later rebuilds only `motor.cpp`, not every file that includes the header.
 
 ---
 

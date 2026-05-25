@@ -133,6 +133,52 @@ classDiagram
 
 ---
 
+## Composition over inheritance
+
+Inheritance is not the only way to build on another class. You can instead hold one as a **member** — that is *composition*, the "has-a" from above. Often **both compile and both work**, and the choice is about design, not correctness.
+
+Suppose a `Thermostat` needs a temperature reading, and you already have a `TemperatureSensor`:
+
+```cpp
+class TemperatureSensor {
+public:
+    double readCelsius() const { return 21.5; }   // a real one would read the hardware
+};
+```
+
+You *could* inherit — a thermostat does, after all, report a temperature:
+
+```cpp
+class Thermostat : public TemperatureSensor {      // "is-a"
+public:
+    bool shouldHeat(double target) const {
+        return readCelsius() < target;             // readCelsius() inherited directly
+    }
+};
+```
+
+Or you could hold one as a member:
+
+```cpp
+class Thermostat {                                 // "has-a"
+    TemperatureSensor sensor_;
+public:
+    bool shouldHeat(double target) const {
+        return sensor_.readCelsius() < target;
+    }
+};
+```
+
+Both versions compile and behave identically — neither is *wrong*. But the member version is the better default, for three reasons:
+
+- **It exposes only what you choose.** Through inheritance, every public function of `TemperatureSensor` — and any it gains later — becomes part of `Thermostat`'s interface too. With a member, `Thermostat` offers just `shouldHeat()`; the sensor is a private detail.
+- **It stays flexible.** Need a different sensor, two of them, or a fake one in a [test](../Chapter6/testing.md)? Change the member. Inheritance weds you to that one base.
+- **It tells the truth.** Public inheritance promises that a `Thermostat` can stand in *anywhere* a `TemperatureSensor` is expected ([the substitutability test](#an-honest-is-a), below). But a thermostat *uses* a sensor; it is not one. "Has-a" matches reality; "is-a" does not.
+
+The rule of thumb: **inherit only when the derived type genuinely *is a kind of* the base and you want the shared interface that makes runtime polymorphism work (the next section). When you just want to reuse what another class can do, make it a member.**
+
+---
+
 ## Virtual functions
 
 A regular function call is resolved based on the *static* type of the variable. A `virtual` function call is resolved based on the *dynamic* type of the object: the actual type at runtime.

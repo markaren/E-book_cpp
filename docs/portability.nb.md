@@ -146,7 +146,7 @@ Du trenger ikke at studiearbeidet ditt skal kjøre på fem plattformer. Men noen
 
 - **Inkluder det du bruker.** Én `#include` for hver standardfasilitet du nevner. Stol aldri på at én header drar inn en annen.
 - **Slå på advarsler** — `-Wall -Wextra` (GCC/Clang) eller `/W4` (MSVC). Se [CMake](Chapter2/cmake_intro.md#turn-on-compiler-warnings). Advarsler er ofte det første tegnet på ikke-portabel kode.
-- **Hold deg til standardbiblioteket og CMake.** Unngå kompilatorspesifikke utvidelser og OS-spesifikke headere (som `<windows.h>`) med mindre du virkelig trenger dem — og når du gjør det, hold dem isolert.
+- **Hold deg til standardbiblioteket og CMake.** Unngå kompilatorspesifikke utvidelser og OS-spesifikke headere (som `<windows.h>`) med mindre du virkelig trenger dem — og når du gjør det, isoler dem bak en [CMake-betingelse](Chapter2/cmake_intro.md#treating-compilers-and-platforms-differently).
 - **Bruk fastbreddetyper for heltall** (`<cstdint>`) når størrelsen betyr noe; anta aldri hvor stor `long` er.
 - **Skriv stier portabelt** — skråstrek forover eller `std::filesystem::path` — og match store/små bokstaver i filnavn nøyaktig. Se [Datamaskingrunnlag](computer_basics.md).
 - **Det eneste beviset er å bygge og kjøre det der.** Hvis kode må fungere på en annen plattform, kompiler og test den på den plattformen. (Å automatisere det er én jobb for *kontinuerlig integrasjon*.) Å lese kildekoden er ikke nok — "det funker på min maskin" er en uttalelse om din maskin.

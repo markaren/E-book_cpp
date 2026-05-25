@@ -73,22 +73,79 @@ add_executable(hello main.cpp)
 
 Several pages in this book tell you to "turn warnings on." A **warning** is the compiler flagging code that is legal but probably a mistake — `if (x = 5)` instead of `==`, a variable you declared and never used, a function that forgets to `return`. They are some of the most valuable feedback the compiler gives you, and most of them are **off by default**.
 
-Switch them on for your project by adding one line to `CMakeLists.txt`:
+You switch them on with `target_compile_options` — but here is the catch this chapter has been hinting at: **the flag names differ between compilers.** GCC and Clang spell them one way, Microsoft's MSVC another:
+
+| Compiler | Turn warnings on | Treat warnings as errors |
+|----------|------------------|--------------------------|
+| GCC, Clang (incl. CLion's MinGW) | `-Wall -Wextra` | `-Werror` |
+| MSVC (Visual Studio) | `/W4` | `/WX` |
+
+Hard-code `-Wall -Wextra` and your `CMakeLists.txt` breaks the moment someone builds it with MSVC — the very [non-portability](../portability.md) we want to avoid. The fix is to ask CMake *which* compiler it is using and choose the right flags. CMake sets the variable `MSVC` to true for Visual Studio, so an `if()` does the job:
 
 ```cmake
 add_executable(hello main.cpp)
-target_compile_options(hello PRIVATE -Wall -Wextra)
+
+if(MSVC)
+    target_compile_options(hello PRIVATE /W4)
+else()
+    target_compile_options(hello PRIVATE -Wall -Wextra)
+endif()
 ```
 
-`-Wall -Wextra` enable the common, worthwhile warnings. (Those are GCC and Clang flag names; CLion's bundled compiler is GCC, so they work out of the box. With Microsoft's MSVC you would write `/W4` instead.) Warnings now appear in CLion's build window every time you compile — read them.
+Now warnings turn on whether the project is built with GCC, Clang, or MSVC. They appear in CLion's build window every time you compile — read them.
 
-Once your code builds cleanly, you can make warnings **fatal**, so a warning stops the build instead of scrolling past:
+Once your code builds cleanly, you can make warnings **fatal**, so a warning stops the build instead of scrolling past. That flag differs too (`-Werror` vs `/WX`), so it goes in the same branches:
 
 ```cmake
-target_compile_options(hello PRIVATE -Wall -Wextra -Werror)
+if(MSVC)
+    target_compile_options(hello PRIVATE /W4 /WX)
+else()
+    target_compile_options(hello PRIVATE -Wall -Wextra -Werror)
+endif()
 ```
 
-`-Werror` is stricter than you need on your first day, but it is a habit worth growing into: it guarantees you never ignore a warning by accident.
+Making warnings fatal is stricter than you need on your first day, but it is a habit worth growing into: it guarantees you never ignore a warning by accident.
+
+---
+
+## Treating compilers and platforms differently
+
+The warnings block above is one case of a general need: CMake describes the build *once*, but the right thing to do sometimes depends on **which compiler** or **which operating system** is doing the building. Plain `if()` blocks and a few built-in variables cover this.
+
+To branch on the **compiler**:
+
+| Check | True when |
+|-------|-----------|
+| `if(MSVC)` | the compiler is Microsoft's MSVC |
+| `if(CMAKE_CXX_COMPILER_ID STREQUAL "GNU")` | the compiler is GCC |
+| `if(CMAKE_CXX_COMPILER_ID STREQUAL "Clang")` | the compiler is Clang (Apple's build reports `"AppleClang"`) |
+
+To branch on the **operating system**:
+
+| Check | True on |
+|-------|---------|
+| `if(WIN32)` | Windows (even 64-bit) |
+| `if(APPLE)` | macOS |
+| `if(UNIX)` | Linux **and** macOS |
+
+`APPLE` is also `UNIX`, so test `APPLE` first when you need to tell them apart:
+
+```cmake
+if(WIN32)
+    target_compile_definitions(app PRIVATE PLATFORM_WINDOWS)
+elseif(APPLE)
+    target_compile_definitions(app PRIVATE PLATFORM_MAC)
+elseif(UNIX)
+    target_compile_definitions(app PRIVATE PLATFORM_LINUX)
+endif()
+```
+
+`target_compile_definitions` defines a preprocessor macro — the CMake equivalent of writing `#define PLATFORM_WINDOWS` at the top of every file — so your C++ can select an OS-specific branch with `#ifdef PLATFORM_WINDOWS`.
+
+Two rules keep this under control:
+
+- **Use it only when you must.** Plain standard C++ already compiles everywhere; reach for a conditional only for the genuinely platform-specific parts — a compiler flag, a system library, an OS-only API. Most projects in this course need none beyond the warning flags above.
+- **Test on every platform you branch for.** A `WIN32` block that has never been compiled on Windows is a guess, not a feature — see [Portability](../portability.md).
 
 ---
 
@@ -304,6 +361,7 @@ For a more elaborate convention used in larger industry projects, see [the Pitch
 - `CMakeLists.txt` describes your project; CMake turns the description into platform-specific build files.
 - Three lines suffice for a single-file program: `cmake_minimum_required`, `project`, `add_executable`.
 - Set `CMAKE_CXX_STANDARD 20` explicitly.
+- Put compiler- or OS-specific settings (such as warning flags) behind `if(MSVC)` / `if(WIN32)` / `if(APPLE)` / `if(UNIX)` blocks — and keep them to the genuinely platform-specific bits.
 - Add more source files by listing them in `add_executable`. Headers do not need to be listed.
 - Use `target_include_directories` when headers live in a separate folder.
 - Use `add_library` and `target_link_libraries` once you have code shared between executables.

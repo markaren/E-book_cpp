@@ -146,7 +146,7 @@ You do not need your coursework to run on five platforms. But a few habits cost 
 
 - **Include what you use.** One `#include` for every standard facility you name. Never rely on one header dragging in another.
 - **Turn warnings on** — `-Wall -Wextra` (GCC/Clang) or `/W4` (MSVC). See [CMake](Chapter2/cmake_intro.md#turn-on-compiler-warnings). Warnings are often the first sign of non-portable code.
-- **Stick to the standard library and CMake.** Avoid compiler-specific extensions and OS-specific headers (like `<windows.h>`) unless you truly need them — and when you do, keep them isolated.
+- **Stick to the standard library and CMake.** Avoid compiler-specific extensions and OS-specific headers (like `<windows.h>`) unless you truly need them — and when you do, isolate them behind a [CMake conditional](Chapter2/cmake_intro.md#treating-compilers-and-platforms-differently).
 - **Use fixed-width integer types** (`<cstdint>`) when the size matters; never assume how big `long` is.
 - **Write paths portably** — forward slashes or `std::filesystem::path` — and match filename case exactly. See [Computer Basics](computer_basics.md).
 - **The only proof is to build and run it there.** If code must work on another platform, compile and test it on that platform. (Automating that is one job of *continuous integration*.) Reading the source is not enough — "works on my machine" is a statement about your machine.

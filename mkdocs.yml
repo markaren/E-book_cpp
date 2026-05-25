@@ -10,8 +10,6 @@ theme:
   language: en
   features:
     - navigation.tracking
-    - navigation.tabs
-    - navigation.sections
     - navigation.indexes
     - navigation.top
     - navigation.footer
@@ -101,10 +99,10 @@ plugins:
             "2. Tooling": "2. Verktøy"
             CMake Introduction: CMake-introduksjon
             Version Control & Git: Versjonskontroll og Git
-            "3. Standard Library": "3. Standardbibliotek"
+            "3. Standard Library & Data Structures": "3. Standardbibliotek og datastrukturer"
             C++ Standard Library: C++ standardbibliotek
             Data Structures: Datastrukturer
-            "4. Classes": "4. Klasser"
+            "4. Classes & Types": "4. Klasser og typer"
             Classes: Klasser
             Values, References & Pointers: Verdier, referanser og pekere
             IO & Streams: IO og strømmer
@@ -166,13 +164,13 @@ nav:
     - Version Control & Git: Chapter2/version_control.md
     - PlatformIO: Chapter2/platformio.md
     - Exercises: Chapter2/exercises.md
-  - 3. Standard Library:
+  - 3. Standard Library & Data Structures:
     - C++ Standard Library: Chapter3/standard_library.md
     - Data Structures: Chapter3/data_structures.md
     - Strings: strings.md
     - Lambda Expressions: lambdas.md
     - Exercises: Chapter3/exercises.md
-  - 4. Classes:
+  - 4. Classes & Types:
     - Classes: Chapter4/classes.md
     - Values, References & Pointers: Chapter4/types_refs_ptrs.md
     - RAII: Chapter4/raii.md

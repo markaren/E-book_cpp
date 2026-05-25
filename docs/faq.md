@@ -31,6 +31,9 @@ They stop a header being pasted into one file twice, which would cause "redefini
 **My program will not compile — what does the error mean?**
 Fix the *first* error first (the later ones are often fallout), starting at the `file:line` it names. See [Reading Compiler Errors](compiler_errors.md).
 
+**It compiles for me but not for my partner (or on another OS) — why?**
+C++ is compiled per platform, and the same source is not guaranteed to compile on every compiler. Usual culprits: a missing `#include` you got away with, a feature too new for their compiler, word operators like `or`, `M_PI`, or assuming a type's size. See [Portability](portability.md).
+
 **It compiles and runs, but does the wrong thing — now what?**
 Use the debugger: set a breakpoint, step through, and watch the variables until what *is* happening and what you *expected* diverge. See [Using a Debugger](debugger.md).
 

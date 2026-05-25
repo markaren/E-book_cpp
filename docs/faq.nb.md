@@ -31,6 +31,9 @@ De hindrer at en header limes inn i én fil to ganger, noe som ville gitt "redef
 **Programmet mitt vil ikke kompilere — hva betyr feilen?**
 Fiks den *første* feilen først (de senere er ofte følgefeil), og start ved `fil:linje` den oppgir. Se [Lese kompilatorfeil](compiler_errors.md).
 
+**Det kompilerer for meg, men ikke for partneren min (eller på et annet OS) — hvorfor?**
+C++ kompileres per plattform, og den samme kildekoden er ikke garantert å kompilere på enhver kompilator. Vanlige syndere: en manglende `#include` du slapp unna med, en funksjon som er for ny for kompilatoren deres, ord-operatorer som `or`, `M_PI`, eller å anta størrelsen på en type. Se [Portabilitet](portability.md).
+
 **Det kompilerer og kjører, men gjør feil ting — hva nå?**
 Bruk debuggeren: sett et breakpoint, gå gjennom koden steg for steg, og følg variablene til det som *faktisk* skjer og det du *forventet* spriker. Se [Bruke en debugger](debugger.md).
 

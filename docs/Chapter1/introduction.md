@@ -92,6 +92,7 @@ A short list of consequences you will run into:
 | Property                   | What it means for you                                                                            |
 |----------------------------|--------------------------------------------------------------------------------------------------|
 | Compiled                   | You must rebuild before you can test a change. Read compiler errors carefully.                   |
+| Platform-specific          | The compiler emits machine code for one OS and CPU. A Windows build won't run on Linux, and the same source isn't always guaranteed to compile on both — see [Portability](../portability.md). |
 | Statically typed           | You declare every variable with a type. Mismatches are compile-time errors, not runtime crashes. |
 | No garbage collector       | You manage when memory is freed (later chapters cover the modern, painless way).                 |
 | Undefined behaviour exists | The language has corners where "anything could happen." We will name them as they appear.        |

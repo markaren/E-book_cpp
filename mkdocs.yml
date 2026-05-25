@@ -121,6 +121,7 @@ plugins:
             Reference: Referanse
             Coming from Python: Fra Python
             Arduino vs. Desktop C++: Arduino vs. desktop-C++
+            Portability: Portabilitet
             Reading Compiler Errors: Lese kompilatorfeil
             Using a Debugger: Bruke en debugger
             Using AI for Coding: Bruke KI til koding
@@ -191,6 +192,7 @@ nav:
   - Reference:
     - Coming from Python: python_to_cpp.md
     - Arduino vs. Desktop C++: arduino_vs_desktop.md
+    - Portability: portability.md
     - Reading Compiler Errors: compiler_errors.md
     - Using a Debugger: debugger.md
     - Using AI for Coding: using_ai.md

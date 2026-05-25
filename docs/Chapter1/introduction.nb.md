@@ -92,6 +92,7 @@ En kort liste over konsekvenser du vil støte på:
 | Egenskap | Hva det betyr for deg |
 |----------|------------------------|
 | Kompilert | Du må bygge på nytt før du kan teste en endring. Les kompilatorfeil nøye. |
+| Plattformspesifikk | Kompilatoren lager maskinkode for ett OS og én CPU. En Windows-bygging kjører ikke på Linux, og den samme kildekoden er ikke alltid garantert å kompilere på begge — se [Portabilitet](../portability.md). |
 | Statisk typet | Du oppgir typen til hver variabel. Mismatch er feil ved kompilering, ikke krasj ved kjøring. |
 | Ingen søppelsamler | Du styrer når minne frigjøres (senere kapitler dekker den moderne, smertefrie måten). |
 | Udefinert oppførsel finnes | Språket har kroker der "hva som helst kan skje". Vi navngir dem etter hvert som de dukker opp. |

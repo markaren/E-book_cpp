@@ -4,6 +4,8 @@ So far you have run programs through CLion's green play button. That button is c
 
 CMake is not a compiler. It is one level above: you describe your project to CMake in a small file called `CMakeLists.txt`, and CMake generates the platform-specific instructions (Makefiles on Linux, Visual Studio project files on Windows, Xcode projects on macOS) that your compiler then follows. Write the project description once; build it anywhere.
 
+> CMake makes the *build* portable, not the program it produces: the executable is still built for one operating system and CPU, and the same source is not guaranteed to compile on every compiler. [Portability](../portability.md) covers what does and does not carry across platforms.
+
 Under that one button your code passes through several stages, and CMake's job is to drive them in order:
 
 ```mermaid

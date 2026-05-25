@@ -68,15 +68,38 @@ Two things to know:
 1. **Always include `break`** at the end of each case unless you specifically want execution to fall through to the next case. Forgetting `break` is a classic bug: execution silently continues into the next case.
 2. `switch` only works with integer-like values (`int`, `char`, enumerations). It cannot switch on a `std::string` or a `double`.
 
-If a case needs to declare its own local variables, wrap its body in braces:
+A subtle trap: all the cases share **one** scope — the single block after `switch (...)`. So a variable declared in one case is still in scope in the cases below it, and C++ forbids jumping over its initialisation. This innocent-looking code does not compile:
 
 ```cpp
-case 1: {
-    int local = 5;
-    // ...
-    break;
+switch (gear) {
+    case 1:
+        int chosen = gear * 10;   // declared here
+        std::cout << chosen << "\n";
+        break;
+    case 2:                       // jumping here would skip
+        std::cout << "Second\n";  // the line that sets up 'chosen'
+        break;
 }
 ```
+
+The compiler rejects it with something like *"jump to case label crosses initialization of 'int chosen'"*: reaching `case 2` would bypass the line that sets up `chosen`, yet `chosen` is still in scope there, so the language refuses.
+
+Give the case its own scope with braces `{}`, and the variable lives and dies inside them:
+
+```cpp
+switch (gear) {
+    case 1: {
+        int chosen = gear * 10;
+        std::cout << chosen << "\n";
+        break;
+    }
+    case 2:
+        std::cout << "Second\n";
+        break;
+}
+```
+
+Now `chosen` exists only between the braces, so nothing leaks into `case 2`. **Rule of thumb: the moment a case declares a variable, wrap that case in `{}`.**
 
 ---
 

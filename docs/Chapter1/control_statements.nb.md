@@ -68,15 +68,38 @@ To ting du må vite:
 1. **Ta alltid med `break`** på slutten av hver case med mindre du spesifikt vil at kjøringen skal falle gjennom til neste case. Å glemme `break` er en klassisk feil: kjøringen fortsetter stille inn i neste case.
 2. `switch` virker bare med heltallslignende verdier (`int`, `char`, enumerasjoner). Den kan ikke switche på en `std::string` eller en `double`.
 
-Hvis en case trenger å deklarere sine egne lokale variabler, pakk kroppen inn i krøllparenteser:
+En subtil felle: alle case-ene deler **ett** virkeområde — den ene blokken etter `switch (...)`. Så en variabel som deklareres i én case, er fortsatt i virkeområde i case-ene under den, og C++ forbyr å hoppe over initialiseringen dens. Denne uskyldig utseende koden kompilerer ikke:
 
 ```cpp
-case 1: {
-    int local = 5;
-    // ...
-    break;
+switch (gear) {
+    case 1:
+        int chosen = gear * 10;   // deklarert her
+        std::cout << chosen << "\n";
+        break;
+    case 2:                       // å hoppe hit ville hoppe over
+        std::cout << "Second\n";  // linjen som setter opp 'chosen'
+        break;
 }
 ```
+
+Kompilatoren avviser den med noe slikt som *"jump to case label crosses initialization of 'int chosen'"*: å nå `case 2` ville hoppe over linjen som setter opp `chosen`, men `chosen` er fortsatt i virkeområde der, så språket nekter.
+
+Gi case-en sitt eget virkeområde med krøllparenteser `{}`, så lever og dør variabelen inni dem:
+
+```cpp
+switch (gear) {
+    case 1: {
+        int chosen = gear * 10;
+        std::cout << chosen << "\n";
+        break;
+    }
+    case 2:
+        std::cout << "Second\n";
+        break;
+}
+```
+
+Nå finnes `chosen` bare mellom krøllparentesene, så ingenting lekker inn i `case 2`. **Tommelfingerregel: i det øyeblikket en case deklarerer en variabel, pakk den case-en inn i `{}`.**
 
 ---
 

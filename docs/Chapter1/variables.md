@@ -18,16 +18,16 @@ The types you will use day-to-day:
 | `double` | decimal numbers (floating point)     | 8 bytes      | `3.14159`     |
 | `float`  | decimal numbers, less precision      | 4 bytes      | `3.14f`       |
 
-Prefer `int` for whole numbers and `double` for decimal numbers unless you have a specific reason to do otherwise (`float` for memory-constrained embedded code, for instance). Sizes are typical for desktop platforms; they can differ on microcontrollers.
+Prefer `int` for whole numbers and `double` for decimal numbers unless you have a specific reason to do otherwise (`float` for memory-constrained embedded code, for instance). Sizes are typical for desktop platforms; they can differ on microcontrollers. For a complete reference, see [cppreference's entry on Fundamental types](https://en.cppreference.com/w/cpp/language/types).
 
-The standard library adds a few more types you will use constantly. They are not "built in" but they are everywhere:
+The standard library adds a few more types you will use constantly in desktop C++. They are not "built in," but on the desktop they are everywhere:
 
 | Type          | Holds                       | Header        |
 |---------------|-----------------------------|---------------|
-| `std::string` | text; see [Strings reference](../strings.md)  | `<string>`    |
+| `std::string` | text; see [Strings](../strings.md)  | `<string>`    |
 | `std::vector` | a resizable list of values  | `<vector>`    |
 
-For a complete reference, see [cppreference's entry on Fundamental types](https://en.cppreference.com/w/cpp/language/types).
+On small microcontrollers these are often unavailable; there you use fixed-size arrays and buffers instead (see [Arduino vs. Desktop C++](../arduino_vs_desktop.md)).
 
 ---
 
@@ -89,7 +89,7 @@ std::vector<int>::iterator it = numbers.begin();
 auto it = numbers.begin();
 ```
 
-(`std::vector` and iterators are [Chapter 3](../Chapter3/standard_library.md) material — here they just supply a deliberately long type name, so the value of `auto` is obvious.)
+(You will meet `std::vector` shortly, in [Strings and Vectors](strings_and_vectors.md); its *iterators* are [Chapter 3](../Chapter3/standard_library.md) material. Here they just supply a deliberately long type name, so the value of `auto` is obvious.)
 
 `auto` lets the compiler deduce the type for you. It is not "dynamic typing"; the type is still fixed and checked at compile time. Use `auto` when the type is verbose or when the exact type does not matter to the reader; spell it out when the explicit type helps clarity.
 

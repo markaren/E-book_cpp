@@ -18,16 +18,16 @@ Typene du vil bruke til daglig:
 | `double` | desimaltall (flyttall)               | 8 byte           | `3.14159`     |
 | `float`  | desimaltall, mindre presisjon        | 4 byte           | `3.14f`       |
 
-Foretrekk `int` for heltall og `double` for desimaltall med mindre du har en spesifikk grunn til å gjøre noe annet (`float` for minnebegrenset innebygd kode, for eksempel). Størrelsene er typiske for skrivebordsplattformer; de kan være annerledes på mikrokontrollere.
+Foretrekk `int` for heltall og `double` for desimaltall med mindre du har en spesifikk grunn til å gjøre noe annet (`float` for minnebegrenset innebygd kode, for eksempel). Størrelsene er typiske for skrivebordsplattformer; de kan være annerledes på mikrokontrollere. For en komplett referanse, se [cppreference sin oppføring om fundamentale typer](https://en.cppreference.com/w/cpp/language/types).
 
-Standardbiblioteket legger til noen flere typer du vil bruke hele tiden. De er ikke "innebygde", men de er overalt:
+Standardbiblioteket legger til noen flere typer du vil bruke hele tiden på skrivebordet. De er ikke "innebygde", men på skrivebordet er de overalt:
 
 | Type          | Holder                      | Header        |
 |---------------|-----------------------------|---------------|
-| `std::string` | tekst; se [Strenger-referansen](../strings.md)  | `<string>`    |
+| `std::string` | tekst; se [Strenger](../strings.md)  | `<string>`    |
 | `std::vector` | en liste med verdier som kan endre størrelse  | `<vector>`    |
 
-For en komplett referanse, se [cppreference sin oppføring om fundamentale typer](https://en.cppreference.com/w/cpp/language/types).
+På små mikrokontrollere er disse ofte utilgjengelige; der bruker du arrays med fast størrelse og buffere i stedet (se [Arduino vs. desktop-C++](../arduino_vs_desktop.md)).
 
 ---
 
@@ -89,7 +89,7 @@ std::vector<int>::iterator it = numbers.begin();
 auto it = numbers.begin();
 ```
 
-(`std::vector` og iteratorer er stoff fra [kapittel 3](../Chapter3/standard_library.md) — her gir de bare et bevisst langt typenavn, så verdien av `auto` blir åpenbar.)
+(Du møter `std::vector` snart, i [Strenger og vektorer](strings_and_vectors.md); *iteratorene* dens er stoff fra [kapittel 3](../Chapter3/standard_library.md). Her gir de bare et bevisst langt typenavn, så verdien av `auto` blir åpenbar.)
 
 `auto` lar kompilatoren utlede typen for deg. Det er ikke "dynamisk typing"; typen er fortsatt fast og sjekkes ved kompilering. Bruk `auto` når typen er omstendelig eller når den nøyaktige typen ikke betyr noe for leseren; skriv den ut når den eksplisitte typen hjelper på klarheten.
 

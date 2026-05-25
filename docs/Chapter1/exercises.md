@@ -83,7 +83,49 @@ You have three test scores: `7`, `8`, and `10`. Print their average. Make sure i
 
 ---
 
-## 3. Even or odd
+## 3. Sensor readings
+
+*Practises: [Strings and Vectors](strings_and_vectors.md)*
+
+Store five sensor readings — `42, 17, 99, 8, 56` — in a `std::vector<int>`. Print how many there are, their average (as a decimal), and the largest.
+
+> Hint: loop over the vector to add up the values and track the biggest; `readings.size()` is the count.
+
+??? success "Show solution"
+
+    <div class="spoiler" markdown title="Click to reveal">
+
+    ```cpp
+    #include <iostream>
+    #include <vector>
+
+    int main() {
+        std::vector<int> readings = {42, 17, 99, 8, 56};
+
+        int sum = 0;
+        int largest = readings[0];
+        for (int r : readings) {
+            sum += r;
+            if (r > largest) {
+                largest = r;
+            }
+        }
+
+        double average = static_cast<double>(sum) / readings.size();
+
+        std::cout << "Count:   " << readings.size() << "\n";
+        std::cout << "Average: " << average << "\n";
+        std::cout << "Largest: " << largest << "\n";
+    }
+    ```
+
+    A range-based `for` visits every element: we add each to `sum` and keep the biggest seen so far. `static_cast<double>` keeps the division decimal (the integer-division rule again), and `readings.size()` gives the element count.
+
+    </div>
+
+---
+
+## 4. Even or odd
 
 *Practises: [Control Statements](control_statements.md)*
 
@@ -115,7 +157,7 @@ Use a `for` loop to print the numbers 1 to 10, labelling each one `even` or `odd
 
 ---
 
-## 4. Squares
+## 5. Squares
 
 *Practises: [Functions](functions.md)*
 
@@ -145,7 +187,7 @@ Write a function `int square(int n)` that returns `n * n` (you saw this exact fu
 
 ---
 
-## 5. Traffic light
+## 6. Traffic light
 
 *Practises: [Enumerations](enums.md)*
 

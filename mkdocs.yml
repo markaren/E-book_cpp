@@ -93,6 +93,7 @@ plugins:
             Basic Structure: Grunnstruktur
             Variables and Basic Types: Variabler og grunntyper
             Operators and Expressions: Operatorer og uttrykk
+            Strings and Vectors: Strenger og vektorer
             Control Statements: Kontrollstrukturer
             Functions: Funksjoner
             Enumerations: Enumerasjoner
@@ -155,6 +156,7 @@ nav:
     - Basic Structure: Chapter1/basic_structure.md
     - Variables and Basic Types: Chapter1/variables.md
     - Operators and Expressions: Chapter1/operators_expressions.md
+    - Strings and Vectors: Chapter1/strings_and_vectors.md
     - Control Statements: Chapter1/control_statements.md
     - Functions: Chapter1/functions.md
     - Enumerations: Chapter1/enums.md

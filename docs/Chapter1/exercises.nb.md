@@ -83,7 +83,49 @@ Du har tre prøvekarakterer: `7`, `8` og `10`. Skriv ut gjennomsnittet deres. S�
 
 ---
 
-## 3. Partall eller oddetall
+## 3. Sensoravlesninger
+
+*Øver på: [Strenger og vektorer](strings_and_vectors.md)*
+
+Lagre fem sensoravlesninger — `42, 17, 99, 8, 56` — i en `std::vector<int>`. Skriv ut hvor mange det er, gjennomsnittet deres (som et desimaltall), og det største.
+
+> Hint: gå gjennom vektoren for å summere verdiene og holde styr på det største; `readings.size()` er antallet.
+
+??? success "Vis løsning"
+
+    <div class="spoiler" markdown title="Klikk for å avsløre">
+
+    ```cpp
+    #include <iostream>
+    #include <vector>
+
+    int main() {
+        std::vector<int> readings = {42, 17, 99, 8, 56};
+
+        int sum = 0;
+        int largest = readings[0];
+        for (int r : readings) {
+            sum += r;
+            if (r > largest) {
+                largest = r;
+            }
+        }
+
+        double average = static_cast<double>(sum) / readings.size();
+
+        std::cout << "Count:   " << readings.size() << "\n";
+        std::cout << "Average: " << average << "\n";
+        std::cout << "Largest: " << largest << "\n";
+    }
+    ```
+
+    En områdebasert `for` besøker hvert element: vi legger hvert til `sum` og beholder det største som er sett så langt. `static_cast<double>` holder divisjonen desimal (heltallsdivisjon-regelen igjen), og `readings.size()` gir antallet elementer.
+
+    </div>
+
+---
+
+## 4. Partall eller oddetall
 
 *Øver på: [Kontrollstrukturer](control_statements.md)*
 
@@ -115,7 +157,7 @@ Bruk en `for`-løkke til å skrive ut tallene 1 til 10, og merk hvert enkelt som
 
 ---
 
-## 4. Kvadrater
+## 5. Kvadrater
 
 *Øver på: [Funksjoner](functions.md)*
 
@@ -145,7 +187,7 @@ Skriv en funksjon `int square(int n)` som returnerer `n * n` (du så akkurat den
 
 ---
 
-## 5. Trafikklys
+## 6. Trafikklys
 
 *Øver på: [Enumerasjoner](enums.md)*
 

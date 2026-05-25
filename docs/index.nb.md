@@ -4,8 +4,8 @@ Velkommen til e-boken for emnet [AIS1003 — Objektorientert programmering med C
 
 Bruk sidemenyen til å navigere mellom kapitlene, eller hopp rett til et emne med søkefeltet øverst. Ny her? Begynn med [Kom i gang](getting_started.md), og deretter [Introduksjonen](Chapter1/introduction.md). Hvis filer, stier, terminalen og `PATH` er ukjent terreng, les også [Datamaskingrunnlag](computer_basics.md) — den dekker grunnlaget som resten av boken bygger på.
 
-!!! note "Merk"
-    Boken er på et tidlig utviklingsstadium. Betrakt den som en forhåndsvisning.
+!!! note "Om oversettelsen"
+    Denne boken er bare delvis oversatt til norsk (bokmål). Ikke alt er oversatt ennå — sider som ennå ikke er oversatt, vises på engelsk. Bytt språk med velgeren i menylinjen øverst.
 
 ## Flere ressurser
 

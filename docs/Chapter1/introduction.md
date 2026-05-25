@@ -76,7 +76,7 @@ You will hear that C++ is a "difficult" language. There is truth to that: it giv
 
 Two properties of C++ shape how you write it.
 
-**Compiled.** Your source code is translated to machine code *once*, ahead of time, by the compiler. The program does not run until compilation succeeds. This means many bugs (typos, type mismatches, missing semicolons) are caught before the program ever executes. Compare this to Python, which runs your code line-by-line and only discovers a typo on line 200 when execution reaches line 200.
+**Compiled.** Your source code is translated to machine code *once*, ahead of time, by the compiler. The program does not run until compilation succeeds. This means many bugs (typos, type mismatches, missing semicolons) are caught before the program ever executes. Compare this to Python, where a misspelled name or a type mismatch is not discovered until the program actually runs that line — so a mistake sitting on line 200 stays hidden until execution reaches it.
 
 **Statically typed.** Every variable has a fixed type that you declare up front:
 

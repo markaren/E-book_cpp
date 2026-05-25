@@ -76,7 +76,7 @@ Du vil høre at C++ er et "vanskelig" språk. Det er noe sant i det: det gir deg
 
 To egenskaper ved C++ former hvordan du skriver det.
 
-**Kompilert.** Kildekoden din oversettes til maskinkode *én gang*, på forhånd, av kompilatoren. Programmet kjører ikke før kompileringen lykkes. Det betyr at mange feil (skrivefeil, typefeil, manglende semikolon) fanges opp før programmet i det hele tatt kjøres. Sammenlign dette med Python, som kjører koden din linje for linje og først oppdager en skrivefeil på linje 200 når kjøringen når linje 200.
+**Kompilert.** Kildekoden din oversettes til maskinkode *én gang*, på forhånd, av kompilatoren. Programmet kjører ikke før kompileringen lykkes. Det betyr at mange feil (skrivefeil, typefeil, manglende semikolon) fanges opp før programmet i det hele tatt kjøres. Sammenlign dette med Python, der et feilstavet navn eller en typefeil ikke oppdages før programmet faktisk kjører den linjen — så en feil på linje 200 forblir skjult helt til kjøringen kommer dit.
 
 **Statisk typet.** Hver variabel har en fast type som du oppgir på forhånd:
 

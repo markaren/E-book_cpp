@@ -2,9 +2,9 @@
 
 Welcome to the E-book for the course [AIS1003](https://www.ntnu.no/studier/emner/AIS1003#tab=omEmnet).
 
-**Read online: [markaren.github.io/E-book_cpp](https://markaren.github.io/E-book_cpp/)**
+This book covers an introduction to modern C++ & software engineering fundamentals.
 
-> Note. The book is in an early state of development. Consider it a preview.
+**Read online: [markaren.github.io/E-book_cpp](https://markaren.github.io/E-book_cpp/)**
 
 ### Additional resources
 

@@ -109,6 +109,23 @@ Out of the box, your operating system hides some of this from you — file exten
 
 To switch both on — **Windows 11:** in File Explorer, open the **View → Show** menu and tick **File name extensions** and **Hidden items** (on Windows 10, use the **View** ribbon tab and the checkboxes of the same name). **macOS:** Finder hides them too — show extensions under **Finder → Settings → Advanced → Show all filename extensions**, and toggle hidden files with **⌘ + Shift + .** (the period key).
 
+### Zipped folders: `.zip` and `.tar.gz` {#archives}
+
+A whole folder — many files and subfolders at once — is often bundled into a **single file** that is easy to download or send, and usually **compressed** so it takes less space. This is an **archive**. You meet them constantly: a library or SDK you download, example code, or an assignment you hand in tends to arrive as one `.zip` or `.tar.gz` file.
+
+- **`.zip`** is the universal format; Windows and macOS open and create it with no extra software.
+- **`.tar.gz`** (sometimes `.tgz`) is the same idea from the Unix world, common for source code and Linux tools. The double extension reflects two stacked steps: `tar` bundles the folder into one file (a "tarball"), then `gzip` compresses it.
+
+**The trap: an archive is not a folder until you extract it.** On Windows, double-clicking a `.zip` opens a window that *looks* just like an ordinary folder — but the files are still locked inside. If you build or run a program from that preview, it acts on a hidden temporary copy: your edits vanish and builds fail because the tools cannot find the neighbouring files. **Always extract first**, then work in the extracted folder — and extract to a short, plain path, for the [reasons above](#keep-paths-short-simple-and-plain).
+
+To extract:
+
+- **Windows:** right-click the file → **Extract All…**, then choose a destination.
+- **macOS:** double-click it; the extracted folder appears beside it.
+- **In a terminal** (covered next): `tar -xzf archive.tar.gz` extracts a `.tar.gz` on Windows, macOS, and Linux alike. For a `.zip`, use `Expand-Archive archive.zip` in PowerShell, or `unzip archive.zip` on macOS and Linux.
+
+To go the other way and *make* an archive — say, to submit your code — right-click the folder (**Compress** on macOS, **Compress to ZIP file** on Windows), or run `tar -czf myproject.tar.gz myproject/`.
+
 ---
 
 ## The terminal
@@ -185,6 +202,7 @@ So that error almost always means one of two things: the program is **not instal
 
 - Keep projects in a **short, plain path** near the drive root (`C:\dev\…`), not a deep folder full of spaces and Norwegian letters.
 - **Show file extensions and hidden files** in your file manager — a programmer needs to see `main.cpp`, `.git`, and `.gitignore` for what they are.
+- An **archive** (`.zip`, `.tar.gz`) is not a folder until you **extract** it — unzip to a real folder before building or editing, and never work inside the preview window.
 - In C++ code, write paths with **forward slashes** (`"C:/dev"`) or escape the backslashes (`"C:\\dev"`).
 - A program reads and writes relative paths (like `"report.txt"`) from its **working directory** — which your IDE often sets to the build folder, not your project folder.
 - The **terminal** is worth learning: most tools live there, and it shows you the real errors.

@@ -109,6 +109,23 @@ Rett ut av boksen skjuler operativsystemet noe av dette for deg — filendelser,
 
 For å skru på begge — **Windows 11:** i Filutforsker, åpne menyen **Vis → Vis** (*View → Show*) og huk av **Filnavnutvidelser** og **Skjulte elementer** (på Windows 10 bruker du **Vis**-fanen i båndet og avkrysningsboksene med samme navn). **macOS:** Finder skjuler dem også — vis endelser under **Finder → Innstillinger → Avansert → Vis alle filnavnutvidelser**, og veksle skjulte filer med **⌘ + Shift + .** (punktum-tasten).
 
+### Komprimerte mapper: `.zip` og `.tar.gz` {#archives}
+
+En hel mappe — mange filer og undermapper på én gang — pakkes ofte sammen til en **enkelt fil** som er lett å laste ned eller sende, og som regel **komprimert** så den tar mindre plass. Dette er et **arkiv**. Du møter dem hele tiden: et bibliotek eller en SDK du laster ned, eksempelkode, eller en innlevering du leverer, kommer gjerne som én `.zip`- eller `.tar.gz`-fil.
+
+- **`.zip`** er det universelle formatet; Windows og macOS åpner og lager det uten ekstra programvare.
+- **`.tar.gz`** (av og til `.tgz`) er den samme ideen fra Unix-verdenen, vanlig for kildekode og Linux-verktøy. Den doble endelsen gjenspeiler to trinn stablet oppå hverandre: `tar` pakker mappa sammen til én fil (en "tarball"), og så komprimerer `gzip` den.
+
+**Fella: et arkiv er ikke en mappe før du pakker det ut.** På Windows åpner et dobbeltklikk på en `.zip` et vindu som *ser ut* akkurat som en vanlig mappe — men filene er fortsatt låst inni. Hvis du bygger eller kjører et program fra den forhåndsvisningen, jobber det på en skjult midlertidig kopi: endringene dine forsvinner, og byggingen feiler fordi verktøyene ikke finner nabofilene. **Pakk alltid ut først**, og jobb så i den utpakkede mappa — og pakk ut til en kort, ren sti, av [grunnene over](#hold-stier-korte-enkle-og-rene).
+
+For å pakke ut:
+
+- **Windows:** høyreklikk fila → **Pakk ut alle…** (*Extract All…*), og velg et mål.
+- **macOS:** dobbeltklikk den; den utpakkede mappa dukker opp ved siden av.
+- **I en terminal** (kommer straks): `tar -xzf archive.tar.gz` pakker ut en `.tar.gz` på både Windows, macOS og Linux. For en `.zip`, bruk `Expand-Archive archive.zip` i PowerShell, eller `unzip archive.zip` på macOS og Linux.
+
+For å gå andre veien og *lage* et arkiv — for eksempel for å levere koden din — høyreklikk mappa (**Komprimer** på macOS, **Komprimer til ZIP-fil** på Windows), eller kjør `tar -czf myproject.tar.gz myproject/`.
+
 ---
 
 ## Terminalen
@@ -185,6 +202,7 @@ Så den feilen betyr nesten alltid én av to ting: programmet er **ikke installe
 
 - Hold prosjekter i en **kort, ren sti** nær rota av disken (`C:\dev\…`), ikke en dyp mappe full av mellomrom og norske bokstaver.
 - **Vis filendelser og skjulte filer** i filbehandleren — en programmerer må se `main.cpp`, `.git` og `.gitignore` for det de er.
+- Et **arkiv** (`.zip`, `.tar.gz`) er ikke en mappe før du **pakker det ut** — pakk ut til en ekte mappe før du bygger eller redigerer, og jobb aldri inni forhåndsvisningsvinduet.
 - I C++-kode, skriv stier med **vanlige skråstreker** (`"C:/dev"`) eller escape de omvendte skråstrekene (`"C:\\dev"`).
 - Et program leser og skriver relative stier (som `"report.txt"`) fra **arbeidskatalogen** sin — som IDE-en ofte setter til byggemappa, ikke prosjektmappa.
 - **Terminalen** er verdt å lære: de fleste verktøy bor der, og den viser deg de egentlige feilene.

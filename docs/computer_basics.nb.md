@@ -18,11 +18,27 @@ Større verdier bruker bare flere byte:
 |-------|-----------|---------|
 | **bit** | `0` eller `1` | én av/på-bryter |
 | **byte** | 8 bits | ett tegn, eller et tall 0–255 |
-| **kilobyte** (KB) | ~1 000 byte | en side med ren tekst |
-| **megabyte** (MB) | ~1 000 KB | et bilde eller en sang |
+| **kilobyte** (kB) | ~1 000 byte | en side med ren tekst |
+| **megabyte** (MB) | ~1 000 kB | et bilde eller en sang |
 | **gigabyte** (GB) | ~1 000 MB | en film; datamaskinens RAM måles i disse |
 
 Det er derfor hver type i C++ har en **størrelse**. En `bool` trenger bare én byte; en `int` er vanligvis fire byte (32 bits); en `double` er åtte. Størrelsen setter en hard grense for hva som får plass: en 32-bits `int` kan telle til omtrent ±2 milliarder, og går du forbi det, **renner den over** (overflow) og ruller rundt. Det er også derfor en mikrokontroller med bare noen få **kilobyte** minne (se [Arduino vs. desktop-C++](arduino_vs_desktop.md)) tvinger fram en nøysomhet som en datamaskin med gigabyte ikke gjør. De nøyaktige typestørrelsene står i [Variabler og grunntyper](Chapter1/variables.md).
+
+### Kilobyte eller kibibyte? (1000 vs. 1024) {#binary-prefixes}
+
+Disse `~`-tegnene over skjuler en hake det er verdt å få riktig. "Kilo" betyr normalt nøyaktig 1000, men datamaskiner teller i toerpotenser, og det nærmeste runde binærtallet til 1000 er **1024** (2 opphøyd i 10). Derfor er to litt forskjellige systemer i bruk:
+
+| Desimal (SI) | Byte | Binær (IEC) | Byte |
+|--------------|------|-------------|------|
+| kilobyte (kB) | 1 000 | **kibi**byte (KiB) | 1 024 |
+| megabyte (MB) | 1 000 000 | **mebi**byte (MiB) | 1 048 576 |
+| gigabyte (GB) | 1 000 000 000 | **gibi**byte (GiB) | 1 073 741 824 |
+
+De to er nesten like i det små (1 000 mot 1 024), men glir fra hverandre etter hvert som de vokser — omtrent 7 % ved gigabyte. Dette er ikke pedanteri; det dukker opp på din egen maskin:
+
+- **Minne er binært.** RAM og minnet i en mikrokontroller adresseres i toerpotenser, så en "8 GB"-brikke rommer egentlig 8 × 1 073 741 824 byte, og en brikkes "2 KB" SRAM er 2 × 1024 = 2 048 byte.
+- **Lagring selges i desimal.** En "1 TB"-disk rommer 1 000 000 000 000 byte. Operativsystemet ditt måler den så binært, men skriver fortsatt etiketten "GB", så den samme disken vises som bare ~931 GB — plassen forsvant ikke; de to systemene er bare uenige om hva "giga" betyr.
+- De entydige binærenhetene **KiB, MiB, GiB** ble innført for å rydde opp i dette. De er de teknisk korrekte, men dagligtale — og Windows — sier fortsatt "KB/MB/GB" selv når det er den binære mengden som menes.
 
 ### Tekst og ASCII {#ascii}
 

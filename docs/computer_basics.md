@@ -18,11 +18,27 @@ Larger values simply use more bytes:
 |------|------|---------------------|
 | **bit** | `0` or `1` | one on/off switch |
 | **byte** | 8 bits | one character, or a number 0–255 |
-| **kilobyte** (KB) | ~1 000 bytes | a page of plain text |
-| **megabyte** (MB) | ~1 000 KB | a photo or a song |
+| **kilobyte** (kB) | ~1 000 bytes | a page of plain text |
+| **megabyte** (MB) | ~1 000 kB | a photo or a song |
 | **gigabyte** (GB) | ~1 000 MB | a movie; your computer's RAM is measured in these |
 
 This is why every type in C++ has a **size**. A `bool` needs just one byte; an `int` is usually four bytes (32 bits); a `double` is eight. The size sets a hard limit on what fits: a 32-bit `int` can count to roughly ±2 billion, and pushing past that makes it **overflow** and wrap around. It is also why a microcontroller with only a few **kilobytes** of memory (see [Arduino vs. Desktop C++](arduino_vs_desktop.md)) forces a frugality that a desktop with gigabytes does not. The exact type sizes are in [Variables and Basic Types](Chapter1/variables.md).
+
+### Kilobyte or kibibyte? (1000 vs. 1024) {#binary-prefixes}
+
+Those `~` signs above hide a catch worth getting right. "Kilo" normally means exactly 1000, but computers count in powers of two, and the nearest round binary number to 1000 is **1024** (2 to the power of 10). Two slightly different systems are therefore in use:
+
+| Decimal (SI) | Bytes | Binary (IEC) | Bytes |
+|--------------|-------|--------------|-------|
+| kilobyte (kB) | 1 000 | **kibi**byte (KiB) | 1 024 |
+| megabyte (MB) | 1 000 000 | **mebi**byte (MiB) | 1 048 576 |
+| gigabyte (GB) | 1 000 000 000 | **gibi**byte (GiB) | 1 073 741 824 |
+
+The two agree closely at the small end (1 000 vs 1 024) but drift apart as they grow — about 7% by the gigabyte. This is not pedantry; it shows up on your own machine:
+
+- **Memory is binary.** RAM and a microcontroller's memory are addressed in powers of two, so an "8 GB" stick really holds 8 × 1 073 741 824 bytes, and a chip's "2 KB" of SRAM is 2 × 1024 = 2 048 bytes.
+- **Storage is sold in decimal.** A "1 TB" drive holds 1 000 000 000 000 bytes. Your operating system then measures it in binary but still prints the label "GB", so the same drive shows up as only ~931 GB — the space did not vanish; the two systems just disagree on what "giga" means.
+- The unambiguous binary units **KiB, MiB, GiB** were invented to settle this. They are the technically correct ones, but everyday usage — and Windows — still says "KB/MB/GB" even when it means the binary amount.
 
 ### Text and ASCII {#ascii}
 

@@ -116,6 +116,11 @@ plugins:
             Observer Pattern: Observatør-mønsteret
             Error Handling: Feilhåndtering
             Testing: Testing
+            Tank Control System: Tankreguleringssystem
+            "Version 1 — Classes & Loop": "Versjon 1 — Klasser og løkke"
+            "Version 2 — Sensors & Polymorphism": "Versjon 2 — Sensorer og polymorfisme"
+            "Version 3 — PID & Composition": "Versjon 3 — PID og komposisjon"
+            "Version 4 — A Real Project": "Versjon 4 — Et ekte prosjekt"
             Capstone Project: Prosjekt
             Reference: Referanse
             Coming from Python: Fra Python
@@ -188,6 +193,11 @@ nav:
     - Error Handling: Chapter6/error_handling.md
     - Testing: Chapter6/testing.md
     - Exercises: Chapter6/exercises.md
+  - Tank Control System:
+    - Version 1 — Classes & Loop: tank_control/v1_classes.md
+    - Version 2 — Sensors & Polymorphism: tank_control/v2_sensors.md
+    - Version 3 — PID & Composition: tank_control/v3_pid.md
+    - Version 4 — A Real Project: tank_control/v4_project.md
   - Capstone Project: capstone.md
   - Reference:
     - Coming from Python: python_to_cpp.md

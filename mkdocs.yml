@@ -121,6 +121,7 @@ plugins:
             "Version 2 — Sensors & Polymorphism": "Versjon 2 — Sensorer og polymorfisme"
             "Version 3 — PID & Composition": "Versjon 3 — PID og komposisjon"
             "Version 4 — A Real Project": "Versjon 4 — Et ekte prosjekt"
+            "Version 5 — Tests": "Versjon 5 — Tester"
             Capstone Project: Prosjekt
             Reference: Referanse
             Coming from Python: Fra Python
@@ -198,6 +199,7 @@ nav:
     - Version 2 — Sensors & Polymorphism: tank_control/v2_sensors.md
     - Version 3 — PID & Composition: tank_control/v3_pid.md
     - Version 4 — A Real Project: tank_control/v4_project.md
+    - Version 5 — Tests: tank_control/v5_tests.md
   - Capstone Project: capstone.md
   - Reference:
     - Coming from Python: python_to_cpp.md

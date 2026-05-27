@@ -356,6 +356,52 @@ For a more elaborate convention used in larger industry projects, see [the Pitch
 
 ---
 
+## Splitting the build across folders
+
+As a project grows, one big `CMakeLists.txt` at the top becomes hard to read. The fix is to give each folder its **own** `CMakeLists.txt` and have the top-level file pull them in with **`add_subdirectory`**:
+
+```cmake
+# top-level CMakeLists.txt
+cmake_minimum_required(VERSION 3.16)
+project(my_project)
+
+set(CMAKE_CXX_STANDARD 20)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+
+add_subdirectory(src)      # the library
+add_subdirectory(app)      # the application that uses it
+add_subdirectory(tests)    # the tests
+```
+
+`add_subdirectory(src)` means "there is another `CMakeLists.txt` in `src/` — go and run it." Each subfolder then defines its own targets, with the **library** and the **application** kept in separate folders:
+
+```cmake
+# src/CMakeLists.txt
+add_library(my_lib motor.cpp sensor.cpp)
+target_include_directories(my_lib PUBLIC ${CMAKE_SOURCE_DIR}/include)
+```
+
+```cmake
+# app/CMakeLists.txt
+add_executable(app main.cpp)
+target_link_libraries(app PRIVATE my_lib)
+```
+
+```cmake
+# tests/CMakeLists.txt
+add_executable(tests test_motor.cpp)
+target_link_libraries(tests PRIVATE my_lib)   # the library defined over in src/
+```
+
+Two things make this work:
+
+- **Targets are visible across folders.** `my_lib` is created in `src/`, yet `app/` and `tests/` can link it — because `add_subdirectory(src)` ran first. Order matters: pull in `src` before the folders that use it.
+- **`${CMAKE_SOURCE_DIR}`** is the top-level project folder, so `${CMAKE_SOURCE_DIR}/include` finds the shared headers from any subfolder.
+
+The pay-off: each folder's build sits next to its code, and the top-level file becomes a short table of contents. The [Tank Control System](../tank_control/v5_tests.md) worked example uses exactly this layout once it grows a test suite.
+
+---
+
 ## Summary
 
 - `CMakeLists.txt` describes your project; CMake turns the description into platform-specific build files.
@@ -365,6 +411,7 @@ For a more elaborate convention used in larger industry projects, see [the Pitch
 - Add more source files by listing them in `add_executable`. Headers do not need to be listed.
 - Use `target_include_directories` when headers live in a separate folder.
 - Use `add_library` and `target_link_libraries` once you have code shared between executables.
+- Split a large build across folders by giving each its own `CMakeLists.txt` and wiring them together with `add_subdirectory`.
 - Libraries are **static** by default — baked into the executable, nothing to ship; prefer that, and reach for a **shared** library (`.dll`/`.so`) only when you need it (and then the program must find it at run time).
 - Keep build artefacts in a separate `build/` folder; ignore it in git.
 - Pick a **build configuration** with `-DCMAKE_BUILD_TYPE` (or CLion's selector): **Debug** to develop and debug, **Release** to measure and ship.

@@ -33,6 +33,7 @@ tank-control/
 
 `Tank` shows the pattern. The header **declares** it; short functions (the getter) stay inline, the longer one moves to the source file:
 
+<!-- no-ce -->
 ```cpp
 // include/tank.hpp
 #pragma once
@@ -47,6 +48,7 @@ public:
 };
 ```
 
+<!-- no-ce -->
 ```cpp
 // src/tank.cpp
 #include "tank.hpp"
@@ -78,6 +80,7 @@ The **interfaces** (`Sensor`, `Controller`) are pure declarations with no bodies
 
 `main.cpp` includes the headers it needs and is otherwise the loop from Version 3:
 
+<!-- no-ce -->
 ```cpp
 // src/main.cpp
 #include <iostream>
@@ -141,24 +144,6 @@ Header-only classes are not listed in `add_executable` — only `.cpp` files are
 
 ---
 
-## Make it your own
+## What's still missing → Version 5
 
-You now have a clean skeleton — a plant, a sensor, a controller, and a loop, separated well enough that any one can change without disturbing the others. That is exactly what makes the following additions *additions* rather than rewrites. Pick a few:
-
-**Beginner**
-
-- A high-level **alarm** that warns when the level crosses a limit.
-- **Overflow protection** — cap the tank and report when it would have spilled.
-- **Sensor noise** — a `NoisyLevelSensor` that adds a small wobble, to see how the controller copes.
-- A **manual mode** — a controller that follows a fixed opening you set, ignoring the level.
-
-**Intermediate**
-
-- **Tune the PID** and compare the curves you logged.
-- A **second tank**, fed by the first (cascaded levels).
-- A **state machine** for the process: *Filling → Holding → Draining → Fault*.
-- **Log to a file** with `std::ofstream` instead of the console.
-
-The same plant–sensor–controller–loop skeleton fits other systems too: an **elevator** (with a state machine and a request queue) or a **conveyor sorter** (event-driven, with detectors and actuators) make natural next projects.
-
-You have built, in miniature, the architecture of real control software — and grown it the way real software grows: one motivated step at a time.
+The project builds and runs, but nothing checks that it is *correct*: flip a sign in `Tank::update` and you would only notice by squinting at the output. Real projects guard their components with **tests**. [Version 5](v5_tests.md) adds a Catch2 test suite — and, now that there are two things to build (the program *and* its tests, sharing the same components), splits the build across folders the grown-up way.

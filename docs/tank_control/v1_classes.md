@@ -2,7 +2,7 @@
 
 Almost all automation software has the same shape: **read the world, decide, act, repeat.** Over four short versions we will build that shape around a problem every automation engineer recognises — keeping the level of a water tank at a target — and grow it into a small but real piece of control software.
 
-This is a *worked example*, not new language material. It assumes you have read Chapters 1–6; each version points back to where its ideas are taught. Read it, type it, run it, then take it further with the [project ideas](v4_project.md#make-it-your-own) at the end.
+This is a *worked example*, not new language material. It assumes you have read Chapters 1–6; each version points back to where its ideas are taught. Read it, type it, run it, then take it further with the [project ideas](v5_tests.md#make-it-your-own) at the end.
 
 The physical system and its software counterparts — this direct mapping is what makes object-oriented code feel useful rather than abstract:
 

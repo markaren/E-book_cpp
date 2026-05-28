@@ -138,6 +138,7 @@ plugins:
             Recursion: Rekursjon
             Building a Tree: Bygge et tre
             Floating-Point Pitfalls: Flyttall-fallgruver
+            Random Numbers: Tilfeldige tall
             Common Terms: Vanlige begreper
             FAQ: Ofte stilte spørsmål
 
@@ -214,6 +215,7 @@ nav:
     - Recursion: recursion.md
     - Building a Tree: building_a_tree.md
     - Floating-Point Pitfalls: floating_point.md
+    - Random Numbers: random.md
     - Common Terms: terms.md
     - FAQ: faq.md
 

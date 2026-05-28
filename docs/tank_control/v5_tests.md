@@ -201,7 +201,7 @@ You now have a clean, tested skeleton — a plant, a sensor, a controller, a loo
 
 - A high-level **alarm** that warns when the level crosses a limit.
 - **Overflow protection** — cap the tank and report when it would have spilled.
-- **Sensor noise** — a `NoisyLevelSensor` that adds a small wobble, to see how the controller copes.
+- **Sensor noise** — a `NoisyLevelSensor` that adds a small wobble (see [Random Numbers](../random.md)), to see how the controller copes.
 - A **manual mode** — a controller that follows a fixed opening you set, ignoring the level.
 
 **Intermediate**

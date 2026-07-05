@@ -33,16 +33,24 @@ Three parts you always want to find:
 
 A single mistake often generates several error messages, because once the compiler is confused it stays confused for a while. Always **fix the first error first**, then rebuild. Many of the later errors will vanish on their own.
 
-A common pattern:
+For example, forgetting `#include <vector>` in a program that uses `std::vector` makes GCC report three errors from that one omission:
 
 ```
-main.cpp:14:18: error: expected ';' after expression
-main.cpp:15:5:  error: use of undeclared identifier 'std'
-main.cpp:15:23: error: expected ';' after expression
-main.cpp:18:1:  error: extraneous closing brace ('}')
+main.cpp: In function 'int main()':
+main.cpp:4:10: error: 'vector' is not a member of 'std'
+    4 |     std::vector<int> readings = {10, 20, 30};
+      |          ^~~~~~
+main.cpp:4:10: note: 'std::vector' is defined in header '<vector>';
+                     did you forget to '#include <vector>'?
+main.cpp:4:17: error: expected primary-expression before 'int'
+    4 |     std::vector<int> readings = {10, 20, 30};
+      |                 ^~~
+main.cpp:5:5: error: 'readings' was not declared in this scope
+    5 |     readings.push_back(40);
+      |     ^~~~~~~~
 ```
 
-Four errors, one mistake: a missing semicolon on line 14 cascading into confusion about everything after it. Fix that semicolon and rebuild before doing anything else.
+Three errors, one mistake: the missing header means `std::vector` is unknown, so `readings` never gets declared, so the line that *uses* `readings` fails too. Fix the first error — add `#include <vector>` — and rebuild; the other two vanish with it. (Notice the `note:` line even tells you which header to add — the compiler is often more helpful than the wall of red suggests.)
 
 ---
 
@@ -84,11 +92,7 @@ A `{` somewhere does not have a matching `}`. The line number is often the very 
 
 ### `redefinition of '...'`
 
-You defined the same thing twice. Common causes:
-
-1. Two `.cpp` files implementing the same function.
-2. A header included from two places, without `#pragma once` or a header guard.
-3. Defining a function in a header without marking it `inline` (it gets compiled into every file that includes the header).
+You defined the same thing twice *within one file*, so the **compiler** rejects it. The usual cause is a header, without `#pragma once` or a header guard, being pasted into the same file twice (often because one header `#include`s another that you also include directly). Add `#pragma once` to the header. (Defining the same thing across *different* files is a different, linker-stage error — see [`multiple definition of ...`](#linker-errors-undefined-reference-to-and-multiple-definition-of) below.)
 
 ### `'X' was not declared in this scope`
 
@@ -119,9 +123,11 @@ x = 10;                     // expression is not assignable
 if (x = 5) { }              // also a warning, see below
 ```
 
-### Linker errors: `undefined reference to ...`
+### Linker errors: `undefined reference to ...` and `multiple definition of ...`
 
-Different from compile errors: these come from the **linker**, the next stage of the build. The compiler accepted your code, but when it came time to assemble the final program, it could not find the implementation of something:
+Different from compile errors: these come from the **linker**, the next stage of the build. The compiler accepted each file on its own, but when it came time to assemble the final program, the pieces did not fit together — either something is missing, or something is defined too many times.
+
+**`undefined reference to ...`** — the linker cannot find the implementation of something you use:
 
 ```
 undefined reference to `Motor::start()'
@@ -132,6 +138,17 @@ Usual causes:
 1. **You declared a function but never defined it** (declaration in a header, no implementation in any `.cpp`).
 2. **The `.cpp` containing the implementation is not in your `CMakeLists.txt`.**
 3. **You forgot to link against a library** (`target_link_libraries` missing).
+
+**`multiple definition of ...`** — the opposite problem: the same thing is defined in more than one `.cpp`, so the linker sees two copies and cannot choose:
+
+```
+multiple definition of `add(int, int)'; first defined here
+```
+
+Usual causes:
+
+1. **Two `.cpp` files implement the same function.**
+2. **A function is *defined* in a header without being marked `inline`** — every `.cpp` that includes the header gets its own copy. Either mark the function `inline`, or move the definition into a single `.cpp` and leave only its declaration in the header.
 
 Linker errors do *not* include line numbers in your source; they refer to symbols.
 
@@ -182,19 +199,16 @@ int main() {
 }
 ```
 
-And get:
+And GCC reports:
 
 ```
-main.cpp:5:5: error: use of undeclared identifier 'std'
-    std::cout << x << "\n";
-    ^
-main.cpp:4:13: error: expected ';' after expression
-    int x = 5
-            ^
-            ;
+main.cpp: In function 'int main()':
+main.cpp:5:5: error: expected ',' or ';' before 'std'
+    5 |     std::cout << x << "\n";
+      |     ^~~
 ```
 
-Two errors. The first says line 5 has an "undeclared identifier `std`", which is nonsense because `std` is declared by the `#include`. That is the giveaway: the compiler is so confused that obvious things have stopped making sense. Always look at the *first* error first. The second message points at line 4, which is missing its semicolon. Add the semicolon, recompile, and both errors disappear.
+One error — and it points at **line 5**, the `std::cout` line, even though the real mistake is on **line 4**: the `int x = 5` has no semicolon. This is the classic missing-semicolon trap. The compiler read `int x = 5` and kept going, expecting the statement to continue; only when it hit `std` on the next line did it realise something was wrong — so *that* is the line it blames. **Always check the line above the one the error points to.** Add the semicolon after `5`, recompile, and the error disappears.
 
 Once you have done this five or six times, you will start fixing missing semicolons before the compiler even finishes complaining about them.
 

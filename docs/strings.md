@@ -18,7 +18,7 @@ std::string d(5, 'a');                  // "aaaaa"
 std::string e = std::to_string(42);     // "42" (convert a number)
 ```
 
-A bare string literal in your source code (`"hello"`) is technically a `const char[]`, not a `std::string`. In most contexts it converts implicitly, but for the cases where it does not, you can force it:
+A bare string literal in your source code (`"hello"`) is technically an array of `const char` — a `const char[6]` here, five letters plus a hidden null terminator — not a `std::string`. Used in most contexts that array *decays* to a `const char*` (a pointer to its first character), and it converts implicitly to `std::string`; for the cases where it does not, you can force it:
 
 ```cpp
 auto x = std::string{"hello"};      // explicit construction
@@ -135,7 +135,19 @@ std::string b = std::format("{:>8}", 42);         // "      42" (right-aligned)
 std::string c = std::format("{:#x}", 255);        // "0xff"
 ```
 
-`std::stoi` and friends throw an *exception* if the input is not a number. Until you have met [Error Handling](Chapter6/error_handling.md), check the input is valid first; afterwards you can wrap the call in `try`/`catch`.
+`std::stoi` and friends throw an *exception* if the input is not a number. Until you have met [Error Handling](Chapter6/error_handling.md), only call it on text you know is numeric — either text your own program produced, or text you have checked first:
+
+```cpp
+#include <algorithm>
+#include <cctype>
+
+auto isDigit = [](char c) { return std::isdigit(static_cast<unsigned char>(c)); };
+if (!s.empty() && std::ranges::all_of(s, isDigit)) {
+    int n = std::stoi(s);   // safe: every character is a digit
+}
+```
+
+(This handles plain unsigned integers; a leading `-` or `+` would need a little more. Afterwards you can drop the check and wrap the call in `try`/`catch` instead.)
 
 ---
 
@@ -154,29 +166,9 @@ The comparison is byte-by-byte. It is case-sensitive (`"Apple" != "apple"`) and 
 
 ---
 
-## `std::string` and `const char*`
-
-The C-style "string" is a pointer to a null-terminated array of characters. You will see them in two places:
-
-1. **String literals** in your code. `"hello"` is a `const char*`.
-2. **Old C APIs.** Many libraries (especially embedded ones) take `const char*` parameters.
-
-`std::string` converts to and from these freely:
-
-```cpp
-const char* literal = "hello";
-std::string s = literal;                 // implicit construction
-
-const char* cstr = s.c_str();             // explicit conversion back
-```
-
-`s.c_str()` returns a pointer to the string's internal buffer with a null terminator. It is valid only as long as `s` is alive and unmodified.
-
----
-
 ## Common pitfalls
 
-**Modifying through `c_str()`.** The pointer returned by `c_str()` is `const`. Do not cast away the const and write through it; the result is undefined behaviour.
+**Modifying through `c_str()`.** The pointer returned by `c_str()` points to `const` characters — you may read them but not write them. Do not cast away the const and write through it; the result is undefined behaviour.
 
 **Comparing with a `const char*` and getting nonsense.**
 
@@ -200,3 +192,26 @@ Wrap one side in `std::string` to force a value comparison: `if (std::string(a) 
 - For combining many pieces of mixed types, `std::format` reads cleaner than chained `+=` or `std::ostringstream`.
 - `find` returns `std::string::npos` when nothing is found.
 - `c_str()` gives you a `const char*` for C APIs.
+
+---
+
+## `std::string` and `const char*`
+
+!!! note "Uses pointers — Chapter 4"
+    This last section talks about **pointers**, which are covered in [Values, References & Pointers](Chapter4/types_refs_ptrs.md). You can skip it until then; nothing earlier on this page depends on it.
+
+The C-style "string" is a null-terminated array of characters, usually handed around as a `const char*` — a pointer to its first character. You will meet them in two places:
+
+1. **String literals** in your code. `"hello"` is an array of `const char` that decays to a `const char*` when you use it as one.
+2. **Old C APIs.** Many libraries (especially embedded ones) take `const char*` parameters.
+
+`std::string` converts to and from these freely:
+
+```cpp
+const char* literal = "hello";
+std::string s = literal;                 // implicit construction
+
+const char* cstr = s.c_str();             // explicit conversion back
+```
+
+`s.c_str()` returns a pointer to the string's internal buffer with a null terminator. It is valid only as long as `s` is alive and unmodified.

@@ -88,6 +88,14 @@ Whenever you see angle brackets in C++, you are looking at a template being inst
 
 ---
 
+## Templates live in the header
+
+[Classes](../Chapter4/classes.md#splitting-the-declaration-and-the-implementation) taught you to split an ordinary class into a `.hpp` (declarations) and a `.cpp` (definitions). **For templates, do not do this.** A template is only a blueprint: the compiler generates the real code at the point where you use it with a concrete type, and to do that it must be able to *see the full definition* right there. If the body lives in a separate `.cpp`, the file using `Box<int>` cannot see it, and you get an `undefined reference` linker error — for code that looks perfectly correct.
+
+So keep templates **entirely in the header**: declaration and definition together, no `.cpp`. This is the one place the split-it-out habit does not apply.
+
+---
+
 ## Why use templates?
 
 | Benefit | What it means |
@@ -146,14 +154,16 @@ GCC will emit something like:
 
 ```
 error: no matching function for call to 'add(std::string&, int)'
-note:   candidate template ignored: deduced conflicting types for parameter 'T'
-        ('std::__cxx11::basic_string<char>' vs. 'int')
+note: candidate: 'template<class T> T add(T, T)'
+note:   template argument deduction/substitution failed:
+note:   deduced conflicting types for parameter 'T'
+        ('std::__cxx11::basic_string<char>' and 'int')
 ```
 
 The wall of text is the compiler listing every candidate it considered and why it rejected each one. Two reading tips that handle 90% of cases:
 
 1. **Read from the top.** The first line is the original error in your code. Everything below is the compiler explaining its reasoning.
-2. **Look for `note: candidate template ignored:`.** That line tells you *why* a template was rejected: usually a type mismatch like the one above.
+2. **Look for the `note:` lines under each candidate.** They tell you *why* a template was rejected — here, `deduction/substitution failed` followed by `deduced conflicting types for parameter 'T'`, i.e. the plain type mismatch above.
 
 Most "scary" template errors are really just type mismatches with a lot of supporting detail. Once you've decoded a few you stop being afraid of the rest.
 

@@ -100,7 +100,7 @@ int main() {
 }
 ```
 
-Swap the two commented lines in for the two above them and the controller now runs against a fake reading of `4.0` m — with no tank and no change to the loop. When the call `sensor.read()` runs the *right* `read()` for the object it actually points at, that is **runtime polymorphism** in action.
+Swap the two commented lines in for the two above them and the controller now runs against a fake reading of `4.0` m — with no tank and no change to the loop. When the call `sensor.read()` runs the *right* `read()` for the object the reference actually refers to, that is **runtime polymorphism** in action.
 
 ---
 

@@ -43,10 +43,10 @@ MyProject/
 
 Catch2 must be downloaded and linked before your tests can use it. The snippet below uses `FetchContent`, a CMake feature that handles this automatically.
 
-> We will cover dependency management in depth in a later chapter. For now, you can use this CMakeLists.txt as a ready-made template for any project that uses Catch2.
+> Pulling a library in with `FetchContent` is covered in [Consuming third-party libraries](../Chapter2/cmake_intro.md#consuming-third-party-libraries). For now, you can use this CMakeLists.txt as a ready-made template for any project that uses Catch2.
 
 ```cmake
-cmake_minimum_required(VERSION 3.16)
+cmake_minimum_required(VERSION 3.20)
 project(MyProject)
 
 set(CMAKE_CXX_STANDARD 20)
@@ -67,9 +67,13 @@ target_include_directories(calculator PUBLIC include)
 # --- Test executable ---
 add_executable(tests tests/test_calculator.cpp)
 target_link_libraries(tests PRIVATE calculator Catch2::Catch2WithMain)
+
+# --- Register it with CTest so `ctest` can run the suite ---
+include(CTest)
+add_test(NAME tests COMMAND tests)
 ```
 
-The key line is `target_link_libraries(tests PRIVATE calculator Catch2::Catch2WithMain)`. It links your code and Catch2 (including its built-in `main()`) into a single test binary.
+The key line is `target_link_libraries(tests PRIVATE calculator Catch2::Catch2WithMain)`. It links your code and Catch2 (including its built-in `main()`) into a single test binary. The last two lines register that binary with **CTest** (the `ctest` runner used below), so you do not have to remember them as a separate step.
 
 ---
 
@@ -137,6 +141,7 @@ On top of that you `#include` whatever you are testing (here, `calculator.hpp` �
 | `REQUIRE(expression)` | Asserts `expression` is true; stops the test immediately on failure |
 | `CHECK(expression)` | Asserts `expression` is true; continues running even on failure |
 | `REQUIRE_THROWS(expression)` | Asserts that `expression` throws any exception |
+| `REQUIRE_THROWS_AS(expression, Type)` | Asserts that `expression` throws an exception of exactly `Type` |
 
 ### A complete test file
 
@@ -172,11 +177,16 @@ TEST_CASE("division returns the correct quotient") {
 
 TEST_CASE("division by zero throws an exception") {
     Calculator calc;
-    REQUIRE_THROWS(calc.divide(10.0, 0.0));
+    REQUIRE_THROWS(calc.divide(10.0, 0.0));                            // throws *something*
+    REQUIRE_THROWS_AS(calc.divide(10.0, 0.0), std::invalid_argument);  // ...the *right* type
 }
 ```
 
+`REQUIRE_THROWS_AS` pins down not just *that* it throws but *what* it throws — the same "catch a specific failure mode" idea from [Error Handling](error_handling.md#custom-exceptions). If someone later changed `divide` to throw a plain `std::runtime_error`, the loose `REQUIRE_THROWS` would still pass but this stricter check would go red.
+
 Each `TEST_CASE` is independent: it creates its own `Calculator` object and runs from scratch.
+
+> These tests compare doubles with `==`, which works *here* only because every value chosen (`5.0`, `3.5`, `-10.0`, …) is exactly representable in binary. In general you must **not** compare floating-point results with `==` — rounding makes `0.1 + 0.2 != 0.3` — so compare within a tolerance instead: Catch2's `Approx` (used throughout [tank-control Version 5](../tank_control/v5_tests.md)) or the techniques in [Floating-Point Pitfalls](../floating_point.md#compare-with-a-tolerance).
 
 ---
 
@@ -217,9 +227,7 @@ with expansion:
 ctest --test-dir build
 ```
 
-CTest is the standard way to run tests in CMake projects and what most automated build systems (CI pipelines) use.
-
-> To register your test executable with CTest, add `include(CTest)` and `add_test(NAME tests COMMAND tests)` to your CMakeLists.txt after the `add_executable` line.
+This works because the template already registered the runner (`include(CTest)` + `add_test`); `ctest` finds it and reports pass/fail. CTest is the standard way to run tests in CMake projects and what most automated build systems (CI pipelines) use. (`--test-dir` needs CMake 3.20 or newer, which is why the template asks for it; on an older CMake, run `cd build` first and then plain `ctest`.)
 
 ---
 

@@ -64,16 +64,15 @@ private:
 
 A `const` after the parameter list (`read() const`) means "this function does not modify the object." Mark every member function `const` if it can be. The compiler enforces it, and it tells the reader "calling this is safe; it observes, it does not change."
 
-What "enforces it" means in practice: a `const` object — or a `const&` to one — can call **only** the member functions marked `const`.
+What "enforces it" means in practice: a `const` object can call **only** the member functions marked `const`.
 
 ```cpp
-void printReading(const Sensor& s) {   // s is read-only
-    std::cout << s.read() << "\n";      // OK — read() is const
-    // s.update(2.0);                   // compile error — update() is not const
-}
+const Sensor s;        // a read-only Sensor
+double r = s.read();   // OK — read() is const
+// s.update(2.0);      // compile error — update() is not const
 ```
 
-The standard way to pass an object you only want to read is by `const&` (the [next section](types_refs_ptrs.md) explains why). So if you forget `const` on a getter like `read()`, anyone holding a `const Sensor&` cannot call it at all. Marking observers `const` and mutators non-`const` is what makes a class usable through a `const` reference — a discipline called **const-correctness**.
+Because `s` is `const`, the compiler lets you call `read()` (which promises not to change the object) but rejects `update()` (which would). So if you forget `const` on a getter like `read()`, no `const Sensor` can call it at all. Marking observers `const` and mutators non-`const` is the discipline called **const-correctness**. Passing an object by `const` reference — the [next page](types_refs_ptrs.md) — is where this really pays off.
 
 ---
 
@@ -87,7 +86,20 @@ Three keywords control what is accessible from where:
 | `protected` | No  | Yes |
 | `private`   | No  | No  |
 
-For everyday classes, `public` is for the interface and `private` is for everything else. `protected` shows up later when you start designing inheritance hierarchies. Default to `private`; relax to `public` only when outside code genuinely needs access.
+For everyday classes, `public` is for the interface and `private` is for everything else. `protected` is only meaningful with inheritance ([Polymorphism](../Chapter5/polymorphism.md)) — it exposes a member to derived classes but not to outside code. You will need it rarely; default to `private`, and relax to `public` only when outside code genuinely needs access.
+
+### `struct` vs `class`
+
+A `struct` is the same as a `class` with one difference: its members default to **public** rather than private.
+
+```cpp
+struct Point {     // members public by default
+    double x;
+    double y;
+};
+```
+
+The convention is to use `struct` for a small bundle of data with no invariants to protect — a coordinate, an RGB colour, a pair of readings — where the members are meant to be read and written directly. Use `class` when the type has behaviour or invariants to enforce, so the data belongs behind a `private` wall. You will see `struct` again when we teach the stream in [IO & Streams](io_streams.md).
 
 ---
 
@@ -240,7 +252,7 @@ std::cout << Motor::count() << "\n";              // 2
 Two static things are going on:
 
 - **`count_` is a static data member** — it is not part of any single `Motor`; there is exactly one, and every constructor increments the same one. (The `inline` lets you give it its value right here in the class; without it you would have to define it separately in a `.cpp`.)
-- **`count()` is a static member function** — you call it on the class, `Motor::count()`, with no object at all. Having no object, it has no `this` and cannot touch the per-object members like `id_`; it may only use the static members. Static functions are handy for class-wide queries like this, and for *factory functions* that build and return an object.
+- **`count()` is a static member function** — you call it on the class, `Motor::count()`, with no object at all. Having no object, it has no `this` and cannot touch the per-object members like `id_`; it may only use the static members. Static functions are handy for class-wide queries like this, and for *factory functions* — static functions that build and return a ready-made object of the class.
 
 The safest and most common static member is a **constant** that belongs to the type:
 
@@ -305,8 +317,8 @@ When you create or copy or destroy an object, C++ may call up to six special mem
 | Destructor             | When the object is destroyed |
 | Copy constructor       | Initialising a new object from an existing one (`B b = a;`) |
 | Copy assignment        | Assigning to an existing object (`b = a;`) |
-| Move constructor       | Initialising from a temporary or `std::move`d value |
-| Move assignment        | Assigning from a temporary or `std::move`d value |
+| Move constructor       | Initialising from a temporary ([Chapter 5](../Chapter5/move.md) explains moving) |
+| Move assignment        | Assigning from a temporary ([Chapter 5](../Chapter5/move.md) explains moving) |
 
 If you do not write any of these, the compiler generates them for you. The generated versions do the obvious thing: copy or move each member. For *most* classes, that is exactly what you want.
 

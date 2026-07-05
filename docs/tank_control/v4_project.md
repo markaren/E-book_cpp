@@ -134,7 +134,14 @@ else()
 endif()
 ```
 
-Header-only classes are not listed in `add_executable` — only `.cpp` files are compiled; headers come along through `#include`. Build it the usual way (`cmake -B build && cmake --build build`, or just open the folder in CLion), and the same program runs — now as a project that builds cleanly on Windows, Linux, and macOS. See [Portability](../portability.md).
+Header-only classes are not listed in `add_executable` — only `.cpp` files are compiled; headers come along through `#include`. Build it the usual way — two commands, configure then build:
+
+```bash
+cmake -B build
+cmake --build build
+```
+
+(Or just open the folder in CLion. On other shells you may see the two joined with `&&`, but Windows PowerShell 5.1 does not accept `&&`, so run them on separate lines.) The same program runs — now as a project that builds cleanly on Windows, Linux, and macOS. See [Portability](../portability.md).
 
 ## What this version shows
 

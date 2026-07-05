@@ -78,7 +78,7 @@ int main() {
 }
 ```
 
-When `throw` executes, the program immediately stops running the current function and searches up the call stack for a matching `catch` block. This process is called **stack unwinding**: every local object that has gone out of scope has its destructor called along the way (see [RAII](../Chapter4/raii.md)).
+When `throw` executes, the program immediately stops running the current function and searches up the call stack for a matching `catch` block. This process is called **stack unwinding**: as each scope between the `throw` and the `catch` is exited, every local object in that scope has its destructor called along the way (see [RAII](../Chapter4/raii.md)).
 
 > If no matching `catch` is found anywhere in the call stack, the program calls `std::terminate()` and aborts. Always catch exceptions at a level where you can meaningfully handle them.
 
@@ -103,7 +103,7 @@ int main() {
 }
 ```
 
-Commonly used types from `<stdexcept>`:
+Commonly used standard exception types (the first four from `<stdexcept>`):
 
 | Type | When to use |
 |------|-------------|
@@ -112,6 +112,8 @@ Commonly used types from `<stdexcept>`:
 | `std::out_of_range` | An index or value is outside the valid range |
 | `std::logic_error` | A bug in program logic (precondition violated) |
 | `std::bad_alloc` | Memory allocation with `new` failed |
+
+The first four live in `<stdexcept>` and derive from `std::logic_error` or `std::runtime_error`. `std::bad_alloc` is the odd one out: it lives in `<new>` and derives *directly* from `std::exception`. All of them, though, are caught by `catch (const std::exception&)`.
 
 You can also catch _any_ exception with `catch (...)`, but use this sparingly; it discards all information about the error:
 
@@ -196,6 +198,10 @@ int main() {
 ```
 
 > **Do not** rely on code _after_ a `throw` statement running. If you need cleanup to happen, put it in a destructor.
+
+### Throwing from a constructor
+
+When a [RAII](../Chapter4/raii.md) object cannot acquire the resource it exists to manage — a file that will not open, a connection that is refused — the canonical way to report that is to **throw from the constructor**. A constructor has no return value, so throwing is its only channel for signalling failure. And the rule that makes this safe is precise: if a constructor throws, the object is considered *never to have existed*, so its destructor will **not** run — but the destructors of any members already fully constructed *will*, so a resource acquired earlier in the same constructor is still released cleanly.
 
 ---
 

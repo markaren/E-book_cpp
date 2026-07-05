@@ -18,7 +18,7 @@ std::string d(5, 'a');                  // "aaaaa"
 std::string e = std::to_string(42);     // "42" (convert a number)
 ```
 
-En naken strengliteral i kildekoden din (`"hello"`) er teknisk sett en `const char[]`, ikke en `std::string`. I de fleste sammenhenger konverteres den implisitt, men for tilfellene der den ikke gjør det, kan du tvinge det:
+En naken strengliteral i kildekoden din (`"hello"`) er teknisk sett et array av `const char` — en `const char[6]` her, fem bokstaver pluss en skjult nullterminator — ikke en `std::string`. Brukt i de fleste sammenhenger *degraderer* det arrayet til en `const char*` (en peker til det første tegnet), og det konverteres implisitt til `std::string`; for tilfellene der den ikke gjør det, kan du tvinge det:
 
 ```cpp
 auto x = std::string{"hello"};      // explicit construction
@@ -135,7 +135,19 @@ std::string b = std::format("{:>8}", 42);         // "      42" (right-aligned)
 std::string c = std::format("{:#x}", 255);        // "0xff"
 ```
 
-`std::stoi` og slektningene kaster et *unntak* hvis inndataen ikke er et tall. Inntil du har møtt [Feilhåndtering](Chapter6/error_handling.md), sjekk at inndataen er gyldig først; etterpå kan du pakke kallet inn i `try`/`catch`.
+`std::stoi` og slektningene kaster et *unntak* hvis inndataen ikke er et tall. Inntil du har møtt [Feilhåndtering](Chapter6/error_handling.md), kall den bare på tekst du vet er numerisk — enten tekst ditt eget program har produsert, eller tekst du har sjekket først:
+
+```cpp
+#include <algorithm>
+#include <cctype>
+
+auto isDigit = [](char c) { return std::isdigit(static_cast<unsigned char>(c)); };
+if (!s.empty() && std::ranges::all_of(s, isDigit)) {
+    int n = std::stoi(s);   // trygt: hvert tegn er et siffer
+}
+```
+
+(Dette håndterer vanlige heltall uten fortegn; en innledende `-` eller `+` ville trengt litt mer. Etterpå kan du droppe sjekken og pakke kallet inn i `try`/`catch` i stedet.)
 
 ---
 
@@ -154,29 +166,9 @@ Sammenligningen er tegn for tegn. Den skiller mellom store og små bokstaver (`"
 
 ---
 
-## `std::string` og `const char*`
-
-C-stil-"strengen" er en peker til et nullterminert tegnarray. Du vil se dem to steder:
-
-1. **Strengliteraler** i koden din. `"hello"` er en `const char*`.
-2. **Gamle C-API-er.** Mange biblioteker (særlig innebygde) tar `const char*`-parametere.
-
-`std::string` konverterer fritt til og fra disse:
-
-```cpp
-const char* literal = "hello";
-std::string s = literal;                 // implicit construction
-
-const char* cstr = s.c_str();             // explicit conversion back
-```
-
-`s.c_str()` returnerer en peker til strengens interne buffer med en nullterminator. Den er gyldig bare så lenge `s` er i live og uendret.
-
----
-
 ## Vanlige fallgruver
 
-**Endre gjennom `c_str()`.** Pekeren som `c_str()` returnerer er `const`. Ikke cast bort const-en og skriv gjennom den; resultatet er udefinert oppførsel.
+**Endre gjennom `c_str()`.** Pekeren som `c_str()` returnerer peker til `const`-tegn — du kan lese dem, men ikke skrive til dem. Ikke cast bort const-en og skriv gjennom den; resultatet er udefinert oppførsel.
 
 **Sammenligne med en `const char*` og få tull.**
 
@@ -200,3 +192,26 @@ Pakk den ene siden inn i `std::string` for å tvinge fram en verdisammenligning:
 - For å kombinere mange biter av blandede typer leses `std::format` renere enn kjedet `+=` eller `std::ostringstream`.
 - `find` returnerer `std::string::npos` når ingenting blir funnet.
 - `c_str()` gir deg en `const char*` for C-API-er.
+
+---
+
+## `std::string` og `const char*` {#stdstring-and-const-char}
+
+!!! note "Bruker pekere — kapittel 4"
+    Denne siste seksjonen handler om **pekere**, som dekkes i [Verdier, referanser og pekere](Chapter4/types_refs_ptrs.md). Du kan hoppe over den til da; ingenting tidligere på denne siden avhenger av den.
+
+C-stil-"strengen" er et nullterminert tegnarray, vanligvis sendt rundt som en `const char*` — en peker til det første tegnet. Du vil møte dem to steder:
+
+1. **Strengliteraler** i koden din. `"hello"` er et array av `const char` som degraderer til en `const char*` når du bruker det som en.
+2. **Gamle C-API-er.** Mange biblioteker (særlig innebygde) tar `const char*`-parametere.
+
+`std::string` konverterer fritt til og fra disse:
+
+```cpp
+const char* literal = "hello";
+std::string s = literal;                 // implicit construction
+
+const char* cstr = s.c_str();             // explicit conversion back
+```
+
+`s.c_str()` returnerer en peker til strengens interne buffer med en nullterminator. Den er gyldig bare så lenge `s` er i live og uendret.

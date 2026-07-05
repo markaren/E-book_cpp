@@ -64,17 +64,23 @@ Whenever you find yourself comparing a measured value for *exact* equality, ask 
 
 ## Sums lose precision
 
-Adding many floats produces accumulated error. The classic pitfall:
+Adding many floats produces accumulated error. The classic pitfall — add `0.1` ten million times and you should get exactly `1,000,000`:
 
 ```cpp
-double total = 0.0;
-for (int i = 0; i < 10'000'000; ++i) {
-    total += 0.1;
+#include <iostream>
+#include <iomanip>
+
+int main() {
+    double total = 0.0;
+    for (int i = 0; i < 10'000'000; ++i) {
+        total += 0.1;
+    }
+    std::cout << total << "\n";                       // 1e+06  (looks exact — it isn't)
+    std::cout << std::setprecision(17) << total << "\n"; // 999999.99983897537
 }
-std::cout << total << "\n";        // 999999.999999...  (not 1,000,000)
 ```
 
-The error in each addition is tiny; ten million of them add up. For sums of millions of samples, consider:
+At `std::cout`'s default precision the sum prints as `1e+06`, which *looks* perfect — you only see the drift once you ask for full precision: the true total is `999999.99983897537`, off by about `0.00016`. The error in each addition is tiny; ten million of them add up. For sums of millions of samples, consider:
 
 1. **Use `double`, not `float`.** `double` has roughly 15-16 decimal digits of precision; `float` has 6-7.
 2. **Use `std::accumulate` with care.** Or look up Kahan summation if accuracy matters more than speed.
@@ -95,7 +101,7 @@ double nan  = 0.0 / 0.0;      // NaN, "not a number"
 double nan2 = std::sqrt(-1.0); // NaN
 ```
 
-Unlike integer division by zero (which is undefined behaviour and may crash), floating-point division by zero is **well-defined**: it produces infinity or NaN. The program keeps running.
+Unlike integer division by zero (which is undefined behaviour and may crash), floating-point division by zero does not crash on any platform you will use: it produces infinity or NaN, and the program keeps running. (Strictly, the C++ standard itself leaves floating-point division by zero *undefined*; it is the **IEEE 754** standard that defines the infinity/NaN result, and every compiler and CPU in this course follows IEEE 754 — so in practice you can rely on it.)
 
 That sounds harmless until you propagate a `NaN` through your math:
 
@@ -103,10 +109,10 @@ That sounds harmless until you propagate a `NaN` through your math:
 double x = std::sqrt(-1.0);    // NaN
 double y = x + 1.0;             // NaN
 double z = std::sin(y);          // NaN
-if (z < 1.0) { /* ... */ }       // false! NaN compares false with everything
+if (z < 1.0) { /* ... */ }       // false! every ordered comparison with NaN is false
 ```
 
-NaN poisons every expression it touches and silently fails every comparison: even `nan == nan` is false. If your sensor pipeline starts producing zeros and you see no errors, suspect a NaN.
+NaN poisons every expression it touches, and comparisons with it behave strangely: every *ordered* comparison (`<`, `>`, `<=`, `>=`) and `==` is **false** — even `nan == nan` is false. The one that surprises people is `!=`: `nan != nan` is **true**, and so is `nan != anything`. That inversion (`!=` true while `==` false) is in fact the standard trick to detect a NaN by hand: `x != x` is true only when `x` is NaN. If your sensor pipeline starts producing zeros and you see no errors, suspect a NaN.
 
 To check explicitly:
 
@@ -184,7 +190,7 @@ For debugging precision issues, set a high precision explicitly. For user-facing
 - Floats and doubles are approximations of decimal numbers. They are not exact.
 - **Never use `==` to compare floats.** Use a tolerance or a range.
 - Long sums accumulate error. Use `double` (not `float`) and consider Kahan summation for high-precision sums.
-- Division by zero is well-defined for floats; it produces infinity or `NaN`.
-- `NaN` poisons every expression it touches and compares unequal to everything, including itself.
+- Division by zero does not crash for floats; under IEEE 754 (which all course platforms use) it produces infinity or `NaN`.
+- `NaN` poisons every expression it touches. Every ordered comparison and `==` against it is false — even `nan == nan` — but `!=` is **true**, so `x != x` detects a NaN.
 - Default to `double`. Use `float` only with reason.
 - For timing, use `std::chrono` (integer-based).

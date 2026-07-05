@@ -120,7 +120,7 @@ ErrorCode code = ErrorCode::Overheat;
 int raw = static_cast<int>(code);   // 8
 ```
 
-> På en mikrokontroller, der hver byte teller, kan du fastsette størrelsen på en enum ved å navngi dens underliggende type: `enum class ErrorCode : uint8_t { ... };` (typen med fast bredde kommer fra `<stdint.h>`; se [Arduino vs. Desktop C++](../arduino_vs_desktop.md)). Du vil ikke trenge dette på skrivebordsmaskinen.
+> På en mikrokontroller, der hver byte teller, kan du fastsette størrelsen på en enum ved å navngi dens underliggende type: `enum class ErrorCode : std::uint8_t { ... };` (typen med fast bredde kommer fra `<cstdint>` i standard-C++; Arduino-kode inkluderer konvensjonelt `<stdint.h>` og skriver den uten `std::`. Se [Arduino vs. Desktop C++](../arduino_vs_desktop.md)). Du vil ikke trenge dette på skrivebordsmaskinen.
 
 ---
 

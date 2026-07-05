@@ -26,7 +26,7 @@ A **breakpoint** says "pause here." In CLion, click in the **gutter** — the na
 
 Then run in **debug mode** instead of the normal run:
 
-- Click the **bug icon** (next to the green run arrow), or press **Shift+F9**.
+- Click the **bug icon** (next to the green run arrow), or press **Shift+F9** (**⌃D** on macOS).
 
 The program runs normally until it reaches the breakpoint, then **pauses** — the line is highlighted and has *not run yet*. Now you can look around.
 
@@ -44,15 +44,17 @@ This is the heart of debugging: compare what a variable *actually* holds against
 
 Once paused, you advance the program one piece at a time:
 
-| Action | Key (CLion) | What it does |
-|--------|-------------|--------------|
-| **Step Over** | F8 | Run the current line, pause on the next. If the line calls a function, run the whole call without going inside. |
-| **Step Into** | F7 | Like Step Over, but if the line calls *your* function, go inside and pause on its first line. |
-| **Step Out** | Shift+F8 | Finish the current function and pause back in the code that called it. |
-| **Resume** | F9 | Carry on until the next breakpoint (or the program ends). |
-| **Stop** | Ctrl+F2 | End the debugging session. |
+| Action | Windows / Linux | macOS | What it does |
+|--------|-----------------|-------|--------------|
+| **Step Over** | F8 | F8 | Run the current line, pause on the next. If the line calls a function, run the whole call without going inside. |
+| **Step Into** | F7 | F7 | Like Step Over, but if the line calls *your* function, go inside and pause on its first line. |
+| **Step Out** | Shift+F8 | ⇧F8 | Finish the current function and pause back in the code that called it. |
+| **Resume** | F9 | ⌥⌘R | Carry on until the next breakpoint (or the program ends). |
+| **Stop** | Ctrl+F2 | ⌘F2 | End the debugging session. |
 
 The everyday rhythm: **Step Over** to walk down a function watching the variables change, **Step Into** when you want to see what a call is doing, **Step Out** when you have seen enough.
+
+> Keymaps vary — if a shortcut does nothing on your machine, the menu **Run ▸ Debugging Actions** always lists each action with your keymap's current binding beside it.
 
 > CLion's [official debugging guide](https://www.jetbrains.com/help/clion/debugging-code.html) has annotated screenshots of each of these buttons if you want to see exactly where they sit.
 

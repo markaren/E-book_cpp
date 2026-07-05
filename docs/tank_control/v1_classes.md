@@ -1,6 +1,6 @@
 # Version 1: A Tank, a Valve, and a Loop
 
-Almost all automation software has the same shape: **read the world, decide, act, repeat.** Over four short versions we will build that shape around a problem every automation engineer recognises — keeping the level of a water tank at a target — and grow it into a small but real piece of control software.
+Almost all automation software has the same shape: **read the world, decide, act, repeat.** Over five short versions we will build that shape around a problem every automation engineer recognises — keeping the level of a water tank at a target — and grow it into a small but real piece of control software.
 
 This is a *worked example*, not new language material. It assumes you have read Chapters 1–6; each version points back to where its ideas are taught. Read it, type it, run it, then take it further with the [project ideas](v5_tests.md#make-it-your-own) at the end.
 
@@ -129,4 +129,4 @@ Run it and watch the level climb from 2 m: while it is below 5 m the valve is wi
 
 ## What's still awkward → Version 2
 
-The controller reads the level straight out of the tank: `controller.compute(tank.level())`. Real systems read it through a **sensor**, which can be noisy, can be one of several types, and which you will want to replace with a stand-in when [testing](../Chapter6/testing.md). Hard-wiring `tank.level()` makes none of that possible. [Version 2](v2_sensors.md) puts a `Sensor` interface in the middle and lets *polymorphism* decouple the controller from where the reading comes from.
+The controller reads the level straight out of the tank: `controller.compute(tank.level())`. Real systems read it through a **sensor**, which can be one of several types, and which you will want to replace with a stand-in when [testing](../Chapter6/testing.md). Hard-wiring `tank.level()` makes none of that possible. [Version 2](v2_sensors.md) puts a `Sensor` interface in the middle and lets *polymorphism* decouple the controller from where the reading comes from.

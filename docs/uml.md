@@ -151,7 +151,7 @@ private:
 };
 ```
 
-### Aggregation — "uses a"
+### Aggregation — "has-a (doesn't own)"
 
 A **hollow diamond** on the holder. Aggregation is a looser "has-a": the class refers to something whose lifetime is managed *elsewhere*. Park the `Car` somewhere else and it still exists after the `Garage` is gone.
 
@@ -162,7 +162,7 @@ classDiagram
     Garage o-- Car : holds
 ```
 
-In C++ this is a **reference, a raw pointer, or a `std::shared_ptr`** — the class points at something it does not own:
+In C++ this is a **reference or a raw pointer** — the class points at something whose lifetime is someone else's job. (A `std::shared_ptr` member is the shared-ownership variant: no single owner, but the object lives as long as *any* holder keeps its pointer.)
 
 ```cpp
 class Garage {
@@ -211,7 +211,7 @@ public:
 | <svg width="72" height="22" viewBox="0 0 72 22" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="solid line ending in a hollow triangle" style="vertical-align:middle" fill="none" stroke="currentColor" stroke-width="1.6"><line x1="2" y1="11" x2="50" y2="11"/><path d="M50,4 L70,11 L50,18 Z"/></svg> | **inheritance** — "is-a" | `class Car : public Vehicle` |
 | <svg width="72" height="22" viewBox="0 0 72 22" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="dashed line ending in a hollow triangle" style="vertical-align:middle" fill="none" stroke="currentColor" stroke-width="1.6"><line x1="2" y1="11" x2="50" y2="11" stroke-dasharray="5 3"/><path d="M50,4 L70,11 L50,18 Z"/></svg> | **interface** — "implements" | derive from an abstract base, `override` |
 | <svg width="72" height="22" viewBox="0 0 72 22" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="solid line ending in a filled diamond" style="vertical-align:middle" fill="none" stroke="currentColor" stroke-width="1.6"><line x1="2" y1="11" x2="48" y2="11"/><path d="M48,11 L59,4 L70,11 L59,18 Z" fill="currentColor"/></svg> | **composition** — "owns; dies with me" | value member or `std::unique_ptr<Part>` |
-| <svg width="72" height="22" viewBox="0 0 72 22" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="solid line ending in a hollow diamond" style="vertical-align:middle" fill="none" stroke="currentColor" stroke-width="1.6"><line x1="2" y1="11" x2="48" y2="11"/><path d="M48,11 L59,4 L70,11 L59,18 Z"/></svg> | **aggregation** — "uses; owned elsewhere" | reference, raw pointer, or `std::shared_ptr` |
+| <svg width="72" height="22" viewBox="0 0 72 22" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="solid line ending in a hollow diamond" style="vertical-align:middle" fill="none" stroke="currentColor" stroke-width="1.6"><line x1="2" y1="11" x2="48" y2="11"/><path d="M48,11 L59,4 L70,11 L59,18 Z"/></svg> | **aggregation** — "has-a; owned elsewhere" | reference or raw pointer (a `std::shared_ptr` member means shared ownership) |
 | <svg width="72" height="22" viewBox="0 0 72 22" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="solid line ending in an open arrow" style="vertical-align:middle" fill="none" stroke="currentColor" stroke-width="1.6"><line x1="2" y1="11" x2="69" y2="11"/><path d="M58,4 L70,11 L58,18"/></svg> | **association** — "knows about" | a member that refers to another object |
 | <svg width="72" height="22" viewBox="0 0 72 22" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="dashed line ending in an open arrow" style="vertical-align:middle" fill="none" stroke="currentColor" stroke-width="1.6"><line x1="2" y1="11" x2="69" y2="11" stroke-dasharray="5 3"/><path d="M58,4 L70,11 L58,18"/></svg> | **dependency** — "temporarily uses" | a function parameter or local variable |
 

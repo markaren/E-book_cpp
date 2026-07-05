@@ -51,7 +51,9 @@ You should see the valve closed **exactly once**, automatically, with no `delete
 
 ## 2. A handle you can move but not copy
 
-*Practises: [Move Semantics](move.md)*
+*Practises: [Move Semantics](move.md)* — **advanced / optional**
+
+> This one builds on the [Designing a movable class](move.md#designing-a-movable-class) section, the deepest material in the chapter. It is here for the curious; you can skip it without missing anything the later chapters rely on.
 
 A data-acquisition `Channel` is a *unique* resource: there is one physical channel, so the object should be **movable but not copyable**. Write a class `Channel` that prints `Channel N open` in its constructor and `Channel N closed` in its destructor. Make it move-only: write the move constructor and move assignment (transfer the id and leave the source empty), `= delete` the copy operations, and have the destructor skip a moved-from channel.
 
@@ -102,7 +104,7 @@ In `main`, open channel `1`, move it into a second variable, and confirm it clos
     }   // b closes channel 1 (once); a is empty and closes nothing
     ```
 
-    A channel is unique, so `Channel` is **move-only**: it has move operations, and its copy operations are `= delete`d. The move constructor steals the other channel's id and sets the source to the empty state (`-1`); the destructor checks for that state, so a moved-from channel closes nothing. Because copying is deleted, `Channel c = b;` is a *compile error* rather than a silent double-close. The moves are `noexcept`, which is what lets a `std::vector<Channel>` move its elements instead of copying them when it grows. (You wrote a destructor and the move operations — the **Rule of Five** — so you accounted for the copies too. You could avoid all of it by storing the handle in a `std::unique_ptr`: the **Rule of Zero**.)
+    A channel is unique, so `Channel` is **move-only**: it has move operations, and its copy operations are `= delete`d. The move constructor steals the other channel's id and sets the source to the empty state (`-1`); the destructor checks for that state, so a moved-from channel closes nothing. Because copying is deleted, `Channel c = b;` is a *compile error* rather than a silent double-close. The moves are `noexcept`; since `Channel` is move-only a `std::vector<Channel>` must move it when it grows in any case, but `noexcept` is the right habit — it is what lets a vector move *copyable* types instead of copying them, and preserves the container's exception guarantees. (You wrote a destructor and the move operations — the **Rule of Five** — so you accounted for the copies too. You could avoid all of it by storing the handle in a `std::unique_ptr`: the **Rule of Zero**.)
 
     </div>
 
@@ -216,5 +218,160 @@ Notice that the *same* function works for all three — including strings, which
     ```
 
     `largest` is written once but works for any type `T` with a `>` operator. The compiler generates a separate version for each type you actually use — `largest<int>`, `largest<double>`, `largest<std::string>` — each as efficient as if you had written it by hand. You never spell out the type at the call site: the compiler deduces `T` from the argument, so `largest(ints)` gives `T = int`. That is the whole point of a template — write the logic once, and it applies to every type that fits. (`std::string`'s `>` compares alphabetically, so `"pear"` wins.)
+
+    </div>
+
+---
+
+## 5. A sensor shared by two owners
+
+*Practises: [Memory Management](memory.md)*
+
+One `Sensor` is used by both a `Logger` and a `Controller`; neither should own it alone, and it must live until *both* are done with it. Model this with `std::shared_ptr`.
+
+Write a `Sensor` that prints `Sensor N created` in its constructor and `Sensor N destroyed` in its destructor. Write a `Logger` and a `Controller` that each store a `std::shared_ptr<Sensor>` (take it by value in the constructor and `std::move` it into the member). In `main`, make one sensor with `std::make_shared`, print `use_count()`, hand it to a `Logger`, print the count again, then hand it to a `Controller` **inside an inner `{ }` block** and print the count once more. After the block, print the count again.
+
+Watch the count rise to 3 and fall back to 2 as the `Controller` is destroyed, and confirm the sensor is destroyed only at the very end — when the *last* owner goes away.
+
+> Hint: `use_count()` reports how many `shared_ptr`s own the object. Copying a `shared_ptr` (which is what handing it to a constructor does) bumps the count; destroying one drops it. The sensor's destructor runs when the count hits zero.
+
+??? success "Show solution"
+
+    <div class="spoiler" markdown title="Click to reveal">
+
+    ```cpp
+    #include <iostream>
+    #include <memory>
+    #include <string>
+
+    class Sensor {
+    public:
+        explicit Sensor(std::string name) : name_(std::move(name)) {
+            std::cout << "Sensor " << name_ << " created\n";
+        }
+        ~Sensor() { std::cout << "Sensor " << name_ << " destroyed\n"; }
+    private:
+        std::string name_;
+    };
+
+    class Logger {
+    public:
+        explicit Logger(std::shared_ptr<Sensor> s) : sensor_(std::move(s)) {}
+    private:
+        std::shared_ptr<Sensor> sensor_;
+    };
+
+    class Controller {
+    public:
+        explicit Controller(std::shared_ptr<Sensor> s) : sensor_(std::move(s)) {}
+    private:
+        std::shared_ptr<Sensor> sensor_;
+    };
+
+    int main() {
+        auto sensor = std::make_shared<Sensor>("outdoor");
+        std::cout << "owners: " << sensor.use_count() << "\n";   // 1
+
+        Logger logger(sensor);
+        std::cout << "owners: " << sensor.use_count() << "\n";   // 2
+
+        {
+            Controller controller(sensor);
+            std::cout << "owners: " << sensor.use_count() << "\n";   // 3
+        }   // controller destroyed → count drops back to 2
+
+        std::cout << "owners: " << sensor.use_count() << "\n";   // 2
+        std::cout << "leaving main\n";
+    }   // logger and sensor go → count hits 0 → sensor destroyed here
+    ```
+
+    The output is:
+
+    ```
+    Sensor outdoor created
+    owners: 1
+    owners: 2
+    owners: 3
+    owners: 2
+    leaving main
+    Sensor outdoor destroyed
+    ```
+
+    Each `shared_ptr` that owns the sensor counts as one owner, and copying one (which is what passing it to `Logger`/`Controller` does) raises the count. Unlike a `unique_ptr` — which cannot be copied at all — a `shared_ptr` is *meant* to be copied, and the reference count is how it knows when the last owner is gone. The `Controller` inside the block drops the count from 3 back to 2 when it is destroyed; the sensor itself is not destroyed until `leaving main` has printed and both remaining owners (`logger` and `sensor`) disappear at the end of `main`. That "destroy exactly when the last owner dies" behaviour is the whole reason `shared_ptr` exists.
+
+    </div>
+
+---
+
+## 6. A base class that needs arguments
+
+*Practises: [Polymorphism](polymorphism.md)*
+
+Every `Sensor` has a **name**, fixed when it is built, so the base class has a constructor `Sensor(std::string name)` and *no* default constructor. Derive two concrete sensors from it and make each forward the name up to the base.
+
+Write an abstract `Sensor` with a `std::string name_` (set via `Sensor(std::string name)`), a `name()` getter, a **pure virtual** `double read() const`, and a virtual destructor. Derive `Thermometer` (constructed from a name and a temperature) and `Barometer` (a name and a pressure); each forwards the name to `Sensor` in its initialiser list and `override`s `read()`. Write `void report(const Sensor& s)` that prints the name and reading, store a mix in a `std::vector<std::unique_ptr<Sensor>>`, and report each.
+
+The lesson: because `Sensor` has no default constructor, a derived constructor that forgets `: Sensor(...)` **will not compile** — try it and read the error.
+
+> Hint: the derived initialiser list runs the base constructor first: `Thermometer(std::string name, double c) : Sensor(std::move(name)), celsius_(c) {}`. Add sensors with `std::make_unique<Thermometer>("outdoor", 21.5)`.
+
+??? success "Show solution"
+
+    <div class="spoiler" markdown title="Click to reveal">
+
+    ```cpp
+    #include <iostream>
+    #include <memory>
+    #include <string>
+    #include <vector>
+
+    class Sensor {
+    public:
+        explicit Sensor(std::string name) : name_(std::move(name)) {}
+        virtual ~Sensor() = default;
+
+        virtual double read() const = 0;              // pure virtual → Sensor is abstract
+        const std::string& name() const { return name_; }
+
+    private:
+        std::string name_;
+    };
+
+    class Thermometer : public Sensor {
+    public:
+        Thermometer(std::string name, double celsius)
+            : Sensor(std::move(name)),   // forward the name to the base constructor
+              celsius_(celsius) {}
+        double read() const override { return celsius_; }
+    private:
+        double celsius_;
+    };
+
+    class Barometer : public Sensor {
+    public:
+        Barometer(std::string name, double kPa)
+            : Sensor(std::move(name)),
+              kPa_(kPa) {}
+        double read() const override { return kPa_; }
+    private:
+        double kPa_;
+    };
+
+    void report(const Sensor& s) {
+        std::cout << s.name() << " = " << s.read() << "\n";
+    }
+
+    int main() {
+        std::vector<std::unique_ptr<Sensor>> sensors;
+        sensors.push_back(std::make_unique<Thermometer>("outdoor", 21.5));
+        sensors.push_back(std::make_unique<Barometer>("roof", 101.3));
+
+        for (const auto& s : sensors) {
+            report(*s);        // outdoor = 21.5, then roof = 101.3
+        }
+    }
+    ```
+
+    `Sensor` has only the one constructor, `Sensor(std::string)`, so it has **no default constructor**. That means each derived constructor *must* name `Sensor(...)` in its initialiser list to build the base part — `Thermometer(std::string, double) : Sensor(std::move(name)), celsius_(celsius) {}`. Leave the `: Sensor(...)` off and the compiler refuses with an error about `Sensor::Sensor()`, the default constructor that does not exist. The base part is always constructed first, then the derived members. Everything else is ordinary polymorphism: `read()` is pure virtual, so `Sensor` is abstract; `report` takes `const Sensor&` and dispatches to the real type at run time; and the `std::vector<std::unique_ptr<Sensor>>` holds the mixed collection, each object freed automatically through the virtual destructor.
 
     </div>

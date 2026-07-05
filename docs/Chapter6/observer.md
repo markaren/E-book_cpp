@@ -130,9 +130,11 @@ sensor.setReading(50.0);   // ...but the callback still refers to it — undefin
 Two habits keep you safe:
 
 - **Capture by value** when the callback might outlive the surrounding scope (`[label]` copies it), rather than by reference.
-- **Make sure every observer outlives the subject** it subscribed to.
+- If you must capture by reference, **make sure whatever the callback captures outlives the subject**. The subject stores *copies* of the callbacks, so the callbacks themselves are safe; what can dangle is anything they refer to by reference (`label` above).
 
 > Capturing by reference (`[&]`) into a callback the subject *stores* is the most common way to create a dangling reference. When in doubt, capture by value.
+
+One thing our minimal `subscribe` cannot do is **unsubscribe**: once a callback is in the vector there is no way to pull it back out, because a `std::function` has no identity to search for. Real frameworks solve this by handing back an ID or token from `subscribe` that you later pass to a `remove` — machinery we leave out here to keep the example small.
 
 ---
 
@@ -150,7 +152,7 @@ public:
 
 A `Display`, an `Alarm`, and a `Logger` would each derive from `TemperatureObserver` and override `onReading`. The subject then stores a list of `TemperatureObserver` handles and calls `onReading` on each — the mechanics are identical to the callback version.
 
-The difference is **ownership**. Because polymorphism requires storing observers by pointer or reference (never by value — that would [slice](../Chapter5/polymorphism.md#object-slicing) them), the subject does not own its observers. You must guarantee each one outlives the sensor and is removed before it is destroyed — exactly the bookkeeping the callback version sidesteps.
+The difference is **ownership**. Because polymorphism requires storing observers by pointer or reference (never by value — that would [slice](../Chapter5/polymorphism.md#object-slicing) them), the subject does not own its observers. The rule is: each observer must **either outlive the subject, or unsubscribe before it is destroyed** — otherwise the subject is left holding a dangling handle. That is exactly the bookkeeping the callback version sidesteps.
 
 For new code, prefer the callback form. Reach for the interface form when an observer is already a full-fledged object with several methods, or when a framework you are using expects it.
 

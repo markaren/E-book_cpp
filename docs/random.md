@@ -83,7 +83,7 @@ int badRoll() {
 }
 ```
 
-That is slow, and on some toolchains it returns nearly the same value every call. Build the generator **once** and reuse it — keep it as a class member, or pass it around by reference:
+That is slow, and on a toolchain with a broken `random_device` (see below) it returns the *exact same* value every call. Build the generator **once** and reuse it — keep it as a class member, or pass it around by reference:
 
 <!-- no-ce -->
 ```cpp
@@ -106,7 +106,7 @@ public:
 std::mt19937 gen(42);   // same seed → same sequence, every run
 ```
 
-This is invaluable when debugging: a failing run becomes reproducible. The tank simulation's noisy-sensor extension uses exactly this — a fixed seed makes the "random" noise repeatable while you work on the controller.
+This is invaluable when debugging: a failing run becomes reproducible. The tank simulation's suggested noisy-sensor extension is a natural place for it — a fixed seed makes the "random" noise repeatable while you work on the controller.
 
 > **A MinGW gotcha.** On some toolchains — notably older MinGW, which CLion may bundle on Windows — `std::random_device` is **not actually random**: it returns the same sequence every run. If your program's "random" numbers never change between runs, this is why. Seed from the clock instead: `std::mt19937 gen(std::chrono::steady_clock::now().time_since_epoch().count());` (from `<chrono>`).
 

@@ -31,6 +31,28 @@ Du sender inn **argumenter** (`5` og `3`), og de blir til **parameterne** (`a` o
 
 ---
 
+## Parametere er kopier {#parameters-are-copies}
+
+Som standard er en parameter en **kopi** av argumentet du sendte inn. Funksjonen jobber på sin egen kopi, så det å endre en parameter endrer *ikke* variabelen til den som kalte:
+
+```cpp
+#include <iostream>
+
+void increment(int x) {
+    x++;   // endrer bare denne funksjonens kopi
+}
+
+int main() {
+    int count = 5;
+    increment(count);
+    std::cout << count << "\n";   // fortsatt 5 — count ble aldri rørt
+}
+```
+
+Dette overrasker nesten alle i starten: `increment` ser ut som den burde øke `count`, men den fikk en kopi og kastet den bort da den returnerte. Denne "pass-by-value"-regelen er grunnen til at en funksjon som skal levere noe tilbake, normalt *returnerer* det. Når du virkelig vil at en funksjon skal endre variabelen til den som kaller, sender du inn en **referanse** i stedet — verktøyet for det dekkes i [Verdier, referanser og pekere](../Chapter4/types_refs_ptrs.md).
+
+---
+
 ## Returnere en verdi
 
 `return` avslutter funksjonen og leverer tilbake en verdi:
@@ -116,6 +138,8 @@ int main() {
 }
 ```
 
+`main` er også det ene unntaket fra regelen over om at en funksjon som ikke er `void` må returnere en verdi på hver vei: hvis kjøringen når slutten av `main` uten en `return`, returnerer den `0` automatisk. Det er derfor flere programmer i denne boken utelater `return 0;` fra `main` — den er underforstått. Alle *andre* funksjoner som ikke er `void` må fortsatt returnere eksplisitt.
+
 Du kan også ta imot kommandolinjeargumenter:
 
 <!-- no-ce -->
@@ -194,6 +218,8 @@ Ett unntak: en global **konstant** er greit. En verdi som aldri endres kan ikke 
 ```cpp
 constexpr double gravity = 9.81;   // global, men konstant — trygg og nyttig
 ```
+
+(`constexpr` er en strengere `const`: verdien er fastsatt ved kompilering, så kompilatoren kan stole på at den aldri endres.)
 
 > Kommer du fra Arduino? Dette er vanen du må justere mest bevisst. Arduino-skisser holder tilstand i globale variabler fordi den må overleve mellom `setup()` og `loop()`; på skrivebordet har du bedre alternativer. Se [Arduino vs. skrivebords-C++](../arduino_vs_desktop.md).
 

@@ -22,7 +22,7 @@ Larger values simply use more bytes:
 | **megabyte** (MB) | ~1 000 kB | a photo or a song |
 | **gigabyte** (GB) | ~1 000 MB | a movie; your computer's RAM is measured in these |
 
-This is why every type in C++ has a **size**. A `bool` needs just one byte; an `int` is usually four bytes (32 bits); a `double` is eight. The size sets a hard limit on what fits: a 32-bit `int` can count to roughly ±2 billion, and pushing past that makes it **overflow** and wrap around. It is also why a microcontroller with only a few **kilobytes** of memory (see [Arduino vs. Desktop C++](arduino_vs_desktop.md)) forces a frugality that a desktop with gigabytes does not. The exact type sizes are in [Variables and Basic Types](Chapter1/variables.md).
+This is why every type in C++ has a **size**. A `bool` needs just one byte; an `int` is usually four bytes (32 bits); a `double` is eight. The size sets a hard limit on what fits: a 32-bit `int` can count to roughly ±2 billion, and pushing past that makes it **overflow** — C++ leaves the result undefined, so in practice you get a garbage value, often one that has wrapped around. It is also why a microcontroller with only a few **kilobytes** of memory (see [Arduino vs. Desktop C++](arduino_vs_desktop.md)) forces a frugality that a desktop with gigabytes does not. The exact type sizes are in [Variables and Basic Types](Chapter1/variables.md).
 
 ### Kilobyte or kibibyte? (1000 vs. 1024) {#binary-prefixes}
 
@@ -58,7 +58,8 @@ Your files live in **folders** (also called **directories**), which nest inside 
 
 - An **absolute path** starts from the top (the "root") and is unambiguous:
     - Windows: `C:\Users\ada\projects\hello\main.cpp`
-    - macOS / Linux: `/home/ada/projects/hello/main.cpp`
+    - macOS: `/Users/ada/projects/hello/main.cpp`
+    - Linux: `/home/ada/projects/hello/main.cpp`
 - A **relative path** is relative to where you currently are — your *working directory*: `projects/hello/main.cpp`, or `../other` to go up one level.
 
 Your **home directory** is your personal folder: `C:\Users\<you>` on Windows, `/Users/<you>` on macOS, `/home/<you>` on Linux. It is often written `~`.
@@ -67,7 +68,7 @@ Your **home directory** is your personal folder: `C:\Users\<you>` on Windows, `/
 
 Your **working directory** (or "current directory") is the folder a program is "in" right now — the folder that relative paths are measured from. In a terminal, `pwd` prints it and `cd` changes it.
 
-It matters for a running program too. When your code opens a file by a plain name — `std::ofstream out("report.txt")` — it does not look in your project folder; it looks in the *working directory of the running program*, and **when you launch from an IDE, that is usually not where you expect.** CLion runs your program from the build folder (e.g. `cmake-build-debug/`), so a `report.txt` your program writes lands *there*, and a `readings.txt` it reads must live *there* too — not beside your source code.
+It matters for a running program too. When your code opens a file by a plain name — `std::ofstream out("report.txt")` (you will meet `std::ofstream` in Chapter 4) — it does not look in your project folder; it looks in the *working directory of the running program*, and **when you launch from an IDE, that is usually not where you expect.** CLion runs your program from the build folder (e.g. `cmake-build-debug/`), so a `report.txt` your program writes lands *there*, and a `readings.txt` it reads must live *there* too — not beside your source code.
 
 If a program "cannot find" a file that clearly exists, or writes one you then cannot find, the working directory is almost always why. In CLion you can see or change it under **Run → Edit Configurations → Working directory**.
 
@@ -103,7 +104,7 @@ A good home for your coursework: `C:\dev\ais1003\` on Windows, or `~/dev/ais1003
 
 Out of the box, your operating system hides some of this from you — file extensions, and certain files and folders — on the assumption that you are a consumer who would only be confused by them. The moment you start programming, that assumption stops holding: those hidden details are exactly the ones you now need to see. Switching the hiding off is one of the first things to do on a machine you write code on — an engineer sets up the tool to show what is really there.
 
-**File name extensions.** The letters after the dot — `.cpp`, `.h`, `.txt`, `.exe` — are how you *and your tools* tell one kind of file from another: your build lists `main.cpp` by that exact name, your editor picks C++ highlighting from the `.cpp`, and double-clicking an `.exe` runs it. Yet Windows hides these extensions by default, so `main.cpp` shows up as plain `main`, and you cannot tell a `report.txt` from a `report.exe` from a folder named `report`. Hence the classic beginner trap: you tell Notepad to "save as `main.cpp`" but — the real extension being hidden — never notice it actually wrote `main.cpp.txt`; your build still looks for `main.cpp`, does not find it, and fails before it compiles a thing. With extensions shown, the slip is obvious at a glance.
+**File name extensions.** Here is the classic beginner trap: you tell Notepad to "save as `main.cpp`", but because Windows hides extensions by default you never notice it actually wrote `main.cpp.txt`; your build looks for `main.cpp`, does not find it, and fails before compiling a thing. The letters after the dot — `.cpp`, `.h`, `.txt`, `.exe` — are how you *and your tools* tell one kind of file from another, so hiding them also means you cannot tell a `report.txt` from a `report.exe` from a folder named `report`. With extensions shown, the slip is obvious at a glance.
 
 **Hidden files.** Names beginning with a dot — `.git`, `.gitignore`, `.idea` — are concealed by default, and they are precisely the files you are about to start caring about: the `.git` folder that holds your entire [version history](Chapter2/version_control.md), and the `.gitignore` next to it that lists what to leave out. When a file you know you created seems to have vanished, it is often merely hidden.
 

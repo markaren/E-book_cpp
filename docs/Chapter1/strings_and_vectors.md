@@ -54,6 +54,18 @@ int main() {
 
 Had you written `std::cin >> fullName`, typing `Ada Lovelace` would store only `Ada` and leave `Lovelace` behind — a classic beginner surprise. Use `>>` for single words, `getline` for whole lines.
 
+!!! warning "Don't mix `>>` and `getline` on the same input"
+
+    Reading a number with `std::cin >> age;` and then a line with `std::getline(std::cin, name);` gives you an *empty* `name`. The `>>` reads the number but leaves the newline you pressed sitting in the input; `getline` then reads up to that leftover newline and stops immediately, with nothing.
+
+    The simplest cure is not to mix them: read every line with `getline` and convert the ones you need to numbers. If you must mix, throw away the leftover newline after the `>>` with:
+
+    ```cpp
+    std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+    ```
+
+    (that needs `#include <limits>`). Chapter 4's [Input, Output, and File Streams](../Chapter4/io_streams.md) explains streams properly.
+
 ---
 
 ## `std::vector`: a list of values

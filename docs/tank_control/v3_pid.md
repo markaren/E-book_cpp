@@ -92,19 +92,26 @@ public:
 
     double compute(double measurement, double dt) override {
         double error = setpoint_ - measurement;
-        integral_ += error * dt;
         double derivative = (error - previousError_) / dt;
         previousError_ = error;
 
+        integral_ += error * dt;
         double output = kp_ * error + ki_ * integral_ + kd_ * derivative;
-        if (output < 0.0) { output = 0.0; }   // a valve cannot open less than shut
-        if (output > 1.0) { output = 1.0; }   // ...or more than fully open
+
+        // Anti-windup: if the valve is already hard against a limit, don't let
+        // the integral keep piling up — undo this step's accumulation and clamp.
+        if (output > 1.0) { integral_ -= error * dt; output = 1.0; }   // ...or more than fully open
+        else if (output < 0.0) { integral_ -= error * dt; output = 0.0; }  // a valve cannot open less than shut
         return output;
     }
 };
 ```
 
-The gains `kp_`, `ki_`, `kd_` are kept as private state, along with the running `integral_` and the last error. (Tuning those gains well is an engineering field of its own; the values below are just sensible starting numbers.)
+The gains `kp_`, `ki_`, `kd_` are kept as private state, along with the running `integral_` and the last error. (Tuning those gains well is an engineering field of its own; the values below are just sensible starting numbers.[^kd])
+
+[^kd]: We leave the derivative term at `0` throughout this arc; using it well has pitfalls of its own (it amplifies sensor noise), so it stays out of the way here.
+
+> **Integral windup — and why the two anti-windup lines matter.** While the level is far below the setpoint the valve is flat-out at `1.0`, but the error is still positive, so a plain integral keeps growing step after step against a valve that cannot open any further. That stored-up surplus is **integral windup**. When the level finally reaches the setpoint the integral is now enormous, and it holds the valve wide open long past the point it should have eased off — the level sails well past target before the controller can claw it back. The fix, **conditional integration** (a form of *anti-windup*), is the two lines above: when the output is already saturated, we undo that step's contribution to `integral_` so it never accumulates against a maxed-out valve. Every serious PID implementation you meet in industry has anti-windup of some kind; this is that feature in miniature.
 
 ---
 
@@ -134,7 +141,7 @@ int main() {
 }
 ```
 
-Run it and the level rises and **settles** at 5 m instead of chattering: as it nears the setpoint the PID eases the valve toward the ~30% opening that exactly matches the outflow, and the integral term trims away the last bit of offset. That is the difference between bang-bang and proportional control, on your screen.
+Run it and the level climbs from 2 m and **settles** near 5 m instead of chattering. For the first stretch the valve is flat-out and the level rises steadily; around step 27 the controller starts easing the valve off full, and the level reaches the setpoint at about step 50. It drifts a little past — a small **overshoot** to roughly 5.19 m near step 65 — then the controller pulls it gently back, and by the end of the run (step 80) it is sitting at about 5.12 m and still creeping down toward the setpoint. In steady state the valve settles toward the ~30% opening that exactly matches the outflow (`0.03 / 0.10`), with the integral term trimming away the last bit of offset. That is the difference between bang-bang and proportional control, on your screen.
 
 The output is **CSV** — `time,level,setpoint` — so you can redirect it to a file (`./tank_control > run.csv`) and open it in a spreadsheet to plot the curve. To write the file from inside the program instead, swap `std::cout` for a `std::ofstream`; see [IO & Streams](../Chapter4/io_streams.md).
 
@@ -146,6 +153,7 @@ The output is **CSV** — `time,level,setpoint` — so you can redirect it to a 
 - **Separation of concerns** — the plant knows physics, the controller knows control, the sensor knows measurement. None reaches into another. See [Separation of Concerns](../Chapter6/soc.md).
 - **Polymorphism, again** — the loop runs against a `Controller&`, so on/off and PID are drop-in swaps. See [Polymorphism](../Chapter5/polymorphism.md).
 - **A real control law** — PID is what actually runs in pumps, ovens, drones, and process plants.
+- **Anti-windup** — the two guarded lines in `compute` stop the integral running away while the valve is saturated; every industrial PID needs this.
 
 ## What's still awkward → Version 4
 

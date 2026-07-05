@@ -9,7 +9,7 @@ This page gets you from nothing to a running "Hello, World!". JetBrains' [Quick 
 ## 1. Install CLion
 
 1. Download CLion from [jetbrains.com/clion](https://www.jetbrains.com/clion/) and run the installer with the default options.
-2. CLion is **free for students**. The first time it launches it will ask you to sign in — create a free JetBrains account and activate the free licence through the [JetBrains educational program](https://www.jetbrains.com/community/education/#students).
+2. CLion is **free for non-commercial use** — coursework included. The first time it launches it will ask you to sign in; create a free JetBrains account, and when prompted choose the **non-commercial** licence. (Students and teachers can alternatively apply for the [educational programme](https://www.jetbrains.com/community/education/#students), which also covers other JetBrains tools, but for this course the non-commercial licence is enough.)
 
 <!-- screenshot: CLion first-run / sign-in screen -->
 
@@ -84,7 +84,7 @@ Do not worry about what each line means yet — [Basic Structure](Chapter1/basic
 
 C++ has to be **compiled** into an executable before it can run. CLion does both with one click:
 
-- Click the green **▶ Run** button near the top-right corner (or press **Shift+F10**).
+- Click the green **▶ Run** button near the top-right corner (or press **Shift+F10** on Windows/Linux, **Ctrl+R** on macOS).
 - The hammer icon next to it *builds* without running, if you ever want that.
 
 <!-- screenshot: top-right toolbar showing the Run (play) and Build (hammer) buttons -->

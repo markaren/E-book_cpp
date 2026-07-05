@@ -50,7 +50,7 @@ std::string copy = std::move(log);   // move, not copy
 Now C++ does this:
 
 1. Copy the three small fields (pointer, size, capacity) from `log` into `copy`.
-2. Set `log`'s pointer to `nullptr` and its size and capacity to zero, so that its destructor does nothing harmful.
+2. Typically, set `log`'s pointer to `nullptr` and its size and capacity to zero, so that its destructor does nothing harmful. (The standard only requires `log` to be left *valid but unspecified* — see below — so the exact leftover state may vary; empty is the usual result.)
 
 That is it. No 10 MB allocation, no `memcpy`, no thousand copy constructors. Three pointer-sized writes, regardless of the size of the data.
 
@@ -139,9 +139,17 @@ If you write your own class and follow the [Rule of Zero](memory.md#the-rule-of-
 
 ## Designing a movable class
 
+!!! info "Optional — for the curious"
+
+    This section is the deepest material in the book, and you will rarely write it yourself: the [Rule of Zero](memory.md#the-rule-of-zero) makes it unnecessary almost every time. Read it to understand *how* a move works under the bonnet, but do not feel you must master it to use moves. The exercise built on it is likewise marked advanced.
+
 The Rule of Zero covers almost everything. But occasionally a class owns a **raw resource** that no standard type already wraps — a handle from a C API, a hardware connection, a lock. Then the compiler-generated operations are wrong, and you must write the move operations yourself.
 
 Take the `SensorConnection` from [RAII](../Chapter4/raii.md): it opens a connection in its constructor and closes it in its destructor. A connection is *unique* — there is one physical link, and copying the object cannot duplicate it. So the right design is **move-only**: you can transfer the connection out of one object into another, but you cannot copy it. This is exactly how `std::unique_ptr` behaves.
+
+!!! note "First, the `&&` syntax: rvalue references"
+
+    A move constructor is written `SensorConnection(SensorConnection&& other)`. The double ampersand `&&` makes `other` an **rvalue reference** — a reference that binds to *temporaries* and to values you have wrapped in `std::move`, rather than to ordinary named variables. Read `T&&` as: "this parameter is something you are allowed to steal from." It is precisely how the compiler tells a move apart from a copy: an argument that is a temporary (or `std::move`d) matches `T&&` and selects the move constructor, while an ordinary lvalue matches the copy constructor's `const T&`. So the move constructor takes the resource out of `other`, knowing the caller has promised not to need it any more.
 
 ```cpp
 class SensorConnection {
@@ -187,7 +195,7 @@ Four things make it correct:
 - **Move assignment releases, then steals.** It closes the connection it currently holds before taking the other's, and guards against self-assignment (`x = std::move(x)`).
 - **Copying is `= delete`d.** That states the move-only intent and turns any attempt to copy into a compile error, rather than a silent, broken duplicate.
 
-**Mark the move operations `noexcept`.** It promises they cannot throw — true here, since they only shuffle a handle around. This matters in practice: `std::vector` will only *move* your objects when it grows (rather than copy them) if their move constructor is `noexcept`.
+**Mark the move operations `noexcept`.** It promises they cannot throw — true here, since they only shuffle a handle around. This matters in practice when a `std::vector` grows and has to relocate its elements. For a type that can *also* be copied, the vector will only move the elements if the move constructor is `noexcept`; otherwise it copies them, because a throwing move partway through relocation could leave the container broken, and copying preserves the strong exception guarantee (this trade-off is made by `std::move_if_noexcept`). A **move-only** type like this one has no copy to fall back on, so the vector must move it regardless — but marking the moves `noexcept` is still the right habit, and it is what lets containers move your *copyable* types too.
 
 This is the **Rule of Five**: once you write a destructor and the move operations, the compiler stops filling in the rest, so you account for all five — here, by deleting the copies. (The [Rule of Zero](memory.md#the-rule-of-zero) is how you usually avoid all of this.)
 

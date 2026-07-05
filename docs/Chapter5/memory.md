@@ -2,7 +2,7 @@
 
 Every value in a C++ program lives somewhere in memory. Most of the time you do not have to think about *where*: the language and compiler handle it for you. But automation code talks to hardware, builds long-lived state machines, and runs for hours; getting memory management wrong here causes real bugs that real users will see.
 
-This chapter walks through the two places values can live (the **stack** and the **heap**), the old C-style way of managing dynamic memory (`new` / `delete`), why it is dangerous, and the modern tools (**smart pointers**) that make it safe again.
+This chapter walks through the two places values can live (the **stack** and the **heap**), the manual way of managing dynamic memory (`new` / `delete`), why it is dangerous, and the modern tools (**smart pointers**) that make it safe again.
 
 ---
 
@@ -43,7 +43,7 @@ void demo() {
 
 Nothing to clean up. Each local variable is created when the function is entered and destroyed when the function returns. This is the easy, fast, correct default.
 
-### Heap example (the C way, do not write code like this)
+### Heap example (the manual way, do not write code like this)
 
 ```cpp
 #include <iostream>
@@ -196,7 +196,7 @@ Motor 7 spinning
 Motor 7 destroyed
 ```
 
-`std::make_unique<Motor>(7)` allocates a `Motor` on the heap and hands the pointer to a `unique_ptr` that owns it. When `m` goes out of scope, its destructor runs and the `Motor` is destroyed. No leaks, no use-after-free, no double-delete.
+`std::make_unique<Motor>(7)` allocates a `Motor` on the heap and hands the pointer to a `unique_ptr` that owns it. You reach the object's members through the smart pointer with `->`, exactly as with a raw pointer (`m->spin()` means `(*m).spin()` — see [pointers to objects](../Chapter4/types_refs_ptrs.md#pointers-to-objects)). When `m` goes out of scope, its destructor runs and the `Motor` is destroyed. No leaks, no use-after-free, no double-delete.
 
 A `unique_ptr` cannot be copied (that would create a second owner), but it can be **moved**:
 
@@ -206,29 +206,75 @@ std::unique_ptr<Motor> b = std::move(a);   // ownership transferred to b
 // a is now empty (nullptr); b owns the Motor
 ```
 
-(More on `std::move` in the [next chapter](move.md).)
+(More on `std::move` on the [next page](move.md).)
 
 ### `std::shared_ptr`: shared ownership
 
-When several parts of your program legitimately share ownership of one object (and none of them can decide alone when it should be destroyed), use `std::shared_ptr`. It keeps a reference count and deletes the object when the last `shared_ptr` to it goes away.
+When several parts of your program legitimately share ownership of one object (and none of them can decide alone when it should be destroyed), use `std::shared_ptr`. It keeps a **reference count** and deletes the object when the last `shared_ptr` to it goes away.
+
+The defining difference from `unique_ptr`: a `shared_ptr` **can be copied**. Each copy is another co-owner, and every copy bumps the shared reference count up by one; every destruction bumps it back down. (Recall `unique_ptr` forbids copying entirely — the *only* way to hand one over is to move it.) The object is destroyed exactly when that count reaches zero.
+
+Imagine a `Sensor` that both a logger and a controller need to keep alive. Neither should be the sole owner, and the sensor must live until *both* are finished with it — a textbook case for shared ownership:
 
 ```cpp
+#include <iostream>
 #include <memory>
-#include <vector>
+#include <string>
 
-void demo() {
-    auto motor = std::make_shared<Motor>(42);
+class Sensor {
+public:
+    explicit Sensor(std::string name) : name_(std::move(name)) {
+        std::cout << "Sensor " << name_ << " created\n";
+    }
+    ~Sensor() { std::cout << "Sensor " << name_ << " destroyed\n"; }
+    double read() const { return 21.5; }
 
-    std::vector<std::shared_ptr<Motor>> subscribers;
-    subscribers.push_back(motor);    // reference count: 2
-    subscribers.push_back(motor);    // reference count: 3
+private:
+    std::string name_;
+};
 
-    // Motor is destroyed only after `motor` and both copies in
-    // `subscribers` are all gone.
-}
+class Controller {
+public:
+    explicit Controller(std::shared_ptr<Sensor> s) : sensor_(std::move(s)) {}   // takes shared ownership
+    // ... uses sensor_ ...
+private:
+    std::shared_ptr<Sensor> sensor_;
+};
+
+int main() {
+    auto sensor = std::make_shared<Sensor>("outdoor");
+    std::cout << sensor.use_count() << "\n";     // 1 — only main holds it
+
+    Controller ctrl(sensor);                     // ctrl is now a co-owner
+    std::cout << sensor.use_count() << "\n";     // 2
+
+    {
+        Controller ctrl2(sensor);
+        std::cout << sensor.use_count() << "\n"; // 3
+    }                                            // ctrl2 gone → count back to 2
+    std::cout << sensor.use_count() << "\n";     // 2
+}   // ctrl and sensor go → count hits 0 → "Sensor outdoor destroyed" prints here
 ```
 
-`shared_ptr` is more expensive than `unique_ptr` (the reference count has to be maintained, atomically, across threads). Reach for it only when shared ownership is really what you need.
+`use_count()` reports how many `shared_ptr`s currently own the object. It is a handy window on what is happening — useful for learning and debugging — though real code rarely needs to consult it.
+
+**Passing a `shared_ptr` around.** A common mistake is to accept `shared_ptr<T>` everywhere. Do not. The type of the parameter should say what the function does with ownership:
+
+| The function… | Parameter to take |
+|---------------|-------------------|
+| Only *uses* the object for the duration of the call | `const T&` (or `T&` to modify it) — no ownership, no reference-count traffic |
+| *Stores* the object, becoming a co-owner | `std::shared_ptr<T>` **by value** (then `std::move` it into the member) |
+
+`logReading(const Sensor&)` just reads a sensor, so it borrows one and never touches the count. `Controller` keeps its sensor alive for its whole life, so it takes a `shared_ptr` by value and stores it. Taking a `shared_ptr` when you only needed a reference forces a needless reference-count update on every call.
+
+**Polymorphism works exactly as with `unique_ptr`.** A `shared_ptr` to a base class dispatches virtual calls to the real derived type:
+
+```cpp
+std::shared_ptr<Shape> s = std::make_shared<Circle>(2.0);
+std::cout << s->area() << "\n";     // calls Circle::area() — virtual dispatch through the shared_ptr
+```
+
+`shared_ptr` is more expensive than `unique_ptr` (the reference count has to be maintained, atomically, so it is safe to share across threads). Reach for it only when shared ownership is really what you need — which, in practice, is less often than beginners expect.
 
 ### `std::weak_ptr`: non-owning observer
 

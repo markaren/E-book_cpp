@@ -22,7 +22,7 @@ Større verdier bruker bare flere byte:
 | **megabyte** (MB) | ~1 000 kB | et bilde eller en sang |
 | **gigabyte** (GB) | ~1 000 MB | en film; datamaskinens RAM måles i disse |
 
-Det er derfor hver type i C++ har en **størrelse**. En `bool` trenger bare én byte; en `int` er vanligvis fire byte (32 bits); en `double` er åtte. Størrelsen setter en hard grense for hva som får plass: en 32-bits `int` kan telle til omtrent ±2 milliarder, og går du forbi det, **renner den over** (overflow) og ruller rundt. Det er også derfor en mikrokontroller med bare noen få **kilobyte** minne (se [Arduino vs. desktop-C++](arduino_vs_desktop.md)) tvinger fram en nøysomhet som en datamaskin med gigabyte ikke gjør. De nøyaktige typestørrelsene står i [Variabler og grunntyper](Chapter1/variables.md).
+Det er derfor hver type i C++ har en **størrelse**. En `bool` trenger bare én byte; en `int` er vanligvis fire byte (32 bits); en `double` er åtte. Størrelsen setter en hard grense for hva som får plass: en 32-bits `int` kan telle til omtrent ±2 milliarder, og går du forbi det, **renner den over** (overflow) — C++ lar resultatet være udefinert, så i praksis får du en søppelverdi, ofte en som har rullet rundt. Det er også derfor en mikrokontroller med bare noen få **kilobyte** minne (se [Arduino vs. desktop-C++](arduino_vs_desktop.md)) tvinger fram en nøysomhet som en datamaskin med gigabyte ikke gjør. De nøyaktige typestørrelsene står i [Variabler og grunntyper](Chapter1/variables.md).
 
 ### Kilobyte eller kibibyte? (1000 vs. 1024) {#binary-prefixes}
 
@@ -58,7 +58,8 @@ Filene dine ligger i **mapper** (også kalt **kataloger**), som ligger inni hver
 
 - En **absolutt sti** starter fra toppen ("roten") og er entydig:
     - Windows: `C:\Users\ada\projects\hello\main.cpp`
-    - macOS / Linux: `/home/ada/projects/hello/main.cpp`
+    - macOS: `/Users/ada/projects/hello/main.cpp`
+    - Linux: `/home/ada/projects/hello/main.cpp`
 - En **relativ sti** er relativ til der du er nå — din *arbeidskatalog*: `projects/hello/main.cpp`, eller `../other` for å gå opp ett nivå.
 
 **Hjemmemappen** din er din personlige mappe: `C:\Users\<deg>` på Windows, `/Users/<deg>` på macOS, `/home/<deg>` på Linux. Den skrives ofte `~`.
@@ -67,7 +68,7 @@ Filene dine ligger i **mapper** (også kalt **kataloger**), som ligger inni hver
 
 **Arbeidskatalogen** din (eller "gjeldende katalog") er mappa et program er "i" akkurat nå — mappa som relative stier måles fra. I en terminal skriver `pwd` den ut og `cd` endrer den.
 
-Den har betydning for et kjørende program også. Når koden din åpner en fil med bare et navn — `std::ofstream out("report.txt")` — leter den ikke i prosjektmappa di; den leter i *arbeidskatalogen til det kjørende programmet*, og **når du starter programmet fra en IDE, er ikke det der du tror.** CLion kjører programmet ditt fra byggemappa (f.eks. `cmake-build-debug/`), så en `report.txt` programmet skriver havner *der*, og en `readings.txt` det leser må ligge *der* — ikke ved siden av kildekoden.
+Den har betydning for et kjørende program også. Når koden din åpner en fil med bare et navn — `std::ofstream out("report.txt")` (du møter `std::ofstream` i kapittel 4) — leter den ikke i prosjektmappa di; den leter i *arbeidskatalogen til det kjørende programmet*, og **når du starter programmet fra en IDE, er ikke det der du tror.** CLion kjører programmet ditt fra byggemappa (f.eks. `cmake-build-debug/`), så en `report.txt` programmet skriver havner *der*, og en `readings.txt` det leser må ligge *der* — ikke ved siden av kildekoden.
 
 Hvis et program "ikke finner" en fil som tydeligvis finnes, eller skriver en du så ikke finner igjen, er arbeidskatalogen nesten alltid grunnen. I CLion kan du se eller endre den under **Run → Edit Configurations → Working directory**.
 
@@ -103,7 +104,7 @@ Et godt hjem for kursarbeidet ditt: `C:\dev\ais1003\` på Windows, eller `~/dev/
 
 Rett ut av boksen skjuler operativsystemet noe av dette for deg — filendelser, og enkelte filer og mapper — ut fra en antakelse om at du er en forbruker som bare ville blitt forvirret av dem. I det øyeblikket du begynner å programmere, slutter den antakelsen å holde: de skjulte detaljene er nettopp dem du nå trenger å se. Å skru av skjulingen er noe av det første du bør gjøre på en maskin du skriver kode på — en ingeniør setter opp verktøyet sitt til å vise det som faktisk er der.
 
-**Filnavnutvidelser.** Bokstavene etter punktumet — `.cpp`, `.h`, `.txt`, `.exe` — er måten du *og verktøyene dine* skiller én filtype fra en annen på: byggingen din lister opp `main.cpp` med akkurat det navnet, redigereren velger C++-utheving ut fra `.cpp`-en, og dobbeltklikk på en `.exe` kjører den. Likevel skjuler Windows disse endelsene som standard, så `main.cpp` vises som bare `main`, og du kan ikke skille en `report.txt` fra en `report.exe` fra en mappe som heter `report`. Derav den klassiske nybegynnerfella: du ber Notisblokk "lagre som `main.cpp`", men — siden den egentlige endelsen er skjult — merker du aldri at den faktisk skrev `main.cpp.txt`; byggingen leter fortsatt etter `main.cpp`, finner den ikke, og feiler før den kompilerer noe som helst. Med endelser synlige er glippen åpenbar ved første øyekast.
+**Filnavnutvidelser.** Her er den klassiske nybegynnerfella: du ber Notisblokk "lagre som `main.cpp`", men siden Windows skjuler endelser som standard, merker du aldri at den faktisk skrev `main.cpp.txt`; byggingen leter etter `main.cpp`, finner den ikke, og feiler før den kompilerer noe som helst. Bokstavene etter punktumet — `.cpp`, `.h`, `.txt`, `.exe` — er måten du *og verktøyene dine* skiller én filtype fra en annen på, så å skjule dem betyr også at du ikke kan skille en `report.txt` fra en `report.exe` fra en mappe som heter `report`. Med endelser synlige er glippen åpenbar ved første øyekast.
 
 **Skjulte filer.** Navn som begynner med et punktum — `.git`, `.gitignore`, `.idea` — er skjult som standard, og de er nettopp filene du straks vil begynne å bry deg om: `.git`-mappa som rommer hele [versjonshistorikken](Chapter2/version_control.md) din, og `.gitignore` ved siden av som lister opp hva som skal holdes utenfor. Når en fil du vet du har laget ser ut til å ha forsvunnet, er den ofte bare skjult.
 

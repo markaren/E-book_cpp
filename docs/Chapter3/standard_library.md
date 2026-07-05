@@ -31,7 +31,7 @@ std::vector<int> readings = {17, 42, 99, 8};
 
 readings.push_back(5);           // append
 int first = readings[0];          // index access (no bounds check)
-int safer = readings.at(0);       // bounds-checked, throws if out of range
+int safer = readings.at(0);       // bounds-checked; stops the program with an error unless handled (Chapter 6)
 
 readings.size();                  // number of elements
 readings.empty();                 // true if size == 0
@@ -49,7 +49,7 @@ for (int value : readings) {
 
 ### `std::array<T, N>`: a fixed-size array
 
-A safer replacement for the C-style array. Size is fixed at compile time, so it lives on the stack.
+A safer replacement for the C-style array. Size is fixed at compile time; there is no heap allocation, the elements live inside the object itself.
 
 ```cpp
 #include <array>
@@ -94,9 +94,11 @@ for (const auto& [word, count] : wordCount) {   // [word, count] splits each key
 }
 ```
 
+The `[word, count]` is a *structured binding* — it unpacks the pair into two named variables so you can write `word` and `count` instead of `.first` and `.second`.
+
 ### `std::unordered_map<K, V>`: a hash-based key-value store
 
-Same interface as `std::map`, but unsorted and faster on average (constant-time lookup).
+Same day-to-day usage as `std::map`, but unsorted and faster on average (constant-time lookup). It drops the ordered operations — no sorted iteration, no range queries — since a hash table has no notion of order.
 
 ```cpp
 #include <unordered_map>
@@ -144,7 +146,7 @@ if (it != v.end()) {
     // found, *it == 4
 }
 
-int count4 = std::count(v.begin(), v.end(), 1);     // 2
+int ones   = std::count(v.begin(), v.end(), 1);     // 2 (how many 1s)
 int total  = std::accumulate(v.begin(), v.end(), 0); // 31
 int maxVal = *std::max_element(v.begin(), v.end());  // 9
 ```
@@ -161,7 +163,7 @@ Picture an iterator as a bookmark:
 
 - `v.begin()` marks the first element.
 - `v.end()` marks *one past* the last — a stop marker, not a real element.
-- `*it` reads the element at that position (just like dereferencing a pointer).
+- `*it` reads the element at that position — follow the bookmark to what it marks.
 - `++it` advances to the next element.
 
 Walking a container by hand looks like this:
@@ -178,12 +180,14 @@ That is exactly what the range-based `for (int x : v)` you already use does unde
 
 ## Ranges (C++20)
 
-Passing `v.begin(), v.end()` every time is noise; you almost always mean "the whole thing." C++20's **ranges** let you say exactly that. Every algorithm from the previous section has a `std::ranges::` version (in the same `<algorithm>` header) that takes the container directly:
+Passing `v.begin(), v.end()` every time is noise; you almost always mean "the whole thing." C++20's **ranges** let you say exactly that. Most algorithms from the previous section have a `std::ranges::` version (in the same `<algorithm>` header) that takes the container directly:
 
 ```cpp
 std::ranges::sort(v);                  // instead of std::sort(v.begin(), v.end())
 auto it = std::ranges::find(v, 4);     // instead of std::find(v.begin(), v.end(), 4)
 ```
+
+One common one has *no* ranges form in C++20: `std::accumulate` (it lives in `<numeric>`, not `<algorithm>`). Keep calling it with the `begin(), end()` pair — the range-based fold, `std::ranges::fold_left`, only arrived in C++23.
 
 Prefer these in new code — this course uses C++20 — because they are shorter and close a real footgun: you can no longer accidentally pair `begin()` from one container with `end()` from another.
 

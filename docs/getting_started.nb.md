@@ -9,7 +9,7 @@ Denne siden tar deg fra ingenting til et kjørende "Hello, World!". JetBrains' [
 ## 1. Installer CLion
 
 1. Last ned CLion fra [jetbrains.com/clion](https://www.jetbrains.com/clion/) og kjør installasjonsprogrammet med standardvalgene.
-2. CLion er **gratis for studenter**. Første gang det starter, blir du bedt om å logge inn — opprett en gratis JetBrains-konto og aktiver den gratis lisensen via [JetBrains' utdanningsprogram](https://www.jetbrains.com/community/education/#students).
+2. CLion er **gratis til ikke-kommersiell bruk** — kursarbeid inkludert. Første gang det starter, blir du bedt om å logge inn; opprett en gratis JetBrains-konto, og velg den **ikke-kommersielle** lisensen når du blir spurt. (Studenter og lærere kan alternativt søke om [utdanningsprogrammet](https://www.jetbrains.com/community/education/#students), som også dekker andre JetBrains-verktøy, men for dette emnet holder den ikke-kommersielle lisensen.)
 
 <!-- screenshot: CLion førstegangs-/innloggingsskjerm -->
 
@@ -84,7 +84,7 @@ Ikke bry deg om hva hver linje betyr ennå — [Grunnstruktur](Chapter1/basic_st
 
 C++ må **kompileres** til en kjørbar fil før det kan kjøre. CLion gjør begge deler med ett klikk:
 
-- Klikk den grønne **▶ Run**-knappen øverst til høyre (eller trykk **Shift+F10**).
+- Klikk den grønne **▶ Run**-knappen øverst til høyre (eller trykk **Shift+F10** på Windows/Linux, **Ctrl+R** på macOS).
 - Hammerikonet ved siden av *bygger* uten å kjøre, hvis du noen gang vil det.
 
 <!-- screenshot: verktøylinjen øverst til høyre med Run- (play) og Build- (hammer) knappene -->

@@ -24,7 +24,7 @@ The standard library adds a few more types you will use constantly in desktop C+
 
 | Type          | Holds                       | Header        |
 |---------------|-----------------------------|---------------|
-| `std::string` | text; see [Strings](../strings.md)  | `<string>`    |
+| `std::string` | text; see [Strings and Vectors](strings_and_vectors.md)  | `<string>`    |
 | `std::vector` | a resizable list of values  | `<vector>`    |
 
 On small microcontrollers these are often unavailable; there you use fixed-size arrays and buffers instead (see [Arduino vs. Desktop C++](../arduino_vs_desktop.md)).
@@ -80,6 +80,15 @@ For numeric types it is up to you. For class types (which you will meet in Chapt
 Sometimes the type is obvious from the right-hand side and writing it out is just noise:
 
 ```cpp
+int a = 3;
+int b = 4;
+
+auto sum = a + b;   // the type follows the right-hand side: int
+```
+
+Here `auto` saves almost nothing — `int` is short — but the principle is the whole point: `auto` gives the variable whatever type the right-hand side already has. It pays off when that type is long to write:
+
+```cpp
 std::vector<int> numbers = {1, 2, 3, 4, 5};
 
 // Without auto:
@@ -102,7 +111,7 @@ A name can contain letters, digits, and underscores, and must start with a lette
 Two conventions used throughout this book:
 
 - Local variables and function parameters: `lowerCamelCase`, like `maxSpeed`, `sensorIndex`.
-- Constants and macros: `UPPER_SNAKE_CASE`, like `MAX_RETRIES`.
+- Ordinary constants: the same `lowerCamelCase` as variables, like `maxRetries`. `UPPER_SNAKE_CASE` is reserved for **macros** (a preprocessor feature you will rarely write), which keeps them visually distinct from real variables.
 
 Pick descriptive names. `int x` is fine for a loop counter; `int maxAllowedTemperature` is far better than `int t` if that is what the variable means.
 

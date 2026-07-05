@@ -85,7 +85,7 @@ Du har tre prøvekarakterer: `7`, `8` og `10`. Skriv ut gjennomsnittet deres. S�
 
 ## 3. Sensoravlesninger
 
-*Øver på: [Strenger og vektorer](strings_and_vectors.md)*
+*Øver på: [Strenger og vektorer](strings_and_vectors.md), [Kontrollstrukturer](control_statements.md)*
 
 Lagre fem sensoravlesninger — `42, 17, 99, 8, 56` — i en `std::vector<int>`. Skriv ut hvor mange det er, gjennomsnittet deres (som et desimaltall), og det største.
 
@@ -222,5 +222,134 @@ Definer en `enum class TrafficLight` med `Red`, `Amber` og `Green`. Skriv en fun
     ```
 
     Et fast sett med navngitte verdier håndtert av en `switch`. Uten `default` advarer kompilatoren deg hvis du legger til en farge senere og glemmer den her.
+
+    </div>
+
+---
+
+## 7. Fortsett å spørre
+
+*Øver på: [Kontrollstrukturer](control_statements.md)*
+
+Spør brukeren om et positivt tall, om og om igjen, til de faktisk gir deg et. Skriv det så ut. Bruk en `do-while`-løkke, så du spør minst én gang.
+
+> Hint: dette er `do-while`-mønsteret fra kapittelet — les inne i løkken, og gjenta så lenge verdien ennå ikke er positiv.
+
+Kjør det — du skal se:
+
+```
+Enter a positive number: -4
+Enter a positive number: 0
+Enter a positive number: 12
+Thanks — you entered 12
+```
+
+??? success "Vis løsning"
+
+    <div class="spoiler" markdown title="Klikk for å avsløre">
+
+    ```cpp
+    #include <iostream>
+
+    int main() {
+        int number = 0;
+
+        do {
+            std::cout << "Enter a positive number: ";
+            std::cin >> number;
+        } while (number <= 0);
+
+        std::cout << "Thanks — you entered " << number << "\n";
+    }
+    ```
+
+    En `do-while` kjører kroppen sin *før* den tester betingelsen, så ledeteksten vises alltid minst én gang. Løkken gjentar så lenge `number <= 0`, så den slipper deg først ut når verdien er ekte positiv — nettopp det "fortsett å spørre til det er gyldig" trenger.
+
+    </div>
+
+---
+
+## 8. Hils med fullt navn
+
+*Øver på: [Strenger og vektorer](strings_and_vectors.md)*
+
+Spør om brukerens fulle navn (fornavn *og* etternavn, med mellomrommet), hils på dem, og fortell hvor mange tegn navnet har. Fordi navnet inneholder et mellomrom, trenger du `std::getline`, ikke `std::cin >>`.
+
+> Hint: `std::getline(std::cin, name)` leser hele linjen; `name.length()` teller tegnene.
+
+Kjør det — du skal se:
+
+```
+Enter your full name: Ada Lovelace
+Hello, Ada Lovelace
+Your name has 12 characters.
+```
+
+??? success "Vis løsning"
+
+    <div class="spoiler" markdown title="Klikk for å avsløre">
+
+    ```cpp
+    #include <iostream>
+    #include <string>
+
+    int main() {
+        std::string name;
+
+        std::cout << "Enter your full name: ";
+        std::getline(std::cin, name);
+
+        std::cout << "Hello, " << name << "\n";
+        std::cout << "Your name has " << name.length() << " characters.\n";
+    }
+    ```
+
+    `std::getline` leser hele linjen, mellomrom inkludert, så `Ada Lovelace` kommer inn helt — `std::cin >> name` ville stoppet ved mellomrommet og beholdt bare `Ada`. Tallet `12` inkluderer mellomrommet, fordi det er ett av tegnene i strengen.
+
+    </div>
+
+---
+
+## 9. Temperaturklassifisering
+
+*Øver på: [Kontrollstrukturer](control_statements.md)*
+
+Les en temperatur (et helt antall grader Celsius) og skriv ut en beskrivelse ved hjelp av en `if` / `else if` / `else`-kjede: under `0` er `Freezing`, `0` til `14` er `Cold`, `15` til `24` er `Comfortable`, og `25` eller over er `Hot`.
+
+> Hint: test det kaldeste tilfellet først og arbeid oppover, så hver `else if` bare trenger å sjekke sin øvre grense.
+
+Kjør det — du skal se:
+
+```
+Enter the temperature in Celsius: 18
+Comfortable
+```
+
+??? success "Vis løsning"
+
+    <div class="spoiler" markdown title="Klikk for å avsløre">
+
+    ```cpp
+    #include <iostream>
+
+    int main() {
+        int celsius = 0;
+
+        std::cout << "Enter the temperature in Celsius: ";
+        std::cin >> celsius;
+
+        if (celsius < 0) {
+            std::cout << "Freezing\n";
+        } else if (celsius < 15) {
+            std::cout << "Cold\n";
+        } else if (celsius < 25) {
+            std::cout << "Comfortable\n";
+        } else {
+            std::cout << "Hot\n";
+        }
+    }
+    ```
+
+    Bare den første grenen som passer kjører, så det å ordne testene fra kaldest og oppover lar hver `else if` anta at alt under den allerede er utelukket: når `celsius < 15` sjekkes, vet vi at den ikke er under `0`, så den grenen betyr `0` til `14`. Den siste `else` fanger alt som er igjen — `25` og over.
 
     </div>

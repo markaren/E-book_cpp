@@ -22,7 +22,7 @@ En header deler *deklarasjoner*; å inkludere en `.cpp` kopierer *definisjonene*
 Vinkelparenteser for standard- og bibliotek-headere; hermetegn for dine egne filer. Se [Grunnstruktur](Chapter1/basic_structure.md). (Mer: [Stack Overflow](https://stackoverflow.com/questions/21593/what-is-the-difference-between-include-filename-and-include-filename).)
 
 **Hvorfor `#ifndef`/`#define` (eller `#pragma once`) øverst i headere?**
-De hindrer at en header limes inn i én fil to ganger, noe som ville gitt "redefinition"-feil. `#pragma once` er den moderne enlinjeren. Se [Lese kompilatorfeil](compiler_errors.md). (Mer: [Stack Overflow](https://stackoverflow.com/questions/1653958/why-are-ifndef-and-define-used-in-c-header-files).)
+De hindrer at en header limes inn i én fil to ganger, noe som ville gitt "redefinition"-feil. `#pragma once` er den moderne enlinjeren. Se [Klasser](Chapter4/classes.md), som lærer bort `#pragma once`, og [Lese kompilatorfeil](compiler_errors.md) for feilen den forhindrer. (Mer: [Stack Overflow](https://stackoverflow.com/questions/1653958/why-are-ifndef-and-define-used-in-c-header-files).)
 
 ---
 
@@ -36,6 +36,12 @@ C++ kompileres per plattform, og den samme kildekoden er ikke garantert å kompi
 
 **Det kompilerer og kjører, men gjør feil ting — hva nå?**
 Bruk debuggeren: sett et breakpoint, gå gjennom koden steg for steg, og følg variablene til det som *faktisk* skjer og det du *forventet* spriker. Se [Bruke en debugger](debugger.md).
+
+**Programmet mitt krasjet — hva betyr "Segmentation fault" / exit-kode `-1073741819` (`0xC0000005`)?**
+Programmet ditt prøvde å røre minne det ikke har lov til — en krasj under kjøring, ikke en kompileringsfeil. Meldingen på Linux/macOS er "Segmentation fault"; Windows-exit-koden `-1073741819` (heks `0xC0000005`, "access violation") er det samme. Vanlige årsaker: å indeksere en `std::vector` eller et array utenfor området, å bruke en referanse eller peker til noe som allerede er ødelagt (en *dinglende* en), eller å dereferere en `nullptr`. Grip til [debuggeren](debugger.md) — den stopper på den nøyaktige linjen — og se [levetidsfellen](Chapter4/types_refs_ptrs.md#the-big-lifetime-trap).
+
+**Hva betyr "Process finished with exit code 0"?**
+At programmet ditt kjørte helt ferdig og meldte suksess. Etter konvensjon returnerer `main` `0` for "alt i orden" (noe det gjør automatisk hvis du aldri skriver `return`), og enhver *ikke-null* kode betyr en feil eller en krasj — så en ikke-null exit-kode er det første tegnet på at noe gikk galt. Se [Grunnstruktur](Chapter1/basic_structure.md).
 
 **Hvorfor kjører `if (x = 5)` alltid?**
 `=` *tilordner*; du mente `==`, som *sammenligner*. Skru på advarsler, så flagger kompilatoren det. Se [Operatorer og uttrykk](Chapter1/operators_expressions.md).

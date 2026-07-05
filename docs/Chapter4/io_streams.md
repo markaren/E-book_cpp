@@ -75,6 +75,29 @@ std::getline(std::cin, name);
 std::cout << "Hello, " << name << "!\n";
 ```
 
+!!! warning "Mixing `>>` and `getline`: the leftover newline"
+
+    When you read a value with `>>` and then read a line with `getline`, the `getline` often comes back **empty**. The reason: `>>` stops at the first whitespace and leaves the newline you pressed sitting in the input buffer. The next `getline` reads from the current position up to that newline — and finds nothing, so it returns an empty string.
+
+    ```cpp
+    int age;
+    std::cin >> age;                 // you type "42<Enter>"; the '\n' stays in the buffer
+    std::string name;
+    std::getline(std::cin, name);    // reads up to the leftover '\n' → name is empty!
+    ```
+
+    The fix is to discard the rest of the line after the `>>`, up to and including that newline:
+
+    ```cpp
+    #include <limits>
+
+    std::cin >> age;
+    std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');   // discard to end of line
+    std::getline(std::cin, name);    // now reads the next line correctly
+    ```
+
+    Alternatively, read *everything* with `getline` and convert the numbers yourself (`std::stoi`, `std::stod`). Pick one style and stick to it rather than switching between `>>` and `getline` on the same stream.
+
 ---
 
 ## File I/O
@@ -157,7 +180,7 @@ int main() {
 
 Two things to notice:
 
-- The first parameter is `std::ostream&` (the base class of `std::cout`, `std::ofstream`, etc.); so the same overload works with any output stream.
+- The first parameter is `std::ostream&` — the type of `std::cout`, and the common type all output streams share (`std::ofstream` and the rest) — so the same overload works with any output stream.
 - The function returns the stream so that `<<` calls can be chained.
 
 The same pattern with `std::istream&` and `>>` lets you parse your own type from input.

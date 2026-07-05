@@ -24,7 +24,7 @@ Standardbiblioteket legger til noen flere typer du vil bruke hele tiden på skri
 
 | Type          | Holder                      | Header        |
 |---------------|-----------------------------|---------------|
-| `std::string` | tekst; se [Strenger](../strings.md)  | `<string>`    |
+| `std::string` | tekst; se [Strenger og vektorer](strings_and_vectors.md)  | `<string>`    |
 | `std::vector` | en liste med verdier som kan endre størrelse  | `<vector>`    |
 
 På små mikrokontrollere er disse ofte utilgjengelige; der bruker du arrays med fast størrelse og buffere i stedet (se [Arduino vs. desktop-C++](../arduino_vs_desktop.md)).
@@ -80,6 +80,15 @@ For numeriske typer er det opp til deg. For klassetyper (som du vil møte i kapi
 Noen ganger er typen åpenbar fra høyresiden, og å skrive den ut er bare støy:
 
 ```cpp
+int a = 3;
+int b = 4;
+
+auto sum = a + b;   // typen følger høyresiden: int
+```
+
+Her sparer `auto` nesten ingenting — `int` er kort — men prinsippet er hele poenget: `auto` gir variabelen den typen høyresiden allerede har. Det lønner seg når den typen er lang å skrive:
+
+```cpp
 std::vector<int> numbers = {1, 2, 3, 4, 5};
 
 // Uten auto:
@@ -102,7 +111,7 @@ Et navn kan inneholde bokstaver, sifre og understreker, og må starte med en bok
 To konvensjoner brukt gjennom hele denne boken:
 
 - Lokale variabler og funksjonsparametere: `lowerCamelCase`, som `maxSpeed`, `sensorIndex`.
-- Konstanter og makroer: `UPPER_SNAKE_CASE`, som `MAX_RETRIES`.
+- Vanlige konstanter: samme `lowerCamelCase` som variabler, som `maxRetries`. `UPPER_SNAKE_CASE` er reservert for **makroer** (en preprosessorfunksjon du sjelden vil skrive), noe som holder dem visuelt atskilt fra ekte variabler.
 
 Velg beskrivende navn. `int x` er greit for en løkketeller; `int maxAllowedTemperature` er langt bedre enn `int t` hvis det er det variabelen betyr.
 

@@ -31,6 +31,28 @@ You pass **arguments** (`5` and `3`) and they become the **parameters** (`a` and
 
 ---
 
+## Parameters are copies
+
+By default a parameter is a **copy** of the argument you passed. The function works on its own copy, so changing a parameter does *not* change the caller's variable:
+
+```cpp
+#include <iostream>
+
+void increment(int x) {
+    x++;   // changes this function's copy only
+}
+
+int main() {
+    int count = 5;
+    increment(count);
+    std::cout << count << "\n";   // still 5 — count was never touched
+}
+```
+
+This surprises almost everyone at first: `increment` looks like it should bump `count`, but it received a copy and threw it away when it returned. This "pass-by-value" rule is why a function that needs to hand something back normally *returns* it. When you genuinely want a function to modify the caller's variable, you pass a **reference** instead — the tool for that is covered in [Values, References, and Pointers](../Chapter4/types_refs_ptrs.md).
+
+---
+
 ## Returning a value
 
 `return` exits the function and hands back a value:
@@ -116,6 +138,8 @@ int main() {
 }
 ```
 
+`main` is also the one exception to the rule above that a non-`void` function must return a value on every path: if execution reaches the end of `main` without a `return`, it returns `0` automatically. That is why several programs in this book leave the `return 0;` off `main` — it is implied. Every *other* non-`void` function must still return explicitly.
+
 You can also accept command-line arguments:
 
 <!-- no-ce -->
@@ -194,6 +218,8 @@ One exception: a global **constant** is fine. A value that never changes cannot 
 ```cpp
 constexpr double gravity = 9.81;   // global, but constant — safe and useful
 ```
+
+(`constexpr` is a stricter `const`: the value is fixed at compile time, so the compiler can rely on it never changing.)
 
 > Coming from Arduino? This is the habit to adjust most consciously. Arduino sketches keep state in globals because it has to survive between `setup()` and `loop()`; on the desktop you have better options. See [Arduino vs. Desktop C++](../arduino_vs_desktop.md).
 

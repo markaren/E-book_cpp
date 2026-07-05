@@ -12,6 +12,7 @@ Whether you are new to programming or just to C++, you will meet a lot of unfami
 | **base case** | The case in a recursive function that can be answered directly, without recursing — it is what stops the recursion. See [Recursion](recursion.md). |
 | **block** | A group of statements wrapped in curly braces `{ }`. A block defines a *scope*. See [Basic Structure](Chapter1/basic_structure.md). |
 | **breakpoint** | A marker that pauses a running program in the debugger so you can inspect it. See [Using a Debugger](debugger.md). |
+| **build / build system** | *Building* is turning your source into a runnable program (compile, then link); a *build system* is the tool that automates it. This course uses CMake. See [CMake](Chapter2/cmake_intro.md). |
 | **built-in type** | A type the language provides directly: `int`, `double`, `bool`, `char`. See [Variables](Chapter1/variables.md). |
 | **capture** | The `[ ]` part of a lambda that lists which surrounding variables it may use, by value or by reference. See [Lambda Expressions](lambdas.md). |
 | **cast** | An explicit type conversion, e.g. `static_cast<int>(x)`. See [Operators](Chapter1/operators_expressions.md). |
@@ -26,6 +27,8 @@ Whether you are new to programming or just to C++, you will meet a lot of unfami
 | **container** | A standard-library type that holds a collection of values, such as `std::vector`, `std::map`, or `std::set`. See [Data Structures](Chapter3/data_structures.md). |
 | **coupling** | How much one piece of code depends on the details of another. Loose (low) coupling — pieces connected only through narrow interfaces — is the goal. See [Separation of Concerns](Chapter6/soc.md). |
 | **dangling reference / pointer** | A reference or pointer to something that has already been destroyed; using it is undefined behaviour and a common cause of crashes. See [Values, References & Pointers](Chapter4/types_refs_ptrs.md). |
+| **declaration** | A statement that *names* something and gives its type, without saying what it does — e.g. `void start();` or a function's line in a header. It tells the compiler "this exists somewhere." Contrast *definition*. See [Classes](Chapter4/classes.md#splitting-the-declaration-and-the-implementation) and [Reading Compiler Errors](compiler_errors.md). |
+| **definition** | The full version that *provides* the thing a declaration promised — a function's body, or a variable that reserves storage. Every used entity needs exactly one definition (the *one-definition rule*); missing or duplicate ones show up as linker errors. Contrast *declaration*. See [Classes](Chapter4/classes.md#splitting-the-declaration-and-the-implementation) and [Reading Compiler Errors](compiler_errors.md). |
 | **encapsulation** | Hiding a type's inner workings behind a clean interface by making its data `private`. See [Classes](Chapter4/classes.md). |
 | **enum class** | A type with a fixed set of named values (a *scoped enumeration*); the modern, type-safe kind of enum. See [Enumerations](Chapter1/enums.md). |
 | **exception** | A way to signal and handle errors, using `throw`, `try`, and `catch`. See [Error Handling](Chapter6/error_handling.md). |
@@ -39,6 +42,7 @@ Whether you are new to programming or just to C++, you will meet a lot of unfami
 | **initialise** | Give a variable a value at the moment it is created. Always do this. See [Variables](Chapter1/variables.md). |
 | **iterator** | An object used to walk through the elements of a container. See [C++ Standard Library](Chapter3/standard_library.md). |
 | **lambda** | A small, unnamed function written inline, often passed to an algorithm. See [Lambda Expressions](lambdas.md). |
+| **library** | A bundle of pre-compiled code you reuse instead of rewriting — the standard library, or code of your own compiled once and linked into several programs. See [CMake](Chapter2/cmake_intro.md#building-libraries). |
 | **linker / linking** | The build stage that combines the compiled pieces and libraries into the final program. "Undefined reference" is a linker error. See [Reading Compiler Errors](compiler_errors.md). |
 | **Liskov Substitution Principle** | The design rule that a derived class must be usable anywhere its base type is, without surprising code that relies on the base — an *honest* is-a. See [Polymorphism](Chapter5/polymorphism.md). |
 | **LLM / AI assistant** | A large language model (ChatGPT, Claude, …) that can generate code — useful, but confidently wrong often enough that you must check it. See [Using AI for Coding](using_ai.md). |
@@ -47,7 +51,7 @@ Whether you are new to programming or just to C++, you will meet a lot of unfami
 | **member initialiser list** | The `: a(x), b(y)` part of a constructor that gives data members their values before the body runs. See [Classes](Chapter4/classes.md). |
 | **move** | Transferring a resource from one object into another instead of copying it. See [Move Semantics](Chapter5/move.md). |
 | **namespace** | A named region that groups names to avoid clashes. The standard library lives in the namespace `std`. See [C++ Standard Library](Chapter3/standard_library.md). |
-| **NaN** | "Not a Number" — a floating-point result of invalid maths (e.g. `0.0 / 0.0`). It compares as *false* against everything, even itself. See [Floating-Point Pitfalls](floating_point.md). |
+| **NaN** | "Not a Number" — a floating-point result of invalid maths (e.g. `0.0 / 0.0`). Every ordered comparison and `==` against it is *false* (even `nan == nan`), but `!=` is *true*. See [Floating-Point Pitfalls](floating_point.md). |
 | **nullptr** | The literal for a pointer that points at nothing. Check a pointer is not `nullptr` before using it. See [Values, References & Pointers](Chapter4/types_refs_ptrs.md). |
 | **object / instance** | A concrete value of a class type, created from its blueprint — "instance" is a synonym. A specific `Motor` in memory is an object of the `Motor` class. See [Classes](Chapter4/classes.md). |
 | **operator** | A symbol such as `+`, `==`, or `&&` that performs an action within an expression. See [Operators](Chapter1/operators_expressions.md). |

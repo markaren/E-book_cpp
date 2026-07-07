@@ -36,11 +36,11 @@ En standardheader har lov til å inkludere *andre* standardheadere, og nøyaktig
 
 int main() {
     std::vector<int> v{3, 1, 2};
-    std::sort(v.begin(), v.end());   // std::sort hører egentlig hjemme i <algorithm>
+    auto it = std::find(v.begin(), v.end(), 2);   // std::find hører egentlig hjemme i <algorithm>
 }
 ```
 
-På MSVC drar `<vector>` tilfeldigvis inn `<algorithm>`, så `std::sort` er synlig og det bygger. På Linux med GCC gjør den ikke det, og du får `'sort' is not a member of 'std'` — som peker på en linje du aldri trodde var feil. **Løsningen er en regel, ikke en omvei: inkluder en header for hver standardfasilitet du bruker.** Her: legg til `#include <algorithm>`. ("Inkluder det du bruker.")
+På MSVC drar `<vector>` tilfeldigvis inn `<algorithm>`, så `std::find` er synlig og det bygger. På Linux med GCC gjør den ikke det, og du får `'find' is not a member of 'std'` — som peker på en linje du aldri trodde var feil. **Løsningen er en regel, ikke en omvei: inkluder en header for hver standardfasilitet du bruker.** Her: legg til `#include <algorithm>`. ("Inkluder det du bruker.")
 
 ### C++20 er ikke ferdig overalt samtidig
 
@@ -67,7 +67,7 @@ Kompilatorer er også uenige om hva som i det hele tatt er gyldig — og forskje
 if (ready or retry) { /* ... */ }     // identisk med: ready || retry
 ```
 
-Men **MSVC, i standardmodusen sin, gjør det ikke** — den melder `'or': undeclared identifier`. (Den gjenkjenner ordformene bare i konformansmodus, eller hvis du inkluderer `<ciso646>`.) Så en linje som bygde på en medstudents Mac, kan feile i et standard Visual Studio-prosjekt. Den robuste løsningen er den enkleste: **bruk symbolene** `||`, `&&`, `!`. De kompilerer på alle kompilatorer, og det er dem denne boken bruker gjennomgående.
+Men **MSVC, i standardmodusen sin, gjør det ikke** — den melder `'or': undeclared identifier`. (Den gjenkjenner ordformene bare i konformansmodus.) Så en linje som bygde på en medstudents Mac, kan feile i et standard Visual Studio-prosjekt. Den robuste løsningen er den enkleste: **bruk symbolene** `||`, `&&`, `!`. De kompilerer på alle kompilatorer, og det er dem denne boken bruker gjennomgående.
 
 **`M_PI` for π.** Strekker du deg etter π, finner du `M_PI` i utallige eksempler:
 
@@ -119,7 +119,7 @@ Kode som antar at `long` rommer en 64-bits verdi, er feil på Windows; kode som 
 
 ---
 
-## Hastighet, størrelse og oppførsel kan også variere
+## Hastighet, størrelse og oppførsel kan også variere {#speed-size-and-behaviour-can-differ-too}
 
 Selv når den samme kildekoden *faktisk* kompilerer overalt, er ikke programmet du får, identisk.
 

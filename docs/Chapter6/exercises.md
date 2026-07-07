@@ -4,7 +4,7 @@ Work through these after reading Chapter 6. **Try each one yourself before revea
 
 When you open a solution it appears **blurred** — click it once more to reveal it, so you do not see the answer by accident.
 
-Most of these are small programs with their own `main()`. Keep them in one project with one `add_executable` line per file (see [CMake](../Chapter2/cmake_intro.md)), and pick which to run from the dropdown next to the green ▶ button. The **last exercise is a test, not a program you run from the dropdown** — build it with the Catch2 template from the [Testing](testing.md) chapter and run it with `ctest`.
+Most of these are small programs with their own `main()`. Keep them in one project with one `add_executable` line per file (see [CMake](../Chapter2/cmake_intro.md)), and pick which to run from the dropdown next to the green ▶ button. The **last exercise is a test, not a program you run from the dropdown** — build it with the Catch2 template from the [Testing](testing.md) chapter (which already registers the runner with CTest via `include(CTest)` + `add_test`, so `ctest` just works) and run it with `ctest`.
 
 ---
 
@@ -213,7 +213,7 @@ In `main`, try a valid withdrawal and each kind of bad one, printing `e.what()` 
 
 *Practises: [Testing](testing.md)*
 
-This one is a **test**, not a program with a `main()` — build it with the Catch2 template from the [Testing](testing.md) chapter and run it with `ctest` (or run the test binary directly).
+This one is a **test**, not a program with a `main()` — build it with the Catch2 template from the [Testing](testing.md) chapter and run it with `ctest` (or run the test binary directly — the two are equivalent). The template's `include(CTest)` + `add_test` lines are what let `ctest` find your runner; without them `ctest` reports *no tests*.
 
 Here is a `PumpController` that should switch a pump **on** when the water level drops below a minimum. Crucially, it does not read hardware itself — it is *handed* a `LevelSensor`, so a test can supply a fake one:
 
@@ -300,5 +300,68 @@ Write a `FakeLevelSensor` that returns a level you choose, then write Catch2 `TE
     ```
 
     Because `PumpController` is **handed** its sensor instead of building one, the test slips in a `FakeLevelSensor` and drives the level to exactly the value each case needs — no water, no waiting, no hardware. That hand-it-in move is **dependency injection**, and the fake is the simplest kind of **test double**. The three cases test *behaviour* (does the pump run?) through the public interface, never the internals — so if you later rewrote `pumpShouldRun` completely, they would still pass as long as the behaviour held. And they probe the **boundary**, exactly at the minimum, because off-by-one mistakes (`<` versus `<=`) hide right there.
+
+    </div>
+
+---
+
+## 5. Test the functions you already separated
+
+*Practises: [Separation of Concerns](soc.md) → [Testing](testing.md)*
+
+This one chains onto Exercise 1. Back there you pulled `report` apart into two **pure** functions — `double toCelsius(int raw)` and `std::string classify(double celsius)`. The whole point of making them pure was that each can now be tested with a value and a check. So do exactly that: write Catch2 `TEST_CASE`s for both.
+
+For `toCelsius`, pick a couple of raw values and check the result within a tolerance (it is `double`, so compare with `Approx`, not `==`). For `classify`, check each band — a temperature that is `OK`, one that is `WARNING`, one that is `CRITICAL` — and be sure to probe a **boundary**: `classify(80.0)` is `WARNING`, not `CRITICAL`, because the test is `> 80.0`.
+
+> Hint: this is the same Catch2 template as Exercise 4 — no `main()`, run it with `ctest`. Put `toCelsius`/`classify` in a header the test includes. A pure function is the easiest thing there is to test: no object to build, no fake to inject, just input in and output out. That ease is the payoff for having separated the concerns in the first place.
+
+??? success "Show solution"
+
+    <div class="spoiler" markdown title="Click to reveal">
+
+    ```cpp
+    #include <catch2/catch_test_macros.hpp>
+    #include <catch2/catch_approx.hpp>
+    #include <string>
+
+    using Catch::Approx;
+
+    // --- The pure functions from Exercise 1 (would live in their own header) ---
+    double toCelsius(int raw) {
+        return (raw * 5.0 / 1023.0 - 0.5) * 100.0;
+    }
+
+    std::string classify(double celsius) {
+        if (celsius > 80.0) return "CRITICAL";
+        if (celsius > 50.0) return "WARNING";
+        return "OK";
+    }
+
+    TEST_CASE("toCelsius converts a raw reading") {
+        // raw 0 → (0 - 0.5) × 100 = -50 ; raw 1023 → (5 - 0.5) × 100 = 450
+        REQUIRE(toCelsius(0)    == Approx(-50.0));
+        REQUIRE(toCelsius(1023) == Approx(450.0));
+        REQUIRE(toCelsius(250)  == Approx(72.1896).epsilon(0.001));
+    }
+
+    TEST_CASE("classify names the right band") {
+        REQUIRE(classify(20.0)  == "OK");
+        REQUIRE(classify(60.0)  == "WARNING");
+        REQUIRE(classify(90.0)  == "CRITICAL");
+    }
+
+    TEST_CASE("classify handles the band boundaries") {
+        REQUIRE(classify(80.0) == "WARNING");    // 80 is not > 80, so not CRITICAL
+        REQUIRE(classify(50.0) == "OK");         // 50 is not > 50, so not WARNING
+    }
+    ```
+
+    Running the tests prints:
+
+    ```
+    All tests passed (8 assertions in 3 test cases)
+    ```
+
+    Nothing here needed a `FakeThermometer` or a `PumpController` — because `toCelsius` and `classify` are **pure**, testing them is just "put a number in, check the number (or string) out". That is the reward for the separation you did in Exercise 1: the moment the calculation stopped being tangled up with `std::cout`, it became trivially testable. The boundary cases (`80.0`, `50.0`) matter for the same reason they did with the pump — `>` versus `>=` bugs live exactly on the edge.
 
     </div>

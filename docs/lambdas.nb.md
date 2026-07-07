@@ -16,7 +16,7 @@ std::vector<double> readings = {-3.2, 1.0, 4.5, -7.1, 0.5};
 
 `std::ranges::sort` trenger å vite hva "mindre enn" betyr. Standarden bruker `<`, som ville sortert `-7.1` først. For å sortere etter *absolutt* verdi må du gi den en egendefinert sammenligning.
 
-Uten lambdaer må du skrive en separat funksjon eller et funksjonsobjekt:
+Uten lambdaer må du skrive en separat navngitt funksjon:
 
 ```cpp
 bool compareAbs(double a, double b) {
@@ -189,7 +189,7 @@ int main() {
     const double sentinel = -999.0;
 
     // fjern sentinel-verdier
-    std::erase_if(readings, [sentinel](double v) { return v == sentinel; });
+    std::erase_if(readings, [sentinel](double v) { return v == sentinel; });   // eksakt == er greit her (se merknad under)
 
     if (readings.empty()) {
         std::cout << "no valid readings\n";
@@ -203,6 +203,8 @@ int main() {
 ```
 
 Begge lambdaene er bittesmå og lever akkurat der de brukes. Hensikten leses ovenfra og ned uten at du må jakte på funksjonsdefinisjoner rundt om i fila.
+
+> Å sammenligne to `double`-verdier med `==` er vanligvis en feil — se [Flyttall](floating_point.md). Her er det trygt: `-999.0` er en vaktverdi *dette programmet* selv skriver inn i dataene, så verdiene som sammenlignes er bit-for-bit den samme `-999.0`, ikke resultatet av en beregning som kan avrunde annerledes. Eksakt `==` er den rette testen for en markørverdi du selv har lagt inn.
 
 ---
 

@@ -12,7 +12,8 @@ This page gathers the conventions this book follows in one place, then shows how
 |------------|---------|------------|
 | Locals, functions, parameters — `lowerCamelCase` | `int maxSpeed`, `readSensor()` | [Variables](Chapter1/variables.md) |
 | Types and classes — `PascalCase` | `class SensorLog` | [Classes](Chapter4/classes.md) |
-| Constants — `UPPER_SNAKE_CASE` | `const int MAX_RETRIES = 5;` | [Variables](Chapter1/variables.md) |
+| Constants — `lowerCamelCase`, like variables | `const int maxRetries = 5;` | [Variables](Chapter1/variables.md) |
+| Macros only — `UPPER_SNAKE_CASE` | `#define MAX_RETRIES 5` (avoid macros where you can) | [Variables](Chapter1/variables.md) |
 | Private data members — trailing `_` | `double balance_;` | [Classes](Chapter4/classes.md) |
 | Always brace, even one-line bodies | `if (done) { return; }` | [Control Statements](Chapter1/control_statements.md) |
 | Prefer `const` for anything you don't reassign | `const double limit = 0.85;` | [Variables](Chapter1/variables.md) |

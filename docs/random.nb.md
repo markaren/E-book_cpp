@@ -83,7 +83,7 @@ int badRoll() {
 }
 ```
 
-Det er tregt, og på noen verktøykjeder returnerer det nesten samme verdi hvert kall. Bygg generatoren **én gang** og gjenbruk den — hold den som et klassemedlem, eller send den rundt ved referanse:
+Det er tregt, og på en verktøykjede med en ødelagt `random_device` (se nedenfor) returnerer det *nøyaktig samme* verdi hvert kall. Bygg generatoren **én gang** og gjenbruk den — hold den som et klassemedlem, eller send den rundt ved referanse:
 
 <!-- no-ce -->
 ```cpp
@@ -106,7 +106,7 @@ public:
 std::mt19937 gen(42);   // samme startverdi → samme sekvens, hver kjøring
 ```
 
-Dette er uvurderlig ved feilsøking: en kjøring som feiler blir reproduserbar. Tank-simuleringens utvidelse med en støyete sensor bruker nettopp dette — en fast startverdi gjør den "tilfeldige" støyen repeterbar mens du jobber med regulatoren.
+Dette er uvurderlig ved feilsøking: en kjøring som feiler blir reproduserbar. Tank-simuleringens foreslåtte utvidelse med en støyete sensor er et naturlig sted for det — en fast startverdi gjør den "tilfeldige" støyen repeterbar mens du jobber med regulatoren.
 
 > **En MinGW-felle.** På noen verktøykjeder — særlig eldre MinGW, som CLion kan ha med på Windows — er `std::random_device` **ikke faktisk tilfeldig**: den returnerer samme sekvens hver kjøring. Hvis programmets "tilfeldige" tall aldri endrer seg mellom kjøringer, er dette grunnen. Gi en startverdi fra klokken i stedet: `std::mt19937 gen(std::chrono::steady_clock::now().time_since_epoch().count());` (fra `<chrono>`).
 

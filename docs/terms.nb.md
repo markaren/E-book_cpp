@@ -12,6 +12,7 @@ Enten du er ny til programmering eller bare til C++, vil du møte mange ukjente 
 | **grunntilfelle** | Tilfellet i en rekursiv funksjon som kan besvares direkte, uten å rekursere — det er det som stopper rekursjonen. Se [Rekursjon](recursion.md). |
 | **blokk** | En gruppe setninger pakket inn i krøllparenteser `{ }`. En blokk definerer et *virkeområde*. Se [Grunnstruktur](Chapter1/basic_structure.md). |
 | **breakpoint** | En markør som pauser et kjørende program i debuggeren så du kan inspisere det. Se [Bruke en debugger](debugger.md). |
+| **build / byggesystem** | Å *bygge* er å gjøre kildekoden din om til et kjørbart program (kompilere, så linke); et *byggesystem* er verktøyet som automatiserer det. Dette emnet bruker CMake. Se [CMake](Chapter2/cmake_intro.md). |
 | **innebygd type** | En type språket tilbyr direkte: `int`, `double`, `bool`, `char`. Se [Variabler og grunntyper](Chapter1/variables.md). |
 | **capture** | `[ ]`-delen av en lambda som lister hvilke omkringliggende variabler den kan bruke, ved verdi eller ved referanse. Se [Lambda-uttrykk](lambdas.md). |
 | **cast** | En eksplisitt typekonvertering, f.eks. `static_cast<int>(x)`. Se [Operatorer og uttrykk](Chapter1/operators_expressions.md). |
@@ -25,6 +26,8 @@ Enten du er ny til programmering eller bare til C++, vil du møte mange ukjente 
 | **konstruktør** | En spesiell medlemsfunksjon som kjører når et objekt opprettes, for å sette opp dets opprinnelige tilstand. Se [Klasser](Chapter4/classes.md). |
 | **beholder** | En type fra standardbiblioteket som holder en samling verdier, som `std::vector`, `std::map` eller `std::set`. Se [Datastrukturer](Chapter3/data_structures.md). |
 | **kobling** | Hvor mye én kodebit avhenger av detaljene i en annen. Løs (lav) kobling — biter koblet sammen bare gjennom smale grensesnitt — er målet. Se [Separasjon av ansvar](Chapter6/soc.md). |
+| **deklarasjon** | En setning som *navngir* noe og gir typen dens, uten å si hva det gjør — f.eks. `void start();` eller en funksjons linje i en header. Den forteller kompilatoren "dette finnes et sted". Kontrast *definisjon*. Se [Klasser](Chapter4/classes.md#splitting-the-declaration-and-the-implementation) og [Lese kompilatorfeil](compiler_errors.md). |
+| **definisjon** | Den fullstendige versjonen som *leverer* det en deklarasjon lovet — en funksjonskropp, eller en variabel som reserverer lagringsplass. Hver brukt entitet trenger nøyaktig én definisjon (*én-definisjon-regelen*); manglende eller doble definisjoner dukker opp som linkerfeil. Kontrast *deklarasjon*. Se [Klasser](Chapter4/classes.md#splitting-the-declaration-and-the-implementation) og [Lese kompilatorfeil](compiler_errors.md). |
 | **dinglende referanse / peker** | En referanse eller peker til noe som allerede er ødelagt; å bruke den er udefinert oppførsel og en vanlig årsak til krasj. Se [Verdier, referanser og pekere](Chapter4/types_refs_ptrs.md). |
 | **innkapsling** | Å skjule en types indre virkemåte bak et rent grensesnitt ved å gjøre dataene dens `private`. Se [Klasser](Chapter4/classes.md). |
 | **enum class** | En type med et fast sett navngitte verdier (en *scoped enumerasjon*); den moderne, typesikre varianten av enum. Se [Enumerasjoner](Chapter1/enums.md). |
@@ -39,6 +42,7 @@ Enten du er ny til programmering eller bare til C++, vil du møte mange ukjente 
 | **initialisere** | Gi en variabel en verdi i det øyeblikket den opprettes. Gjør alltid dette. Se [Variabler og grunntyper](Chapter1/variables.md). |
 | **iterator** | Et objekt som brukes til å gå gjennom elementene i en beholder. Se [C++ standardbibliotek](Chapter3/standard_library.md). |
 | **lambda** | En liten, navnløs funksjon skrevet rett i koden, ofte gitt til en algoritme. Se [Lambda-uttrykk](lambdas.md). |
+| **bibliotek** | En samling ferdigkompilert kode du gjenbruker i stedet for å skrive på nytt — standardbiblioteket, eller din egen kode kompilert én gang og linket inn i flere programmer. Se [CMake](Chapter2/cmake_intro.md#building-libraries). |
 | **linker / linking** | Byggetrinnet som kombinerer de kompilerte delene og bibliotekene til det ferdige programmet. "Undefined reference" er en linkerfeil. Se [Lese kompilatorfeil](compiler_errors.md). |
 | **Liskovs substitusjonsprinsipp** | Designregelen om at en avledet klasse må kunne brukes overalt hvor grunntypen brukes, uten å overraske kode som stoler på grunntypen — en *ærlig* is-a. Se [Polymorfisme](Chapter5/polymorphism.md). |
 | **LLM / KI-assistent** | En stor språkmodell (ChatGPT, Claude, …) som kan generere kode — nyttig, men selvsikkert feil ofte nok til at du må sjekke den. Se [Bruke KI til koding](using_ai.md). |
@@ -47,7 +51,7 @@ Enten du er ny til programmering eller bare til C++, vil du møte mange ukjente 
 | **medlemsinitialiseringsliste** | `: a(x), b(y)`-delen av en konstruktør som gir datamedlemmene sine verdier før kroppen kjører. Se [Klasser](Chapter4/classes.md). |
 | **move** | Å overføre en ressurs fra ett objekt til et annet i stedet for å kopiere den. Se [Flyttesemantikk](Chapter5/move.md). |
 | **namespace** | En navngitt region som grupperer navn for å unngå kollisjoner. Standardbiblioteket bor i navnerommet `std`. Se [C++ standardbibliotek](Chapter3/standard_library.md). |
-| **NaN** | "Not a Number" — et flyttallsresultat av ugyldig matematikk (f.eks. `0.0 / 0.0`). Det sammenlignes som *usant* mot alt, til og med seg selv. Se [Flyttall-fallgruver](floating_point.md). |
+| **NaN** | "Not a Number" — et flyttallsresultat av ugyldig matematikk (f.eks. `0.0 / 0.0`). Enhver ordnet sammenligning og `==` mot den er *usann* (selv `nan == nan`), men `!=` er *sann*. Se [Flyttall-fallgruver](floating_point.md). |
 | **nullptr** | Literalen for en peker som peker på ingenting. Sjekk at en peker ikke er `nullptr` før du bruker den. Se [Verdier, referanser og pekere](Chapter4/types_refs_ptrs.md). |
 | **objekt / instans** | En konkret verdi av en klassetype, laget fra tegningen dens — "instans" er et synonym. En bestemt `Motor` i minnet er et objekt av klassen `Motor`. Se [Klasser](Chapter4/classes.md). |
 | **operator** | Et symbol som `+`, `==` eller `&&` som utfører en handling inni et uttrykk. Se [Operatorer og uttrykk](Chapter1/operators_expressions.md). |

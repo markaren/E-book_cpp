@@ -137,7 +137,7 @@ Hvis programmet ditt henger, er dette det første stedet å se.
 Som `while`, men betingelsen sjekkes *etter* den første iterasjonen. Kroppen kjører derfor alltid minst én gang:
 
 ```cpp
-int input;
+int input = 0;
 do {
     std::cout << "Enter a positive number: ";
     std::cin >> input;
@@ -196,6 +196,8 @@ for (auto& value : readings) {
     value *= 2;
 }
 ```
+
+`&`-en her gjør at `value` *er* selve elementet i stedet for en kopi av det: uten den er hver `value` en fersk kopi, og endringer på den kastes bort på slutten av iterasjonen; med den skriver du rett inn i vektoren når du skriver til `value`. (`const` oppå det lover at du bare skal lese, aldri skrive.) Referanser dekkes ordentlig i [Verdier, referanser og pekere](../Chapter4/types_refs_ptrs.md); her trenger du bare å vite at `&`-en unngår kopieringen og lar deg redigere på stedet.
 
 ---
 

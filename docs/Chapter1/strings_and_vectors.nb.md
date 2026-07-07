@@ -54,6 +54,18 @@ int main() {
 
 Hadde du skrevet `std::cin >> fullName`, ville det å skrive `Ada Lovelace` lagre bare `Ada` og la `Lovelace` bli igjen — en klassisk nybegynneroverraskelse. Bruk `>>` for enkeltord, `getline` for hele linjer.
 
+!!! warning "Ikke bland `>>` og `getline` på samme inndata"
+
+    Å lese et tall med `std::cin >> age;` og deretter en linje med `std::getline(std::cin, name);` gir deg en *tom* `name`. `>>` leser tallet, men lar linjeskiftet du trykket ligge igjen i inndataen; `getline` leser så fram til det gjenværende linjeskiftet og stopper med en gang, uten noe.
+
+    Den enkleste kuren er å ikke blande dem: les hver linje med `getline` og konverter dem du trenger til tall. Må du blande, kast det gjenværende linjeskiftet etter `>>` med:
+
+    ```cpp
+    std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+    ```
+
+    (det krever `#include <limits>`). Kapittel 4s [Inndata, utdata og filstrømmer](../Chapter4/io_streams.md) forklarer strømmer ordentlig.
+
 ---
 
 ## `std::vector`: en liste med verdier

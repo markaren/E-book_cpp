@@ -39,9 +39,26 @@ The body of `main`, between `{` and `}`, is the code that actually runs.
 
 ---
 
+## Escape sequences
+
+Look again at the first program: it prints `"Hello, world!"` followed by `"\n"`. That `\n` is not the two characters backslash and *n*. Inside a string, a backslash starts an **escape sequence** — a stand-in for a character you cannot easily type between quotes. `\n` means "start a new line."
+
+The handful you will meet constantly:
+
+| Escape | Means |
+|--------|-------|
+| `\n`   | new line |
+| `\t`   | tab |
+| `\"`   | a double quote (without ending the string) |
+| `\\`   | a single backslash |
+
+The last two exist because `"` and `\` already have special jobs — one ends the string, the other starts an escape — so you spell the literal character by escaping it. This is also why a Windows path like `"C:\dev"` misbehaves: `\d` looks like an escape. (More on that in [Computer Basics](../computer_basics.md).)
+
+---
+
 ## Statements and semicolons
 
-A **statement** is one instruction. In C++, every statement ends with a semicolon:
+A **statement** is one instruction. In C++, every *simple* statement — a declaration, an assignment, a function call — ends with a semicolon:
 
 ```cpp
 int quantity = 10;
@@ -50,15 +67,9 @@ double sum = price * quantity;
 std::cout << "Total: " << sum << "\n";
 ```
 
+A **block** (`{ ... }`) and a **control statement** (an `if`, a `for`, a `while`) do *not* take a trailing semicolon — the closing brace ends them. You will meet blocks and control statements in the pages ahead.
+
 Forgetting a semicolon is the single most common error a beginner gets. The compiler error usually points to the line *after* the missing semicolon, which is confusing the first time. Always check the line above too.
-
-Semicolons also terminate class definitions:
-
-```cpp
-class Motor {
-    // ...
-}; // <-- this semicolon is required
-```
 
 ---
 
@@ -116,8 +127,8 @@ A complete program that reads two numbers from the user and prints their sum:
 #include <iostream>
 
 int main() {
-    int a;
-    int b;
+    int a = 0;
+    int b = 0;
 
     std::cout << "Enter two integers separated by a space: ";
     std::cin >> a >> b;
@@ -128,6 +139,8 @@ int main() {
     return 0;
 }
 ```
+
+`std::cin` is the input counterpart of `std::cout`: where `<<` sends values *out* to the screen, `>>` reads a value *in* from the keyboard and stores it in a variable. Here `std::cin >> a >> b` reads two integers.
 
 You now know every structural element this program is built from: `#include`, `main`, blocks, statements, semicolons, comments. The remaining chapters of this section fill in what goes *inside* `main`: variables, operators, control flow, and functions.
 

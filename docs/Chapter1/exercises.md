@@ -85,7 +85,7 @@ You have three test scores: `7`, `8`, and `10`. Print their average. Make sure i
 
 ## 3. Sensor readings
 
-*Practises: [Strings and Vectors](strings_and_vectors.md)*
+*Practises: [Strings and Vectors](strings_and_vectors.md), [Control Statements](control_statements.md)*
 
 Store five sensor readings — `42, 17, 99, 8, 56` — in a `std::vector<int>`. Print how many there are, their average (as a decimal), and the largest.
 
@@ -222,5 +222,134 @@ Define an `enum class TrafficLight` with `Red`, `Amber`, and `Green`. Write a fu
     ```
 
     A fixed set of named values handled by a `switch`. With no `default`, the compiler warns you if you add a colour later and forget it here.
+
+    </div>
+
+---
+
+## 7. Keep asking
+
+*Practises: [Control Statements](control_statements.md)*
+
+Ask the user for a positive number, over and over, until they actually give you one. Then print it. Use a `do-while` loop, so you ask at least once.
+
+> Hint: this is the `do-while` pattern from the chapter — read inside the loop, and repeat while the value is not yet positive.
+
+Run it — you should see:
+
+```
+Enter a positive number: -4
+Enter a positive number: 0
+Enter a positive number: 12
+Thanks — you entered 12
+```
+
+??? success "Show solution"
+
+    <div class="spoiler" markdown title="Click to reveal">
+
+    ```cpp
+    #include <iostream>
+
+    int main() {
+        int number = 0;
+
+        do {
+            std::cout << "Enter a positive number: ";
+            std::cin >> number;
+        } while (number <= 0);
+
+        std::cout << "Thanks — you entered " << number << "\n";
+    }
+    ```
+
+    A `do-while` runs its body *before* testing the condition, so the prompt always appears at least once. The loop repeats as long as `number <= 0`, so it only lets you out once the value is genuinely positive — exactly what "keep asking until it is valid" needs.
+
+    </div>
+
+---
+
+## 8. Greet by full name
+
+*Practises: [Strings and Vectors](strings_and_vectors.md)*
+
+Ask for the user's full name (first *and* last, with the space), greet them, and report how many characters the name has. Because the name contains a space, you need `std::getline`, not `std::cin >>`.
+
+> Hint: `std::getline(std::cin, name)` reads the whole line; `name.length()` counts its characters.
+
+Run it — you should see:
+
+```
+Enter your full name: Ada Lovelace
+Hello, Ada Lovelace
+Your name has 12 characters.
+```
+
+??? success "Show solution"
+
+    <div class="spoiler" markdown title="Click to reveal">
+
+    ```cpp
+    #include <iostream>
+    #include <string>
+
+    int main() {
+        std::string name;
+
+        std::cout << "Enter your full name: ";
+        std::getline(std::cin, name);
+
+        std::cout << "Hello, " << name << "\n";
+        std::cout << "Your name has " << name.length() << " characters.\n";
+    }
+    ```
+
+    `std::getline` reads the entire line, spaces included, so `Ada Lovelace` arrives whole — `std::cin >> name` would have stopped at the space and kept only `Ada`. The count of `12` includes the space, because it is one of the characters in the string.
+
+    </div>
+
+---
+
+## 9. Temperature classifier
+
+*Practises: [Control Statements](control_statements.md)*
+
+Read a temperature (a whole number of degrees Celsius) and print a description using an `if` / `else if` / `else` chain: below `0` is `Freezing`, `0` to `14` is `Cold`, `15` to `24` is `Comfortable`, and `25` or above is `Hot`.
+
+> Hint: test the coldest case first and work upward, so each `else if` only has to check its upper bound.
+
+Run it — you should see:
+
+```
+Enter the temperature in Celsius: 18
+Comfortable
+```
+
+??? success "Show solution"
+
+    <div class="spoiler" markdown title="Click to reveal">
+
+    ```cpp
+    #include <iostream>
+
+    int main() {
+        int celsius = 0;
+
+        std::cout << "Enter the temperature in Celsius: ";
+        std::cin >> celsius;
+
+        if (celsius < 0) {
+            std::cout << "Freezing\n";
+        } else if (celsius < 15) {
+            std::cout << "Cold\n";
+        } else if (celsius < 25) {
+            std::cout << "Comfortable\n";
+        } else {
+            std::cout << "Hot\n";
+        }
+    }
+    ```
+
+    Only the first matching branch runs, so ordering the tests from coldest upward lets each `else if` assume everything below it was already ruled out: by the time `celsius < 15` is checked, we know it is not below `0`, so that branch means `0` to `14`. The final `else` catches everything left — `25` and above.
 
     </div>

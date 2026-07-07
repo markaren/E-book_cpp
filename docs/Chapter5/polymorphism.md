@@ -8,7 +8,7 @@ C++ has two kinds:
 
 | Kind | Resolved at | Mechanism |
 |------|-------------|-----------|
-| Compile-time polymorphism | Compile time | Function overloading, templates |
+| Compile-time polymorphism | Compile time | Function overloading, templates (next section) |
 | Runtime polymorphism | Run time | Virtual functions through inheritance |
 
 Compile-time polymorphism is faster (no indirection at runtime) but every concrete type must be known when the code is built. Runtime polymorphism is slightly slower but allows behaviour to be selected (or even loaded) after the program has started.
@@ -49,7 +49,7 @@ public:
 
 class FileLogger : public Logger {
 public:
-    explicit FileLogger(const std::filesystem::path& path) : out_(path) {}
+    explicit FileLogger(const std::string& path) : out_(path) {}
 
     void log(const std::string& message) override {
         out_ << message << "\n";
@@ -130,6 +130,43 @@ classDiagram
     Vehicle <|-- Car : is-a
     Car *-- Engine : has-a
 ```
+
+### Constructing the base
+
+A derived object contains a base part, and that base part has to be constructed too. When the base has a constructor that takes arguments, the derived constructor **hands them up** in its member initialiser list, before its own members:
+
+```cpp
+class Sensor {
+public:
+    explicit Sensor(std::string name) : name_(std::move(name)) {}
+    const std::string& name() const { return name_; }
+
+private:
+    std::string name_;
+};
+
+class Thermometer : public Sensor {
+public:
+    Thermometer(std::string name, double celsius)
+        : Sensor(std::move(name)),   // construct the base part first
+          celsius_(celsius) {}       // then this class's own members
+
+private:
+    double celsius_;
+};
+```
+
+`Sensor(std::move(name))` in the initialiser list is a call to the base constructor. The base part is always built first, then the derived members, in the order written.
+
+!!! warning "If the base has no default constructor, you *must* name it"
+
+    `Sensor` has no default constructor (its only constructor requires a `name`). So a derived constructor that does **not** name `Sensor` in its initialiser list will not compile — the compiler cannot construct the base part on its own:
+
+    ```cpp
+    Thermometer(double celsius) : celsius_(celsius) {}   // error: Sensor has no default constructor
+    ```
+
+    The fix is to forward whatever the base needs: `: Sensor(...)`. If the base *does* have a default constructor, you may omit the call and that default is used — but naming it explicitly is never wrong.
 
 ---
 
@@ -224,6 +261,32 @@ classDiagram
 ```
 
 `override` is not strictly required, but always write it. It tells the compiler "I mean to be overriding a base-class function." If you mistype the name, change a parameter type, or get the const-ness wrong, the compiler will reject the file rather than silently introducing a brand-new unrelated function.
+
+### Extending, not just replacing
+
+An override does not have to throw the base version away. From inside an override you can call the base implementation by name with `Base::`, then add to it:
+
+```cpp
+class Logger {
+public:
+    virtual ~Logger() = default;
+    virtual void log(const std::string& message) {
+        std::cout << timestamp() << message << "\n";
+    }
+
+protected:
+    std::string timestamp() const { return "[12:00] "; }   // helper for derived classes
+};
+
+class TaggedLogger : public Logger {
+public:
+    void log(const std::string& message) override {
+        Logger::log("[net] " + message);   // reuse the base behaviour, with a prefix added
+    }
+};
+```
+
+`Logger::log(...)` runs the base version explicitly (a plain `log(...)` here would call *this* class's version again — infinite recursion). Note `timestamp()` is `protected`: derived classes may use it, but outside code cannot. That is the one everyday use of `protected` — a helper meant for the hierarchy, not for the public interface.
 
 ### Pure virtual = abstract
 

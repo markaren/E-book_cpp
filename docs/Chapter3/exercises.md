@@ -14,7 +14,7 @@ Each exercise is a small program with its own `main()`. Now that you have read [
 
 Put these readings in a `std::vector<int>`: `17, 42, 99, 8, 23`. Then, using **standard-library algorithms** rather than hand-written loops, print three things: the readings **sorted** ascending, their **sum**, and the **largest** value.
 
-> Hint: `<algorithm>` has `std::sort` and `std::max_element`; `<numeric>` has `std::accumulate`. Each takes a `.begin(), .end()` range.
+> Hint: prefer the C++20 `std::ranges::` forms — `std::ranges::sort(v)` and `std::ranges::max_element(v)` take the container directly. `<numeric>` has `std::accumulate`, which has no ranges form in C++20, so it still takes a `.begin(), .end()` range.
 
 ??? success "Show solution"
 
@@ -29,10 +29,10 @@ Put these readings in a `std::vector<int>`: `17, 42, 99, 8, 23`. Then, using **s
     int main() {
         std::vector<int> readings = {17, 42, 99, 8, 23};
 
-        std::sort(readings.begin(), readings.end());
+        std::ranges::sort(readings);
 
         int sum = std::accumulate(readings.begin(), readings.end(), 0);
-        int largest = *std::max_element(readings.begin(), readings.end());
+        int largest = *std::ranges::max_element(readings);
 
         std::cout << "Sorted:";
         for (int r : readings) {
@@ -45,7 +45,7 @@ Put these readings in a `std::vector<int>`: `17, 42, 99, 8, 23`. Then, using **s
     }
     ```
 
-    Each algorithm works on the whole container via the `.begin(), .end()` range. `std::max_element` returns an *iterator* to the largest element, so the `*` in front reads the value it points at. Letting the library sort and sum for you is shorter and harder to get wrong than writing the loops by hand — the chapter's main point.
+    The `std::ranges::` versions take the container directly — shorter, and you cannot accidentally mismatch a `begin()` from one container with an `end()` from another. `std::ranges::max_element` returns an *iterator* to the largest element, so the `*` in front reads the value it points at. `std::accumulate` keeps the classic `.begin(), .end()` form because C++20 gives it no ranges version (the range-based fold arrived only in C++23). Letting the library sort and sum for you is shorter and harder to get wrong than writing the loops by hand — the chapter's main point.
 
     </div>
 
@@ -107,12 +107,102 @@ A stream of sensor IDs arrives, with some repeats — `{4, 8, 4, 15, 16, 8, 23, 
     int main() {
         std::vector<int> ids = {4, 8, 4, 15, 16, 8, 23, 42, 16};
 
-        std::unordered_set<int> distinct(ids.begin(), ids.end());
+        std::unordered_set<int> distinct;
+        for (int id : ids) {
+            distinct.insert(id);      // a repeat is silently ignored
+        }
 
         std::cout << "Distinct IDs: " << distinct.size() << "\n";
     }
     ```
 
-    A set silently discards duplicates, so once every ID has gone in, its `size()` *is* the count of distinct values. Building the set straight from the vector's `begin(), end()` range is the shortest way; inserting in a loop would work too. The chapter's decision table points to a set for exactly this "track which items I have seen" job.
+    A set silently discards duplicates, so once every ID has gone in, its `size()` *is* the count of distinct values. The chapter's decision table points to a set for exactly this "track which items I have seen" job.
+
+    **Shorter alternative:** a set can be built straight from a range of values, so `std::unordered_set<int> distinct(ids.begin(), ids.end());` does the whole loop in one line. Both give the same answer.
+
+    </div>
+
+---
+
+## 4. Split a `name:value` setting
+
+*Practises: [Strings](../strings.md)*
+
+Configuration lines often look like `"speed:120"` — a name, a colon, then a value. Given the string `"speed:120"`, split it at the colon and print the name and the value on their own lines. Then convert the value to an `int` and print double it.
+
+Expected output:
+
+```
+name  = speed
+value = 120
+doubled = 240
+```
+
+> Hint: `find(':')` gives you the index of the colon; `substr` takes the part before and the part after. `std::stoi` turns the value text into an `int`.
+
+??? success "Show solution"
+
+    <div class="spoiler" markdown title="Click to reveal">
+
+    ```cpp
+    #include <iostream>
+    #include <string>
+
+    int main() {
+        std::string line = "speed:120";
+
+        std::size_t colon = line.find(':');
+        std::string name  = line.substr(0, colon);   // before the colon
+        std::string value = line.substr(colon + 1);  // after the colon
+
+        std::cout << "name  = " << name << "\n";
+        std::cout << "value = " << value << "\n";
+
+        int n = std::stoi(value);
+        std::cout << "doubled = " << n * 2 << "\n";
+    }
+    ```
+
+    `find(':')` returns the index of the colon; `substr(0, colon)` takes the `colon` characters before it, and `substr(colon + 1)` takes everything from just after it to the end. `std::stoi` then turns `"120"` into the number `120`. (A robust parser would check `find` did not return `std::string::npos` first — here we know the colon is there.)
+
+    </div>
+
+---
+
+## 5. Count the readings above a threshold
+
+*Practises: [Lambda Expressions](../lambdas.md)*
+
+You have these sensor readings in a `std::vector<double>`: `{22.5, 19.0, 31.2, 18.7, 25.0, 40.1}`. Using `std::ranges::count_if` with a **lambda**, count how many are above `24.0`, and print the count.
+
+Expected output:
+
+```
+Above threshold: 3
+```
+
+> Hint: `std::ranges::count_if(v, predicate)` counts the elements for which `predicate` returns `true`. The predicate is a lambda taking one `double` and returning a `bool`.
+
+??? success "Show solution"
+
+    <div class="spoiler" markdown title="Click to reveal">
+
+    ```cpp
+    #include <iostream>
+    #include <vector>
+    #include <algorithm>
+
+    int main() {
+        std::vector<double> readings = {22.5, 19.0, 31.2, 18.7, 25.0, 40.1};
+        const double threshold = 24.0;
+
+        int above = std::ranges::count_if(readings,
+                        [threshold](double r) { return r > threshold; });
+
+        std::cout << "Above threshold: " << above << "\n";
+    }
+    ```
+
+    The lambda `[threshold](double r) { return r > threshold; }` is the test applied to each reading; `std::ranges::count_if` runs it over the whole vector and returns how many times it was `true`. Capturing `threshold` by value lets the lambda use it without it being a global. Three readings — `31.2`, `25.0`, and `40.1` — clear `24.0`.
 
     </div>

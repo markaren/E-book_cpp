@@ -137,7 +137,7 @@ If your program hangs, this is the first place to look.
 Like `while`, but the condition is checked *after* the first iteration. The body therefore always runs at least once:
 
 ```cpp
-int input;
+int input = 0;
 do {
     std::cout << "Enter a positive number: ";
     std::cin >> input;
@@ -196,6 +196,8 @@ for (auto& value : readings) {
     value *= 2;
 }
 ```
+
+The `&` here makes `value` *be* the element itself rather than a copy of it: without it, each `value` is a fresh copy and changes to it are thrown away at the end of the iteration; with it, writing to `value` writes straight into the vector. (`const` on top of that promises you will only read, never write.) References are covered properly in [Values, References, and Pointers](../Chapter4/types_refs_ptrs.md); here you only need to know the `&` avoids the copy and lets you edit in place.
 
 ---
 

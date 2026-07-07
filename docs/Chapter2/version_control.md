@@ -14,12 +14,12 @@ A **repository** (or "repo") is your project plus its complete history of change
 
 A **commit** is one snapshot. Each commit records:
 
-- which files changed and how,
+- the full state of the project at that moment (git stores the complete snapshot, not a list of edits — the "what changed" you see in `git diff` is worked out on demand by comparing two snapshots),
 - a message describing the change (written by you),
 - a unique identifier (a 40-character hash),
 - the commit that came before it (its "parent").
 
-A **branch** is a line of development. The default branch is called `main`. You can create new branches to work on a feature without disturbing `main`, then merge your work back when it is ready.
+A **branch** is a line of development. The first branch is conventionally called `main`, though a plain `git init` still names it `master` unless you have told git otherwise — run `git config --global init.defaultBranch main` once and every new repo starts on `main`. You can create new branches to work on a feature without disturbing `main`, then merge your work back when it is ready.
 
 A **remote** is a copy of your repo on another machine (usually GitHub). You **push** your commits up to the remote to share them; you **pull** to get commits others have pushed.
 
@@ -72,7 +72,9 @@ git log --oneline    # compact view
 
 ### Working with a remote (GitHub)
 
-When the project lives on GitHub:
+There are two ways your local repo and a GitHub repo first meet.
+
+**If the project already lives on GitHub**, clone it:
 
 ```bash
 git clone https://github.com/owner/repo.git   # download the repo from GitHub
@@ -82,7 +84,16 @@ git push                                   # send your commits back to GitHub
 git pull                                   # fetch and merge others' commits
 ```
 
-`git clone` is what you run *once* to start; `push` and `pull` are what you do repeatedly to stay in sync.
+**If you started locally** with `git init` (the flow above) and now want it on GitHub, create an empty repository on GitHub, then connect and push:
+
+```bash
+git remote add origin https://github.com/owner/repo.git   # name the remote "origin"
+git push -u origin main                                    # push main and remember the link
+```
+
+`git remote add origin <url>` tells your local repo where its GitHub copy lives (`origin` is the conventional name for it). The `-u` on that first push sets `main` to track `origin/main`, so from then on a plain `git push` and `git pull` know where to go. The first push asks you to log in to GitHub; your operating system's credential manager saves it so you are not asked again.
+
+Either way, `git clone` or the `remote add` + first push is what you run *once* to start; `push` and `pull` are what you do repeatedly to stay in sync.
 
 ---
 
@@ -122,6 +133,19 @@ git branch -D new-controller-tuning
 
 Branches are cheap. Make one for every feature, experiment, or attempt.
 
+!!! note "When merge says `CONFLICT`"
+    If two branches changed the same lines, `git merge` stops and reports a **conflict**. Git marks the clash inside the file with three lines of markers:
+
+    ```
+    <<<<<<< HEAD
+    your version of the lines
+    =======
+    the other branch's version
+    >>>>>>> new-controller-tuning
+    ```
+
+    Open the file, delete the markers, and leave the text you want (yours, theirs, or a blend of both). Then `git add <file>` to mark it resolved and `git commit` to finish the merge. `git status` lists every file still in conflict.
+
 ---
 
 ## Pull requests
@@ -130,7 +154,7 @@ A **pull request** (PR, sometimes "merge request") is GitHub's way of asking "pl
 
 You will not always use PRs on solo projects. You will use them constantly in any team setting and in this course's group work. The mechanics:
 
-1. Create a branch, commit your changes, push the branch to GitHub.
+1. Create a branch, commit your changes, and push the branch to GitHub. A brand-new branch has no remote counterpart yet, so the first push must name one: `git push -u origin new-controller-tuning`. (A bare `git push` fails here with *"no upstream branch"* — the `-u` creates the upstream and remembers it, so later pushes on this branch are just `git push`.)
 2. Open a pull request from that branch to `main`.
 3. Wait for review; address feedback by pushing additional commits to the same branch.
 4. Once approved, merge the PR.
@@ -167,6 +191,9 @@ Three situations every student hits in their first month.
 ```bash
 git restore path/to/file       # discard unsaved changes to that file
 ```
+
+!!! warning "This one *does* delete"
+    `git restore` throws away your uncommitted changes to that file for good — they were never committed, so there is no snapshot to recover them from. This is the exception to "almost nothing is truly deleted" below: that safety net only covers work you have already committed. Be sure you want the changes gone before you run it.
 
 **"I staged a file but I didn't mean to."**
 

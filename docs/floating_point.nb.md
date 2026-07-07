@@ -38,7 +38,7 @@ if (sensorReading == 0.0) { /* probably wrong */ }
 
 To tryggere mønstre:
 
-### Sammenlign med en toleranse
+### Sammenlign med en toleranse {#compare-with-a-tolerance}
 
 ```cpp
 bool approximatelyEqual(double a, double b, double tolerance = 1e-9) {
@@ -64,17 +64,23 @@ Når du finner deg selv i å sammenligne en målt verdi for *nøyaktig* likhet, 
 
 ## Summer mister presisjon
 
-Å legge sammen mange flyttall gir akkumulert feil. Den klassiske fallgruva:
+Å legge sammen mange flyttall gir akkumulert feil. Den klassiske fallgruva — legg til `0.1` ti millioner ganger, og du skulle få nøyaktig `1 000 000`:
 
 ```cpp
-double total = 0.0;
-for (int i = 0; i < 10'000'000; ++i) {
-    total += 0.1;
+#include <iostream>
+#include <iomanip>
+
+int main() {
+    double total = 0.0;
+    for (int i = 0; i < 10'000'000; ++i) {
+        total += 0.1;
+    }
+    std::cout << total << "\n";                       // 1e+06  (ser nøyaktig ut — det er det ikke)
+    std::cout << std::setprecision(17) << total << "\n"; // 999999.99983897537
 }
-std::cout << total << "\n";        // 999999.999999...  (not 1,000,000)
 ```
 
-Feilen i hver addisjon er bittesmå; ti millioner av dem summerer seg opp. For summer av millioner av målepunkter, vurder:
+Med `std::cout`s standardpresisjon skrives summen ut som `1e+06`, som *ser* perfekt ut — du ser driften først når du ber om full presisjon: den sanne summen er `999999.99983897537`, feil med omtrent `0.00016`. Feilen i hver addisjon er bittesmå; ti millioner av dem summerer seg opp. For summer av millioner av målepunkter, vurder:
 
 1. **Bruk `double`, ikke `float`.** `double` har omtrent 15–16 desimale siffers presisjon; `float` har 6–7.
 2. **Bruk `std::accumulate` med omhu.** Eller slå opp Kahan-summering hvis nøyaktighet betyr mer enn fart.
@@ -95,7 +101,7 @@ double nan  = 0.0 / 0.0;      // NaN, "not a number"
 double nan2 = std::sqrt(-1.0); // NaN
 ```
 
-I motsetning til heltallsdivisjon med null (som er udefinert oppførsel og kan krasje), er flyttallsdivisjon med null **veldefinert**: den gir uendelig eller NaN. Programmet fortsetter å kjøre.
+I motsetning til heltallsdivisjon med null (som er udefinert oppførsel og kan krasje), krasjer ikke flyttallsdivisjon med null på noen plattform du kommer til å bruke: den gir uendelig eller NaN, og programmet fortsetter å kjøre. (Strengt tatt lar C++-standarden selv flyttallsdivisjon med null være *udefinert*; det er **IEEE 754**-standarden som definerer uendelig/NaN-resultatet, og hver kompilator og CPU i dette kurset følger IEEE 754 — så i praksis kan du stole på det.)
 
 Det høres harmløst ut helt til du propagerer en `NaN` gjennom matematikken din:
 
@@ -103,10 +109,10 @@ Det høres harmløst ut helt til du propagerer en `NaN` gjennom matematikken din
 double x = std::sqrt(-1.0);    // NaN
 double y = x + 1.0;             // NaN
 double z = std::sin(y);          // NaN
-if (z < 1.0) { /* ... */ }       // false! NaN compares false with everything
+if (z < 1.0) { /* ... */ }       // false! enhver ordnet sammenligning med NaN er false
 ```
 
-NaN forgifter ethvert uttrykk den berører og feiler stille i enhver sammenligning: selv `nan == nan` er false. Hvis sensorrørledningen din begynner å produsere nuller og du ikke ser noen feil, mistenk en NaN.
+NaN forgifter ethvert uttrykk den berører, og sammenligninger med den oppfører seg merkelig: enhver *ordnet* sammenligning (`<`, `>`, `<=`, `>=`) og `==` er **false** — selv `nan == nan` er false. Den som overrasker folk er `!=`: `nan != nan` er **true**, og det samme er `nan != hva som helst`. Den inverteringen (`!=` true mens `==` false) er faktisk det standard trikset for å oppdage en NaN for hånd: `x != x` er true bare når `x` er NaN. Hvis sensorrørledningen din begynner å produsere nuller og du ikke ser noen feil, mistenk en NaN.
 
 For å sjekke eksplisitt:
 
@@ -184,7 +190,7 @@ For å feilsøke presisjonsproblemer, sett en høy presisjon eksplisitt. For bru
 - `float` og `double` er tilnærminger av desimaltall. De er ikke nøyaktige.
 - **Bruk aldri `==` til å sammenligne flyttall.** Bruk en toleranse eller et intervall.
 - Lange summer akkumulerer feil. Bruk `double` (ikke `float`) og vurder Kahan-summering for høypresisjonssummer.
-- Divisjon med null er veldefinert for flyttall; den gir uendelig eller `NaN`.
-- `NaN` forgifter ethvert uttrykk den berører og sammenlignes ulik alt, inkludert seg selv.
+- Divisjon med null krasjer ikke for flyttall; under IEEE 754 (som alle kursplattformer bruker) gir den uendelig eller `NaN`.
+- `NaN` forgifter ethvert uttrykk den berører. Enhver ordnet sammenligning og `==` mot den er false — selv `nan == nan` — men `!=` er **true**, så `x != x` oppdager en NaN.
 - Bruk `double` som standard. Bruk `float` bare med grunn.
 - For tidtaking, bruk `std::chrono` (heltallsbasert).

@@ -16,7 +16,7 @@ std::vector<double> readings = {-3.2, 1.0, 4.5, -7.1, 0.5};
 
 `std::ranges::sort` needs to know what "smaller than" means. The default uses `<`, which would sort `-7.1` first. To sort by *absolute* value, you need to give it a custom comparison.
 
-Without lambdas, you have to write a separate function or a function object:
+Without lambdas, you have to write a separate named function:
 
 ```cpp
 bool compareAbs(double a, double b) {
@@ -189,7 +189,7 @@ int main() {
     const double sentinel = -999.0;
 
     // remove sentinel values
-    std::erase_if(readings, [sentinel](double v) { return v == sentinel; });
+    std::erase_if(readings, [sentinel](double v) { return v == sentinel; });   // exact == is fine here (see note below)
 
     if (readings.empty()) {
         std::cout << "no valid readings\n";
@@ -203,6 +203,8 @@ int main() {
 ```
 
 Both lambdas are tiny and live exactly where they are used. The intent reads top-to-bottom without you having to chase function definitions across the file.
+
+> Comparing two `double`s with `==` is usually a bug — see [Floating-Point Numbers](floating_point.md). Here it is safe: `-999.0` is a sentinel *this program* writes into the data, so the values being compared are bit-for-bit the same `-999.0`, not the result of a calculation that might round differently. Exact `==` is the right test for a marker value you put there yourself.
 
 ---
 

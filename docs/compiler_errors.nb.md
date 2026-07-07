@@ -33,16 +33,24 @@ Tre deler du alltid vil finne:
 
 Én enkelt feil gir ofte flere feilmeldinger, fordi når kompilatoren først er forvirret, holder den seg forvirret en stund. **Fiks alltid den første feilen først**, og bygg på nytt. Mange av de senere feilene forsvinner av seg selv.
 
-Et vanlig mønster:
+For eksempel: glemmer du `#include <vector>` i et program som bruker `std::vector`, melder GCC tre feil fra den ene forglemmelsen:
 
 ```
-main.cpp:14:18: error: expected ';' after expression
-main.cpp:15:5:  error: use of undeclared identifier 'std'
-main.cpp:15:23: error: expected ';' after expression
-main.cpp:18:1:  error: extraneous closing brace ('}')
+main.cpp: In function 'int main()':
+main.cpp:4:10: error: 'vector' is not a member of 'std'
+    4 |     std::vector<int> readings = {10, 20, 30};
+      |          ^~~~~~
+main.cpp:4:10: note: 'std::vector' is defined in header '<vector>';
+                     did you forget to '#include <vector>'?
+main.cpp:4:17: error: expected primary-expression before 'int'
+    4 |     std::vector<int> readings = {10, 20, 30};
+      |                 ^~~
+main.cpp:5:5: error: 'readings' was not declared in this scope
+    5 |     readings.push_back(40);
+      |     ^~~~~~~~
 ```
 
-Fire feil, én tabbe: et manglende semikolon på linje 14 som forplanter seg til forvirring om alt etterpå. Fiks det semikolonet og bygg på nytt før du gjør noe annet.
+Tre feil, én tabbe: den manglende headeren gjør at `std::vector` er ukjent, så `readings` blir aldri deklarert, så linjen som *bruker* `readings` feiler også. Fiks den første feilen — legg til `#include <vector>` — og bygg på nytt; de to andre forsvinner med den. (Legg merke til at `note:`-linjen til og med forteller deg hvilken header du skal legge til — kompilatoren er ofte mer hjelpsom enn veggen av rødt lar det virke.)
 
 ---
 
@@ -84,11 +92,7 @@ En `{` et sted har ikke en tilhørende `}`. Linjenummeret er ofte helt på slutt
 
 ### `redefinition of '...'`
 
-Du definerte det samme to ganger. Vanlige årsaker:
-
-1. To `.cpp`-filer som implementerer den samme funksjonen.
-2. En header inkludert fra to steder, uten `#pragma once` eller en header guard.
-3. Å definere en funksjon i en header uten å merke den `inline` (den blir kompilert inn i hver fil som inkluderer headeren).
+Du definerte det samme to ganger *innenfor én fil*, så **kompilatoren** avviser det. Den vanligste årsaken er en header, uten `#pragma once` eller en header guard, som limes inn i samme fil to ganger (ofte fordi én header `#include`-er en annen som du også inkluderer direkte). Legg til `#pragma once` i headeren. (Å definere det samme på tvers av *forskjellige* filer er en annen feil, på linker-trinnet — se [`multiple definition of ...`](#linker-errors-undefined-reference-to-and-multiple-definition-of) nedenfor.)
 
 ### `'X' was not declared in this scope`
 
@@ -119,9 +123,11 @@ x = 10;                     // expression is not assignable
 if (x = 5) { }              // also a warning, see below
 ```
 
-### Linkerfeil: `undefined reference to ...`
+### Linkerfeil: `undefined reference to ...` og `multiple definition of ...` {#linker-errors-undefined-reference-to-and-multiple-definition-of}
 
-Forskjellig fra kompileringsfeil: disse kommer fra **linkeren**, neste trinn i byggingen. Kompilatoren godtok koden din, men da det ble tid for å sette sammen det endelige programmet, fant den ikke implementasjonen av noe:
+Forskjellig fra kompileringsfeil: disse kommer fra **linkeren**, neste trinn i byggingen. Kompilatoren godtok hver fil for seg, men da det ble tid for å sette sammen det endelige programmet, passet ikke bitene sammen — enten mangler noe, eller så er noe definert for mange ganger.
+
+**`undefined reference to ...`** — linkeren finner ikke implementasjonen av noe du bruker:
 
 ```
 undefined reference to `Motor::start()'
@@ -132,6 +138,17 @@ Vanlige årsaker:
 1. **Du deklarerte en funksjon, men definerte den aldri** (deklarasjon i en header, ingen implementasjon i noen `.cpp`).
 2. **`.cpp`-filen som inneholder implementasjonen er ikke med i `CMakeLists.txt`.**
 3. **Du glemte å linke mot et bibliotek** (`target_link_libraries` mangler).
+
+**`multiple definition of ...`** — det motsatte problemet: det samme er definert i mer enn én `.cpp`, så linkeren ser to kopier og kan ikke velge:
+
+```
+multiple definition of `add(int, int)'; first defined here
+```
+
+Vanlige årsaker:
+
+1. **To `.cpp`-filer implementerer den samme funksjonen.**
+2. **En funksjon er *definert* i en header uten å være merket `inline`** — hver `.cpp` som inkluderer headeren får sin egen kopi. Enten merk funksjonen `inline`, eller flytt definisjonen inn i én enkelt `.cpp` og la bare deklarasjonen stå i headeren.
 
 Linkerfeil inneholder *ikke* linjenummer i kildekoden din; de viser til symboler.
 
@@ -182,19 +199,16 @@ int main() {
 }
 ```
 
-Og får:
+Og GCC melder:
 
 ```
-main.cpp:5:5: error: use of undeclared identifier 'std'
-    std::cout << x << "\n";
-    ^
-main.cpp:4:13: error: expected ';' after expression
-    int x = 5
-            ^
-            ;
+main.cpp: In function 'int main()':
+main.cpp:5:5: error: expected ',' or ';' before 'std'
+    5 |     std::cout << x << "\n";
+      |     ^~~
 ```
 
-To feil. Den første sier at linje 5 har en "undeclared identifier `std`", noe som er tøv fordi `std` er deklarert av `#include`-en. Det er avsløringen: kompilatoren er så forvirret at åpenbare ting har sluttet å gi mening. Se alltid på den *første* feilen først. Den andre meldingen peker på linje 4, som mangler semikolonet sitt. Legg til semikolonet, kompiler på nytt, og begge feilene forsvinner.
+Én feil — og den peker på **linje 5**, `std::cout`-linjen, selv om den egentlige tabben er på **linje 4**: `int x = 5` mangler semikolon. Dette er den klassiske fella med manglende semikolon. Kompilatoren leste `int x = 5` og fortsatte, i forventning om at setningen skulle fortsette; først da den traff `std` på neste linje skjønte den at noe var galt — så det er *den* linjen den skylder på. **Sjekk alltid linjen over den feilen peker på.** Legg til semikolonet etter `5`, kompiler på nytt, og feilen forsvinner.
 
 Når du har gjort dette fem eller seks ganger, begynner du å fikse manglende semikolon før kompilatoren engang er ferdig med å klage på dem.
 

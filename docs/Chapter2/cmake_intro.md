@@ -1,8 +1,8 @@
 # CMake
 
-So far you have run programs through CLion's green play button. That button is calling a build tool behind the scenes, and that tool is **CMake**.
+So far you have run programs through CLion's green play button. Behind that button sits **CMake**.
 
-CMake is not a compiler. It is one level above: you describe your project to CMake in a small file called `CMakeLists.txt`, and CMake generates the platform-specific instructions (Makefiles on Linux, Visual Studio project files on Windows, Xcode projects on macOS) that your compiler then follows. Write the project description once; build it anywhere.
+CMake is not a compiler, and it is not the thing that actually builds your program either. It is a **build-system generator**: you describe your project to CMake in a small file called `CMakeLists.txt`, and CMake generates the platform-specific instructions (Makefiles on Linux, Visual Studio project files on Windows, Ninja build files, Xcode projects on macOS) that a *build tool* — Ninja, Make, or MSBuild — then follows to invoke the compiler. Pressing play runs CMake first and then that build tool, one after the other. CLion's default build tool is **Ninja**. Write the project description once; build it anywhere.
 
 > CMake makes the *build* portable, not the program it produces: the executable is still built for one operating system and CPU, and the same source is not guaranteed to compile on every compiler. [Portability](../portability.md) covers what does and does not carry across platforms.
 
@@ -260,6 +260,39 @@ The catch with shared libraries is the one that bites beginners: the program mus
 
 ---
 
+## Consuming third-party libraries
+
+Sooner or later you will want a library someone else wrote — a testing framework, a formatting library, a maths library. The simplest way to pull one into a CMake project is **`FetchContent`**: you name a git repository and a version, and CMake downloads and builds it as part of your own build. Here is the whole pattern, fetching [Catch2](https://github.com/catchorg/Catch2) (the test framework the [testing chapter](../Chapter6/testing.md) uses):
+
+```cmake
+include(FetchContent)
+
+FetchContent_Declare(
+    Catch2
+    GIT_REPOSITORY https://github.com/catchorg/Catch2.git
+    GIT_TAG        v3.5.2                      # pin a version, never a moving branch
+)
+FetchContent_MakeAvailable(Catch2)
+
+add_executable(tests test_motor.cpp)
+target_link_libraries(tests PRIVATE Catch2::Catch2WithMain)
+```
+
+Four steps: `include(FetchContent)` loads the feature; `FetchContent_Declare` says *where* the dependency lives and *which* version; `FetchContent_MakeAvailable` downloads and builds it; then you `target_link_libraries` against a target the dependency exports.
+
+**What `Catch2::Catch2WithMain` means.** That `namespace::target` name is a target the fetched project *exports* for you to link. Linking it does everything at once: the compiler gets Catch2's include paths (so `#include <catch2/catch_test_macros.hpp>` resolves) and the linker gets its compiled code. You never chase down header folders or `.lib` files by hand — the one `target_link_libraries` line brings the whole package along. (The `::` is just a naming convention that marks it as an imported target, not your own.)
+
+**The first build is slow.** The first time you configure a project with a new `FetchContent` dependency, CMake clones the repository and compiles it — that needs an internet connection and can take a minute or two. After that it is cached in your `build/` folder and configuring is fast again.
+
+**Alternatives, named only.** Two other approaches exist: `find_package`, which locates a library already *installed* on the machine (common on Linux, where the system package manager provides it), and dedicated C++ package managers such as **vcpkg** and **Conan**. They matter in larger or team projects; this course only needs `FetchContent`.
+
+**Two failure smells.** Knowing *when* an error appears tells you what went wrong:
+
+- An error at **configure** time (when CMake runs, before any compiling) — usually a typo in `FetchContent_Declare`, a wrong repository URL or tag, or no network to download from.
+- `undefined reference` at **link** time (the code compiled, but the linker cannot find the library's functions) — you fetched the dependency but forgot the `target_link_libraries` line, so nothing was actually linked.
+
+---
+
 ## Building from the command line
 
 CLion drives CMake for you, but every CMake project can also be built directly:
@@ -277,7 +310,7 @@ cmake --build build
 ./build/Debug/hello.exe    # Windows with MSVC (multi-config)
 ```
 
-The `-B build` flag puts all generated files into `build/` so they stay out of your source tree. Add `build/` to your `.gitignore` (or use `*/build` if you have nested projects).
+The `-B build` flag puts all generated files into `build/` so they stay out of your source tree. Add `build/` to your `.gitignore` — a bare `build/` line matches a folder of that name at any depth, so it covers nested projects too.
 
 ---
 
@@ -298,6 +331,8 @@ Choose one when you configure the project:
 cmake -B build -DCMAKE_BUILD_TYPE=Debug      # or -DCMAKE_BUILD_TYPE=Release
 cmake --build build
 ```
+
+> With a **multi-config generator** (Visual Studio), `-DCMAKE_BUILD_TYPE` has no effect — one build folder holds every configuration, and you pick one at build time instead: `cmake --build build --config Debug`. Single-config generators (Ninja, Make) use `-DCMAKE_BUILD_TYPE` as shown.
 
 In CLion you do not type that — the toolbar has a configuration selector, and it keeps a separate folder per configuration (`cmake-build-debug/`, `cmake-build-release/`) so switching between them does not rebuild everything. **Develop in Debug; switch to Release to measure performance or hand the program to someone else.**
 
@@ -323,6 +358,8 @@ if(BUILD_TESTS)
     target_link_libraries(tests PRIVATE motor Catch2::Catch2WithMain)
 endif()
 ```
+
+`Catch2::Catch2WithMain` is not one of your own targets — it is a target from a fetched dependency, the Catch2 test framework. See [Consuming third-party libraries](#consuming-third-party-libraries) below for how a name like that gets into your build.
 
 `option(<NAME> "<description>" <default>)` creates a boolean that defaults to `ON` or `OFF`; everything inside the matching `if(<NAME>) … endif()` is configured only when it is on. The default holds unless someone overrides it on the command line:
 
@@ -378,7 +415,7 @@ add_subdirectory(tests)    # the tests
 ```cmake
 # src/CMakeLists.txt
 add_library(my_lib motor.cpp sensor.cpp)
-target_include_directories(my_lib PUBLIC ${CMAKE_SOURCE_DIR}/include)
+target_include_directories(my_lib PUBLIC ${PROJECT_SOURCE_DIR}/include)
 ```
 
 ```cmake
@@ -395,8 +432,8 @@ target_link_libraries(tests PRIVATE my_lib)   # the library defined over in src/
 
 Two things make this work:
 
-- **Targets are visible across folders.** `my_lib` is created in `src/`, yet `app/` and `tests/` can link it — because `add_subdirectory(src)` ran first. Order matters: pull in `src` before the folders that use it.
-- **`${CMAKE_SOURCE_DIR}`** is the top-level project folder, so `${CMAKE_SOURCE_DIR}/include` finds the shared headers from any subfolder.
+- **Targets are visible across folders.** `my_lib` is created in `src/`, yet `app/` and `tests/` can link it. You do not have to define a target before the line that links it: CMake resolves target names when it generates the build at the *end* of configuration, so a name in `target_link_libraries` finds its target wherever it is defined. Adding `src` before the folders that use it is still the right habit — it keeps the file readable and matches the order things are built — but it is convention, not a requirement.
+- **`${PROJECT_SOURCE_DIR}`** is the folder of the nearest `project()` call, so `${PROJECT_SOURCE_DIR}/include` finds the shared headers from any subfolder. (Prefer it over `${CMAKE_SOURCE_DIR}`, which points at the *outermost* project and breaks if this project is ever pulled into a larger one with `add_subdirectory`.)
 
 The pay-off: each folder's build sits next to its code, and the top-level file becomes a short table of contents. The [Tank Control System](../tank_control/v5_tests.md) worked example uses exactly this layout once it grows a test suite.
 
@@ -411,6 +448,7 @@ The pay-off: each folder's build sits next to its code, and the top-level file b
 - Add more source files by listing them in `add_executable`. Headers do not need to be listed.
 - Use `target_include_directories` when headers live in a separate folder.
 - Use `add_library` and `target_link_libraries` once you have code shared between executables.
+- Pull in a third-party library with `FetchContent` (`FetchContent_Declare` + `FetchContent_MakeAvailable`), then link the target it exports (`ns::target`).
 - Split a large build across folders by giving each its own `CMakeLists.txt` and wiring them together with `add_subdirectory`.
 - Libraries are **static** by default — baked into the executable, nothing to ship; prefer that, and reach for a **shared** library (`.dll`/`.so`) only when you need it (and then the program must find it at run time).
 - Keep build artefacts in a separate `build/` folder; ignore it in git.

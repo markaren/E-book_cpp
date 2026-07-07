@@ -55,7 +55,7 @@ Vendepunktet var **C++11**. Det moderniserte språket så grundig at folk nå sn
 | **C++11**     | 2011        | Spranget til "moderne C++".    |
 | C++14 / C++17 | 2014 / 2017 | Jevne forbedringer.            |
 | **C++20**     | 2020        | Det dette emnet underviser i.  |
-| C++23         | 2023        | Den nåværende nyeste.          |
+| C++23         | 2023        | Den nyeste publiserte standarden — en ny kommer hvert tredje år. |
 
 Du trenger ikke å pugge dette. Lærdommen er enkel: **C++ er gammelt nok til å kjøre nesten alt, og moderne C++ er nytt nok til å være behagelig å skrive — så lenge du holder deg til den moderne stilen denne boken lærer bort.**
 

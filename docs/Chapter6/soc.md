@@ -85,7 +85,7 @@ public:
 
 class FileAlertSink : public AlertSink {
 public:
-    explicit FileAlertSink(const std::filesystem::path& path) : out_(path, std::ios::app) {}
+    explicit FileAlertSink(const std::string& path) : out_(path, std::ios::app) {}
     void overheatDetected(double celsius) override {
         out_ << "[ALERT] " << celsius << " C\n";
     }
@@ -107,7 +107,7 @@ void monitorLoop(TemperatureSensor& sensor,
 }
 ```
 
-Each class has one job. The function that pulls them together knows about *what* must happen but nothing about *how*. It has no idea whether the temperature comes from an analog pin or a simulated sensor, no idea whether alerts go to a file or a network socket, no idea what threshold is in effect.
+Each class has one job. The function that pulls them together knows about *what* must happen but nothing about *how*. It has no idea whether the temperature comes from an analog pin or a simulated sensor, no idea whether alerts go to a file or a network socket, no idea what threshold is in effect. This hand-the-dependencies-in style — `monitorLoop` is *given* its sensor, policy, and sink rather than creating them — is called **dependency injection**; you will meet it again in [Testing](testing.md), where it is what lets a test slot in a fake.
 
 Want to test the policy? Construct an `OverheatPolicy` and call `isOverheating` with values; no hardware required. Want to switch from a file to a console alert? Write a `ConsoleAlertSink` and pass it in instead. Want to test the orchestrator? Pass it a fake sensor that returns scripted values and a fake sink that records the alerts.
 

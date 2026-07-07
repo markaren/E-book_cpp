@@ -36,11 +36,11 @@ A standard header is allowed to include *other* standard headers, and exactly wh
 
 int main() {
     std::vector<int> v{3, 1, 2};
-    std::sort(v.begin(), v.end());   // std::sort actually lives in <algorithm>
+    auto it = std::find(v.begin(), v.end(), 2);   // std::find actually lives in <algorithm>
 }
 ```
 
-On MSVC, `<vector>` happens to drag in `<algorithm>`, so `std::sort` is visible and it builds. On Linux with GCC it does not, and you get `'sort' is not a member of 'std'` — pointing at a line you never thought was wrong. **The fix is a rule, not a workaround: include a header for every standard facility you name.** Here, add `#include <algorithm>`. ("Include what you use.")
+On MSVC, `<vector>` happens to drag in `<algorithm>`, so `std::find` is visible and it builds. On Linux with GCC it does not, and you get `'find' is not a member of 'std'` — pointing at a line you never thought was wrong. **The fix is a rule, not a workaround: include a header for every standard facility you name.** Here, add `#include <algorithm>`. ("Include what you use.")
 
 ### C++20 is not finished everywhere at the same time
 
@@ -67,7 +67,7 @@ Compilers also disagree about what counts as valid in the first place — and th
 if (ready or retry) { /* ... */ }     // identical to: ready || retry
 ```
 
-But **MSVC, in its default mode, does not** — it reports `'or': undeclared identifier`. (It recognises the word forms only in conformance mode, or if you include `<ciso646>`.) So a line that built on a classmate's Mac can fail in a default Visual Studio project. The robust fix is the simplest one: **use the symbols** `||`, `&&`, `!`. They compile on every compiler, and they are what this book uses throughout.
+But **MSVC, in its default mode, does not** — it reports `'or': undeclared identifier`. (It recognises the word forms only in conformance mode.) So a line that built on a classmate's Mac can fail in a default Visual Studio project. The robust fix is the simplest one: **use the symbols** `||`, `&&`, `!`. They compile on every compiler, and they are what this book uses throughout.
 
 **`M_PI` for π.** Reach for π and you will find `M_PI` in countless examples:
 

@@ -16,10 +16,10 @@ Dette er de som lurer Python-programmerere:
 | `10 / 3` er `3.333…` | `10 / 3` er `3` (heltallsdivisjon) |
 | en variabel kan skifte type (`x = 5`, så `x = "hi"`) | en variabels **type er fast** ved deklarasjon |
 | innrykk definerer blokker | blokker er `{ }`; setninger avsluttes med `;`; innrykk ignoreres |
-| `if xs:` er usann for en tom liste | beholdere har ingen sannhetsverdi — skriv `if (xs.empty())` |
+| `if xs:` er sann for en ikke-tom liste | beholdere har ingen sannhetsverdi — skriv `if (!xs.empty())` |
 | `None` betyr "ingenting" | `nullptr` (en peker til ingenting) eller [`std::optional`](Chapter6/error_handling.md#stdoptional-when-failure-is-expected) (en manglende verdi) |
 | `len(xs)` | `xs.size()` |
-| `int` vokser uten grense | `int` har fast bredde og **flyter over stille** |
+| `int` vokser uten grense | `int` har fast bredde; overflyt er **udefinert oppførsel** (ruller ofte stille rundt, men ingenting er garantert) |
 | `print(obj)` skriver alltid ut *noe* (dine egne typer får en standard plassholder) | `std::cout << obj` **vil ikke kompilere** for dine egne typer før du definerer en [`operator<<`](Chapter4/io_streams.md) |
 
 ---
@@ -59,7 +59,7 @@ count = "three";   // compile error — not a runtime surprise
 `auto` lar kompilatoren *utlede* typen, men den er fortsatt fast når den er utledet — `auto` er **ikke** Pythons dynamiske typing:
 
 ```cpp
-auto name = "Ada";   // type is deduced once, then fixed
+auto count = 0;      // utledet som int, deretter fast
 ```
 
 Gevinsten: en hel kategori av Pythons `TypeError` under kjøring blir **kompileringsfeil** du fikser før programmet i det hele tatt kjører. Se [Kompilert, statisk typet](Chapter1/introduction.md) og [Variabler og grunntyper](Chapter1/variables.md).
@@ -71,7 +71,7 @@ Gevinsten: en hel kategori av Pythons `TypeError` under kjøring blir **kompiler
 To overraskelser verdt å kjenne fra dag én:
 
 - **Heltallsdivisjon kutter bort resten.** `10 / 3` er `3`, fordi begge operandene er `int`. Gjør den ene til en `double` (`10.0 / 3`) for å få `3.333…`. Pythons `/` er alltid flyttall; dens `//` ligner mest på C++ sin heltallsdivisjon, men de runder negative tall ulikt (Python runder nedover, C++ kutter mot null). Se [Operatorer og uttrykk](Chapter1/operators_expressions.md).
-- **Heltall flyter over.** En C++ `int` rommer omtrent ±2 milliarder; Python-heltall vokser uten grense. Gå forbi området, og en C++ `int` ruller stille rundt. For det meste av automasjonsarbeid er `int` helt greit — bare vit at kanten finnes.
+- **Heltall flyter over.** En C++ `int` rommer omtrent ±2 milliarder; Python-heltall vokser uten grense. Å gå forbi området er **udefinert oppførsel** — i praksis ruller en `int` som regel rundt, men standarden garanterer ingenting, så stol aldri på det. For det meste av automasjonsarbeid er `int` helt greit — bare vit at kanten finnes. Se [Portabilitet](portability.md#speed-size-and-behaviour-can-differ-too).
 
 ---
 

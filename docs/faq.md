@@ -22,7 +22,7 @@ A header shares *declarations*; including a `.cpp` copies its *definitions* into
 Angle brackets for standard and library headers; quotes for your own files. See [Basic Structure](Chapter1/basic_structure.md). (More: [Stack Overflow](https://stackoverflow.com/questions/21593/what-is-the-difference-between-include-filename-and-include-filename).)
 
 **Why the `#ifndef`/`#define` (or `#pragma once`) at the top of headers?**
-They stop a header being pasted into one file twice, which would cause "redefinition" errors. `#pragma once` is the modern one-liner. See [Reading Compiler Errors](compiler_errors.md). (More: [Stack Overflow](https://stackoverflow.com/questions/1653958/why-are-ifndef-and-define-used-in-c-header-files).)
+They stop a header being pasted into one file twice, which would cause "redefinition" errors. `#pragma once` is the modern one-liner. See [Classes](Chapter4/classes.md), which teaches `#pragma once`, and [Reading Compiler Errors](compiler_errors.md) for the error it prevents. (More: [Stack Overflow](https://stackoverflow.com/questions/1653958/why-are-ifndef-and-define-used-in-c-header-files).)
 
 ---
 
@@ -36,6 +36,12 @@ C++ is compiled per platform, and the same source is not guaranteed to compile o
 
 **It compiles and runs, but does the wrong thing — now what?**
 Use the debugger: set a breakpoint, step through, and watch the variables until what *is* happening and what you *expected* diverge. See [Using a Debugger](debugger.md).
+
+**My program crashed — what does "Segmentation fault" / exit code `-1073741819` (`0xC0000005`) mean?**
+Your program tried to touch memory it is not allowed to — a runtime crash, not a compile error. The Linux/macOS message is "Segmentation fault"; the Windows exit code `-1073741819` (hex `0xC0000005`, "access violation") is the same thing. Usual causes: indexing a `std::vector` or array out of range, using a reference or pointer to something already destroyed (a *dangling* one), or dereferencing a `nullptr`. Reach for the [debugger](debugger.md) — it stops on the exact line — and see [the lifetime trap](Chapter4/types_refs_ptrs.md#the-big-lifetime-trap).
+
+**What does "Process finished with exit code 0" mean?**
+That your program ran to completion and reported success. By convention `main` returns `0` for "all fine" (which it does automatically if you never write `return`), and any *non-zero* code means an error or a crash — so a non-zero exit code is the first sign something went wrong. See [Basic Structure](Chapter1/basic_structure.md).
 
 **Why does `if (x = 5)` always run?**
 `=` *assigns*; you meant `==`, which *compares*. Turn warnings on and the compiler will flag it. See [Operators and Expressions](Chapter1/operators_expressions.md).

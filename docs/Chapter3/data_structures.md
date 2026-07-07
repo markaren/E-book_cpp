@@ -23,23 +23,11 @@ The answers usually pick the container for you.
 
 ## Sequence containers
 
-Containers that store a linear sequence of values.
+Containers that store a linear sequence of values. [The Standard Library](standard_library.md#containers-collections-of-values) shows the API of each — how you push, index, and iterate. This page is about *when to pick which*, and the costs behind that choice.
 
 ### `std::vector<T>`: dynamic array
 
-Elements live in **contiguous memory**, like a C array, but the size can grow at runtime.
-
-```cpp
-#include <vector>
-
-std::vector<int> readings;
-readings.push_back(42);          // add to the end, fast
-readings.push_back(17);
-readings.push_back(99);
-
-int first = readings[0];         // index access, constant time
-readings.size();                 // 3
-```
+Elements live in **contiguous memory**, like a C array, but the size can grow at runtime. Its costs are what make it the default:
 
 | Operation | Cost |
 |-----------|------|
@@ -48,51 +36,23 @@ readings.size();                 // 3
 | Insert/remove in the middle | O(n), everything after has to shift |
 | Find by value (`std::find`) | O(n) |
 
-**Use vector by default.** Only reach for something else if your usage pattern genuinely conflicts with what vector is good at.
+**Use vector by default.** Only reach for something else if your usage pattern genuinely conflicts with what vector is good at — a lot of inserting at the front, say, or a need for guaranteed O(1) middle removal.
 
 ### `std::array<T, N>`: fixed-size array
 
-Like `std::vector` but the size is fixed at compile time. Lives on the stack, no heap allocation.
-
-```cpp
-#include <array>
-
-std::array<double, 3> position = {0.0, 0.0, 0.0};
-position[2] = 1.5;
-```
-
-**Use when** the size is known and won't change: fixed-length sensor packets, lookup tables, matrix dimensions.
+Like `std::vector` but the size is fixed at compile time; there is no heap allocation, the elements live inside the object itself. **Use when** the size is known and won't change: fixed-length sensor packets, lookup tables, matrix dimensions.
 
 ### `std::deque<T>`: double-ended queue
 
-Like `vector`, but also fast to add or remove at the **front**.
-
-```cpp
-#include <deque>
-
-std::deque<int> buffer;
-buffer.push_back(1);     // add at the back
-buffer.push_front(0);    // add at the front, fast
-```
-
-The cost is that elements are not in one contiguous block, so it's slightly less cache-friendly than a vector. **Use when** you need fast inserts at both ends.
+Like `vector`, but also fast to add or remove at the **front** (O(1) at both ends). The cost is that elements are not in one contiguous block, so it is slightly less cache-friendly than a vector. **Use when** you need fast inserts at both ends.
 
 ### `std::list<T>`: doubly linked list
 
-Each element holds pointers to the next and previous. Insertions and deletions anywhere in the list are O(1) — but you also lose O(1) index access and most of the cache-friendliness of `vector`.
-
-```cpp
-#include <list>
-
-std::list<int> jobs;
-jobs.push_back(1);
-jobs.push_front(0);
-// jobs[2] does NOT work, no index access
-```
+Each element holds a pointer (the address of another element; pointers are [Chapter 4](../Chapter4/types_refs_ptrs.md)) to the next and previous element in the list. Insertions and deletions anywhere in the list are O(1), but you also lose O(1) index access and most of the cache-friendliness of `vector`.
 
 In practice, `std::list` is rarely the right choice. Modern hardware loves contiguous memory; the constant-factor cost of pointer-chasing through a linked list often outweighs the algorithmic advantage. **Use only when** you specifically need to splice items between lists, or remove from the middle while holding an iterator to the item.
 
-The difference is the *shape* in memory: a `vector` packs its elements side by side in one block, while a `list` scatters them and links each to the next with a pointer:
+The difference is the *shape* in memory: a `vector` packs its elements side by side in one block, while a `list` scatters them and links each to the next with a pointer (an address pointing to where the next node lives):
 
 <svg viewBox="0 0 300 215" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="A vector stores its elements in one contiguous block reached by index; a list stores them as separate nodes linked by pointers, reached by following the links." style="display:block;margin:1rem auto;max-width:320px;width:100%;height:auto;font-family:var(--md-code-font-family,monospace);font-size:13px;" fill="none" stroke="currentColor" stroke-width="1.5">
   <defs>
@@ -124,40 +84,9 @@ The difference is the *shape* in memory: a `vector` packs its elements side by s
 
 ## Associative containers
 
-Containers that store key-value pairs (or just keys), with fast lookup by key.
+Containers that store key-value pairs (or just keys), with fast lookup by key. Again, [The Standard Library](standard_library.md#stdmapk-v-a-sorted-key-value-store) covers how you insert and look up; here we compare the two you will actually choose between.
 
-### `std::map<K, V>`: sorted key-value store
-
-Keys are kept sorted. Lookup, insertion, and deletion are O(log n).
-
-```cpp
-#include <map>
-
-std::map<std::string, double> sensorOffsets;
-sensorOffsets["temp"]    = -0.5;
-sensorOffsets["voltage"] = 0.01;
-
-double t = sensorOffsets["temp"];       // -0.5
-sensorOffsets.contains("temp");          // true
-
-for (const auto& [name, offset] : sensorOffsets) {   // [name, offset] splits each key/value pair
-    // iterates in alphabetical order of key
-}
-```
-
-**Use when** you need fast key lookup *and* you want to iterate in sorted order, *or* you want to do range queries on keys.
-
-### `std::unordered_map<K, V>`: hash-based key-value store
-
-Same interface as `std::map`, but unordered. Backed by a hash table, so lookups are O(1) on average.
-
-```cpp
-#include <unordered_map>
-
-std::unordered_map<int, std::string> users;
-users[1] = "alice";
-users[2] = "bob";
-```
+The choice is almost always `std::map` versus `std::unordered_map`, and it comes down to one question: **do you need the keys in sorted order?**
 
 | Property | `std::map` | `std::unordered_map` |
 |----------|------------|----------------------|
@@ -167,18 +96,19 @@ users[2] = "bob";
 | Memory overhead per element | Higher | Lower (usually) |
 | Required from the key type | Less-than comparison | Hash + equality |
 
-**Default to `unordered_map`.** Pick `map` when you want ordering.
+**Default to `unordered_map`** — it is faster on average and asks less of you day to day. Pick `map` only when you need the extra thing it offers: iterating keys in sorted order, or range queries over a span of keys. That ordered behaviour is exactly what the hash table gives up for its speed.
 
 ### `std::set` and `std::unordered_set`
 
-Same as the maps, but storing only keys (no values). Useful for "have I seen this?" and de-duplicating data.
+Same trade-off as the two maps, but storing only keys (no values). Useful for "have I seen this?" and de-duplicating data. `set` keeps the keys sorted; `unordered_set` is faster and unordered — default to `unordered_set` unless you need the order. To test membership and add in one go, use `contains()` then `insert()`:
 
 ```cpp
 #include <unordered_set>
 
 std::unordered_set<int> seen;
-if (seen.insert(42).second) {
-    std::cout << "first time seeing 42\n";
+if (!seen.contains(42)) {
+    seen.insert(42);
+    // first time seeing 42 — do the once-only work here
 }
 ```
 
@@ -194,18 +124,9 @@ Three convenience wrappers built on top of other containers, exposing only the o
 | `std::queue<T>` | FIFO (first in, first out): push, pop, front |
 | `std::priority_queue<T>` | Always pops the largest element |
 
-```cpp
-#include <stack>
+Reach for these when the algorithm you are implementing genuinely needs a stack or a queue: the restricted interface says "this is a stack" more clearly than a bare `vector` would, and stops you reaching for operations the algorithm should not use.
 
-std::stack<int> calls;
-calls.push(1);
-calls.push(2);
-calls.top();   // 2
-calls.pop();
-calls.top();   // 1
-```
-
-These are convenient when the algorithm you are implementing genuinely needs a stack or queue. For most purposes, a `vector` exposes everything they do and more.
+A `vector` can stand in for a `std::stack` — push and pop at the back are both O(1), so it does everything a stack needs and more. A `std::queue` is a different story: a queue removes from the *front*, which is O(n) on a vector (every remaining element shifts down). That is why `std::queue` is built on a `std::deque`, not a vector. So "just use a vector" holds for stacks, not for queues.
 
 ---
 
@@ -231,19 +152,11 @@ When in doubt, start with `std::vector` or `std::unordered_map`. They cover more
 
 You may notice that the standard library does *not* ship with a general-purpose tree or graph container. That is intentional: trees and graphs come in too many shapes (binary, n-ary, balanced, weighted, directed, …) for one container to fit them all.
 
-When you need a tree, build it out of nodes with `std::unique_ptr` children. (This snippet uses templates and `std::unique_ptr`, both from Chapters 4–5 — skim it for now.)
+When you need a tree, you build it yourself out of **nodes**: each node holds a value and links to its child nodes. The links use tools from later chapters (references and smart pointers in Chapter 4, templates to make the node work for any value type in Chapter 5), so the full construction waits until then.
 
-```cpp
-template <typename T>
-struct TreeNode {
-    T value;
-    std::vector<std::unique_ptr<TreeNode<T>>> children;
-};
-```
+When you need a graph, an "adjacency list" — `std::unordered_map<NodeId, std::vector<NodeId>>`, mapping each node to the list of nodes it connects to — is usually all you need, and it uses only the containers from this chapter. Specialised libraries exist (Boost.Graph, for example) when the algorithms get serious.
 
-When you need a graph, an "adjacency list" — `std::unordered_map<NodeId, std::vector<NodeId>>` — is usually all you need. Specialised libraries exist (Boost.Graph, for example) when the algorithms get serious.
-
-Implementing these from scratch is a fine learning exercise, but for production code, prefer the library where one exists. Still curious? [Building a Tree](../building_a_tree.md) turns that `TreeNode` into a small, reusable container and demonstrates it with a family tree.
+Implementing these from scratch is a fine learning exercise, but for production code, prefer the library where one exists. Still curious? [Building a Tree](../building_a_tree.md) builds a small, reusable tree container step by step and demonstrates it with a family tree.
 
 ---
 
@@ -252,5 +165,5 @@ Implementing these from scratch is a fine learning exercise, but for production 
 - The standard library covers every basic data structure you need this semester.
 - `std::vector` is your default sequence; `std::unordered_map` is your default lookup table.
 - Linked lists exist but are usually not what you want; `std::vector` is cache-friendlier.
-- Trees and graphs are not in the standard library; build them out of `std::unique_ptr` and `std::vector`.
+- Trees and graphs are not in the standard library; a graph is just an adjacency list (`std::unordered_map` of `std::vector`), and trees you build from nodes once you have the tools from Chapters 4–5.
 - Pick a container by asking how you will add, find, and order the elements, not which one sounds clever.

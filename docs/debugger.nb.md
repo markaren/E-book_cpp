@@ -26,7 +26,7 @@ Et **breakpoint** sier "pause her". I CLion klikker du i **gutter** — den smal
 
 Kjør så i **debug-modus** i stedet for vanlig kjøring:
 
-- Klikk på **bug-ikonet** (ved siden av den grønne kjørepilen), eller trykk **Shift+F9**.
+- Klikk på **bug-ikonet** (ved siden av den grønne kjørepilen), eller trykk **Shift+F9** (**⌃D** på macOS).
 
 Programmet kjører normalt til det når breakpointet, og **stopper** så — linjen er uthevet og har *ikke kjørt ennå*. Nå kan du se deg rundt.
 
@@ -44,15 +44,17 @@ Dette er kjernen i debugging: sammenlign det en variabel *faktisk* holder med de
 
 Når programmet er på pause, fører du det videre én bit av gangen:
 
-| Handling | Tast (CLion) | Hva den gjør |
-|--------|-------------|--------------|
-| **Step Over** | F8 | Kjør gjeldende linje, pause på den neste. Hvis linjen kaller en funksjon, kjør hele kallet uten å gå inn i det. |
-| **Step Into** | F7 | Som Step Over, men hvis linjen kaller *din* funksjon, gå inn i den og pause på dens første linje. |
-| **Step Out** | Shift+F8 | Fullfør gjeldende funksjon og pause tilbake i koden som kalte den. |
-| **Resume** | F9 | Fortsett til neste breakpoint (eller programmet avsluttes). |
-| **Stop** | Ctrl+F2 | Avslutt debug-økten. |
+| Handling | Windows / Linux | macOS | Hva den gjør |
+|--------|-----------------|-------|--------------|
+| **Step Over** | F8 | F8 | Kjør gjeldende linje, pause på den neste. Hvis linjen kaller en funksjon, kjør hele kallet uten å gå inn i det. |
+| **Step Into** | F7 | F7 | Som Step Over, men hvis linjen kaller *din* funksjon, gå inn i den og pause på dens første linje. |
+| **Step Out** | Shift+F8 | ⇧F8 | Fullfør gjeldende funksjon og pause tilbake i koden som kalte den. |
+| **Resume** | F9 | ⌥⌘R | Fortsett til neste breakpoint (eller programmet avsluttes). |
+| **Stop** | Ctrl+F2 | ⌘F2 | Avslutt debug-økten. |
 
 Den daglige rytmen: **Step Over** for å gå nedover en funksjon mens du følger variablene endre seg, **Step Into** når du vil se hva et kall gjør, **Step Out** når du har sett nok.
+
+> Tastaturoppsett varierer — hvis en snarvei ikke gjør noe på maskinen din, lister menyen **Run ▸ Debugging Actions** alltid hver handling med gjeldende binding fra oppsettet ditt ved siden av.
 
 > CLions [offisielle debugging-veiledning](https://www.jetbrains.com/help/clion/debugging-code.html) har kommenterte skjermbilder av hver av disse knappene hvis du vil se nøyaktig hvor de sitter.
 

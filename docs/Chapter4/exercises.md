@@ -220,7 +220,7 @@ Define a `struct Point` with `int` members `x` and `y`. Overload `operator<<` so
     }
     ```
 
-    The overload takes the stream by reference as `std::ostream&` — the base type of `std::cout`, `std::ofstream`, and the rest — so the same function prints to the console or to a file. It returns that stream so the next `<<` in the chain has something to write to; that is why `std::cout << "a = " << a << "\n"` works left to right. Taking `const Point&` avoids copying and promises not to change the point.
+    The overload takes the stream by reference as `std::ostream&` — the type of `std::cout` and the common type all output streams share (`std::ofstream` and the rest) — so the same function prints to the console or to a file. It returns that stream so the next `<<` in the chain has something to write to; that is why `std::cout << "a = " << a << "\n"` works left to right. Taking `const Point&` avoids copying and promises not to change the point.
 
     </div>
 
@@ -371,5 +371,58 @@ In `main`, build a thermometer, `report` it, `calibrate(-1.5)`, and `report` it 
     ```
 
     `report` takes its argument by `const Thermometer&` — the usual way to pass an object you only want to read, with no copy. But a `const` reference can call only `const` member functions, so `celsius()` **must** be marked `const` (it merely observes) for `report` to compile. `calibrate` changes the reading, so it is deliberately *not* `const` — and the commented-out call inside `report` would be a compile error, which is exactly the safety net const-correctness gives you. The rule of thumb: mark every observer `const`, and your class becomes usable through a `const` reference.
+
+    </div>
+
+---
+
+## 8. A pointer that may point to nothing
+
+*Practises: [Values, References & Pointers](types_refs_ptrs.md)*
+
+Write a function `const int* largest(const std::vector<int>& v)` that returns a **pointer** to the biggest element of `v` — or `nullptr` if `v` is empty. In `main`, call it on `{3, 9, 2, 7}` and, only if the returned pointer is not null, print the value it points to. Then call it on an **empty** vector and confirm you get `nullptr` and print nothing dangerous.
+
+The point of the exercise: a pointer can legitimately mean "no result", and you must **check for `nullptr` before dereferencing**.
+
+> Hint: take the address of an element with `&`. Start "biggest so far" as `&v.at(0)` (but only after checking the vector is not empty), then walk the rest, reassigning the pointer when you find a larger element. Read the pointed-to value with `*p`, and its members — if it pointed to a class — with `p->` ([pointers to objects](types_refs_ptrs.md#pointers-to-objects)).
+
+??? success "Show solution"
+
+    <div class="spoiler" markdown title="Click to reveal">
+
+    ```cpp
+    #include <iostream>
+    #include <vector>
+
+    // returns a pointer to the largest element, or nullptr if v is empty
+    const int* largest(const std::vector<int>& v) {
+        if (v.empty()) {
+            return nullptr;             // no element to point at
+        }
+        const int* biggest = &v.at(0);
+        for (const int& x : v) {
+            if (x > *biggest) {
+                biggest = &x;           // point at the new champion
+            }
+        }
+        return biggest;
+    }
+
+    int main() {
+        std::vector<int> readings = {3, 9, 2, 7};
+        const int* p = largest(readings);
+        if (p != nullptr) {                       // check before dereferencing
+            std::cout << "largest = " << *p << "\n";   // largest = 9
+        }
+
+        std::vector<int> empty;
+        const int* q = largest(empty);
+        if (q == nullptr) {
+            std::cout << "empty: no largest\n";   // empty: no largest
+        }
+    }
+    ```
+
+    A pointer can hold `nullptr` to mean "there is nothing here" — something a reference can never do. So `largest` returns a pointer: a real element's address when there is one, `nullptr` when the vector is empty. The caller **must** check `p != nullptr` before writing `*p`; dereferencing a null pointer is undefined behaviour. Note the pointer is `const int*` — it points at data owned by the caller's vector, and returning it is safe *because that vector outlives the call*. (Had `largest` returned the address of a local variable instead, the pointer would dangle the moment the function returned — the trap from [the pointers page](types_refs_ptrs.md#the-big-lifetime-trap).)
 
     </div>

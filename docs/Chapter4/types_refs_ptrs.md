@@ -38,7 +38,7 @@ Three things make references different from pointers:
 
 - A reference must be initialised when declared. There is no "uninitialised" reference.
 - A reference cannot be rebound. Once it refers to `age`, it refers to `age` forever.
-- A reference is never null. It always refers to some object.
+- There is no null reference: a reference always starts out bound to a real object. It can, however, outlive that object and *dangle* — see [The big lifetime trap](#the-big-lifetime-trap) below.
 
 References are the workhorse of efficient parameter passing in C++.
 
@@ -124,6 +124,20 @@ if (p != nullptr) {
 
 Always check before dereferencing, or use language constructs that guarantee non-null (references, smart pointers).
 
+### Pointers to objects
+
+A pointer can point at a class object just as easily as at an `int`. To reach a member through the pointer you first have to dereference it. Written out in full that is `(*p).read()` — the parentheses are needed because `.` binds tighter than `*`. Because that is clumsy, C++ gives you the arrow shorthand `->`:
+
+```cpp
+Sensor s;
+Sensor* p = &s;
+
+(*p).read();   // dereference, then call read()
+p->read();     // exactly the same thing, written the readable way
+```
+
+`p->read()` means precisely `(*p).read()`. The arrow is what you will see in practice — almost nobody writes `(*p).member`. You will meet `->` constantly in [Chapter 5](../Chapter5/polymorphism.md), where objects are routinely handled through pointers and smart pointers.
+
 ---
 
 ## The big lifetime trap
@@ -196,7 +210,7 @@ For data members of a class, the rules of thumb are similar:
 | Situation | Use |
 |-----------|-----|
 | Class owns the data | Plain value member (e.g. `std::vector<int> data_`) |
-| Class observes data owned by something else | A reference or raw pointer — but think carefully about who keeps it alive |
+| Class observes data owned by something else | A **raw pointer (non-owning)** — but think carefully about who keeps it alive |
 | Class shares ownership with others | `std::shared_ptr<T>` (see [Memory](../Chapter5/memory.md)) |
 
 ---

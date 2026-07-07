@@ -39,9 +39,26 @@ Kroppen til `main`, mellom `{` og `}`, er koden som faktisk kjører.
 
 ---
 
+## Escape-sekvenser {#escape-sequences}
+
+Se en gang til på det første programmet: det skriver ut `"Hello, world!"` etterfulgt av `"\n"`. Den `\n`-en er ikke de to tegnene omvendt skråstrek og *n*. Inne i en streng starter en omvendt skråstrek en **escape-sekvens** — en stedfortreder for et tegn du ikke lett kan skrive mellom hermetegn. `\n` betyr "start en ny linje".
+
+De få du vil møte hele tiden:
+
+| Escape | Betyr |
+|--------|-------|
+| `\n`   | ny linje |
+| `\t`   | tabulator |
+| `\"`   | et hermetegn (uten å avslutte strengen) |
+| `\\`   | én omvendt skråstrek |
+
+De to siste finnes fordi `"` og `\` allerede har hver sin spesielle jobb — den ene avslutter strengen, den andre starter en escape — så du skriver selve tegnet ved å escape det. Det er også derfor en Windows-sti som `"C:\dev"` oppfører seg feil: `\d` ser ut som en escape. (Mer om det i [Datamaskingrunnlag](../computer_basics.md).)
+
+---
+
 ## Setninger og semikolon
 
-En **setning** er én instruksjon. I C++ slutter hver setning med et semikolon:
+En **setning** er én instruksjon. I C++ slutter hver *enkel* setning — en deklarasjon, en tilordning, et funksjonskall — med et semikolon:
 
 ```cpp
 int quantity = 10;
@@ -50,15 +67,9 @@ double sum = price * quantity;
 std::cout << "Total: " << sum << "\n";
 ```
 
+En **blokk** (`{ ... }`) og en **kontrollstruktur** (en `if`, en `for`, en `while`) tar *ikke* et avsluttende semikolon — den avsluttende krøllparentesen avslutter dem. Du vil møte blokker og kontrollstrukturer på sidene som kommer.
+
 Å glemme et semikolon er den aller vanligste feilen en nybegynner gjør. Kompilatorfeilen peker som regel på linjen *etter* det manglende semikolonet, noe som er forvirrende første gang. Sjekk alltid linjen over også.
-
-Semikolon avslutter også klassedefinisjoner:
-
-```cpp
-class Motor {
-    // ...
-}; // <-- dette semikolonet er påkrevd
-```
 
 ---
 
@@ -116,8 +127,8 @@ Et komplett program som leser to tall fra brukeren og skriver ut summen deres:
 #include <iostream>
 
 int main() {
-    int a;
-    int b;
+    int a = 0;
+    int b = 0;
 
     std::cout << "Enter two integers separated by a space: ";
     std::cin >> a >> b;
@@ -128,6 +139,8 @@ int main() {
     return 0;
 }
 ```
+
+`std::cin` er inndata-motstykket til `std::cout`: der `<<` sender verdier *ut* til skjermen, leser `>>` en verdi *inn* fra tastaturet og lagrer den i en variabel. Her leser `std::cin >> a >> b` to heltall.
 
 Du kjenner nå alle de strukturelle elementene dette programmet er bygd av: `#include`, `main`, blokker, setninger, semikolon, kommentarer. De gjenværende kapitlene i denne delen fyller inn det som går *inni* `main`: variabler, operatorer, kontrollflyt og funksjoner.
 

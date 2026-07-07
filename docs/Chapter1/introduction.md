@@ -55,7 +55,7 @@ The turning point was **C++11**. It modernised the language so thoroughly that p
 | **C++11**     | 2011        | The leap to "modern C++."     |
 | C++14 / C++17 | 2014 / 2017 | Steady refinements.           |
 | **C++20**     | 2020        | What this course teaches.     |
-| C++23         | 2023        | The current latest.           |
+| C++23         | 2023        | The most recent published standard — a new one arrives every three years. |
 
 You do not need to memorise this. The takeaway is simple: **C++ is old enough to run almost everything, and modern C++ is new enough to be pleasant to write — as long as you stick to the modern style this book teaches.**
 

@@ -16,10 +16,10 @@ These are the ones that catch Python programmers out:
 | `10 / 3` is `3.333…` | `10 / 3` is `3` (integer division) |
 | a variable can change type (`x = 5`, then `x = "hi"`) | a variable's **type is fixed** at declaration |
 | indentation defines blocks | blocks are `{ }`; statements end in `;`; indentation is ignored |
-| `if xs:` is false for an empty list | containers have no truthiness — write `if (xs.empty())` |
+| `if xs:` is true for a non-empty list | containers have no truthiness — write `if (!xs.empty())` |
 | `None` means "nothing" | `nullptr` (a pointer to nothing) or [`std::optional`](Chapter6/error_handling.md#stdoptional-when-failure-is-expected) (a missing value) |
 | `len(xs)` | `xs.size()` |
-| `int` grows without limit | `int` is fixed-width and **overflows silently** |
+| `int` grows without limit | `int` is fixed-width; overflow is **undefined behaviour** (often silently wraps, but nothing is guaranteed) |
 | `print(obj)` always prints *something* (your own types get a default placeholder) | `std::cout << obj` **won't compile** for your own types until you define an [`operator<<`](Chapter4/io_streams.md) |
 
 ---
@@ -59,7 +59,7 @@ count = "three";   // compile error — not a runtime surprise
 `auto` lets the compiler *deduce* the type, but it is still fixed once deduced — `auto` is **not** Python's dynamic typing:
 
 ```cpp
-auto name = "Ada";   // type is deduced once, then fixed
+auto count = 0;      // deduced as int, then fixed
 ```
 
 The payoff: a whole category of Python's runtime `TypeError`s become **compile errors** you fix before the program ever runs. See [Compiled, statically typed](Chapter1/introduction.md) and [Variables](Chapter1/variables.md).
@@ -71,7 +71,7 @@ The payoff: a whole category of Python's runtime `TypeError`s become **compile e
 Two surprises worth knowing on day one:
 
 - **Integer division truncates.** `10 / 3` is `3`, because both operands are `int`. Make one a `double` (`10.0 / 3`) to get `3.333…`. Python's `/` is always floating-point; its `//` is the closest match to C++'s integer division, though they round negatives differently (Python floors, C++ truncates toward zero). See [Operators and Expressions](Chapter1/operators_expressions.md).
-- **Integers overflow.** A C++ `int` holds roughly ±2 billion; Python integers grow without limit. Go past the range and a C++ `int` silently wraps around. For most automation work `int` is fine — just know the edge exists.
+- **Integers overflow.** A C++ `int` holds roughly ±2 billion; Python integers grow without limit. Going past the range is **undefined behaviour** — in practice an `int` usually wraps around, but the standard guarantees nothing, so never rely on it. For most automation work `int` is fine — just know the edge exists. See [Portability](portability.md#speed-size-and-behaviour-can-differ-too).
 
 ---
 

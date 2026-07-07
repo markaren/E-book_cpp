@@ -37,7 +37,7 @@ The top-level file is now a short table of contents:
 
 ```cmake
 # CMakeLists.txt (top level)
-cmake_minimum_required(VERSION 3.16)
+cmake_minimum_required(VERSION 3.20)
 project(tank_control)
 
 set(CMAKE_CXX_STANDARD 20)
@@ -91,6 +91,9 @@ FetchContent_MakeAvailable(Catch2)
 
 add_executable(tests test_tank.cpp)
 target_link_libraries(tests PRIVATE tank_lib Catch2::Catch2WithMain)
+
+include(CTest)                          # so `ctest` can find the suite
+add_test(NAME tests COMMAND tests)      # register the runner with CTest
 ```
 
 ---
@@ -107,6 +110,8 @@ Each component is a small, pure piece of logic, which is exactly what makes it e
 
 #include "tank.hpp"
 #include "valve.hpp"
+#include "plant.hpp"
+#include "controller.hpp"       // Controller interface + OnOffController
 #include "pid_controller.hpp"
 
 using Catch::Approx;
@@ -165,11 +170,36 @@ TEST_CASE("PID integral accumulates over repeated steps") {
     const double ki       = 0.1;
     PIDController pid(0.0, ki, 0.0, setpoint);          // I-only: Ki = ki
 
-    // each step adds (error = 1) × dt = 1 to the running integral
+    // each step adds (error = 1) × dt = 1 to the running integral; the output
+    // stays well inside 0..1, so anti-windup never undoes the accumulation
     REQUIRE(pid.compute(4.0, 1.0) == Approx(0.1));      // integral 1 × ki 0.1
     REQUIRE(pid.compute(4.0, 1.0) == Approx(0.2));      // integral 2 × ki 0.1
 }
+
+TEST_CASE("OnOff controller opens below the setpoint and shuts at or above it") {
+    OnOffController onoff(5.0);
+
+    REQUIRE(onoff.compute(4.0, 1.0) == Approx(1.0));   // below → fully open
+    REQUIRE(onoff.compute(5.0, 1.0) == Approx(0.0));   // exactly at → shut (5.0 < 5.0 is false)
+    REQUIRE(onoff.compute(6.0, 1.0) == Approx(0.0));   // above → shut
+}
+
+TEST_CASE("Closed loop: the level ends near the setpoint") {
+    Plant plant(2.0, 1.0, 0.10, 0.03);                 // start 2 m, as in main
+    PIDController pid(0.8, 0.05, 0.0, 5.0);            // the tuned controller
+    Controller& controller = pid;
+
+    double level = 0.0;
+    for (int step = 0; step < 80; ++step) {
+        level = plant.level();
+        plant.step(controller.compute(level, 1.0), 1.0);
+    }
+    // after 80 steps the level has settled to within 0.2 m of the 5 m target
+    REQUIRE(level == Approx(5.0).margin(0.2));
+}
 ```
+
+The last test runs the *whole* loop — plant and controller together — and checks the one thing that ultimately matters: does the level actually end up near the setpoint? This is exactly the kind of check that catches bugs eyeballing the console misses; a controller that overshoots and never settles (an unguarded integral would do just that) prints plausible-looking numbers row by row, yet fails this single assertion outright.
 
 Each `TEST_CASE` pins down one behaviour in arithmetic you can check by hand. Flip a sign in `Tank::update`, or forget to clamp the valve, and the matching test goes red the moment you build — the safety net that [Testing](../Chapter6/testing.md) is about.
 
@@ -183,7 +213,15 @@ cmake --build build
 ./build/tests/tests      # Linux/macOS;  build\tests\tests.exe on Windows
 ```
 
-A green run means every behaviour above still holds; a red one points you straight at the component that broke.
+(That path assumes a single-configuration generator such as CLion's default Ninja. The Visual Studio generator adds a configuration folder, so the binary is `build\tests\Debug\tests.exe`.)
+
+Because the CMake above registers the runner with CTest (`include(CTest)` + `add_test`), you can equally run it through CTest — the same command CI pipelines use — which discovers and runs every registered test binary:
+
+```bash
+ctest --test-dir build
+```
+
+Running the binary directly and running it through `ctest` are equivalent here; `ctest` just wraps it. A green run means every behaviour above still holds; a red one points you straight at the component that broke.
 
 ## What this version shows
 

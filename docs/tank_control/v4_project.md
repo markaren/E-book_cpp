@@ -16,7 +16,7 @@ tank-control/
 │   ├── valve.hpp
 │   ├── sensor.hpp          # Sensor interface + FixedSensor (header-only)
 │   ├── level_sensor.hpp
-│   ├── controller.hpp      # Controller interface (header-only)
+│   ├── controller.hpp      # Controller interface + OnOffController (header-only)
 │   ├── pid_controller.hpp
 │   └── plant.hpp
 └── src/
@@ -66,7 +66,7 @@ void Tank::update(double inflow, double outflow, double dt) {
 
 The `#pragma once` at the top of the header stops it being pasted in twice. Why the getter stays in the header but `update` moves out — and what it does to compile times — is covered in [Classes](../Chapter4/classes.md#splitting-the-declaration-and-the-implementation).
 
-The **interfaces** (`Sensor`, `Controller`) are pure declarations with no bodies to compile, so they live entirely in headers — no `.cpp` needed. Each remaining class follows the `Tank` pattern:
+The **interfaces** (`Sensor`, `Controller`) are pure declarations with no bodies to compile, so they live entirely in headers — no `.cpp` needed. `OnOffController` keeps `controller.hpp` company: its `compute` is a one-liner, and [Version 5](v5_tests.md) tests it alongside the PID. Each remaining class follows the `Tank` pattern:
 
 | Class | Header | Source |
 |-------|--------|--------|
@@ -74,7 +74,7 @@ The **interfaces** (`Sensor`, `Controller`) are pure declarations with no bodies
 | `Valve` | `valve.hpp` | `valve.cpp` |
 | `Sensor`, `FixedSensor` | `sensor.hpp` | — (header-only) |
 | `LevelSensor` | `level_sensor.hpp` | — (one-liner) |
-| `Controller` | `controller.hpp` | — (interface) |
+| `Controller`, `OnOffController` | `controller.hpp` | — (interface + one-liner) |
 | `PIDController` | `pid_controller.hpp` | `pid_controller.cpp` |
 | `Plant` | `plant.hpp` | `plant.cpp` |
 

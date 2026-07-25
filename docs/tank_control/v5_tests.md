@@ -58,7 +58,7 @@ add_library(tank_lib
     plant.cpp
     pid_controller.cpp
 )
-target_include_directories(tank_lib PUBLIC ${CMAKE_SOURCE_DIR}/include)
+target_include_directories(tank_lib PUBLIC ${PROJECT_SOURCE_DIR}/include)
 
 if(MSVC)
     target_compile_options(tank_lib PRIVATE /W4)

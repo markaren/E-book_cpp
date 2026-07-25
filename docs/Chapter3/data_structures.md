@@ -100,7 +100,7 @@ The choice is almost always `std::map` versus `std::unordered_map`, and it comes
 
 ### `std::set` and `std::unordered_set`
 
-Same trade-off as the two maps, but storing only keys (no values). Useful for "have I seen this?" and de-duplicating data. `set` keeps the keys sorted; `unordered_set` is faster and unordered — default to `unordered_set` unless you need the order. To test membership and add in one go, use `contains()` then `insert()`:
+Same trade-off as the two maps, but storing only keys (no values). Useful for "have I seen this?" and de-duplicating data. `set` keeps the keys sorted; `unordered_set` is faster and unordered — default to `unordered_set` unless you need the order. Test membership with `contains()`:
 
 ```cpp
 #include <unordered_set>
@@ -108,6 +108,14 @@ Same trade-off as the two maps, but storing only keys (no values). Useful for "h
 std::unordered_set<int> seen;
 if (!seen.contains(42)) {
     seen.insert(42);
+    // first time seeing 42 — do the once-only work here
+}
+```
+
+That looks the set up twice. `insert()` already tells you what happened: it returns a pair whose `.second` is `true` only if the value was new, so one call does both jobs:
+
+```cpp
+if (seen.insert(42).second) {
     // first time seeing 42 — do the once-only work here
 }
 ```

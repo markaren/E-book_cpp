@@ -142,7 +142,7 @@ int main() {
 
 `std::cin` is the input counterpart of `std::cout`: where `<<` sends values *out* to the screen, `>>` reads a value *in* from the keyboard and stores it in a variable. Here `std::cin >> a >> b` reads two integers.
 
-You now know every structural element this program is built from: `#include`, `main`, blocks, statements, semicolons, comments. The remaining chapters of this section fill in what goes *inside* `main`: variables, operators, control flow, and functions.
+You now know every structural element this program is built from: `#include`, `main`, blocks, statements, semicolons, comments. The remaining chapters of this section fill in what goes *inside* `main`: variables, operators, strings and vectors, control flow, functions, and enumerations.
 
 ---
 

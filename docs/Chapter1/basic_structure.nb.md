@@ -142,7 +142,7 @@ int main() {
 
 `std::cin` er inndata-motstykket til `std::cout`: der `<<` sender verdier *ut* til skjermen, leser `>>` en verdi *inn* fra tastaturet og lagrer den i en variabel. Her leser `std::cin >> a >> b` to heltall.
 
-Du kjenner nå alle de strukturelle elementene dette programmet er bygd av: `#include`, `main`, blokker, setninger, semikolon, kommentarer. De gjenværende kapitlene i denne delen fyller inn det som går *inni* `main`: variabler, operatorer, kontrollflyt og funksjoner.
+Du kjenner nå alle de strukturelle elementene dette programmet er bygd av: `#include`, `main`, blokker, setninger, semikolon, kommentarer. De gjenværende kapitlene i denne delen fyller inn det som går *inni* `main`: variabler, operatorer, strenger og vektorer, kontrollflyt, funksjoner og enumerasjoner.
 
 ---
 

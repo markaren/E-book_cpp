@@ -21,7 +21,7 @@ This page gathers the conventions this book follows in one place, then shows how
 | Prefer `"\n"` over `std::endl` | `std::cout << "done\n";` | [IO & Streams](Chapter4/io_streams.md) |
 | Initialise variables where you declare them | `int count = 0;` | [Variables](Chapter1/variables.md) |
 | Pass anything bigger than a number by `const&` | `void print(const std::string& s)` | [Values, References & Pointers](Chapter4/types_refs_ptrs.md) |
-| Guard every header with `#pragma once` | first line of a `.hpp` | [Classes](Chapter4/classes.md) |
+| Guard every header with `#pragma once` | first line of a `.hpp` | [Classes](Chapter4/classes.md#splitting-the-declaration-and-the-implementation) |
 
 These are conventions, not rules of the language — but following them consistently, and matching the book, means the code you write looks like the examples you read here. When this book makes a recommendation, prefer it unless you have a specific reason not to.
 

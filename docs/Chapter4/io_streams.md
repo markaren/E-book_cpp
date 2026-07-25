@@ -21,7 +21,7 @@ Three stream objects, all in `<iostream>`:
 #include <iostream>
 
 int main() {
-    int number;
+    int number = 0;
     std::cout << "Enter a number: ";
     std::cin  >> number;
     std::cout << "You entered " << number << "\n";
@@ -40,7 +40,8 @@ int main() {
 Stream extraction (`>>`) skips whitespace, so reading several values is just chaining:
 
 ```cpp
-int a, b;
+int a = 0;
+int b = 0;
 std::cout << "Enter two integers separated by a space: ";
 std::cin >> a >> b;
 std::cout << "Sum: " << (a + b) << "\n";
@@ -53,7 +54,7 @@ The user can type `3 5`, `3<tab>5`, or even press Enter between them; `>>` will 
 If the user types `hello` when you asked for an integer, `>>` fails silently; the stream enters an error state and subsequent extractions also fail. You can check the stream like a boolean:
 
 ```cpp
-int n;
+int n = 0;
 if (!(std::cin >> n)) {
     std::cerr << "That was not a number.\n";
     return 1;
@@ -80,7 +81,7 @@ std::cout << "Hello, " << name << "!\n";
     When you read a value with `>>` and then read a line with `getline`, the `getline` often comes back **empty**. The reason: `>>` stops at the first whitespace and leaves the newline you pressed sitting in the input buffer. The next `getline` reads from the current position up to that newline — and finds nothing, so it returns an empty string.
 
     ```cpp
-    int age;
+    int age = 0;
     std::cin >> age;                 // you type "42<Enter>"; the '\n' stays in the buffer
     std::string name;
     std::getline(std::cin, name);    // reads up to the leftover '\n' → name is empty!

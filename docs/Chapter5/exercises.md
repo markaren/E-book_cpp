@@ -1,10 +1,224 @@
 # Chapter 5 Exercises
 
-Work through these after reading Chapter 5. **Try each one yourself before revealing the solution** — you learn far more from an honest attempt than from reading a finished answer. Type the code into CLion and run it; do not just read it.
+Two kinds of exercise on this page.
+
+The **warm-ups** come first: short programs to read, where you predict what happens and pick an answer in the browser. No project, no typing. This chapter is where C++ starts punishing imprecision — a copy where you meant a reference, a base class where you meant a derived one — and these are the mistakes that produce *plausible* wrong output rather than a crash.
+
+Then come the **programs**, from Exercise 1 onwards. **Try each one yourself before revealing the solution** — you learn far more from an honest attempt than from reading a finished answer. Type the code into CLion and run it; do not just read it.
 
 When you open a solution it appears **blurred** — click it once more to reveal it, so you do not see the answer by accident.
 
 Each exercise is a small program with its own `main()`. Keep them in one project with one `add_executable` line per file (see [CMake](../Chapter2/cmake_intro.md)), and pick which to run from the dropdown next to the green ▶ button.
+
+---
+
+## Warm-ups: predict the output
+
+Decide what each program does **before** you answer. Answering locks the question and reveals the explanation.
+
+### W1. A value and a reference
+
+<!-- no-ce -->
+```cpp
+#include <iostream>
+#include <string>
+
+struct Base {
+    virtual ~Base() = default;
+    virtual std::string kind() const { return "base"; }
+};
+
+struct Derived : Base {
+    std::string kind() const override { return "derived"; }
+};
+
+int main() {
+    Derived d;
+
+    Base  b = d;   // a copy
+    Base& r = d;   // a reference
+
+    std::cout << b.kind() << " " << r.kind() << "\n";
+}
+```
+
+````quiz
+What does this print?
+- `derived derived`
+- =`base derived`
+- `derived base`
+- `base base`
+:::
+**`base derived`.** One line, both halves of the lesson.
+
+`Base b = d;` copies **only the `Base` part** of `d` — a `Base` variable is exactly big enough for a `Base`, so the `Derived` part is dropped on the floor. That is **[object slicing](polymorphism.md#object-slicing)**, and what survives is a genuine `Base`, so `b.kind()` returns `"base"`. No warning: it is a perfectly legal copy.
+
+`Base& r = d;` does not copy anything. `r` is another name for `d`, which is still a whole `Derived`, so the virtual call dispatches to `Derived::kind()`.
+
+That is the rule in one line: work with polymorphic types through **references or pointers, never by value**. The moment you assign to a base *value*, the derived-ness is gone — silently, and the program keeps running with plausible-looking output.
+````
+
+### W2. A base class without a virtual destructor
+
+<!-- no-ce -->
+```cpp
+#include <iostream>
+#include <memory>
+
+class Logger {
+public:
+    ~Logger() { std::cout << "~Logger\n"; }
+    virtual void log() = 0;
+};
+
+class FileLogger : public Logger {
+public:
+    ~FileLogger() { std::cout << "~FileLogger\n"; }
+    void log() override {}
+};
+
+int main() {
+    std::unique_ptr<Logger> p = std::make_unique<FileLogger>();
+    p->log();
+}
+```
+
+````quiz
+What is wrong with this program?
+- Nothing — `unique_ptr` always destroys the object it holds correctly
+- `Logger` cannot be abstract and have a destructor at the same time
+- =`~Logger` is not `virtual`, so destroying a `FileLogger` through a `Logger` pointer is undefined behaviour
+- `make_unique` cannot build a `FileLogger` when the variable is a `unique_ptr<Logger>`
+:::
+**The destructor is not `virtual`.**
+
+The `unique_ptr` holds a `Logger*`. When it goes out of scope it deletes through *that* pointer, and because `~Logger` is not `virtual` the call is resolved statically: only `~Logger` runs. `~FileLogger` never does — so anything the derived class owned (an open file, in a real logger) is never released. Formally it is **undefined behaviour**, not merely a leak.
+
+The compiler does warn here — MSVC with:
+
+```
+warning C5205: delete of an abstract class 'Logger' that has a
+non-virtual destructor results in undefined behavior
+```
+
+The fix is one word: `virtual ~Logger() = default;`. The rule is worth memorising, because nothing about the call site looks wrong: **any class with a `virtual` function needs a `virtual` destructor.** See [The virtual destructor rule](polymorphism.md#the-virtual-destructor-rule).
+````
+
+### W3. Moving a unique_ptr
+
+<!-- no-ce -->
+```cpp
+#include <iostream>
+#include <memory>
+
+class Valve {
+public:
+    explicit Valve(int id) : id_(id) { std::cout << "open " << id_ << "\n"; }
+    ~Valve() { std::cout << "close " << id_ << "\n"; }
+
+private:
+    int id_;
+};
+
+int main() {
+    auto a = std::make_unique<Valve>(1);
+    auto b = std::move(a);
+
+    std::cout << (a ? "a holds it" : "a is empty") << "\n";
+    std::cout << "end of main\n";
+}
+```
+
+````quiz
+What does this print?
+- `open 1`, `a holds it`, `end of main`, `close 1`
+- =`open 1`, `a is empty`, `end of main`, `close 1`
+- `open 1`, `a is empty`, `close 1`, `end of main`
+- `open 1`, `a is empty`, `end of main`, `close 1`, `close 1`
+:::
+**`open 1`, `a is empty`, `end of main`, `close 1`.**
+
+`std::move(a)` transfers ownership to `b` and leaves `a` **empty** — a moved-from `unique_ptr` is guaranteed to be null, so `a ? ... : ...` takes the second branch. This is one of the few moved-from states the standard pins down exactly; for [most types it is only "valid but unspecified"](move.md#a-note-on-the-moved-from-object).
+
+The valve is closed **once**, at the end of `main`, when `b` is destroyed. Not twice — there was only ever one `Valve`, and only ever one owner of it. And not early — moving the pointer did not touch the object it points at.
+
+That "exactly one owner, cleanup exactly once, no `delete` anywhere" is the whole reason to use `unique_ptr`. See [`std::unique_ptr`](memory.md#stdunique_ptr-the-default).
+````
+
+### W4. Counting owners
+
+<!-- no-ce -->
+```cpp
+#include <iostream>
+#include <memory>
+
+int main() {
+    auto s = std::make_shared<int>(42);
+    std::cout << s.use_count() << " ";
+
+    {
+        auto t = s;
+        std::cout << s.use_count() << " ";
+    }
+
+    std::cout << s.use_count() << "\n";
+}
+```
+
+````quiz
+What does this print?
+- `1 1 1`
+- `1 2 2`
+- =`1 2 1`
+- `1 3 1`
+:::
+**`1 2 1`.**
+
+A `shared_ptr` **can** be copied, and every copy is another co-owner: `auto t = s;` raises the count to `2`. When `t` goes out of scope at the closing brace its destructor drops the count back to `1`. The `int` itself is destroyed only when the count reaches **zero**, at the end of `main`.
+
+That is the entire difference from `unique_ptr`, which forbids copying outright precisely so this counting is never needed. Reach for `shared_ptr` only when ownership is genuinely shared — it is rarer than beginners expect, and the count is not free. See [`std::shared_ptr`](memory.md#stdshared_ptr-shared-ownership).
+````
+
+### W5. One template, two types
+
+<!-- no-ce -->
+```cpp
+#include <iostream>
+#include <string>
+
+template <typename T>
+T add(T a, T b) {
+    return a + b;
+}
+
+int main() {
+    std::string s = "x";
+    std::cout << add(s, 5) << "\n";
+}
+```
+
+````quiz
+What happens?
+- It prints `x5`
+- It prints `x`
+- =It does not compile: `T` cannot be both `std::string` and `int`
+- It compiles, and `5` is converted to `std::string`
+:::
+**It does not compile.**
+
+`add` has **one** type parameter used for **both** arguments, so the compiler must deduce a single `T`. The first argument says `std::string`, the second says `int`, and there is no tie-breaker — deduction fails before any code is generated. MSVC puts it plainly:
+
+```
+error C2672: 'add': no matching overloaded function found
+note: 'T add(T,T)': template parameter 'T' is ambiguous
+note: could be 'int'
+note: or       'std::string'
+```
+
+Note what does **not** happen: no conversion is attempted. Template argument deduction does not convert to make a match — it deduces from the arguments exactly as written, and gives up if they disagree.
+
+Long template errors read worse than this one, but decode the same way: start at the top, then look for the `note:` lines explaining why each candidate was rejected. See [What template errors look like](templates.md#what-template-errors-look-like).
+````
 
 ---
 

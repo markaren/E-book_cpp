@@ -54,6 +54,98 @@
   cursor: auto;
 }
 
+/* Multiple-choice question emitted by hooks/quiz.py, driven by quiz.js.
+   The reader clicks one option; the answer and explanation appear, and the
+   question locks so it cannot be brute-forced. */
+.quiz {
+  margin: 1rem 0;
+  padding: 0.8rem 1rem 0.2rem;
+  border: 1px solid var(--md-default-fg-color--lightest);
+  border-radius: 0.2rem;
+  background: var(--md-code-bg-color);
+}
+
+.quiz-stem > :first-child {
+  margin-top: 0;
+}
+
+.quiz-options {
+  list-style: none;
+  margin: 0.6rem 0 0.8rem !important;
+  padding: 0;
+}
+
+.quiz-option {
+  margin: 0.3rem 0;
+  padding: 0.4rem 0.7rem;
+  border: 1px solid var(--md-default-fg-color--lightest);
+  border-radius: 0.2rem;
+  background: var(--md-default-bg-color);
+  cursor: pointer;
+  transition: border-color 0.15s, background-color 0.15s;
+}
+
+.quiz-option:hover,
+.quiz-option:focus-visible {
+  border-color: var(--md-accent-fg-color);
+  outline: none;
+}
+
+/* Once answered, nothing is clickable any more. */
+.quiz--answered .quiz-option {
+  cursor: default;
+}
+
+.quiz--answered .quiz-option:hover {
+  border-color: var(--md-default-fg-color--lightest);
+}
+
+/* Green marks the correct option — whether or not it was the one chosen, so a
+   reader who picked wrong still sees which one was right. The translucent fill
+   works on either theme; the borders are brightened for the dark palette below,
+   where the darker shades sit too close to the background to read. */
+.quiz-option--correct {
+  border-color: #2e7d32;
+  background: rgba(46, 125, 50, 0.12);
+}
+
+.quiz-option--wrong {
+  border-color: #c62828;
+  background: rgba(198, 40, 40, 0.12);
+}
+
+[data-md-color-scheme="slate"] .quiz-option--correct {
+  border-color: #66bb6a;
+  background: rgba(102, 187, 106, 0.14);
+}
+
+[data-md-color-scheme="slate"] .quiz-option--wrong {
+  border-color: #ef5350;
+  background: rgba(239, 83, 80, 0.14);
+}
+
+.quiz-option--chosen::after {
+  content: " ← your answer";
+  font-size: 0.75em;
+  opacity: 0.7;
+}
+
+/* The explanation is hidden until an option is picked. */
+.quiz-answer {
+  display: none;
+  margin: 0 0 0.8rem;
+  padding-top: 0.6rem;
+  border-top: 1px solid var(--md-default-fg-color--lightest);
+}
+
+.quiz--answered .quiz-answer {
+  display: block;
+}
+
+.quiz-answer > :last-child {
+  margin-bottom: 0;
+}
+
 /* Mermaid diagrams render left-aligned by default; center them on the page.
    text-align handles an inline-level SVG; margin:auto handles a block-level one. */
 .mermaid {

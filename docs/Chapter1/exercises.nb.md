@@ -1,8 +1,227 @@
 # Oppgaver til kapittel 1
 
-Arbeid deg gjennom disse etter at du har lest kapittel 1. **Prøv hver enkelt selv før du avslører løsningen** — du lærer langt mer av et ærlig forsøk, og feilene underveis, enn av å lese et ferdig program. Skriv koden inn i CLion og kjør den; ikke bare les den.
+Det er to slags oppgaver på denne siden.
+
+**Oppvarmingene** kommer først: korte programmer du skal lese, der du forutsier hva de skriver ut og velger et svar i nettleseren. Ikke noe prosjekt, ingen skriving, omtrent ett minutt hver. Hver eneste av dem er bygd rundt en feil kapittel 1 advarer spesifikt mot — langt billigere å møte her enn klokka ett om natta i din egen kode.
+
+Så kommer **programmene**, fra oppgave 1 og utover: ting du skal skrive selv. **Prøv hver enkelt selv før du avslører løsningen** — du lærer langt mer av et ærlig forsøk, og feilene underveis, enn av å lese et ferdig program. Skriv koden inn i CLion og kjør den; ikke bare les den.
 
 Når du åpner en løsning vises den **uskarp** — klikk én gang til for å avsløre den, slik at du ikke ser svaret ved et uhell.
+
+---
+
+## Oppvarming: forutsi utskriften
+
+Finn ut hva hvert program skriver ut **før** du velger et alternativ. Å svare låser spørsmålet og avslører forklaringen, så en gjetning koster deg oppgaven. Er du usikker, spor programmet for hånd, linje for linje, slik en debugger ville gjort det — den vanen er hele poenget.
+
+### W1. Del og skriv ut
+
+<!-- no-ce -->
+```cpp
+#include <iostream>
+
+int main() {
+    int a = 7;
+    int b = 8;
+    int c = 10;
+
+    double average = (a + b + c) / 3;
+
+    std::cout << average << "\n";
+}
+```
+
+````quiz
+Hva skriver dette ut?
+- `8.33333`
+- =`8`
+- `8.3`
+- Det kompilerer ikke — du kan ikke legge et `int`-resultat i en `double`
+:::
+**`8`.** `double`-en på venstre side endrer ingenting ved divisjonen på høyre side.
+
+`a + b + c` er `25`, en `int`. `3` er også en `int`. Dermed er `25 / 3` **heltallsdivisjon**: den regner ut `8` og kaster resten, akkurat der, før noe som helst blir tilordnet. Først da blir denne `8`-en konvertert til `double` og lagret i `average`.
+
+Løsningen er å gjøre den ene siden til en `double`, slik at selve divisjonen beholder brøkdelen: `(a + b + c) / 3.0`. Se [Operatorer og uttrykk](operators_expressions.md).
+````
+
+### W2. En funksjon som ikke endrer noe
+
+<!-- no-ce -->
+```cpp
+#include <iostream>
+
+void addTen(int value) {
+    value += 10;
+}
+
+int main() {
+    int count = 5;
+    addTen(count);
+    std::cout << count << "\n";
+}
+```
+
+````quiz
+Hva skriver dette ut?
+- `15`
+- =`5`
+- `10`
+- Ingenting — `addTen` returnerer `void`, så programmet har ingen utskrift
+:::
+**`5`.** `count` ble aldri rørt.
+
+En parameter er en **kopi** av argumentet. `addTen` fikk sin egen `int` med verdien `5`, la `10` til *den*, og kastet den da funksjonen returnerte. `count` i `main` er en annen variabel og ble aldri endret.
+
+Dette er den enkeltoverraskelsen nybegynnere oftest møter, og derfor bruker [Funksjoner](functions.md#parameters-are-copies) et helt avsnitt på den. For å la en funksjon endre kallerens variabel sender du en **referanse** — verktøyet for det kommer i [Verdier, referanser og pekere](../Chapter4/types_refs_ptrs.md). Inntil da: skal en funksjon gi noe tilbake, `return`-er du det.
+````
+
+### W3. To ord inn, ett ord ut
+
+Brukeren skriver `Ada Lovelace` og trykker Enter.
+
+<!-- no-ce -->
+```cpp
+#include <iostream>
+#include <string>
+
+int main() {
+    std::string name;
+
+    std::cout << "Name: ";
+    std::cin >> name;
+
+    std::cout << "Hello, " << name << "!\n";
+}
+```
+
+````quiz
+Hva skriver dette ut etter ledeteksten?
+- `Hello, Ada Lovelace!`
+- =`Hello, Ada!`
+- `Hello, !`
+- Det venter for alltid på mer inndata
+:::
+**`Hello, Ada!`** — `Lovelace` blir liggende igjen.
+
+`>>` leser **ett ord adskilt av blanktegn**. Den stopper ved mellomrommet etter `Ada`, så `name` inneholder bare `Ada`; resten av linja blir liggende ulest i inndatabufferet.
+
+For å lese en hel linje, mellomrom og alt, bruker du `std::getline(std::cin, name)` i stedet. Se [Strenger og vektorer](strings_and_vectors.md#lese-tekst-fra-brukeren) — og merk advarselen der om hva som skjer når du *blander* de to på samme strøm.
+````
+
+### W4. En switch uten break
+
+<!-- no-ce -->
+```cpp
+#include <iostream>
+
+int main() {
+    int gear = 2;
+
+    switch (gear) {
+        case 1: std::cout << "First\n";
+        case 2: std::cout << "Second\n";
+        case 3: std::cout << "Third\n";
+        default: std::cout << "Unknown\n";
+    }
+}
+```
+
+````quiz
+Hva skriver dette ut?
+- `Second`
+- `Second`, så `Unknown`
+- =`Second`, så `Third`, så `Unknown`
+- Det kompilerer ikke — hver `case` trenger en `break`
+:::
+**Alle tre: `Second`, `Third`, `Unknown`.**
+
+En `case`-etikett er et *inngangspunkt*, ikke en selvstendig blokk. Kjøringen hopper til `case 2:` og fortsetter så rett gjennom hver etikett under den helt til den treffer en `break` eller den avsluttende krøllparentesen. Her finnes ingen `break` noe sted, så den faller helt gjennom — også inn i `default`.
+
+Det kompilerer uten en eneste innvending, fordi bevisst gjennomfall av og til er nyttig. Nettopp det gjør en glemt `break` til et så godt gjemmested for en feil. Se [Kontrollstrukturer](control_statements.md#switch).
+````
+
+### W5. Riktige grener i feil rekkefølge
+
+<!-- no-ce -->
+```cpp
+#include <iostream>
+
+int main() {
+    int celsius = -5;
+
+    if (celsius < 25) {
+        std::cout << "Comfortable\n";
+    } else if (celsius < 15) {
+        std::cout << "Cold\n";
+    } else if (celsius < 0) {
+        std::cout << "Freezing\n";
+    } else {
+        std::cout << "Hot\n";
+    }
+}
+```
+
+````quiz
+Minus fem grader. Hva skriver dette ut?
+- `Freezing`
+- =`Comfortable`
+- `Cold`
+- Ingenting — ingen gren passer
+:::
+**`Comfortable`**, ved −5 °C.
+
+Bare den **første** grenen som passer kjører; resten hoppes over uansett hvor mye bedre de passer. `-5 < 25` er sant, så kjeden stopper der og vurderer aldri `Cold` eller `Freezing` i det hele tatt. De to grenene er uoppnåelige for *enhver* verdi: alt som er under `15` eller `0` er også under `25`.
+
+Ingenting her er en syntaksfeil, så kompilatoren sier ikke et ord. En `else if`-kjede over et verdiområde må ordnes fra den ene enden til den andre — kaldest først, slik [oppgave 9](#9-temperaturklassifisering) nedenfor gjør det. Se [Kontrollstrukturer](control_statements.md#if-og-else).
+````
+
+### W6. Dobling som ikke fester seg
+
+<!-- no-ce -->
+```cpp
+#include <iostream>
+#include <vector>
+
+int main() {
+    std::vector<int> readings = {1, 2, 3};
+
+    for (int value : readings) {
+        value *= 2;
+    }
+
+    for (int value : readings) {
+        std::cout << value << " ";
+    }
+    std::cout << "\n";
+}
+```
+
+````quiz
+Hva skriver dette ut?
+- `2 4 6`
+- =`1 2 3`
+- `1 2 3 2 4 6`
+- `6 12 18`
+:::
+**`1 2 3`.** Vektoren er urørt.
+
+`for (int value : readings)` gir deg en fersk **kopi** av hvert element. `value *= 2` dobler kopien, og kopien kastes ved slutten av den runden — samme regel om verdioverføring som i [W2](#w2-en-funksjon-som-ikke-endrer-noe), i løkkeforkledning.
+
+For å endre elementene på plass tar du en referanse, slik at `value` *er* elementet i stedet for en kopi av det:
+
+```cpp
+for (int& value : readings) {
+    value *= 2;
+}
+```
+
+Dette ene `&`-tegnet er hele forskjellen. Se [Kontrollstrukturer](control_statements.md#range-basert-for).
+````
+
+Når du har svart på et spørsmål, lim programmet inn i [Compiler Explorer](https://godbolt.org/) og kjør det — å se utskriften bekrefte (eller motsi) resonnementet ditt er det som får det til å feste seg.
+
+---
 
 ## Hvor du skal legge koden din
 

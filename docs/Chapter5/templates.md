@@ -141,6 +141,8 @@ Take a simple mistake:
 
 <!-- no-ce -->
 ```cpp
+#include <string>
+
 template <typename T>
 T add(T a, T b) { return a + b; }
 

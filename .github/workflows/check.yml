@@ -1,0 +1,41 @@
+name: Check
+
+# Runs on every push and pull request. `deploy.yml` publishes the site; this
+# job is about whether the site is *correct* — chiefly the failures that a
+# clean `mkdocs build` does not notice, such as a link to a heading that no
+# longer exists or a quiz question with no correct answer.
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      # --strict turns MkDocs' own warnings (a nav entry pointing at a missing
+      # file, say) into build failures.
+      - name: Build site
+        run: mkdocs build --strict
+
+      # Confirms the checkers below still detect a planted defect, so they
+      # cannot quietly decay into always passing.
+      - name: Self-test the checkers
+        run: python tools/selftest.py site
+
+      - name: Check links and anchors
+        run: python tools/check_links.py site
+
+      - name: Check quiz questions
+        run: python tools/check_quizzes.py site

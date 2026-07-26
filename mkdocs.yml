@@ -144,12 +144,14 @@ plugins:
 
 hooks:
   - hooks/compiler_explorer.py
+  - hooks/quiz.py
 
 extra_css:
   - stylesheets/extra.css
 
 extra_javascript:
   - javascripts/spoiler.js
+  - javascripts/quiz.js
 
 nav:
   - Home: index.md

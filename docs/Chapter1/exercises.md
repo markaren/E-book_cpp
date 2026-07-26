@@ -1,8 +1,227 @@
 # Chapter 1 Exercises
 
-Work through these after reading Chapter 1. **Try each one yourself before revealing the solution** — you learn far more from an honest attempt, and the mistakes along the way, than from reading a finished program. Type the code into CLion and run it; do not just read it.
+Two kinds of exercise on this page.
+
+The **warm-ups** come first: short programs to read, where you predict what they print and pick an answer in the browser. No project, no typing, about a minute each. Every one of them is built around a mistake Chapter 1 specifically warns about — much cheaper to meet here than at 1 a.m. in your own code.
+
+Then come the **programs**, from Exercise 1 onwards: things to write yourself. **Try each one before revealing the solution** — you learn far more from an honest attempt, and the mistakes along the way, than from reading a finished program. Type the code into CLion and run it; do not just read it.
 
 When you open a solution it appears **blurred** — click it once more to reveal it, so you do not see the answer by accident.
+
+---
+
+## Warm-ups: predict the output
+
+Work out what each program prints **before** you pick an option. Answering locks the question and reveals the explanation, so a guess costs you the exercise. If you are unsure, trace the program by hand, line by line, the way a debugger would — that habit is the whole point.
+
+### W1. Divide and print
+
+<!-- no-ce -->
+```cpp
+#include <iostream>
+
+int main() {
+    int a = 7;
+    int b = 8;
+    int c = 10;
+
+    double average = (a + b + c) / 3;
+
+    std::cout << average << "\n";
+}
+```
+
+````quiz
+What does this print?
+- `8.33333`
+- =`8`
+- `8.3`
+- It does not compile — you cannot put an `int` result in a `double`
+:::
+**`8`.** The `double` on the left changes nothing about the division on the right.
+
+`a + b + c` is `25`, an `int`. `3` is also an `int`. So `25 / 3` is **integer division**: it computes `8` and throws the remainder away, right there, before anything is assigned. Only then is that `8` converted to `double` and stored in `average`.
+
+The fix is to make one side a `double` so the division itself keeps the fraction: `(a + b + c) / 3.0`. See [Operators and Expressions](operators_expressions.md).
+````
+
+### W2. A function that changes nothing
+
+<!-- no-ce -->
+```cpp
+#include <iostream>
+
+void addTen(int value) {
+    value += 10;
+}
+
+int main() {
+    int count = 5;
+    addTen(count);
+    std::cout << count << "\n";
+}
+```
+
+````quiz
+What does this print?
+- `15`
+- =`5`
+- `10`
+- Nothing — `addTen` returns `void`, so the program has no output
+:::
+**`5`.** `count` was never touched.
+
+A parameter is a **copy** of the argument. `addTen` received its own `int` holding `5`, added `10` to *that*, and threw it away when it returned. The `count` in `main` is a different variable and never changed.
+
+This is the single most common surprise for beginners, which is why [Functions](functions.md#parameters-are-copies) spends a section on it. To let a function change the caller's variable you pass a **reference** — the tool for that arrives in [Values, References & Pointers](../Chapter4/types_refs_ptrs.md). Until then: if a function needs to hand something back, `return` it.
+````
+
+### W3. Two words in, one word out
+
+The user types `Ada Lovelace` and presses Enter.
+
+<!-- no-ce -->
+```cpp
+#include <iostream>
+#include <string>
+
+int main() {
+    std::string name;
+
+    std::cout << "Name: ";
+    std::cin >> name;
+
+    std::cout << "Hello, " << name << "!\n";
+}
+```
+
+````quiz
+What does this print after the prompt?
+- `Hello, Ada Lovelace!`
+- =`Hello, Ada!`
+- `Hello, !`
+- It waits forever for more input
+:::
+**`Hello, Ada!`** — `Lovelace` is left behind.
+
+`>>` reads **one whitespace-separated word**. It stops at the space after `Ada`, so `name` holds just `Ada`; the rest of the line stays in the input buffer, unread.
+
+To read a whole line, spaces included, use `std::getline(std::cin, name)` instead. See [Strings and Vectors](strings_and_vectors.md#reading-text-from-the-user) — and note the warning there about what happens when you *mix* the two on one stream.
+````
+
+### W4. A switch without breaks
+
+<!-- no-ce -->
+```cpp
+#include <iostream>
+
+int main() {
+    int gear = 2;
+
+    switch (gear) {
+        case 1: std::cout << "First\n";
+        case 2: std::cout << "Second\n";
+        case 3: std::cout << "Third\n";
+        default: std::cout << "Unknown\n";
+    }
+}
+```
+
+````quiz
+What does this print?
+- `Second`
+- `Second` then `Unknown`
+- =`Second`, then `Third`, then `Unknown`
+- It does not compile — every `case` needs a `break`
+:::
+**All three: `Second`, `Third`, `Unknown`.**
+
+A `case` label is an *entry point*, not a self-contained block. Execution jumps to `case 2:` and then keeps running straight through every label below it until it hits a `break` or the closing brace. There is no `break` anywhere here, so it falls all the way through — including into `default`.
+
+It compiles without complaint, because deliberate fall-through is occasionally useful. That is exactly what makes a forgotten `break` such a good hiding place for a bug. See [Control Statements](control_statements.md#switch).
+````
+
+### W5. The right branches in the wrong order
+
+<!-- no-ce -->
+```cpp
+#include <iostream>
+
+int main() {
+    int celsius = -5;
+
+    if (celsius < 25) {
+        std::cout << "Comfortable\n";
+    } else if (celsius < 15) {
+        std::cout << "Cold\n";
+    } else if (celsius < 0) {
+        std::cout << "Freezing\n";
+    } else {
+        std::cout << "Hot\n";
+    }
+}
+```
+
+````quiz
+Minus five degrees. What does this print?
+- `Freezing`
+- =`Comfortable`
+- `Cold`
+- Nothing — no branch matches
+:::
+**`Comfortable`**, at −5 °C.
+
+Only the **first** matching branch runs; the rest are skipped no matter how much better they fit. `-5 < 25` is true, so the chain stops there and never considers `Cold` or `Freezing` at all. Those two branches are unreachable for *any* value: anything below `15` or `0` is also below `25`.
+
+Nothing here is a syntax error, so the compiler says nothing. An `else if` chain over a range has to be ordered from one end to the other — coldest first, as [Exercise 9](#9-temperature-classifier) below does it. See [Control Statements](control_statements.md#if-and-else).
+````
+
+### W6. Doubling that does not stick
+
+<!-- no-ce -->
+```cpp
+#include <iostream>
+#include <vector>
+
+int main() {
+    std::vector<int> readings = {1, 2, 3};
+
+    for (int value : readings) {
+        value *= 2;
+    }
+
+    for (int value : readings) {
+        std::cout << value << " ";
+    }
+    std::cout << "\n";
+}
+```
+
+````quiz
+What does this print?
+- `2 4 6`
+- =`1 2 3`
+- `1 2 3 2 4 6`
+- `6 12 18`
+:::
+**`1 2 3`.** The vector is untouched.
+
+`for (int value : readings)` hands you a fresh **copy** of each element. `value *= 2` doubles the copy, and the copy is discarded at the end of that iteration — the same pass-by-value rule as [W2](#w2-a-function-that-changes-nothing), in loop clothing.
+
+To modify the elements in place, take a reference so `value` *is* the element rather than a copy of it:
+
+```cpp
+for (int& value : readings) {
+    value *= 2;
+}
+```
+
+That one `&` is the whole difference. See [Control Statements](control_statements.md#range-based-for).
+````
+
+Once you have answered a question, paste the program into [Compiler Explorer](https://godbolt.org/) and run it — seeing the output confirm (or contradict) your reasoning is what makes it stick.
+
+---
 
 ## Where to put your code
 

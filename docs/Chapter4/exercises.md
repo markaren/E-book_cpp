@@ -1,10 +1,221 @@
 # Chapter 4 Exercises
 
-Work through these after reading Chapter 4. **Try each one yourself before revealing the solution** — you learn far more from an honest attempt than from reading a finished answer. Type the code into CLion and run it; do not just read it.
+Two kinds of exercise on this page.
+
+The **warm-ups** come first: short programs to read, where you predict what happens and pick an answer in the browser. No project, no typing. Each one is built on a rule this chapter states — `const`-correctness, when a destructor runs, what `static` means, who owns what — where the consequence only becomes obvious once you have been caught by it.
+
+Then come the **programs**, from Exercise 1 onwards. **Try each one yourself before revealing the solution** — you learn far more from an honest attempt than from reading a finished answer. Type the code into CLion and run it; do not just read it.
 
 When you open a solution it appears **blurred** — click it once more to reveal it, so you do not see the answer by accident.
 
 Each exercise is a small program with its own `main()`. Keep them in one project with one `add_executable` line per file (see [CMake](../Chapter2/cmake_intro.md)), and pick which to run from the dropdown next to the green ▶ button.
+
+---
+
+## Warm-ups: predict the output
+
+Decide what each program does **before** you answer. Answering locks the question and reveals the explanation.
+
+### W1. A const object and a getter
+
+<!-- no-ce -->
+```cpp
+#include <iostream>
+
+class Sensor {
+public:
+    double read() { return value_; }
+    void set(double v) { value_ = v; }
+
+private:
+    double value_ = 21.5;
+};
+
+int main() {
+    const Sensor s;
+    std::cout << s.read() << "\n";
+}
+```
+
+````quiz
+What happens?
+- It prints `21.5`
+- =It does not compile: `read()` is not `const`
+- It prints `0`
+- It compiles, but prints a garbage value
+:::
+**It does not compile.** GCC and MSVC both reject the call, MSVC with:
+
+```
+error C2662: 'double Sensor::read(void)': cannot convert 'this'
+pointer from 'const Sensor' to 'Sensor &'
+```
+
+`s` is a `const Sensor`, and **a `const` object can call only member functions marked `const`**. `read()` does not modify anything, but it never said so, and the compiler goes by the declaration, not by what the body happens to do.
+
+The fix is one word: `double read() const { return value_; }`. This is why [Classes](classes.md#members-data-and-functions) tells you to mark every observer `const` — forget it on a getter and no `const` object, and no `const&` parameter, can call it. That is the whole practical point of const-correctness.
+````
+
+### W2. When does the destructor run?
+
+<!-- no-ce -->
+```cpp
+#include <iostream>
+#include <string>
+
+class Trace {
+public:
+    explicit Trace(std::string name) : name_(std::move(name)) {
+        std::cout << "open " << name_ << "\n";
+    }
+    ~Trace() { std::cout << "close " << name_ << "\n"; }
+
+private:
+    std::string name_;
+};
+
+int main() {
+    Trace a("A");
+    {
+        Trace b("B");
+        std::cout << "inner\n";
+    }
+    std::cout << "outer\n";
+}
+```
+
+````quiz
+In what order do the six lines appear?
+- `open A`, `open B`, `inner`, `outer`, `close A`, `close B`
+- =`open A`, `open B`, `inner`, `close B`, `outer`, `close A`
+- `open A`, `open B`, `inner`, `outer`, `close B`, `close A`
+- `open A`, `close A`, `open B`, `close B`, `inner`, `outer`
+:::
+**`open A`, `open B`, `inner`, `close B`, `outer`, `close A`.**
+
+`b` is destroyed at the closing brace of the inner block — *before* `outer` prints, not at the end of `main`. `a` lives until `main` itself ends, so `close A` comes last.
+
+Two rules do all the work here. An object is destroyed **the moment its enclosing scope ends**, and objects in the same scope are destroyed in **reverse order of construction** (last built, first destroyed). That is what makes [RAII](raii.md) trustworthy: cleanup is pinned to a brace you can see, not to something you have to remember to call.
+````
+
+### W3. One counter, three objects
+
+<!-- no-ce -->
+```cpp
+#include <iostream>
+
+class Motor {
+public:
+    Motor() : id_(++count_) {}
+    int id() const { return id_; }
+    static int count() { return count_; }
+
+private:
+    int id_;
+    static inline int count_ = 0;
+};
+
+int main() {
+    Motor a;
+    Motor b;
+    Motor c;
+
+    std::cout << a.id() << " " << c.id() << " " << Motor::count() << "\n";
+}
+```
+
+````quiz
+What does this print?
+- `1 1 1`
+- `1 3 1`
+- =`1 3 3`
+- `3 3 3`
+:::
+**`1 3 3`.**
+
+`id_` is an ordinary data member, so every `Motor` has its own: `a` got `1`, `c` got `3`, and those never change. `count_` is **`static`** — there is exactly one, shared by the whole class, and each constructor incremented that same one. After three motors it holds `3`.
+
+`Motor::count()` is called on the *class*, not on an object, which is why there is no `a.` or `c.` in front of it. See [Static members](classes.md#static-members).
+````
+
+### W4. A reference to something that is gone
+
+<!-- no-ce -->
+```cpp
+#include <iostream>
+#include <string>
+
+const std::string& label() {
+    std::string text = "sensor-1";
+    return text;
+}
+
+int main() {
+    std::cout << label() << "\n";
+}
+```
+
+````quiz
+This compiles. What is wrong with it?
+- Nothing — returning `const&` avoids a copy, which is the recommended style
+- It leaks memory, because `text` is never freed
+- =`text` is destroyed when `label` returns, so the caller is handed a reference to memory that no longer exists
+- It does not compile, because you cannot return a local by reference
+:::
+**The reference dangles.** `text` is a local: it is destroyed the instant `label` returns, so the reference handed back refers to memory that is no longer alive. Reading it is **undefined behaviour** — it might print `sensor-1`, print rubbish, or crash, and it may well behave differently in a Release build than in Debug.
+
+It compiles, though the compiler does try to tell you. MSVC warns:
+
+```
+warning C4172: returning address of local variable or temporary : text
+```
+
+which is exactly the kind of warning [the CMake chapter](../Chapter2/cmake_intro.md#turn-on-compiler-warnings) turns on for you, and exactly the kind people learn to scroll past.
+
+Returning `const&` really is the right way to hand back something that **outlives the call** — a data member, say. It is wrong for a local. Here you return by value: `std::string label()`. See [The big lifetime trap](types_refs_ptrs.md#the-big-lifetime-trap).
+````
+
+### W5. Writing to the same file twice
+
+<!-- no-ce -->
+```cpp
+#include <fstream>
+#include <iostream>
+#include <string>
+
+int main() {
+    {
+        std::ofstream out("log.txt");
+        out << "first\n";
+    }
+    {
+        std::ofstream out("log.txt");
+        out << "second\n";
+    }
+
+    std::ifstream in("log.txt");
+    std::string line;
+    while (std::getline(in, line)) {
+        std::cout << line << "\n";
+    }
+}
+```
+
+````quiz
+What does the program print at the end?
+- `first` then `second`
+- =`second`
+- `first`
+- Nothing — the second `ofstream` fails because the file is already open
+:::
+**Just `second`.** `first` is gone.
+
+Opening an `std::ofstream` **truncates** the file by default: it is emptied the moment it is opened, before you write a thing. The second block therefore starts from an empty `log.txt` and the first line is lost.
+
+To add to a file instead of replacing it, open it in append mode: `std::ofstream out("log.txt", std::ios::app);` See [Writing a file](io_streams.md#writing-a-file).
+
+Note that the two blocks are what make this safe to reason about: each `ofstream` is closed at its closing brace, so the file is flushed and released before the next one opens it — [RAII](raii.md) again.
+````
 
 ---
 

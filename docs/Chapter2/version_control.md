@@ -4,7 +4,7 @@ Version control is the system that lets you take **snapshots** of your project a
 
 The tool you will use for this — in this course, in your degree, and in industry — is **Git**.
 
-This chapter introduces the concepts, then walks through the commands you need on day one.
+This chapter introduces the concepts, walks through the commands you need on day one, and then shows where the same operations live in CLion — which is where you will do most of your daily git work.
 
 ---
 
@@ -72,12 +72,75 @@ git log --oneline    # compact view
 
 ### Working with a remote (GitHub)
 
+For the remote you will use **GitHub** — in this course and, most likely, for the rest of your career. If you do not have an account yet, sign up at [github.com](https://github.com) (any email works; you can add your NTNU address later for student benefits).
+
+#### Set up SSH access (once per machine)
+
+When your computer talks to GitHub, it has to prove who you are. In this course we use **SSH keys** for that: a pair of files — a *private* key that never leaves your machine, and a *public* key you hand to GitHub. Set it up once and every clone, push, and pull afterwards just works, with no passwords or login prompts, in the terminal and in CLion alike. The setup is four short steps; do them slowly and in order.
+
+**1. Generate the key pair.** Open a terminal (on Windows, PowerShell — or the **Terminal** tab at the bottom of CLion) and run:
+
+```bash
+ssh-keygen -t ed25519 -C "your.email@stud.ntnu.no"
+```
+
+It asks where to save the key and for a passphrase — press **Enter** at every prompt to accept the defaults. This creates two files in the hidden `.ssh` folder inside your home folder:
+
+- `id_ed25519` — the **private** key. Never share it, never commit it, never paste it anywhere.
+- `id_ed25519.pub` — the **public** key. This is the one GitHub gets (`.pub` as in *public*).
+
+**2. Copy the public key.** Put the contents of the `.pub` file on your clipboard:
+
+=== "Windows (PowerShell)"
+
+    ```bash
+    Get-Content ~\.ssh\id_ed25519.pub | clip
+    ```
+
+=== "macOS"
+
+    ```bash
+    pbcopy < ~/.ssh/id_ed25519.pub
+    ```
+
+=== "Linux"
+
+    ```bash
+    cat ~/.ssh/id_ed25519.pub
+    ```
+
+    Then select the printed line and copy it.
+
+**3. Give it to GitHub.** On github.com, click your profile picture (top right) → **Settings** → **SSH and GPG keys** → **New SSH key**. Paste the key into the *Key* field, give it a title like "NTNU laptop", and click **Add SSH key**.
+
+<!-- screenshot: GitHub Settings → SSH and GPG keys → New SSH key form -->
+
+**4. Test it.** Back in the terminal:
+
+```bash
+ssh -T git@github.com
+```
+
+The very first time, SSH asks whether it should trust GitHub (*"The authenticity of host 'github.com' can't be established"*) — type `yes` and press **Enter**. Success looks like:
+
+```
+Hi yourusername! You've successfully authenticated, but GitHub does not provide shell access.
+```
+
+That last part is normal — it means everything works.
+
+!!! warning "The two mistakes everyone makes"
+    - **Pasting the wrong key.** GitHub gets the `.pub` file, nothing else. If GitHub rejects the key or a red warning appears, check you did not paste the private key.
+    - **`Permission denied (publickey)`.** This error, on clone or push, means GitHub does not have your key: either step 3 was skipped, or you are on a different machine than the one that generated the key. Each machine you work on needs its own run through these steps.
+
+From now on, whenever you copy a repo's address from GitHub's green **Code** button, use the **SSH** tab — the URL looks like `git@github.com:owner/repo.git`. (You will also see **HTTPS** URLs, `https://github.com/...`; they work too, with a browser login instead of a key, but in this course we standardise on SSH.)
+
 There are two ways your local repo and a GitHub repo first meet.
 
 **If the project already lives on GitHub**, clone it:
 
 ```bash
-git clone https://github.com/owner/repo.git   # download the repo from GitHub
+git clone git@github.com:owner/repo.git   # download the repo from GitHub
 cd repo
 # make changes, git add, git commit ...
 git push                                   # send your commits back to GitHub
@@ -87,11 +150,11 @@ git pull                                   # fetch and merge others' commits
 **If you started locally** with `git init` (the flow above) and now want it on GitHub, create an empty repository on GitHub, then connect and push:
 
 ```bash
-git remote add origin https://github.com/owner/repo.git   # name the remote "origin"
-git push -u origin main                                    # push main and remember the link
+git remote add origin git@github.com:owner/repo.git   # name the remote "origin"
+git push -u origin main                                # push main and remember the link
 ```
 
-`git remote add origin <url>` tells your local repo where its GitHub copy lives (`origin` is the conventional name for it). The `-u` on that first push sets `main` to track `origin/main`, so from then on a plain `git push` and `git pull` know where to go. The first push asks you to log in to GitHub; your operating system's credential manager saves it so you are not asked again.
+`git remote add origin <url>` tells your local repo where its GitHub copy lives (`origin` is the conventional name for it). The `-u` on that first push sets `main` to track `origin/main`, so from then on a plain `git push` and `git pull` know where to go. Because your SSH key already proves who you are, the push goes through without any login prompt.
 
 Either way, `git clone` or the `remote add` + first push is what you run *once* to start; `push` and `pull` are what you do repeatedly to stay in sync.
 
@@ -155,9 +218,63 @@ A **pull request** (PR, sometimes "merge request") is GitHub's way of asking "pl
 You will not always use PRs on solo projects. You will use them constantly in any team setting and in this course's group work. The mechanics:
 
 1. Create a branch, commit your changes, and push the branch to GitHub. A brand-new branch has no remote counterpart yet, so the first push must name one: `git push -u origin new-controller-tuning`. (A bare `git push` fails here with *"no upstream branch"* — the `-u` creates the upstream and remembers it, so later pushes on this branch are just `git push`.)
-2. Open a pull request from that branch to `main`.
+2. Open a pull request from that branch to `main`. The easiest way: right after you push, open the repo on github.com — a yellow banner with a **Compare & pull request** button appears. Click it, write a short description of the change, and click **Create pull request**.
 3. Wait for review; address feedback by pushing additional commits to the same branch.
 4. Once approved, merge the PR.
+
+---
+
+## Git in CLion
+
+Everything above works in any terminal, and you should be able to do it there — when git behaves strangely, the terminal is where you find out what is actually going on. Day to day, though, you will mostly use git through **CLion**, which has every operation from this chapter built into its interface. Nothing new to learn: CLion runs the exact same git commands for you, and the vocabulary — commit, push, pull, branch — is identical.
+
+### Connect CLion to GitHub (once)
+
+1. Open **File → Settings → Version Control → GitHub** (on macOS: **CLion → Settings**).
+2. Click **+** and choose **Log In via GitHub**.
+3. Your browser opens; log in to GitHub and click **Authorize**.
+4. Back in the same settings page, tick **Clone git repositories using ssh**, then click **OK**.
+
+<!-- screenshot: CLion Settings → Version Control → GitHub with an account added and "Clone git repositories using ssh" ticked -->
+
+That is the whole setup. The login lets CLion list your repos and create pull requests for you; the checkbox makes it use the SSH key you set up earlier for every clone, push, and pull — the same key, whether you work in CLion or the terminal.
+
+### Getting a project
+
+- **Clone from GitHub:** on the welcome screen choose **Clone Repository** (or **File → New → Project from Version Control** with a project open). Since you are logged in, CLion lists your own GitHub repos to pick from; for any other repo, paste its SSH URL.
+- **Put a local project on GitHub:** with the project open, choose **Git → GitHub → Share Project on GitHub**, give it a name, and click **Share**. CLion creates the repository on GitHub and pushes your code in one step — this replaces the whole `git remote add` + `git push -u origin main` sequence from earlier.
+
+<!-- screenshot: CLion "Share Project on GitHub" dialog -->
+
+### The daily cycle
+
+- **Commit:** open the **Commit** tool window (**Alt+0**, or the tick-mark icon in the left sidebar). Ticking a file's checkbox is `git add`; double-click a file to see exactly what changed. Write a message and press **Commit** — or **Commit and Push...** to share it in the same step.
+- **Push:** **Git → Push** (**Ctrl+Shift+K**).
+- **Pull:** **Git → Update Project** (**Ctrl+T**).
+- **Branches:** click the branch name in the toolbar (or the status bar at the bottom right). From there you can create a **New Branch** or switch to an existing one — CLion's version of `git switch`.
+- **History:** the **Git** tool window's **Log** tab is a clickable `git log`, showing the commit graph with every branch.
+
+| Terminal | In CLion |
+|---------|----------|
+| `git clone <url>` | Welcome screen → **Clone Repository** |
+| `git add` + `git commit` | **Commit** tool window: tick files, write message, **Commit** |
+| `git push` | **Git → Push** |
+| `git pull` | **Git → Update Project** |
+| `git switch -c <name>` | Branch name in toolbar → **New Branch** |
+| `git merge <branch>` | Branch name in toolbar → pick branch → **Merge into Current** |
+| `git log` | **Git** tool window → **Log** tab |
+| `git diff` | Double-click a file in the **Commit** window |
+
+### "Add file to Git?"
+
+When you create a new file, CLion asks whether to add it to git. Say **Add** for anything you wrote — source files, `CMakeLists.txt`, headers. Say **Cancel** for generated files; better yet, keep a proper `.gitignore` (see below) and CLion will stop asking about them entirely.
+
+### Merge conflicts, the comfortable way
+
+When a merge hits a conflict, CLion opens a **Conflicts** dialog listing the affected files. Click **Merge** on a file and you get a three-way view: your version on the left, the incoming version on the right, and the result you are building in the middle. Accept a side's change with the **>>**/**<<** arrows, discard one with **×**, or edit the middle pane directly, then click **Apply**. It is the same conflict resolution as editing the `<<<<<<<` markers by hand — just far harder to get wrong.
+
+!!! tip "When the GUI confuses you"
+    CLion has a **Terminal** tab at the bottom. Whatever state the buttons have gotten you into, `git status` there tells you the truth, in the same terms as this chapter.
 
 ---
 
@@ -255,4 +372,6 @@ Git has more depth than fits in one chapter. The single best free resource is th
 - Stage with `git add`, save with `git commit`, share with `git push`, sync with `git pull`.
 - Use branches for everything; they are free.
 - Write commit messages that explain *why*, not just *what*.
+- Set up your SSH key once per machine and give the `.pub` file to GitHub; after that every push and pull just works, in the terminal and in CLion.
+- CLion has all of this built in: log in to GitHub once, then commit, push, pull, and branch from the IDE.
 - When in doubt: `git status`, `git log`.

@@ -51,6 +51,26 @@ You will copy this template into many projects. Get familiar with it.
 
 ---
 
+## CMake in CLion
+
+CLion is built *around* CMake: the `CMakeLists.txt` **is** the project. That has a handful of practical consequences, and knowing them up front saves a lot of head-scratching.
+
+**Opening a project means opening the folder.** Use **File → Open** and pick the folder that contains `CMakeLists.txt` (picking the file itself works too). This matters most when you [clone a repo from GitHub](version_control.md): open the cloned *folder* and CLion finds the `CMakeLists.txt`, configures the project, and the green ▶ button works. If you instead open a lone `.cpp` file, you get an editor with no project behind it — nothing to build, nothing to run.
+
+**Editing `CMakeLists.txt` requires a reload.** CMake reads the file when it *configures* the project, not continuously. When you edit `CMakeLists.txt`, a banner appears at the top of the editor offering to reload the project — click it, or click **Enable auto-reload** once and CLion re-runs CMake by itself a moment after each edit. Until the project reloads, your edit has **no effect**. This is the single most common "I added the file but it still does not build."
+
+<!-- screenshot: CLion reload banner after editing CMakeLists.txt -->
+
+**New files must be listed in a target.** When you create a file with **File → New → C/C++ Source File**, CLion shows an **Add to targets** checkbox — leave it ticked and CLion writes the file into your `add_executable` line for you. A file that arrives any other way (copied in from the file explorer, downloaded) is *not* picked up automatically: add it to the list in `CMakeLists.txt` yourself, then reload.
+
+**One target, one entry in the ▶ dropdown.** Every `add_executable` in your project becomes an entry in the dropdown next to the green play button, and ▶ builds and runs the *selected* one. When a project has several programs — an app and its tests, say — check that dropdown before concluding your program "did not run."
+
+**Errors appear in two different places.** Mistakes in `CMakeLists.txt` itself are **configure-time** errors: they appear in the **CMake** tool window at the bottom of CLion, at the moment the project (re)loads. Compiler and linker errors appear in the **Build** window when you actually build. The stage diagram above tells you *who* is complaining; the window it appears in tells you *when* it went wrong.
+
+**The build folder is disposable.** Everything CMake and the compiler generate lands in `cmake-build-debug/` (CLion's default name for the `build/` folder). If CMake ever gets itself into a confused state — after renaming things, moving the project, or changing toolchains — use **Tools → CMake → Reset Cache and Reload Project**, or simply delete the `cmake-build-debug/` folder. Nothing in it is yours; the next build regenerates all of it.
+
+---
+
 ## Setting the C++ standard
 
 The default standard depends on the compiler, and it is rarely the one you want. Set it explicitly:
@@ -439,6 +459,24 @@ The pay-off: each folder's build sits next to its code, and the top-level file b
 
 ---
 
+## When the build breaks
+
+Five failures account for almost every CMake problem students bring to the lab. Match the symptom, apply the fix.
+
+**`Cannot find source file: motor.cpp`** — a *configure-time* error (CMake tool window, before anything compiles). `CMakeLists.txt` names a file that is not where it says: a typo in the name, or the file lives in a subfolder (`src/motor.cpp`) while the list says `motor.cpp`. Paths in `add_executable` are relative to the `CMakeLists.txt` that contains them — fix the path, reload.
+
+**`undefined reference to 'motorRpm()'`** — a *link-time* error (Build window, after everything compiled). The linker never received the compiled body of that function. Almost always: you wrote `motor.cpp` but forgot to list it in `add_executable`, or you forgot the `target_link_libraries` line for the library that contains it. Add it, reload, rebuild. Note the misdirection: the error is reported on the file that *calls* the function, which is not the file you need to fix.
+
+**`multiple definition of 'main'`** — also at link time. Two source files in the *same* target each define `main`; the linker cannot pick one. Two programs mean two targets: give each file its own `add_executable`, exactly like [exercise 1](exercises.md#1-a-project-with-two-programs).
+
+**"I changed the code, but the program behaves like before."** Two usual causes, both in CLion: the ▶ dropdown is set to a *different* target than the one you edited, or you changed `CMakeLists.txt` and never reloaded, so the build still follows the old description.
+
+**"It builds and runs, but cannot find my file."** The program opens `data.txt`, gets nothing — because it runs *inside* `cmake-build-debug/`, and relative paths are resolved from there, not from your source folder. That is a [working-directory](../computer_basics.md#the-working-directory) problem, not a CMake one: see or change it under **Run → Edit Configurations → Working directory**.
+
+And when the symptom matches nothing at all — the project was fine yesterday, nothing you changed explains it — reset: **Tools → CMake → Reset Cache and Reload Project**, or delete `cmake-build-debug/` and let it regenerate. A stale cache after renames or toolchain changes produces exactly this kind of inexplicable breakage, and the reset is free.
+
+---
+
 ## Summary
 
 - `CMakeLists.txt` describes your project; CMake turns the description into platform-specific build files.
@@ -451,6 +489,7 @@ The pay-off: each folder's build sits next to its code, and the top-level file b
 - Pull in a third-party library with `FetchContent` (`FetchContent_Declare` + `FetchContent_MakeAvailable`), then link the target it exports (`ns::target`).
 - Split a large build across folders by giving each its own `CMakeLists.txt` and wiring them together with `add_subdirectory`.
 - Libraries are **static** by default — baked into the executable, nothing to ship; prefer that, and reach for a **shared** library (`.dll`/`.so`) only when you need it (and then the program must find it at run time).
-- Keep build artefacts in a separate `build/` folder; ignore it in git.
+- In CLion: edits to `CMakeLists.txt` take effect only after a **reload**; every new file must be listed in a target; the ▶ dropdown decides which target runs.
+- Keep build artefacts in a separate `build/` folder; ignore it in git. The folder is disposable — deleting it (or **Reset Cache and Reload Project**) cures a confused CMake.
 - Pick a **build configuration** with `-DCMAKE_BUILD_TYPE` (or CLion's selector): **Debug** to develop and debug, **Release** to measure and ship.
 - Make parts of the build optional with `option(NAME "…" ON)` and an `if(NAME)` block — e.g. gate the tests behind `BUILD_TESTS`.

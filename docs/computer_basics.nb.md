@@ -64,7 +64,7 @@ Filene dine ligger i **mapper** (også kalt **kataloger**), som ligger inni hver
 
 **Hjemmemappen** din er din personlige mappe: `C:\Users\<deg>` på Windows, `/Users/<deg>` på macOS, `/home/<deg>` på Linux. Den skrives ofte `~`.
 
-### Arbeidskatalogen
+### Arbeidskatalogen {#the-working-directory}
 
 **Arbeidskatalogen** din (eller "gjeldende katalog") er mappa et program er "i" akkurat nå — mappa som relative stier måles fra. I en terminal skriver `pwd` den ut og `cd` endrer den.
 

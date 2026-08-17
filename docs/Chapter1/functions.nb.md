@@ -78,7 +78,7 @@ En funksjon som ikke er `void` må returnere en verdi på hver vei. Å glemme de
 
 ---
 
-## Deklarasjoner vs. definisjoner
+## Deklarasjoner vs. definisjoner {#declarations-vs-definitions}
 
 I større programmer deler du ofte en funksjon over flere filer. **Deklarasjonen** forteller kompilatoren at funksjonen finnes og hva signaturen dens er; **definisjonen** gir den faktiske koden.
 

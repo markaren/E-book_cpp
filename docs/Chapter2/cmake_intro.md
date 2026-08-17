@@ -424,7 +424,7 @@ if(BUILD_TESTS)
 endif()
 ```
 
-`Catch2::Catch2WithMain` is not one of your own targets — it is a target from a fetched dependency, the Catch2 test framework. See [Consuming third-party libraries](#consuming-third-party-libraries) below for how a name like that gets into your build.
+`Catch2::Catch2WithMain` is not one of your own targets — it is a target from a fetched dependency, the Catch2 test framework. See [Consuming third-party libraries](#consuming-third-party-libraries) above for how a name like that gets into your build.
 
 `option(<NAME> "<description>" <default>)` creates a boolean that defaults to `ON` or `OFF`; everything inside the matching `if(<NAME>) … endif()` is configured only when it is on. The default holds unless someone overrides it on the command line:
 

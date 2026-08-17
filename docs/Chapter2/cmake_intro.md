@@ -200,6 +200,51 @@ add_executable(hello
 )
 ```
 
+### Inside a header {#headers}
+
+What is actually *in* `motor.hpp`? Recall [declarations vs. definitions](../Chapter1/functions.md#declarations-vs-definitions) from Chapter 1: the declaration tells the compiler a function exists; the definition supplies its body. A **header** is a file collecting declarations that several source files need to share, and `#include "motor.hpp"` pastes it into whichever file asks:
+
+```cpp
+// motor.hpp — the declarations: what exists
+#pragma once
+
+double motorRpm(int throttlePercent);
+```
+
+```cpp
+// motor.cpp — the definitions: how it works
+#include "motor.hpp"
+
+double motorRpm(int throttlePercent) {
+    return throttlePercent * 42.0;
+}
+```
+
+```cpp
+// main.cpp — any file that includes the header can call the function
+#include <iostream>
+#include "motor.hpp"
+
+int main() {
+    std::cout << motorRpm(50) << "\n";
+}
+```
+
+Both `motor.cpp` and `main.cpp` are compiled (that is the `add_executable` list); the header is pasted into each of them. Two conventions in that little header deserve a proper introduction, because every header you ever write uses both.
+
+**`#pragma once` — the include guard.** `#include` is a literal paste, and in a real project one file easily ends up including the same header *twice* — once directly, and once more through some other header that also includes it. The compiler would then see every declaration in it twice and reject the file with a *redefinition* error. `#pragma once` on the first line tells the compiler: "however many times this file is asked for, paste it in at most once." Put it at the top of **every** header you write. You will also meet the older spelling of the same idea in other people's code — Arduino libraries and older tutorials especially:
+
+```cpp
+#ifndef MOTOR_HPP
+#define MOTOR_HPP
+// ... the header's contents ...
+#endif
+```
+
+That is an include guard built from preprocessor conditionals: the first paste defines the macro `MOTOR_HPP`, and the `#ifndef` ("if not defined") makes every later paste skip straight to the `#endif`. It does exactly the same job as `#pragma once`, at the cost of three lines and a macro name you must keep unique. `#pragma once` is technically not part of the C++ standard, but every compiler you will meet supports it — write it in your own headers, and simply recognise the `#ifndef` form when you see it.
+
+**`.h` or `.hpp`?** Both are header files, and the compiler treats them identically — the ending is pure convention. `.h` is inherited from C, so it is what C libraries (and the Arduino world) use; `.hpp` signals "there is C++ inside." This book uses **`.hpp`** for its own headers, so a reader can tell at a glance which headers are C++. Watch out in CLion: **File → New → C/C++ Header File** suggests `.h` by default — name the file with `.hpp` yourself (you can change the default under **Settings → Editor → Code Style → C/C++**, on the **New File Extensions** tab).
+
 ---
 
 ## Headers in a separate folder

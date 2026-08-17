@@ -22,7 +22,7 @@ En header deler *deklarasjoner*; å inkludere en `.cpp` kopierer *definisjonene*
 Vinkelparenteser for standard- og bibliotek-headere; hermetegn for dine egne filer. Se [Grunnstruktur](Chapter1/basic_structure.md). (Mer: [Stack Overflow](https://stackoverflow.com/questions/21593/what-is-the-difference-between-include-filename-and-include-filename).)
 
 **Hvorfor `#ifndef`/`#define` (eller `#pragma once`) øverst i headere?**
-De hindrer at en header limes inn i én fil to ganger, noe som ville gitt "redefinition"-feil. `#pragma once` er den moderne enlinjeren. Se [Klasser](Chapter4/classes.md), som lærer bort `#pragma once`, og [Lese kompilatorfeil](compiler_errors.md) for feilen den forhindrer. (Mer: [Stack Overflow](https://stackoverflow.com/questions/1653958/why-are-ifndef-and-define-used-in-c-header-files).)
+De hindrer at en header limes inn i én fil to ganger, noe som ville gitt "redefinition"-feil. `#pragma once` er den moderne enlinjeren. Se [Inni en header](Chapter2/cmake_intro.md#headers), som lærer bort begge formene, og [Lese kompilatorfeil](compiler_errors.md) for feilen den forhindrer. (Mer: [Stack Overflow](https://stackoverflow.com/questions/1653958/why-are-ifndef-and-define-used-in-c-header-files).)
 
 ---
 

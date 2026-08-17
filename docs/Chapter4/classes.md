@@ -409,7 +409,7 @@ std::string Motor::describe() const {
 
 `Motor::` in front of each function name says "this function belongs to the `Motor` class." The header is what other files `#include`; the implementation file is compiled separately.
 
-`#pragma once` on the header's first line is the **include guard**. A header is *pasted in* wherever it is `#include`d, and it is easy for one file to end up including the same header twice (directly, and again through another header). Without the guard the class would be defined twice in that file and the compiler would reject it. `#pragma once` tells the compiler "however many times you are asked, paste this file in only once." Put it at the top of every header you write.
+`#pragma once` on the header's first line is the **include guard** you met in [CMake](../Chapter2/cmake_intro.md#headers). A header is *pasted in* wherever it is `#include`d, and it is easy for one file to end up including the same header twice (directly, and again through another header). Without the guard the class would be defined twice in that file and the compiler would reject it. `#pragma once` tells the compiler "however many times you are asked, paste this file in only once." Put it at the top of every header you write.
 
 (`describe` uses `std::format`, which builds a string by filling each `{}` with the next argument — the modern way to assemble text. See [Strings](../strings.md).)
 

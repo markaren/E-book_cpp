@@ -22,7 +22,7 @@ A header shares *declarations*; including a `.cpp` copies its *definitions* into
 Angle brackets for standard and library headers; quotes for your own files. See [Basic Structure](Chapter1/basic_structure.md). (More: [Stack Overflow](https://stackoverflow.com/questions/21593/what-is-the-difference-between-include-filename-and-include-filename).)
 
 **Why the `#ifndef`/`#define` (or `#pragma once`) at the top of headers?**
-They stop a header being pasted into one file twice, which would cause "redefinition" errors. `#pragma once` is the modern one-liner. See [Classes](Chapter4/classes.md), which teaches `#pragma once`, and [Reading Compiler Errors](compiler_errors.md) for the error it prevents. (More: [Stack Overflow](https://stackoverflow.com/questions/1653958/why-are-ifndef-and-define-used-in-c-header-files).)
+They stop a header being pasted into one file twice, which would cause "redefinition" errors. `#pragma once` is the modern one-liner. See [Inside a header](Chapter2/cmake_intro.md#headers), which teaches both forms, and [Reading Compiler Errors](compiler_errors.md) for the error it prevents. (More: [Stack Overflow](https://stackoverflow.com/questions/1653958/why-are-ifndef-and-define-used-in-c-header-files).)
 
 ---
 

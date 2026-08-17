@@ -241,6 +241,18 @@ Alt ovenfor virker i enhver terminal, og du bør kunne gjøre det der — når g
 
 Det er hele oppsettet. Innloggingen lar CLion liste repoene dine og opprette pull requests for deg; avkrysningsboksen får den til å bruke SSH-nøkkelen du satte opp tidligere, for hver clone, push og pull — den samme nøkkelen, enten du jobber i CLion eller i terminalen.
 
+### Installer plugin-en Modal Commit Interface (én gang) {#install-the-modal-commit-interface-plugin-once}
+
+Nyere CLion-versjoner committer gjennom et *ikke-modalt* **Commit**-verktøyvindu forankret i sidefeltet. Dette emnet bruker i stedet den eldre **modale** commit-dialogen: ett samlet vindu med fillisten, diffen og meldingen på samme sted, slik at en commit blir én bevisst handling i stedet for noe spredt utover editoren. Den er en plugin nå, og verdt å installere med en gang:
+
+1. Åpne **File → Settings → Plugins**, velg fanen **Marketplace**, og søk etter `commit`.
+2. Installer **Modal Commit Interface**, og start CLion på nytt når den ber om det.
+3. Skru på det modale grensesnittet under **File → Settings → Advanced Settings → Version Control**.
+
+![CLions Plugins-innstillinger med "commit" skrevet i søkefeltet og plugin-en Modal Commit Interface valgt, med beskrivelsen sin.](../assets/clion-modal-commit-plugin.png){ .screenshot }
+
+Fra da av åpner **Ctrl+K** (**⌘K** på macOS) commit-dialogen, og resten av dette kapittelet forutsetter den. Hopper du over plugin-en, virker alt nedenfor fortsatt — det skjer bare i det forankrede verktøyvinduet i stedet.
+
 ### Hente et prosjekt {#getting-a-project}
 
 - **Klone fra GitHub:** på velkomstskjermen, velg **Clone Repository** (eller **File → New → Project from Version Control** med et prosjekt åpent). Siden du er logget inn, lister CLion dine egne GitHub-repoer å velge fra; for et hvilket som helst annet repo, lim inn SSH-URL-en dets.
@@ -250,7 +262,7 @@ Det er hele oppsettet. Innloggingen lar CLion liste repoene dine og opprette pul
 
 ### Den daglige syklusen {#the-daily-cycle}
 
-- **Commit:** åpne **Commit**-verktøyvinduet (**Alt+0**, eller hake-ikonet i venstre sidefelt). Å krysse av en fils avkrysningsboks er `git add`; dobbeltklikk en fil for å se nøyaktig hva som endret seg. Skriv en melding og trykk **Commit** — eller **Commit and Push...** for å dele den i samme steg.
+- **Commit:** trykk **Ctrl+K** (**⌘K** på macOS) for å åpne commit-dialogen. Å krysse av en fils avkrysningsboks er `git add`; klikk en fil for å se nøyaktig hva som endret seg i den. Skriv en melding og trykk **Commit** — eller **Commit and Push...** for å dele den i samme steg.
 - **Push:** **Git → Push** (**Ctrl+Shift+K**).
 - **Pull:** **Git → Update Project** (**Ctrl+T**).
 - **Brancher:** klikk branch-navnet i verktøylinjen (eller i statuslinjen nederst til høyre). Derfra kan du opprette en **New Branch** eller bytte til en eksisterende — CLions versjon av `git switch`.
@@ -259,13 +271,13 @@ Det er hele oppsettet. Innloggingen lar CLion liste repoene dine og opprette pul
 | Terminal | I CLion |
 |---------|----------|
 | `git clone <url>` | Velkomstskjermen → **Clone Repository** |
-| `git add` + `git commit` | **Commit**-verktøyvinduet: kryss av filer, skriv melding, **Commit** |
+| `git add` + `git commit` | Commit-dialogen (**Ctrl+K**): kryss av filer, skriv melding, **Commit** |
 | `git push` | **Git → Push** |
 | `git pull` | **Git → Update Project** |
 | `git switch -c <name>` | Branch-navnet i verktøylinjen → **New Branch** |
 | `git merge <branch>` | Branch-navnet i verktøylinjen → velg branch → **Merge into Current** |
 | `git log` | **Git**-verktøyvinduet → **Log**-fanen |
-| `git diff` | Dobbeltklikk en fil i **Commit**-vinduet |
+| `git diff` | Klikk en fil i commit-dialogen |
 
 ### "Add file to Git?" {#add-file-to-git}
 

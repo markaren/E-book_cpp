@@ -59,13 +59,13 @@ CLion is built *around* CMake: the `CMakeLists.txt` **is** the project. That has
 
 **Editing `CMakeLists.txt` requires a reload.** CMake reads the file when it *configures* the project, not continuously. When you edit `CMakeLists.txt`, a banner appears at the top of the editor offering to reload the project — click it, or click **Enable auto-reload** once and CLion re-runs CMake by itself a moment after each edit. Until the project reloads, your edit has **no effect**. This is the single most common "I added the file but it still does not build."
 
-<!-- screenshot: CLion reload banner after editing CMakeLists.txt -->
+![The reload button CLion floats over the editor after CMakeLists.txt is edited: a small circular-arrow icon with a dismiss cross beside it.](../assets/clion-cmake-reload.png){ .screenshot }
 
 **New files must be listed in a target.** When you create a file with **File → New → C/C++ Source File**, CLion shows an **Add to targets** checkbox — leave it ticked and CLion writes the file into your `add_executable` line for you. A file that arrives any other way (copied in from the file explorer, downloaded) is *not* picked up automatically: add it to the list in `CMakeLists.txt` yourself, then reload.
 
 **One target, one entry in the ▶ dropdown.** Every `add_executable` in your project becomes an entry in the dropdown next to the green play button, and ▶ builds and runs the *selected* one. When a project has several programs — an app and its tests, say — check that dropdown before concluding your program "did not run."
 
-![CLion's toolbar: the target dropdown sits just left of the hammer, run and debug buttons — whichever target it names is the one ▶ builds and runs.](../assets/clion-run-toolbar.png){ .screenshot }
+![CLion's target dropdown opened, listing recent configurations above the project's full set of targets; the one named in the toolbar is what ▶ builds and runs.](../assets/clion-target-dropdown.png){ .screenshot }
 
 **Errors appear in two different places.** Mistakes in `CMakeLists.txt` itself are **configure-time** errors: they appear in the **CMake** tool window at the bottom of CLion, at the moment the project (re)loads. Compiler and linker errors appear in the **Build** window when you actually build. The stage diagram above tells you *who* is complaining; the window it appears in tells you *when* it went wrong.
 

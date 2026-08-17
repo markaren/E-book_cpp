@@ -59,13 +59,13 @@ CLion er bygd *rundt* CMake: `CMakeLists.txt` **er** prosjektet. Det har en hån
 
 **Å redigere `CMakeLists.txt` krever en ny innlasting.** CMake leser filen når den *konfigurerer* prosjektet, ikke kontinuerlig. Når du redigerer `CMakeLists.txt`, dukker det opp et banner øverst i editoren som tilbyr å laste prosjektet inn på nytt — klikk det, eller klikk **Enable auto-reload** én gang, så kjører CLion CMake på nytt av seg selv et øyeblikk etter hver endring. Før prosjektet er lastet inn på nytt, har endringen din **ingen effekt**. Dette er den aller vanligste "jeg la til filen, men den bygges fortsatt ikke."
 
-<!-- skjermbilde: CLions reload-banner etter redigering av CMakeLists.txt -->
+![Reload-knappen CLion viser over editoren etter at CMakeLists.txt er endret: et lite ikon med sirkelpil og et kryss for å lukke ved siden av.](../assets/clion-cmake-reload.png){ .screenshot }
 
 **Nye filer må stå oppført i et target.** Når du oppretter en fil med **File → New → C/C++ Source File**, viser CLion en avkrysningsboks **Add to targets** — la den stå avkrysset, så skriver CLion filen inn i `add_executable`-linjen din for deg. En fil som kommer inn på annen måte (kopiert inn fra filutforskeren, lastet ned) plukkes *ikke* opp automatisk: legg den til i listen i `CMakeLists.txt` selv, og last inn på nytt.
 
 **Ett target, én oppføring i ▶-rullegardinmenyen.** Hver `add_executable` i prosjektet ditt blir en oppføring i rullegardinmenyen ved siden av den grønne play-knappen, og ▶ bygger og kjører det *valgte*. Når et prosjekt har flere programmer — en app og testene dens, for eksempel — sjekk den menyen før du konkluderer med at programmet ditt "ikke kjørte".
 
-![CLions verktøylinje: target-menyen ligger rett til venstre for hammer-, kjør- og debug-knappene — det targetet den navngir, er det ▶ bygger og kjører.](../assets/clion-run-toolbar.png){ .screenshot }
+![CLions target-meny åpnet, med nylige konfigurasjoner øverst og prosjektets fulle sett av targets under; det som står i verktøylinjen, er det ▶ bygger og kjører.](../assets/clion-target-dropdown.png){ .screenshot }
 
 **Feil dukker opp to forskjellige steder.** Feil i selve `CMakeLists.txt` er feil ved **konfigurering** (configure-time): de vises i **CMake**-verktøyvinduet nederst i CLion, i det øyeblikket prosjektet lastes (på nytt). Kompilator- og linkerfeil vises i **Build**-vinduet når du faktisk bygger. Trinndiagrammet ovenfor forteller deg *hvem* som klager; vinduet det vises i forteller deg *når* det gikk galt.
 

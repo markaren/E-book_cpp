@@ -110,6 +110,8 @@ Out of the box, your operating system hides some of this from you — file exten
 
 To switch both on — **Windows 11:** in File Explorer, open the **View → Show** menu and tick **File name extensions** and **Hidden items** (on Windows 10, use the **View** ribbon tab and the checkboxes of the same name). **macOS:** Finder hides them too — show extensions under **Finder → Settings → Advanced → Show all filename extensions**, and toggle hidden files with **⌘ + Shift + .** (the period key).
 
+![Windows 11 File Explorer with the View → Show submenu open; the entries for file name extensions and hidden items are the last two. (Shown on a Norwegian-language Windows: *Vis → Filtyper / Skjulte elementer*.)](assets/windows-show-extensions.png){ .screenshot }
+
 ### Zipped folders: `.zip` and `.tar.gz` {#archives}
 
 A whole folder — many files and subfolders at once — is often bundled into a **single file** that is easy to download or send, and usually **compressed** so it takes less space. This is an **archive**. You meet them constantly: a library or SDK you download, example code, or an assignment you hand in tends to arrive as one `.zip` or `.tar.gz` file.

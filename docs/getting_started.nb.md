@@ -112,6 +112,8 @@ Process finished with exit code 0
 De vanligste problemene ved første kjøring:
 
 - **"No toolchain configured" eller kompilatoren finnes ikke.** Åpne **File → Settings → Build, Execution, Deployment → Toolchains**. På Windows bør det være en innebygd **MinGW**-oppføring; hvis den mangler, klikk **+** og legg den til. På macOS/Linux, sørg for at du installerte kompilatoren fra fanen i steg 1.
+
+    ![CLions Toolchains-innstillingsside med de oppsatte verktøykjedene listet, og detaljene for den valgte til høyre.](assets/clion-toolchains.png){ .screenshot }
 - **En rød feil dukker opp i CMake-panelet nederst.** Dette er nesten alltid en dårlig prosjektplassering — en sti med mellomrom eller spesialtegn, eller en skylagringsmappe. Slett prosjektet og lag det på nytt i en enkel sti som `C:\dev\projects`.
 - **Run-knappen er grå eller ingenting skjer.** CLion holder sannsynligvis fortsatt på å laste prosjektet — vent til fremdriftslinjen nederst er ferdig, og prøv igjen.
 - **Fortsatt fast på en feilmelding.** Les [Lese kompilatorfeil](compiler_errors.md), og kopier så den *nøyaktige* feilteksten inn i en søkemotor — eller inn i en KI-assistent, og følg [Bruke KI til koding](using_ai.md).

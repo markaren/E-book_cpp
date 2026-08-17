@@ -112,6 +112,8 @@ Process finished with exit code 0
 The most common first-run problems:
 
 - **"No toolchain configured" or the compiler is not found.** Open **File → Settings → Build, Execution, Deployment → Toolchains**. On Windows there should be a bundled **MinGW** entry; if it is missing, click **+** and add it. On macOS/Linux, make sure you installed the compiler from the tab in Step 1.
+
+    ![CLion's Toolchains settings page listing the configured toolchains, with the details of the selected one on the right.](assets/clion-toolchains.png){ .screenshot }
 - **A red error appears in the CMake panel at the bottom.** This is almost always a bad project location — a path with spaces or special characters, or a cloud-storage folder. Delete the project and recreate it in a simple path like `C:\dev\projects`.
 - **The Run button is greyed out or nothing happens.** CLion is probably still loading the project — wait for the progress bar at the bottom to finish, then try again.
 - **Still stuck on an error message.** Read [Reading Compiler Errors](compiler_errors.md), then copy the *exact* error text into a search engine — or into an AI assistant, following [Using AI for Coding](using_ai.md).

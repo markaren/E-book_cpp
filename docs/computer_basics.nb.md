@@ -110,6 +110,8 @@ Rett ut av boksen skjuler operativsystemet noe av dette for deg — filendelser,
 
 For å skru på begge — **Windows 11:** i Filutforsker, åpne menyen **Vis → Vis** (*View → Show*) og huk av **Filnavnutvidelser** og **Skjulte elementer** (på Windows 10 bruker du **Vis**-fanen i båndet og avkrysningsboksene med samme navn). **macOS:** Finder skjuler dem også — vis endelser under **Finder → Innstillinger → Avansert → Vis alle filnavnutvidelser**, og veksle skjulte filer med **⌘ + Shift + .** (punktum-tasten).
 
+![Filutforsker i Windows 11 med undermenyen Vis → Vis åpen; oppføringene *Filtyper* og *Skjulte elementer* er de to nederste.](assets/windows-show-extensions.png){ .screenshot }
+
 ### Komprimerte mapper: `.zip` og `.tar.gz` {#archives}
 
 En hel mappe — mange filer og undermapper på én gang — pakkes ofte sammen til en **enkelt fil** som er lett å laste ned eller sende, og som regel **komprimert** så den tar mindre plass. Dette er et **arkiv**. Du møter dem hele tiden: et bibliotek eller en SDK du laster ned, eksempelkode, eller en innlevering du leverer, kommer gjerne som én `.zip`- eller `.tar.gz`-fil.

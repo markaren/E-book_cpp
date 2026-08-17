@@ -241,6 +241,18 @@ Everything above works in any terminal, and you should be able to do it there �
 
 That is the whole setup. The login lets CLion list your repos and create pull requests for you; the checkbox makes it use the SSH key you set up earlier for every clone, push, and pull — the same key, whether you work in CLion or the terminal.
 
+### Install the Modal Commit Interface plugin (once)
+
+Recent CLion versions commit through a *non-modal* **Commit** tool window docked in the sidebar. This course uses the older **modal** commit dialog instead: one focused window holding the file list, the diff and the message together, so a commit is a single deliberate act rather than something spread across the editor. It is a plugin now, and worth installing on day one:
+
+1. Open **File → Settings → Plugins**, choose the **Marketplace** tab, and search for `commit`.
+2. Install **Modal Commit Interface** and restart CLion when it asks.
+3. Switch the modal interface on under **File → Settings → Advanced Settings → Version Control**.
+
+![CLion's Plugins settings with "commit" typed in the search box and the Modal Commit Interface plugin selected, showing its description.](../assets/clion-modal-commit-plugin.png){ .screenshot }
+
+From then on **Ctrl+K** (**⌘K** on macOS) opens the commit dialog, and the rest of this chapter assumes it. If you skip the plugin, everything below still works — it just happens in the docked tool window instead.
+
 ### Getting a project
 
 - **Clone from GitHub:** on the welcome screen choose **Clone Repository** (or **File → New → Project from Version Control** with a project open). Since you are logged in, CLion lists your own GitHub repos to pick from; for any other repo, paste its SSH URL.
@@ -250,7 +262,7 @@ That is the whole setup. The login lets CLion list your repos and create pull re
 
 ### The daily cycle
 
-- **Commit:** open the **Commit** tool window (**Alt+0**, or the tick-mark icon in the left sidebar). Ticking a file's checkbox is `git add`; double-click a file to see exactly what changed. Write a message and press **Commit** — or **Commit and Push...** to share it in the same step.
+- **Commit:** press **Ctrl+K** (**⌘K** on macOS) to open the commit dialog. Ticking a file's checkbox is `git add`; click a file to see exactly what changed in it. Write a message and press **Commit** — or **Commit and Push...** to share it in the same step.
 - **Push:** **Git → Push** (**Ctrl+Shift+K**).
 - **Pull:** **Git → Update Project** (**Ctrl+T**).
 - **Branches:** click the branch name in the toolbar (or the status bar at the bottom right). From there you can create a **New Branch** or switch to an existing one — CLion's version of `git switch`.
@@ -259,13 +271,13 @@ That is the whole setup. The login lets CLion list your repos and create pull re
 | Terminal | In CLion |
 |---------|----------|
 | `git clone <url>` | Welcome screen → **Clone Repository** |
-| `git add` + `git commit` | **Commit** tool window: tick files, write message, **Commit** |
+| `git add` + `git commit` | Commit dialog (**Ctrl+K**): tick files, write message, **Commit** |
 | `git push` | **Git → Push** |
 | `git pull` | **Git → Update Project** |
 | `git switch -c <name>` | Branch name in toolbar → **New Branch** |
 | `git merge <branch>` | Branch name in toolbar → pick branch → **Merge into Current** |
 | `git log` | **Git** tool window → **Log** tab |
-| `git diff` | Double-click a file in the **Commit** window |
+| `git diff` | Click a file in the commit dialog |
 
 ### "Add file to Git?"
 

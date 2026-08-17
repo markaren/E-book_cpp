@@ -1,0 +1,3 @@
+[submodule "lectures"]
+	path = lectures
+	url = git@github.com:markaren/E-book_cpp_slides.git

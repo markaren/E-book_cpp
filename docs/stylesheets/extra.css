@@ -155,3 +155,15 @@
 .mermaid svg {
   margin: 0 auto;
 }
+
+/* Screenshots. UI captures are mostly white, so they bleed into the page
+   without a frame — and look like a floating rectangle in dark mode. A thin
+   border and a light backing keep them readable in both colour schemes. */
+.md-typeset img.screenshot {
+  display: block;
+  margin: 1.2em auto;
+  max-width: 100%;
+  border: 1px solid var(--md-default-fg-color--lighter);
+  border-radius: 4px;
+  background: #fff;
+}

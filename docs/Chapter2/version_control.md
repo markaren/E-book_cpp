@@ -113,7 +113,7 @@ It asks where to save the key and for a passphrase — press **Enter** at every 
 
 **3. Give it to GitHub.** On github.com, click your profile picture (top right) → **Settings** → **SSH and GPG keys** → **New SSH key**. Paste the key into the *Key* field, give it a title like "NTNU laptop", and click **Add SSH key**.
 
-<!-- screenshot: GitHub Settings → SSH and GPG keys → New SSH key form -->
+![GitHub's Settings page with "SSH and GPG keys" selected in the sidebar; the green "New SSH key" button sits at the top right of the key list.](../assets/github-ssh-keys.png){ .screenshot }
 
 **4. Test it.** Back in the terminal:
 
@@ -134,6 +134,8 @@ That last part is normal — it means everything works.
     - **`Permission denied (publickey)`.** This error, on clone or push, means GitHub does not have your key: either step 3 was skipped, or you are on a different machine than the one that generated the key. Each machine you work on needs its own run through these steps.
 
 From now on, whenever you copy a repo's address from GitHub's green **Code** button, use the **SSH** tab — the URL looks like `git@github.com:owner/repo.git`. (You will also see **HTTPS** URLs, `https://github.com/...`; they work too, with a browser login instead of a key, but in this course we standardise on SSH.)
+
+![The green Code button opened on a GitHub repository, with the SSH tab selected under "Clone" and the URL reading git@github.com:markaren/E-book_cpp.git.](../assets/github-code-ssh.png){ .screenshot }
 
 There are two ways your local repo and a GitHub repo first meet.
 

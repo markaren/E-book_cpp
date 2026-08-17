@@ -113,7 +113,7 @@ Den spør hvor nøkkelen skal lagres, og om en passfrase — trykk **Enter** på
 
 **3. Gi den til GitHub.** På github.com, klikk profilbildet ditt (øverst til høyre) → **Settings** → **SSH and GPG keys** → **New SSH key**. Lim nøkkelen inn i *Key*-feltet, gi den en tittel som "NTNU-laptop", og klikk **Add SSH key**.
 
-<!-- skjermbilde: GitHub Settings → SSH and GPG keys → New SSH key-skjemaet -->
+![GitHubs Settings-side med "SSH and GPG keys" valgt i sidemenyen; den grønne knappen "New SSH key" ligger øverst til høyre over nøkkellisten.](../assets/github-ssh-keys.png){ .screenshot }
 
 **4. Test det.** Tilbake i terminalen:
 
@@ -134,6 +134,8 @@ Den siste delen er normal — den betyr at alt virker.
     - **`Permission denied (publickey)`.** Denne feilen, ved clone eller push, betyr at GitHub ikke har nøkkelen din: enten ble steg 3 hoppet over, eller du er på en annen maskin enn den som genererte nøkkelen. Hver maskin du jobber på, trenger sin egen runde gjennom disse stegene.
 
 Fra nå av, hver gang du kopierer et repos adresse fra GitHubs grønne **Code**-knapp, bruk **SSH**-fanen — URL-en ser ut som `git@github.com:owner/repo.git`. (Du vil også se **HTTPS**-URL-er, `https://github.com/...`; de virker også, med en nettleserinnlogging i stedet for en nøkkel, men i dette emnet standardiserer vi på SSH.)
+
+![Den grønne Code-knappen åpnet på et GitHub-repo, med SSH-fanen valgt under "Clone" og URL-en git@github.com:markaren/E-book_cpp.git.](../assets/github-code-ssh.png){ .screenshot }
 
 Det er to måter ditt lokale repo og et GitHub-repo først møtes på.
 

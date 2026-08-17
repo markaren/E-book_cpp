@@ -65,6 +65,8 @@ CLion er bygd *rundt* CMake: `CMakeLists.txt` **er** prosjektet. Det har en hån
 
 **Ett target, én oppføring i ▶-rullegardinmenyen.** Hver `add_executable` i prosjektet ditt blir en oppføring i rullegardinmenyen ved siden av den grønne play-knappen, og ▶ bygger og kjører det *valgte*. Når et prosjekt har flere programmer — en app og testene dens, for eksempel — sjekk den menyen før du konkluderer med at programmet ditt "ikke kjørte".
 
+![CLions verktøylinje: target-menyen ligger rett til venstre for hammer-, kjør- og debug-knappene — det targetet den navngir, er det ▶ bygger og kjører.](../assets/clion-run-toolbar.png){ .screenshot }
+
 **Feil dukker opp to forskjellige steder.** Feil i selve `CMakeLists.txt` er feil ved **konfigurering** (configure-time): de vises i **CMake**-verktøyvinduet nederst i CLion, i det øyeblikket prosjektet lastes (på nytt). Kompilator- og linkerfeil vises i **Build**-vinduet når du faktisk bygger. Trinndiagrammet ovenfor forteller deg *hvem* som klager; vinduet det vises i forteller deg *når* det gikk galt.
 
 **Byggemappen kan trygt kastes.** Alt CMake og kompilatoren genererer havner i `cmake-build-debug/` (CLions standardnavn på `build/`-mappen). Hvis CMake noen gang havner i en forvirret tilstand — etter omdøpinger, flytting av prosjektet eller bytte av verktøykjede — bruk **Tools → CMake → Reset Cache and Reload Project**, eller bare slett `cmake-build-debug/`-mappen. Ingenting i den er ditt; neste bygg regenererer alt sammen.

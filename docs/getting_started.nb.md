@@ -50,7 +50,7 @@ CLion har også med **CMake** (byggeverktøyet emnet bruker), så det trenger du
 3. Hvis dialogen tilbyr et **Language standard**-valg, velg **C++20**. (Ikke alle versjoner gjør det — uansett, når prosjektet åpner, sjekk at `CMakeLists.txt` har `set(CMAKE_CXX_STANDARD 20)`; hvis linjen viser et lavere tall som `14` eller `17`, endre det til `20`.)
 4. Velg en plassering for prosjektet — men les advarselen nedenfor først — og klikk **Create**.
 
-<!-- screenshot: New Project-dialogen med "C++ Executable" valgt -->
+![CLions New Project-dialog: "C++ Executable" valgt i listen til venstre, Location satt til C:\dev\hello_world, og Language standard satt til C++20.](assets/clion-new-project.png){ .screenshot }
 
 > **Hvor du skal legge prosjektet.** Unngå en mappe inne i skylagring (OneDrive, Dropbox, Google Drive). Bygging lager et stort antall filer som ville synkronisert hele tiden, og hvis du bruker mer enn én PC skaper de maskinspesifikke byggefilene konflikter. Unngå også stier med mellomrom eller spesialtegn — inkludert norske `æ`, `ø`, `å` — som gir forvirrende feil på Windows. En enkel sti som `C:\dev\projects` er ideell. ([Datamaskingrunnlag](computer_basics.md) forklarer hvorfor stier, mellomrom og spesialtegn har betydning.)
 
@@ -87,7 +87,7 @@ C++ må **kompileres** til en kjørbar fil før det kan kjøre. CLion gjør begg
 - Klikk den grønne **▶ Run**-knappen øverst til høyre (eller trykk **Shift+F10** på Windows/Linux, **Ctrl+R** på macOS).
 - Hammerikonet ved siden av *bygger* uten å kjøre, hvis du noen gang vil det.
 
-<!-- screenshot: verktøylinjen øverst til høyre med Run- (play) og Build- (hammer) knappene -->
+![CLions verktøylinje: velgeren for byggkonfigurasjon, target-menyen, og så knappene hammer (bygg), grønn trekant (kjør) og bille (debug).](assets/clion-run-toolbar.png){ .screenshot }
 
 ---
 

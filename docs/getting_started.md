@@ -50,7 +50,7 @@ CLion also bundles **CMake** (the build tool the course uses), so you do not nee
 3. If the dialog offers a **Language standard** option, choose **C++20**. (Not every version does — either way, once the project opens, check that its `CMakeLists.txt` has `set(CMAKE_CXX_STANDARD 20)`; if the line shows a lower number like `14` or `17`, change it to `20`.)
 4. Choose a location for the project — but read the warning below first — and click **Create**.
 
-<!-- screenshot: New Project dialog with "C++ Executable" selected -->
+![CLion's New Project dialog: "C++ Executable" selected in the left-hand list, Location set to C:\dev\hello_world, and Language standard set to C++20.](assets/clion-new-project.png){ .screenshot }
 
 > **Where to put your project.** Avoid a folder inside cloud storage (OneDrive, Dropbox, Google Drive). Building generates a large number of files that would sync constantly, and if you use more than one PC the machine-specific build files cause conflicts. Also avoid paths with spaces or special characters — including Norwegian `æ`, `ø`, `å` — which cause confusing errors on Windows. A simple path such as `C:\dev\projects` is ideal. ([Computer Basics](computer_basics.md) explains why paths, spaces, and special characters matter.)
 
@@ -87,7 +87,7 @@ C++ has to be **compiled** into an executable before it can run. CLion does both
 - Click the green **▶ Run** button near the top-right corner (or press **Shift+F10** on Windows/Linux, **Ctrl+R** on macOS).
 - The hammer icon next to it *builds* without running, if you ever want that.
 
-<!-- screenshot: top-right toolbar showing the Run (play) and Build (hammer) buttons -->
+![CLion's toolbar: the build-configuration selector, the target dropdown, then the hammer (build), green triangle (run) and bug (debug) buttons.](assets/clion-run-toolbar.png){ .screenshot }
 
 ---
 

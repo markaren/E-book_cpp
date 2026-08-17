@@ -65,6 +65,8 @@ CLion is built *around* CMake: the `CMakeLists.txt` **is** the project. That has
 
 **One target, one entry in the ▶ dropdown.** Every `add_executable` in your project becomes an entry in the dropdown next to the green play button, and ▶ builds and runs the *selected* one. When a project has several programs — an app and its tests, say — check that dropdown before concluding your program "did not run."
 
+![CLion's toolbar: the target dropdown sits just left of the hammer, run and debug buttons — whichever target it names is the one ▶ builds and runs.](../assets/clion-run-toolbar.png){ .screenshot }
+
 **Errors appear in two different places.** Mistakes in `CMakeLists.txt` itself are **configure-time** errors: they appear in the **CMake** tool window at the bottom of CLion, at the moment the project (re)loads. Compiler and linker errors appear in the **Build** window when you actually build. The stage diagram above tells you *who* is complaining; the window it appears in tells you *when* it went wrong.
 
 **The build folder is disposable.** Everything CMake and the compiler generate lands in `cmake-build-debug/` (CLion's default name for the `build/` folder). If CMake ever gets itself into a confused state — after renaming things, moving the project, or changing toolchains — use **Tools → CMake → Reset Cache and Reload Project**, or simply delete the `cmake-build-debug/` folder. Nothing in it is yours; the next build regenerates all of it.

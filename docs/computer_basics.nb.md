@@ -197,6 +197,10 @@ Så den feilen betyr nesten alltid én av to ting: programmet er **ikke installe
 
 `PATH` er én av flere **miljøvariabler**: navngitte verdier systemet holder på for at programmer skal lese dem. Som nybegynner vil du mest møte `PATH`, og mest når et nyinstallert verktøy "ikke kan finnes".
 
+**Hvor du finner det på Windows:** søk i Start-menyen etter *miljøvariabler* og åpne **Rediger systemets miljøvariabler**; på fanen **Avansert**, klikk knappen **Miljøvariabler…**. `Path` står to steder — én gang i den øverste listen, som holder din egen brukers variabler, og igjen i den nederste, som holder hele maskinens. Å redigere din egen holder, og endringen når terminaler du åpner *etterpå*, ikke dem som allerede kjører.
+
+![Systemegenskaper i Windows på fanen Avansert med knappen Miljøvariabler uthevet, og Miljøvariabler-dialogen ved siden av med oppføringen Path uthevet i brukerlisten.](assets/windows-env-path.png){ .screenshot }
+
 > Du vil sjelden trenge å redigere `PATH` for hånd i dette emnet — CLion har med verktøyene den trenger. Men når en veiledning sier "sørg for at X er på `PATH`", er det dette den mener.
 
 ---

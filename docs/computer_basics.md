@@ -197,6 +197,10 @@ So that error almost always means one of two things: the program is **not instal
 
 `PATH` is one of several **environment variables**: named values the system keeps for programs to read. As a beginner you will mostly meet `PATH`, and mostly when a freshly-installed tool "cannot be found."
 
+**Where to find it on Windows:** search the Start menu for *environment variables* and open **Edit the system environment variables**; on the **Advanced** tab, click the **Environment Variables…** button. `Path` appears twice — once in the upper list, which holds your own account's variables, and again in the lower one, which holds the whole machine's. Editing your own is enough, and the change reaches terminals you open *afterwards*, not ones already running.
+
+![Windows System Properties on the Advanced tab with the Environment Variables button highlighted, and the Environment Variables dialog beside it with the Path entry highlighted in the user list. (Shown on a Norwegian-language Windows: *Miljøvariabler*, *Brukervariabler*.)](assets/windows-env-path.png){ .screenshot }
+
 > You will rarely need to edit `PATH` by hand for this course — CLion bundles the tools it needs. But when a tutorial says "make sure X is on your `PATH`," this is what it means.
 
 ---

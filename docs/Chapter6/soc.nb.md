@@ -107,7 +107,7 @@ void monitorLoop(TemperatureSensor& sensor,
 }
 ```
 
-Hver klasse har én jobb. Funksjonen som trekker dem sammen, vet *hva* som må skje, men ingenting om *hvordan*. Den aner ikke om temperaturen kommer fra en analog pinne eller en simulert sensor, aner ikke om varsler går til en fil eller en nettverkssocket, aner ikke hvilken terskel som gjelder. Denne stilen der avhengighetene rekkes inn — `monitorLoop` *får* sensoren, policyen og varselmottakeren i stedet for å opprette dem selv — kalles **avhengighetsinjeksjon** (dependency injection); du møter den igjen i [Testing](testing.md), der den er det som lar en test smette inn en fake.
+Hver klasse har én jobb. Funksjonen som trekker dem sammen, vet *hva* som må skje, men ingenting om *hvordan*. Den aner ikke om temperaturen kommer fra en analog pinne eller en simulert sensor, aner ikke om varsler går til en fil eller en nettverkssocket, aner ikke hvilken terskel som gjelder. Denne stilen der avhengighetene rekkes inn — `monitorLoop` *får* sensoren, policyen og varselmottakeren i stedet for å opprette dem selv — kalles **dependency injection**; du møter den igjen i [Testing](testing.md), der den er det som lar en test smette inn en fake.
 
 Vil du teste policyen? Konstruer en `OverheatPolicy` og kall `isOverheating` med verdier; ingen maskinvare nødvendig. Vil du bytte fra fil- til konsollvarsel? Skriv en `ConsoleAlertSink` og send den inn i stedet. Vil du teste orkestratoren? Gi den en fake-sensor som returnerer forhåndsbestemte verdier og en fake-mottaker som noterer varslene.
 

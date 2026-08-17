@@ -86,7 +86,7 @@ void process() {
 }
 ```
 
-**2. Bruk etter frigjøring (use-after-free).** Bruk en peker etter at minnet er frigjort, og du får udefinert oppførsel: som regel et krasj, noen ganger stille datakorrupsjon.
+**2. Use-after-free.** Bruk en peker etter at minnet er frigjort, og du får udefinert oppførsel: som regel et krasj, noen ganger stille datakorrupsjon.
 
 ```cpp
 int* p = new int(5);
@@ -94,7 +94,7 @@ delete p;
 std::cout << *p << "\n";   // udefinert oppførsel
 ```
 
-**3. Dobbel frigjøring (double-free).** Å kalle `delete` to ganger på samme peker er også udefinert oppførsel.
+**3. Double-free.** Å kalle `delete` to ganger på samme peker er også udefinert oppførsel.
 
 ```cpp
 int* p = new int(5);
@@ -141,7 +141,7 @@ Buffer b = a;     // kopierer pekeren, ikke minnet under
    b.data_  ●─────────┘
 ```
 
-Når `a` og `b` destrueres, blir det samme arrayet `delete[]`-et to ganger. Det er udefinert oppførsel. Standardkopien C++ leverer, er en grunn kopi (*shallow copy*): den kopierer *pekeren*, ikke det pekeren peker på.
+Når `a` og `b` destrueres, blir det samme arrayet `delete[]`-et to ganger. Det er udefinert oppførsel. Standardkopien C++ leverer, er en *shallow copy*: den kopierer *pekeren*, ikke det pekeren peker på.
 
 Den klassiske løsningen (å implementere en kopikonstruktør, en kopitilordningsoperator og en destruktør som alle er enige om eierskapet) kalles **Rule of Three**, eller i moderne C++ **Rule of Five**, som legger til flytteoperasjonene. Den er korrekt, men den er også mye feilutsatt kode for det som burde vært en enkel type.
 
@@ -196,7 +196,7 @@ Motor 7 spinning
 Motor 7 destroyed
 ```
 
-`std::make_unique<Motor>(7)` allokerer en `Motor` på heapen og gir pekeren til en `unique_ptr` som eier den. Du når objektets medlemmer gjennom den smarte pekeren med `->`, akkurat som med en rå peker (`m->spin()` betyr `(*m).spin()` — se [pekere til objekter](../Chapter4/types_refs_ptrs.md#pointers-to-objects)). Når `m` går ut av skop, kjører destruktøren dens, og `Motor`-en destrueres. Ingen lekkasjer, ingen bruk etter frigjøring, ingen dobbel sletting.
+`std::make_unique<Motor>(7)` allokerer en `Motor` på heapen og gir pekeren til en `unique_ptr` som eier den. Du når objektets medlemmer gjennom den smarte pekeren med `->`, akkurat som med en rå peker (`m->spin()` betyr `(*m).spin()` — se [pekere til objekter](../Chapter4/types_refs_ptrs.md#pointers-to-objects)). Når `m` går ut av skop, kjører destruktøren dens, og `Motor`-en destrueres. Ingen lekkasjer, ingen use-after-free, ingen double-delete.
 
 En `unique_ptr` kan ikke kopieres (det ville skapt en eier nummer to), men den kan **flyttes**:
 

@@ -94,7 +94,7 @@ Dette er grunnen til at du sjelden trenger å skrive en destruktør selv: det ri
 
 ## RAII og minne {#raii-and-memory}
 
-Den viktigste ressursen er minne. Å allokere det for hånd (`new`) og frigi det for hånd (`delete`) er den klassiske kilden til lekkasjer og doble frigjøringer. Neste kapittels **smartpekere** — `std::unique_ptr` og `std::shared_ptr` — er rett og slett RAII-innpakninger rundt minne: de frigir det de holder når de går ut av skop. Se [Minnehåndtering](../Chapter5/memory.md).
+Den viktigste ressursen er minne. Å allokere det for hånd (`new`) og frigi det for hånd (`delete`) er den klassiske kilden til lekkasjer og double-frees. Neste kapittels **smartpekere** — `std::unique_ptr` og `std::shared_ptr` — er rett og slett RAII-innpakninger rundt minne: de frigir det de holder når de går ut av skop. Se [Minnehåndtering](../Chapter5/memory.md).
 
 RAII er også grunnen til at C++ ikke trenger en søppelsamler: oppryddingen er *deterministisk* og skjer i det nøyaktige øyeblikket et objekt dør, ikke på et uforutsigbart tidspunkt senere.
 

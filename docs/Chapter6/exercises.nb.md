@@ -299,7 +299,7 @@ Skriv en `FakeLevelSensor` som returnerer et nivå du velger, og skriv så Catch
     All tests passed (3 assertions in 3 test cases)
     ```
 
-    Fordi `PumpController` **får** sensoren sin i stedet for å bygge en selv, smetter testen inn en `FakeLevelSensor` og driver nivået til nøyaktig den verdien hvert tilfelle trenger — uten vann, uten venting, uten maskinvare. Det gi-det-inn-grepet er **avhengighetsinjeksjon**, og faken er den enkleste typen **test double**. De tre tilfellene tester *oppførsel* (kjører pumpa?) gjennom det offentlige grensesnittet, aldri innmaten — så hvis du senere skrev om `pumpShouldRun` fullstendig, ville de fortsatt bestå så lenge oppførselen holdt. Og de undersøker **grensen**, nøyaktig på minimum, fordi off-by-one-feil (`<` kontra `<=`) gjemmer seg akkurat der.
+    Fordi `PumpController` **får** sensoren sin i stedet for å bygge en selv, smetter testen inn en `FakeLevelSensor` og driver nivået til nøyaktig den verdien hvert tilfelle trenger — uten vann, uten venting, uten maskinvare. Det gi-det-inn-grepet er **dependency injection**, og faken er den enkleste typen **test double**. De tre tilfellene tester *oppførsel* (kjører pumpa?) gjennom det offentlige grensesnittet, aldri innmaten — så hvis du senere skrev om `pumpShouldRun` fullstendig, ville de fortsatt bestå så lenge oppførselen holdt. Og de undersøker **grensen**, nøyaktig på minimum, fordi off-by-one-feil (`<` kontra `<=`) gjemmer seg akkurat der.
 
     </div>
 

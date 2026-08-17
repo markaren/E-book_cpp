@@ -257,7 +257,7 @@ Du skal se ventilen lukket **nøyaktig én gang**, automatisk, uten noen `delete
     }   // b går ut av skop her → "Valve 1 closed" (nøyaktig én gang)
     ```
 
-    `std::make_unique<Valve>(1)` allokerer en `Valve` på heapen og gir den til `a`; du skriver aldri `new` eller `delete`. `std::move(a)` overfører eierskapet til `b` og etterlater `a` tom — en `unique_ptr` kan ikke kopieres (det ville skapt to eiere), så flytting er den eneste måten å gi den videre på. Når `b` går ut av skop på slutten av `main`, destruerer den den ene `Valve`-en, så "closed" skrives ut nøyaktig én gang. Ingen lekkasje, ingen dobbel frigjøring, ingen manuell opprydding.
+    `std::make_unique<Valve>(1)` allokerer en `Valve` på heapen og gir den til `a`; du skriver aldri `new` eller `delete`. `std::move(a)` overfører eierskapet til `b` og etterlater `a` tom — en `unique_ptr` kan ikke kopieres (det ville skapt to eiere), så flytting er den eneste måten å gi den videre på. Når `b` går ut av skop på slutten av `main`, destruerer den den ene `Valve`-en, så "closed" skrives ut nøyaktig én gang. Ingen lekkasje, ingen double-free, ingen manuell opprydding.
 
     </div>
 

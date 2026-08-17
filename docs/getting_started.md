@@ -17,9 +17,13 @@ CLion also bundles **CMake** (the build tool the course uses), so you do not nee
 
 === "Windows"
 
-    **No separate compiler to install.** CLion provides a **MinGW** toolchain and sets it up on first launch — accept the default it offers. (If the toolchain list ever comes up empty, the *If something went wrong* section at the bottom shows how to add MinGW.)
+    **Nothing is strictly required.** CLion provides a **MinGW** toolchain and sets it up on first launch — accept the default it offers, and everything in this book will build. (If the toolchain list ever comes up empty, the *If something went wrong* section at the bottom shows how to add MinGW.)
 
-    *Advanced, optional:* you can instead use Microsoft's MSVC compiler from [Visual Studio](https://visualstudio.microsoft.com/vs/community/). Skip this unless your instructor specifically asks for it — the bundled compiler is fine for everything in this book.
+    **Recommended anyway: Microsoft's MSVC compiler.** MSVC is the native Windows toolchain — the compiler Windows software is normally built with, the one third-party libraries ship Windows binaries for, and the one this course uses. You do **not** need the Visual Studio IDE: on the [Visual Studio downloads page](https://visualstudio.microsoft.com/downloads/), scroll to **Tools for Visual Studio** and download **Build Tools for Visual Studio** — the compiler and libraries on their own. (Free for students and individual use under the Community licence.)
+
+    ![The Visual Studio downloads page, section "Tools for Visual Studio", with the Build Tools for Visual Studio entry and its Download button highlighted.](assets/vs-build-tools-download.png){ .screenshot }
+
+    In the installer, tick the **Desktop development with C++** workload. CLion picks the toolchain up by itself; you can see it, and choose which one is the default, under **File → Settings → Build, Execution, Deployment → Toolchains**.
 
 === "macOS"
 

@@ -17,9 +17,13 @@ CLion har også med **CMake** (byggeverktøyet emnet bruker), så det trenger du
 
 === "Windows"
 
-    **Ingen separat kompilator å installere.** CLion leverer en **MinGW**-verktøykjede og setter den opp ved første oppstart — godta standardvalget den foreslår. (Hvis verktøykjedelisten noen gang er tom, viser avsnittet *Hvis noe gikk galt* nederst hvordan du legger til MinGW.)
+    **Ingenting er strengt tatt påkrevd.** CLion leverer en **MinGW**-verktøykjede og setter den opp ved første oppstart — godta standardvalget den foreslår, så vil alt i denne boken bygge. (Hvis verktøykjedelisten noen gang er tom, viser avsnittet *Hvis noe gikk galt* nederst hvordan du legger til MinGW.)
 
-    *Avansert, valgfritt:* du kan i stedet bruke Microsofts MSVC-kompilator fra [Visual Studio](https://visualstudio.microsoft.com/vs/community/). Hopp over dette med mindre instruktøren din spesifikt ber om det — den innebygde kompilatoren holder til alt i denne boken.
+    **Anbefalt likevel: Microsofts MSVC-kompilator.** MSVC er den innfødte Windows-verktøykjeden — kompilatoren Windows-programvare normalt bygges med, den tredjepartsbiblioteker leverer Windows-binaerfiler for, og den dette emnet bruker. Du trenger **ikke** Visual Studio-IDE-en: på [nedlastingssiden for Visual Studio](https://visualstudio.microsoft.com/downloads/), bla ned til **Tools for Visual Studio** og last ned **Build Tools for Visual Studio** — kompilatoren og bibliotekene alene. (Gratis for studenter og personlig bruk under Community-lisensen.)
+
+    ![Nedlastingssiden for Visual Studio, seksjonen "Tools for Visual Studio", med oppføringen Build Tools for Visual Studio og Download-knappen dens uthevet.](assets/vs-build-tools-download.png){ .screenshot }
+
+    I installasjonsprogrammet, kryss av arbeidsbelastningen **Desktop development with C++**. CLion plukker opp verktøykjeden selv; du ser den, og velger hvilken som skal være standard, under **File → Settings → Build, Execution, Deployment → Toolchains**.
 
 === "macOS"
 

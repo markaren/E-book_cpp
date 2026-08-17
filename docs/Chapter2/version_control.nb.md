@@ -230,16 +230,13 @@ Du kommer ikke alltid til å bruke PR-er på soloprosjekter. Du kommer til å br
 
 Alt ovenfor virker i enhver terminal, og du bør kunne gjøre det der — når git oppfører seg rart, er terminalen stedet du finner ut hva som faktisk foregår. Til daglig kommer du likevel mest til å bruke git gjennom **CLion**, som har hver operasjon fra dette kapittelet innebygd i grensesnittet sitt. Ingenting nytt å lære: CLion kjører nøyaktig de samme git-kommandoene for deg, og vokabularet — commit, push, pull, branch — er identisk.
 
-### Koble CLion til GitHub (én gang) {#connect-clion-to-github-once}
+### Å koble CLion til GitHub-kontoen din (valgfritt) {#connecting-clion-to-your-github-account-optional}
 
-1. Åpne **File → Settings → Version Control → GitHub** (på macOS: **CLion → Settings**).
-2. Klikk **+** og velg **Log In via GitHub**.
-3. Nettleseren din åpnes; logg inn på GitHub og klikk **Authorize**.
-4. Tilbake på den samme innstillingssiden, kryss av **Clone git repositories using ssh**, og klikk **OK**.
+SSH-nøkkelen din er alt git trenger: clone, push og pull virker i CLion nøyaktig som i terminalen, uten at CLion vet noe som helst om GitHub-*kontoen* din.
 
-<!-- skjermbilde: CLion Settings → Version Control → GitHub med en konto lagt til og "Clone git repositories using ssh" avkrysset -->
+Å logge IDE-en inn på GitHub i tillegg er en bekvemmelighet, ikke et krav. Det gir deg tre ting — CLion kan liste dine egne repoer når du kloner, opprette et repo for deg, og åpne pull requests fra IDE-en — mot at du autoriserer JetBrains' integrasjon på GitHub-kontoen din. Mange utviklere takker nei til det og mister ingenting; dette kapittelet forutsetter aldri at du gjorde det.
 
-Det er hele oppsettet. Innloggingen lar CLion liste repoene dine og opprette pull requests for deg; avkrysningsboksen får den til å bruke SSH-nøkkelen du satte opp tidligere, for hver clone, push og pull — den samme nøkkelen, enten du jobber i CLion eller i terminalen.
+Vil du ha det: **File → Settings → Version Control → GitHub** (på macOS: **CLion → Settings**) → **+** → **Log In via GitHub**, autoriser i nettleseren som åpnes, og kryss av **Clone git repositories using ssh** slik at integrasjonen bruker nøkkelen du allerede har laget.
 
 ### Installer plugin-en Modal Commit Interface (én gang) {#install-the-modal-commit-interface-plugin-once}
 
@@ -255,10 +252,8 @@ Fra da av åpner **Ctrl+K** (**⌘K** på macOS) commit-dialogen, og resten av d
 
 ### Hente et prosjekt {#getting-a-project}
 
-- **Klone fra GitHub:** på velkomstskjermen, velg **Clone Repository** (eller **File → New → Project from Version Control** med et prosjekt åpent). Siden du er logget inn, lister CLion dine egne GitHub-repoer å velge fra; for et hvilket som helst annet repo, lim inn SSH-URL-en dets.
-- **Legge et lokalt prosjekt på GitHub:** med prosjektet åpent, velg **Git → GitHub → Share Project on GitHub**, gi det et navn, og klikk **Share**. CLion oppretter repositoryet på GitHub og pusher koden din i ett steg — dette erstatter hele `git remote add` + `git push -u origin main`-sekvensen fra tidligere.
-
-<!-- skjermbilde: CLions "Share Project on GitHub"-dialog -->
+- **Klone fra GitHub:** på velkomstskjermen, velg **Clone Repository** (eller **File → New → Project from Version Control** med et prosjekt åpent) og lim inn repoets SSH-URL — den fra **SSH**-fanen under den grønne **Code**-knappen. (Har du logget IDE-en inn på GitHub, listes dine egne repoer også til å velge fra.)
+- **Legge et lokalt prosjekt på GitHub:** opprett et tomt repository på github.com, og koble til og push nøyaktig som [ovenfor](#set-up-ssh-access-once-per-machine): `git remote add origin git@github.com:owner/repo.git` etterfulgt av `git push -u origin main`. Begge kommandoene virker fra **Terminal**-fanen i CLion. (Med IDE-en logget inn på GitHub kan du i stedet bruke **Git → GitHub → Share Project on GitHub**, som oppretter repoet og pusher i ett steg.)
 
 ### Den daglige syklusen {#the-daily-cycle}
 
@@ -387,5 +382,5 @@ Git har mer dybde enn det som får plass i ett kapittel. Den beste enkeltståend
 - Bruk brancher til alt; de er gratis.
 - Skriv commit-meldinger som forklarer *hvorfor*, ikke bare *hva*.
 - Sett opp SSH-nøkkelen din én gang per maskin og gi `.pub`-filen til GitHub; etter det bare virker hver push og pull, i terminalen og i CLion.
-- CLion har alt dette innebygd: logg inn på GitHub én gang, og commit, push, pull og branch deretter fra IDE-en.
+- CLion har alt dette innebygd: commit, push, pull og branch fra IDE-en, autentisert av den samme SSH-nøkkelen. Å logge IDE-en inn på GitHub-kontoen din er valgfri bekvemmelighet på toppen.
 - Når du er i tvil: `git status`, `git log`.

@@ -230,16 +230,13 @@ You will not always use PRs on solo projects. You will use them constantly in an
 
 Everything above works in any terminal, and you should be able to do it there — when git behaves strangely, the terminal is where you find out what is actually going on. Day to day, though, you will mostly use git through **CLion**, which has every operation from this chapter built into its interface. Nothing new to learn: CLion runs the exact same git commands for you, and the vocabulary — commit, push, pull, branch — is identical.
 
-### Connect CLion to GitHub (once)
+### Connecting CLion to your GitHub account (optional)
 
-1. Open **File → Settings → Version Control → GitHub** (on macOS: **CLion → Settings**).
-2. Click **+** and choose **Log In via GitHub**.
-3. Your browser opens; log in to GitHub and click **Authorize**.
-4. Back in the same settings page, tick **Clone git repositories using ssh**, then click **OK**.
+Your SSH key is all git needs: clone, push and pull work in CLion exactly as they do in the terminal, without CLion knowing anything about your GitHub *account*.
 
-<!-- screenshot: CLion Settings → Version Control → GitHub with an account added and "Clone git repositories using ssh" ticked -->
+Signing the IDE in to GitHub as well is a convenience, not a requirement. It buys you three things — CLion can list your own repositories when cloning, create a repository for you, and open pull requests from the IDE — at the cost of authorising JetBrains' integration on your GitHub account. Plenty of developers decline that and lose nothing; this chapter never assumes you did it.
 
-That is the whole setup. The login lets CLion list your repos and create pull requests for you; the checkbox makes it use the SSH key you set up earlier for every clone, push, and pull — the same key, whether you work in CLion or the terminal.
+If you want it: **File → Settings → Version Control → GitHub** (on macOS: **CLion → Settings**) → **+** → **Log In via GitHub**, authorise in the browser that opens, and tick **Clone git repositories using ssh** so the integration uses the key you already made.
 
 ### Install the Modal Commit Interface plugin (once)
 
@@ -255,10 +252,8 @@ From then on **Ctrl+K** (**⌘K** on macOS) opens the commit dialog, and the res
 
 ### Getting a project
 
-- **Clone from GitHub:** on the welcome screen choose **Clone Repository** (or **File → New → Project from Version Control** with a project open). Since you are logged in, CLion lists your own GitHub repos to pick from; for any other repo, paste its SSH URL.
-- **Put a local project on GitHub:** with the project open, choose **Git → GitHub → Share Project on GitHub**, give it a name, and click **Share**. CLion creates the repository on GitHub and pushes your code in one step — this replaces the whole `git remote add` + `git push -u origin main` sequence from earlier.
-
-<!-- screenshot: CLion "Share Project on GitHub" dialog -->
+- **Clone from GitHub:** on the welcome screen choose **Clone Repository** (or **File → New → Project from Version Control** with a project open) and paste the repository's SSH URL — the one from the green **Code** button's **SSH** tab. (If you signed the IDE in to GitHub, your own repositories are also listed for picking.)
+- **Put a local project on GitHub:** create an empty repository on github.com, then connect and push it exactly as [above](#set-up-ssh-access-once-per-machine): `git remote add origin git@github.com:owner/repo.git` followed by `git push -u origin main`. Both commands work from CLion's **Terminal** tab. (With the IDE signed in to GitHub you can instead use **Git → GitHub → Share Project on GitHub**, which creates the repository and pushes in one step.)
 
 ### The daily cycle
 
@@ -387,5 +382,5 @@ Git has more depth than fits in one chapter. The single best free resource is th
 - Use branches for everything; they are free.
 - Write commit messages that explain *why*, not just *what*.
 - Set up your SSH key once per machine and give the `.pub` file to GitHub; after that every push and pull just works, in the terminal and in CLion.
-- CLion has all of this built in: log in to GitHub once, then commit, push, pull, and branch from the IDE.
+- CLion has all of this built in: commit, push, pull and branch from the IDE, authenticated by the same SSH key. Signing the IDE in to your GitHub account is optional convenience on top.
 - When in doubt: `git status`, `git log`.

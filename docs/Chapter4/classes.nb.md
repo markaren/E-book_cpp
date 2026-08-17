@@ -111,7 +111,7 @@ En **konstruktør** er en spesiell medlemsfunksjon som kjører når et objekt op
 class Motor {
 public:
     Motor(int id, double maxRpm)
-        : id_(id), maxRpm_(maxRpm) {}      // medlemsinitialiseringsliste
+        : id_(id), maxRpm_(maxRpm) {}      // member initialiser list
 
 private:
     int    id_;
@@ -122,9 +122,9 @@ private:
 Motor m(1, 3000.0);   // kaller konstruktøren med id=1, maxRpm=3000.0
 ```
 
-Delen etter `:` og før `{}` er **medlemsinitialiseringslisten** (member initialiser list). Den initialiserer datamedlemmene direkte, før konstruktørkroppen kjører.
+Delen etter `:` og før `{}` er konstruktørens **member initialiser list**. Den initialiserer datamedlemmene direkte, før konstruktørkroppen kjører.
 
-Foretrekk medlemsinitialiseringslisten fremfor tilordning i konstruktørkroppen:
+Foretrekk *member initialiser list* fremfor tilordning i konstruktørkroppen:
 
 ```cpp
 // Mindre bra: medlemmene standardkonstrueres og tilordnes etterpå
@@ -423,7 +423,7 @@ For korte funksjoner (enlinjere, enkle gettere) er det greit å beholde dem inne
 
 - En klasse bunter data sammen med operasjonene som virker på dem.
 - La data være `private` som standard, og eksponer bare operasjonene kallerne trenger (`public`).
-- Bruk **medlemsinitialiseringslisten** i konstruktører.
+- Bruk **member initialiser list** i konstruktører.
 - Dekorer datamedlemmer (`balance_`, `id_`) for å unngå navnekonflikter med parametere.
 - Merk medlemsfunksjoner `const` når de ikke endrer objektet.
 - **Sikt mot Rule of Zero**: design klasser der medlemmene forvalter seg selv, og la kompilatoren generere de spesielle medlemmene.

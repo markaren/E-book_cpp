@@ -100,7 +100,7 @@ RAII er også grunnen til at C++ ikke trenger en søppelsamler: oppryddingen er 
 
 Det forklarer også **Rule of Zero** fra kapittelet om [klasser](classes.md): hvis hvert datamedlem allerede er en RAII-type (en `vector`, en `string`, en smartpeker), trenger klassen din ingen egen destruktør — medlemmene rydder opp etter seg selv.
 
-Baksiden er den sjeldnere klassen som eier en *rå* ressurs direkte — en ingen standardtype pakker inn. Den kan ikke lene seg på Rule of Zero, og gjøres vanligvis best **move-only** (kun flyttbar): du overfører ressursen i stedet for å kopiere den. [Å designe en flyttbar klasse](../Chapter5/move.md#designing-a-movable-class) (neste kapittel) viser hvordan, med nettopp denne `SensorConnection`-klassen.
+Baksiden er den sjeldnere klassen som eier en *rå* ressurs direkte — en ingen standardtype pakker inn. Den kan ikke lene seg på Rule of Zero, og gjøres vanligvis best **move-only**: du overfører ressursen i stedet for å kopiere den. [Å designe en flyttbar klasse](../Chapter5/move.md#designing-a-movable-class) (neste kapittel) viser hvordan, med nettopp denne `SensorConnection`-klassen.
 
 ---
 

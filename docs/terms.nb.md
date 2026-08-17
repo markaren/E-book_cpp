@@ -28,7 +28,7 @@ Enten du er ny til programmering eller bare til C++, vil du møte mange ukjente 
 | **kobling** | Hvor mye én kodebit avhenger av detaljene i en annen. Løs (lav) kobling — biter koblet sammen bare gjennom smale grensesnitt — er målet. Se [Separasjon av ansvar](Chapter6/soc.md). |
 | **deklarasjon** | En setning som *navngir* noe og gir typen dens, uten å si hva det gjør — f.eks. `void start();` eller en funksjons linje i en header. Den forteller kompilatoren "dette finnes et sted". Kontrast *definisjon*. Se [Klasser](Chapter4/classes.md#splitting-the-declaration-and-the-implementation) og [Lese kompilatorfeil](compiler_errors.md). |
 | **definisjon** | Den fullstendige versjonen som *leverer* det en deklarasjon lovet — en funksjonskropp, eller en variabel som reserverer lagringsplass. Hver brukt entitet trenger nøyaktig én definisjon (*én-definisjon-regelen*); manglende eller doble definisjoner dukker opp som linkerfeil. Kontrast *deklarasjon*. Se [Klasser](Chapter4/classes.md#splitting-the-declaration-and-the-implementation) og [Lese kompilatorfeil](compiler_errors.md). |
-| **dinglende referanse / peker** | En referanse eller peker til noe som allerede er ødelagt; å bruke den er udefinert oppførsel og en vanlig årsak til krasj. Se [Verdier, referanser og pekere](Chapter4/types_refs_ptrs.md). |
+| **dangling referanse / peker** | En referanse eller peker til noe som allerede er ødelagt; å bruke den er udefinert oppførsel og en vanlig årsak til krasj. Se [Verdier, referanser og pekere](Chapter4/types_refs_ptrs.md). |
 | **innkapsling** | Å skjule en types indre virkemåte bak et rent grensesnitt ved å gjøre dataene dens `private`. Se [Klasser](Chapter4/classes.md). |
 | **enum class** | En type med et fast sett navngitte verdier (en *scoped enumerasjon*); den moderne, typesikre varianten av enum. Se [Enumerasjoner](Chapter1/enums.md). |
 | **unntak** | En måte å signalisere og håndtere feil på, ved hjelp av `throw`, `try` og `catch`. Se [Feilhåndtering](Chapter6/error_handling.md). |
@@ -48,7 +48,7 @@ Enten du er ny til programmering eller bare til C++, vil du møte mange ukjente 
 | **LLM / KI-assistent** | En stor språkmodell (ChatGPT, Claude, …) som kan generere kode — nyttig, men selvsikkert feil ofte nok til at du må sjekke den. Se [Bruke KI til koding](using_ai.md). |
 | **main** | Funksjonen operativsystemet kaller for å starte programmet ditt. Hvert program har nøyaktig én. Se [Grunnstruktur](Chapter1/basic_structure.md). |
 | **medlemsfunksjon** (metode) | En operasjon definert inni en klasse og kalt på et objekt. "Metode" er et synonym. Se [Klasser](Chapter4/classes.md). |
-| **medlemsinitialiseringsliste** | `: a(x), b(y)`-delen av en konstruktør som gir datamedlemmene sine verdier før kroppen kjører. Se [Klasser](Chapter4/classes.md). |
+| **member initialiser list** | `: a(x), b(y)`-delen av en konstruktør som gir datamedlemmene sine verdier før kroppen kjører. Se [Klasser](Chapter4/classes.md). |
 | **move** | Å overføre en ressurs fra ett objekt til et annet i stedet for å kopiere den. Se [Flyttesemantikk](Chapter5/move.md). |
 | **namespace** | En navngitt region som grupperer navn for å unngå kollisjoner. Standardbiblioteket bor i navnerommet `std`. Se [C++ standardbibliotek](Chapter3/standard_library.md). |
 | **NaN** | "Not a Number" — et flyttallsresultat av ugyldig matematikk (f.eks. `0.0 / 0.0`). Enhver ordnet sammenligning og `==` mot den er *usann* (selv `nan == nan`), men `!=` er *sann*. Se [Flyttall-fallgruver](floating_point.md). |

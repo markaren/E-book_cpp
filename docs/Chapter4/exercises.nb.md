@@ -162,7 +162,7 @@ Dette kompilerer. Hva er galt med det?
 - =`text` destrueres når `label` returnerer, så kalleren får en referanse til minne som ikke lenger finnes
 - Det kompilerer ikke, fordi du ikke kan returnere en lokal variabel ved referanse
 :::
-**Referansen blir hengende.** `text` er en lokal variabel: den destrueres i det øyeblikket `label` returnerer, så referansen som gis tilbake, refererer til minne som ikke lenger lever. Å lese den er **udefinert oppførsel** — den kan skrive ut `sensor-1`, skrive ut søppel eller krasje, og den kan gjerne oppføre seg annerledes i en Release-bygging enn i Debug.
+**Referansen blir dangling.** `text` er en lokal variabel: den destrueres i det øyeblikket `label` returnerer, så referansen som gis tilbake, refererer til minne som ikke lenger lever. Å lese den er **udefinert oppførsel** — den kan skrive ut `sensor-1`, skrive ut søppel eller krasje, og den kan gjerne oppføre seg annerledes i en Release-bygging enn i Debug.
 
 Det kompilerer, men kompilatoren prøver faktisk å si fra. MSVC advarer:
 
@@ -231,7 +231,7 @@ Skriv en klasse `WaterTank`. **Kapasiteten** dens fastsettes når tanken opprett
 
 Hold dataene **private**. Lag så, i `main`, en 100-liters tank, `fill(60)`, `fill(60)` igjen (den skal stoppe på 100, ikke 120), `drain(30)`, og skriv ut nivået.
 
-> Hint: kapasiteten og nivået er tankens private tilstand. Bruk konstruktørens medlemsinitialiseringsliste til å sette kapasiteten, og merk `level()` som `const`.
+> Hint: kapasiteten og nivået er tankens private tilstand. Bruk konstruktørens *member initialiser list* til å sette kapasiteten, og merk `level()` som `const`.
 
 ??? success "Vis løsning"
 
@@ -634,6 +634,6 @@ Poenget med oppgaven: en peker kan legitimt bety "ikke noe resultat", og du må 
     }
     ```
 
-    En peker kan holde `nullptr` for å bety "her er det ingenting" — noe en referanse aldri kan. Derfor returnerer `largest` en peker: adressen til et virkelig element når det finnes ett, `nullptr` når vektoren er tom. Kalleren **må** sjekke `p != nullptr` før den skriver `*p`; å dereferere en null-peker er udefinert oppførsel. Merk at pekeren er `const int*` — den peker på data som eies av kallerens vektor, og å returnere den er trygt *fordi den vektoren overlever kallet*. (Hadde `largest` i stedet returnert adressen til en lokal variabel, ville pekeren blitt hengende i det øyeblikket funksjonen returnerte — fellen fra [siden om pekere](types_refs_ptrs.md#the-big-lifetime-trap).)
+    En peker kan holde `nullptr` for å bety "her er det ingenting" — noe en referanse aldri kan. Derfor returnerer `largest` en peker: adressen til et virkelig element når det finnes ett, `nullptr` når vektoren er tom. Kalleren **må** sjekke `p != nullptr` før den skriver `*p`; å dereferere en null-peker er udefinert oppførsel. Merk at pekeren er `const int*` — den peker på data som eies av kallerens vektor, og å returnere den er trygt *fordi den vektoren overlever kallet*. (Hadde `largest` i stedet returnert adressen til en lokal variabel, ville pekeren blitt *dangling* i det øyeblikket funksjonen returnerte — fellen fra [siden om pekere](types_refs_ptrs.md#the-big-lifetime-trap).)
 
     </div>

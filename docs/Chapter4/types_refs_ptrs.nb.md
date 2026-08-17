@@ -38,7 +38,7 @@ Tre ting gjør referanser forskjellige fra pekere:
 
 - En referanse må initialiseres når den deklareres. Det finnes ingen "uinitialisert" referanse.
 - En referanse kan ikke bindes på nytt. Når den først refererer til `age`, refererer den til `age` for alltid.
-- Det finnes ingen null-referanse: en referanse starter alltid bundet til et virkelig objekt. Den kan derimot overleve objektet og bli *hengende* (eng. *dangle*) — se [Den store levetidsfellen](#the-big-lifetime-trap) nedenfor.
+- Det finnes ingen null-referanse: en referanse starter alltid bundet til et virkelig objekt. Den kan derimot overleve objektet og bli *dangling* — se [Den store levetidsfellen](#the-big-lifetime-trap) nedenfor.
 
 Referanser er arbeidshesten for effektiv parameteroverføring i C++.
 
@@ -159,8 +159,8 @@ int* createIntPtr() {
 }
 
 int main() {
-    int& bad1 = createIntRef();    // hengende referanse — udefinert oppførsel
-    int* bad2 = createIntPtr();    // hengende peker — udefinert oppførsel
+    int& bad1 = createIntRef();    // dangling referanse — udefinert oppførsel
+    int* bad2 = createIntPtr();    // dangling peker — udefinert oppførsel
 }
 ```
 

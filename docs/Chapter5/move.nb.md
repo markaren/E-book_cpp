@@ -145,7 +145,7 @@ Hvis du skriver din egen klasse og følger [Rule of Zero](memory.md#the-rule-of-
 
 Rule of Zero dekker nesten alt. Men av og til eier en klasse en **rå ressurs** som ingen standardtype allerede pakker inn — et håndtak fra et C-API, en maskinvaretilkobling, en lås. Da er de kompilatorgenererte operasjonene feil, og du må skrive flytteoperasjonene selv.
 
-Ta `SensorConnection` fra [RAII](../Chapter4/raii.md): den åpner en tilkobling i konstruktøren og lukker den i destruktøren. En tilkobling er *unik* — det finnes én fysisk forbindelse, og å kopiere objektet kan ikke duplisere den. Så riktig design er **kun flyttbar** (*move-only*): du kan overføre tilkoblingen ut av ett objekt og inn i et annet, men du kan ikke kopiere den. Dette er nøyaktig slik `std::unique_ptr` oppfører seg.
+Ta `SensorConnection` fra [RAII](../Chapter4/raii.md): den åpner en tilkobling i konstruktøren og lukker den i destruktøren. En tilkobling er *unik* — det finnes én fysisk forbindelse, og å kopiere objektet kan ikke duplisere den. Så riktig design er **move-only**: du kan overføre tilkoblingen ut av ett objekt og inn i et annet, men du kan ikke kopiere den. Dette er nøyaktig slik `std::unique_ptr` oppfører seg.
 
 !!! note "Først, `&&`-syntaksen: rvalue-referanser"
 
@@ -195,7 +195,7 @@ Fire ting gjør den korrekt:
 - **Flyttetilordningen frigjør, og stjeler så.** Den lukker tilkoblingen den selv holder før den tar den andres, og beskytter mot selvtilordning (`x = std::move(x)`).
 - **Kopiering er `= delete`-et.** Det uttrykker at klassen kun skal flyttes, og gjør ethvert forsøk på å kopiere til en kompileringsfeil, i stedet for et stille, ødelagt duplikat.
 
-**Merk flytteoperasjonene `noexcept`.** Det lover at de ikke kan kaste — sant her, siden de bare flytter et håndtak rundt. Dette betyr noe i praksis når en `std::vector` vokser og må flytte elementene sine til nytt sted. For en type som *også* kan kopieres, flytter vektoren elementene bare hvis flyttekonstruktøren er `noexcept`; ellers kopierer den dem, fordi en flytting som kaster midtveis i relokasjonen kunne etterlatt beholderen ødelagt, og kopiering bevarer den sterke unntaksgarantien (denne avveiningen gjøres av `std::move_if_noexcept`). En **kun flyttbar** type som denne har ingen kopi å falle tilbake på, så vektoren må flytte den uansett — men å merke flyttingene `noexcept` er fortsatt den riktige vanen, og det er det som lar beholdere flytte de *kopierbare* typene dine også.
+**Merk flytteoperasjonene `noexcept`.** Det lover at de ikke kan kaste — sant her, siden de bare flytter et håndtak rundt. Dette betyr noe i praksis når en `std::vector` vokser og må flytte elementene sine til nytt sted. For en type som *også* kan kopieres, flytter vektoren elementene bare hvis flyttekonstruktøren er `noexcept`; ellers kopierer den dem, fordi en flytting som kaster midtveis i relokasjonen kunne etterlatt beholderen ødelagt, og kopiering bevarer den sterke unntaksgarantien (denne avveiningen gjøres av `std::move_if_noexcept`). En **move-only**-type som denne har ingen kopi å falle tilbake på, så vektoren må flytte den uansett — men å merke flyttingene `noexcept` er fortsatt den riktige vanen, og det er det som lar beholdere flytte de *kopierbare* typene dine også.
 
 Dette er **Rule of Five**: når du først skriver en destruktør og flytteoperasjonene, slutter kompilatoren å fylle ut resten, så du må gjøre rede for alle fem — her ved å slette kopiene. ([Rule of Zero](memory.md#the-rule-of-zero) er hvordan du vanligvis unngår alt dette.)
 
@@ -227,5 +227,5 @@ En enkel tommelfingerregel: behandle en variabel det er flyttet fra som om den n
 - Skriv `std::move` selv når du har en navngitt variabel med innhold du vil gi videre.
 - **Ikke** `std::move` en returverdi av en lokal variabel; det slår av RVO.
 - Bruk flyttinger når du overfører `unique_ptr`-er; de kan ikke kopieres.
-- Eier du en **rå ressurs**? Gjør klassen **kun flyttbar** — `noexcept` flytteoperasjoner, kopiene `= delete`-et — eller pakk den inn i en `unique_ptr` og skriv ingen av dem (Rule of Zero).
+- Eier du en **rå ressurs**? Gjør klassen **move-only** — `noexcept` flytteoperasjoner, kopiene `= delete`-et — eller pakk den inn i en `unique_ptr` og skriv ingen av dem (Rule of Zero).
 - Et objekt det er flyttet fra er gyldig, men uspesifisert; tilordne til det eller destruer det.

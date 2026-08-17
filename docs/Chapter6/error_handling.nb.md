@@ -292,7 +292,7 @@ Hvis betingelsen er usann, kompilerer koden rett og slett ikke, og du får meldi
 
 ### Kast som verdi, fang som referanse {#throw-by-value-catch-by-reference}
 
-Kast (`throw`) alltid unntaksobjekter som verdi, og fang (`catch`) dem som `const`-referanse. Dette unngår unødvendige kopier og forhindrer at objektene skjæres i skiver (object slicing).
+Kast (`throw`) alltid unntaksobjekter som verdi, og fang (`catch`) dem som `const`-referanse. Dette unngår unødvendige kopier og forhindrer **object slicing**.
 
 ```cpp
 throw std::runtime_error("something failed"); // kast som verdi

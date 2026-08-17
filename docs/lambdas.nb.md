@@ -99,7 +99,7 @@ To kortformer:
 
 Kortformene er bekvemme, men mister presisjon. Foretrekk å navngi fangstene eksplisitt; det dokumenterer hensikten.
 
-> **Pass på at `[&]` ikke overlever de fangede variablene.** En lambda som fanger som referanse, holder referanser til variablene; hvis lambdaen lagres og kalles *etter* at de variablene har gått ut av virkeområdet, får du en dinglende referanse. (Referanser, og denne levetidsfellen, får full behandling i [Verdier, referanser og pekere](Chapter4/types_refs_ptrs.md#the-big-lifetime-trap).) Fang som verdi når du er usikker.
+> **Pass på at `[&]` ikke overlever de fangede variablene.** En lambda som fanger som referanse, holder referanser til variablene; hvis lambdaen lagres og kalles *etter* at de variablene har gått ut av virkeområdet, får du en dangling referanse. (Referanser, og denne levetidsfellen, får full behandling i [Verdier, referanser og pekere](Chapter4/types_refs_ptrs.md#the-big-lifetime-trap).) Fang som verdi når du er usikker.
 
 ---
 

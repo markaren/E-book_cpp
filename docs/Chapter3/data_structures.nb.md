@@ -96,7 +96,7 @@ Valget står nesten alltid mellom `std::map` og `std::unordered_map`, og det kok
 | Minneoverhead per element | Høyere | Lavere (vanligvis) |
 | Krav til nøkkeltypen | Mindre-enn-sammenligning | Hash + likhet |
 
-**Bruk `unordered_map` som standard** — den er raskere i gjennomsnitt og krever mindre av deg i det daglige. Velg `map` bare når du trenger det ekstra den tilbyr: å iterere nøklene i sortert rekkefølge, eller intervallspørringer over et spenn av nøkler. Den ordnede oppførselen er nøyaktig det hashtabellen gir opp for farten sin.
+**Bruk `unordered_map` som standard** — den er raskere i gjennomsnitt og krever mindre av deg i det daglige. Velg `map` bare når du trenger det ekstra den tilbyr: å iterere nøklene i sortert rekkefølge, eller *range queries* over et spenn av nøkler. Den ordnede oppførselen er nøyaktig det hashtabellen gir opp for farten sin.
 
 ### `std::set` og `std::unordered_set` {#stdset-and-stdunordered_set}
 

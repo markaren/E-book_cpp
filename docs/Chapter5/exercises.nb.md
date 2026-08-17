@@ -51,7 +51,7 @@ Hva skriver dette ut?
 :::
 **`base derived`.** Én linje, begge halvdeler av leksjonen.
 
-`Base b = d;` kopierer **bare `Base`-delen** av `d` — en `Base`-variabel er akkurat stor nok for en `Base`, så `Derived`-delen slippes på gulvet. Det er **[objektavskjæring](polymorphism.md#object-slicing)**, og det som overlever er en ekte `Base`, så `b.kind()` returnerer `"base"`. Ingen advarsel: det er en fullt lovlig kopi.
+`Base b = d;` kopierer **bare `Base`-delen** av `d` — en `Base`-variabel er akkurat stor nok for en `Base`, så `Derived`-delen slippes på gulvet. Det er **[object slicing](polymorphism.md#object-slicing)**, og det som overlever er en ekte `Base`, så `b.kind()` returnerer `"base"`. Ingen advarsel: det er en fullt lovlig kopi.
 
 `Base& r = d;` kopierer ingenting. `r` er et annet navn for `d`, som fortsatt er en hel `Derived`, så det virtuelle kallet går til `Derived::kind()`.
 
@@ -269,7 +269,7 @@ Du skal se ventilen lukket **nøyaktig én gang**, automatisk, uten noen `delete
 
 > Denne bygger på delen [Å designe en flyttbar klasse](move.md#designing-a-movable-class), det dypeste stoffet i kapittelet. Den er her for den nysgjerrige; du kan hoppe over den uten å gå glipp av noe de senere kapitlene er avhengige av.
 
-En datainnsamlings-`Channel` er en *unik* ressurs: det finnes én fysisk kanal, så objektet skal være **flyttbart, men ikke kopierbart**. Skriv en klasse `Channel` som skriver ut `Channel N open` i konstruktøren og `Channel N closed` i destruktøren. Gjør den kun flyttbar: skriv flyttekonstruktøren og flyttetilordningen (overfør id-en og etterlat kilden tom), `= delete` kopioperasjonene, og la destruktøren hoppe over en kanal det er flyttet fra.
+En datainnsamlings-`Channel` er en *unik* ressurs: det finnes én fysisk kanal, så objektet skal være **flyttbart, men ikke kopierbart**. Skriv en klasse `Channel` som skriver ut `Channel N open` i konstruktøren og `Channel N closed` i destruktøren. Gjør den **move-only**: skriv flyttekonstruktøren og flyttetilordningen (overfør id-en og etterlat kilden tom), `= delete` kopioperasjonene, og la destruktøren hoppe over en kanal det er flyttet fra.
 
 I `main`, åpne kanal `1`, flytt den inn i en andre variabel, og bekreft at den lukkes nøyaktig én gang.
 
@@ -318,7 +318,7 @@ I `main`, åpne kanal `1`, flytt den inn i en andre variabel, og bekreft at den 
     }   // b lukker kanal 1 (én gang); a er tom og lukker ingenting
     ```
 
-    En kanal er unik, så `Channel` er **kun flyttbar**: den har flytteoperasjoner, og kopioperasjonene dens er `= delete`-et. Flyttekonstruktøren stjeler den andre kanalens id og setter kilden til den tomme tilstanden (`-1`); destruktøren sjekker for den tilstanden, så en kanal det er flyttet fra lukker ingenting. Fordi kopiering er slettet, er `Channel c = b;` en *kompileringsfeil* i stedet for en stille dobbel lukking. Flyttingene er `noexcept`; siden `Channel` er kun flyttbar, må en `std::vector<Channel>` uansett flytte den når den vokser, men `noexcept` er den riktige vanen — det er det som lar en vektor flytte *kopierbare* typer i stedet for å kopiere dem, og som bevarer beholderens unntaksgarantier. (Du skrev en destruktør og flytteoperasjonene — **Rule of Five** — så du gjorde rede for kopiene også. Du kunne unngått alt sammen ved å lagre håndtaket i en `std::unique_ptr`: **Rule of Zero**.)
+    En kanal er unik, så `Channel` er **move-only**: den har flytteoperasjoner, og kopioperasjonene dens er `= delete`-et. Flyttekonstruktøren stjeler den andre kanalens id og setter kilden til den tomme tilstanden (`-1`); destruktøren sjekker for den tilstanden, så en kanal det er flyttet fra lukker ingenting. Fordi kopiering er slettet, er `Channel c = b;` en *kompileringsfeil* i stedet for en stille dobbel lukking. Flyttingene er `noexcept`; siden `Channel` er move-only, må en `std::vector<Channel>` uansett flytte den når den vokser, men `noexcept` er den riktige vanen — det er det som lar en vektor flytte *kopierbare* typer i stedet for å kopiere dem, og som bevarer beholderens unntaksgarantier. (Du skrev en destruktør og flytteoperasjonene — **Rule of Five** — så du gjorde rede for kopiene også. Du kunne unngått alt sammen ved å lagre håndtaket i en `std::unique_ptr`: **Rule of Zero**.)
 
     </div>
 

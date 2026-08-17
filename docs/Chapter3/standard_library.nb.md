@@ -98,7 +98,7 @@ for (const auto& [word, count] : wordCount) {   // [word, count] deler opp hvert
 
 ### `std::unordered_map<K, V>`: et hash-basert nøkkel/verdi-lager {#stdunordered_mapk-v-a-hash-based-key-value-store}
 
-Samme daglige bruk som `std::map`, men usortert og raskere i gjennomsnitt (oppslag i konstant tid). Den dropper de ordnede operasjonene — ingen sortert iterasjon, ingen intervallspørringer (range queries) — siden en hashtabell ikke har noe begrep om rekkefølge.
+Samme daglige bruk som `std::map`, men usortert og raskere i gjennomsnitt (oppslag i konstant tid). Den dropper de ordnede operasjonene — ingen sortert iterasjon, ingen *range queries* — siden en hashtabell ikke har noe begrep om rekkefølge.
 
 ```cpp
 #include <unordered_map>
@@ -107,7 +107,7 @@ std::unordered_map<std::string, int> fast;
 fast["temperature"] = 22;
 ```
 
-**Å velge mellom map og unordered_map:** unordered er raskere, ordered holder ting sortert (praktisk for iterasjon i sortert rekkefølge eller intervallspørringer). Trenger du ikke rekkefølge, er `unordered_map` vanligvis det riktige standardvalget.
+**Å velge mellom map og unordered_map:** unordered er raskere, ordered holder ting sortert (praktisk for iterasjon i sortert rekkefølge eller *range queries*). Trenger du ikke rekkefølge, er `unordered_map` vanligvis det riktige standardvalget.
 
 ### `std::set` og `std::unordered_set` {#stdset-and-stdunordered_set}
 

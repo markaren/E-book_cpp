@@ -112,7 +112,7 @@ Sensoren vet ingenting om visninger, alarmer eller logger — bare at den holder
 
 ## Pass på levetidene {#watching-out-for-lifetimes}
 
-Dette er den ene virkelige faren. En lambda kan [fange](../lambdas.md#captures) variabler fra omgivelsene sine. Hvis et fanget objekt blir destruert *før* sensoren slutter å kalle callbacken, står callbacken igjen og peker på noe som ikke lenger finnes — den samme [fellen med dinglende referanser](../Chapter4/types_refs_ptrs.md#the-big-lifetime-trap) som i referansekapittelet.
+Dette er den ene virkelige faren. En lambda kan [fange](../lambdas.md#captures) variabler fra omgivelsene sine. Hvis et fanget objekt blir destruert *før* sensoren slutter å kalle callbacken, står callbacken igjen og peker på noe som ikke lenger finnes — den samme [fellen med dangling referanser](../Chapter4/types_refs_ptrs.md#the-big-lifetime-trap) som i referansekapittelet.
 
 ```cpp
 TemperatureSensor sensor;
@@ -132,7 +132,7 @@ To vaner holder deg trygg:
 - **Fang som verdi** når callbacken kan overleve det omsluttende virkeområdet (`[label]` kopierer den), heller enn som referanse.
 - Hvis du må fange som referanse, **sørg for at det callbacken fanger, lever lenger enn subjektet**. Subjektet lagrer *kopier* av callbackene, så callbackene i seg selv er trygge; det som kan dingle, er det de peker på som referanse (`label` ovenfor).
 
-> Å fange som referanse (`[&]`) inn i en callback subjektet *lagrer*, er den vanligste måten å skape en dinglende referanse på. Er du i tvil, fang som verdi.
+> Å fange som referanse (`[&]`) inn i en callback subjektet *lagrer*, er den vanligste måten å skape en dangling referanse på. Er du i tvil, fang som verdi.
 
 Én ting vår minimale `subscribe` ikke kan, er å **melde av** (unsubscribe): når en callback først ligger i vektoren, finnes det ingen måte å trekke den ut igjen på, fordi en `std::function` ikke har noen identitet å søke etter. Ekte rammeverk løser dette ved å levere tilbake en ID eller et token fra `subscribe` som du senere sender til en `remove` — maskineri vi utelater her for å holde eksempelet lite.
 
@@ -152,7 +152,7 @@ public:
 
 En `Display`, en `Alarm` og en `Logger` ville hver arve fra `TemperatureObserver` og overstyre `onReading`. Subjektet lagrer så en liste med `TemperatureObserver`-håndtak og kaller `onReading` på hver — mekanikken er identisk med callback-versjonen.
 
-Forskjellen er **eierskap**. Fordi polymorfisme krever at observatører lagres som peker eller referanse (aldri som verdi — det ville [skåret dem i skiver](../Chapter5/polymorphism.md#object-slicing) (slicing)), eier ikke subjektet observatørene sine. Regelen er: hver observatør må **enten leve lenger enn subjektet, eller melde seg av før den destrueres** — ellers sitter subjektet igjen med et dinglende håndtak. Det er nøyaktig det bokholderiet callback-versjonen slipper unna.
+Forskjellen er **eierskap**. Fordi polymorfisme krever at observatører lagres som peker eller referanse (aldri som verdi — det ville gitt [object slicing](../Chapter5/polymorphism.md#object-slicing)), eier ikke subjektet observatørene sine. Regelen er: hver observatør må **enten leve lenger enn subjektet, eller melde seg av før den destrueres** — ellers sitter subjektet igjen med et dangling håndtak. Det er nøyaktig det bokholderiet callback-versjonen slipper unna.
 
 For ny kode, foretrekk callback-formen. Grip etter grensesnitt-formen når en observatør allerede er et fullverdig objekt med flere metoder, eller når et rammeverk du bruker forventer det.
 

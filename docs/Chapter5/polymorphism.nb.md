@@ -133,7 +133,7 @@ classDiagram
 
 ### Å konstruere basisdelen {#constructing-the-base}
 
-Et avledet objekt inneholder en basisdel, og den basisdelen må også konstrueres. Når basisklassen har en konstruktør som tar argumenter, **rekker den avledede konstruktøren dem opp** i medlemsinitialiseringslisten sin, før sine egne medlemmer:
+Et avledet objekt inneholder en basisdel, og den basisdelen må også konstrueres. Når basisklassen har en konstruktør som tar argumenter, **rekker den avledede konstruktøren dem opp** i sin *member initialiser list*, før sine egne medlemmer:
 
 ```cpp
 class Sensor {
@@ -339,11 +339,11 @@ Tommelfingerregel: hver klasse med en eller annen `virtual` funksjon bør også 
 
 ---
 
-## Objektavskjæring {#object-slicing}
+## Object slicing {#object-slicing}
 
 `Shape` ovenfor er abstrakt, så kompilatoren lar deg ikke engang kopiere en `Circle` inn i en `Shape`-*verdi* — `Shape s = c;` er en kompileringsfeil. Det er språket som beskytter deg.
 
-Fella dukker opp med en **konkret** basisklasse (en du *kan* instansiere): å kopiere et avledet objekt inn i en basisverdi dropper de avledede delene i stillhet. Det er **objektavskjæring** (*object slicing*).
+Fella dukker opp med en **konkret** basisklasse (en du *kan* instansiere): å kopiere et avledet objekt inn i en basisverdi dropper de avledede delene i stillhet.
 
 ```cpp
 struct Base {
@@ -381,7 +381,7 @@ Regelen er den samme uansett: jobb med polymorfe typer gjennom **pekere eller re
 
 ```cpp
 Circle c;
-Shape& ref = c;            // OK: referanse, ingen avskjæring
+Shape& ref = c;            // OK: referanse, ingen slicing
 std::unique_ptr<Shape> p = std::make_unique<Circle>();  // også greit
 ```
 

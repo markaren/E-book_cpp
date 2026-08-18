@@ -6,6 +6,28 @@ C++ sitt svar er **RAII** — *Resource Acquisition Is Initialization*, et kløn
 
 ---
 
+## Problemet: opprydding for hånd {#the-problem-cleanup-by-hand}
+
+For å se hva RAII erstatter, kan vi først rydde opp for hånd — med et par "åpne den / lukk den"-kall du selv må holde i balanse:
+
+```cpp
+void logReadings() {
+    openSensor(7);                 // skaff
+
+    if (somethingWrong()) {
+        return;                    // FEIL: sensoren lukkes aldri
+    }
+
+    // ... les og loggfør verdiene ...
+
+    closeSensor(7);                // nås bare på den normale veien
+}
+```
+
+`closeSensor` nederst kjører bare hvis kjøringen når frem til den. Den tidlige `return`-en hopper over den, og tilkoblingen lekker. Hvert ekstra utgangspunkt — en `return` til, en `break`, senere et unntak — er enda et sted som må huske oppryddingen, og før eller siden er det ett som glemmer. Løsningen er ikke "vær mer forsiktig". Løsningen er å gjøre opprydding umulig å glemme.
+
+---
+
 ## Destruktøren {#the-destructor}
 
 En konstruktør kjører når et objekt opprettes. Speilbildet dens, **destruktøren**, kjører automatisk når objektet destrueres — som for en lokal variabel er øyeblikket den går ut av skop. En destruktør har navnet `~` etterfulgt av klassenavnet, tar ingen argumenter, og du kaller den aldri selv; kompilatoren setter inn kallet for deg.
@@ -70,7 +92,11 @@ void useSensor() {
 
 Sammenlign dette med opprydding skrevet for hånd på slutten av en funksjon: en tidlig `return` hopper forbi den, og et kastet unntak hopper forbi den. RAII har ingen slik glipe. Når objektet først finnes, er oppryddingen garantert.
 
+Unntaksstien har til og med et navn: når en `throw` utløses, utfører C++ **stack unwinding** — den destruerer hvert lokale objekt som er opprettet så langt, i motsatt rekkefølge av konstruksjonen, på veien ut av skopet. `sensor` er blant dem, så tilkoblingen lukkes selv om kjøringen aldri nådde slutten av funksjonen.
+
 > Dette er grunnen til at du bør foretrekke et objekt som eier en ressurs, fremfor et par "åpne den / lukk den"-kall du selv må balansere. Kompilatoren glemmer aldri å kalle destruktøren; det vil du.
+
+Én garanti til fullfører bildet: hvis en **konstruktør** kaster, regnes objektet aldri som å ha eksistert, og destruktøren dens vil ikke kjøre. Konstruksjonen lykkes enten fullstendig — og etterlater et objekt med garantert opprydding — eller feiler uten å etterlate noe. Det finnes ingen halvåpen ressurs å bekymre seg for.
 
 ---
 
@@ -100,14 +126,32 @@ RAII er også grunnen til at C++ ikke trenger en søppelsamler: oppryddingen er 
 
 Det forklarer også **Rule of Zero** fra kapittelet om [klasser](classes.md): hvis hvert datamedlem allerede er en RAII-type (en `vector`, en `string`, en smartpeker), trenger klassen din ingen egen destruktør — medlemmene rydder opp etter seg selv.
 
-Baksiden er den sjeldnere klassen som eier en *rå* ressurs direkte — en ingen standardtype pakker inn. Den kan ikke lene seg på Rule of Zero, og gjøres vanligvis best **move-only**: du overfører ressursen i stedet for å kopiere den. [Å designe en flyttbar klasse](../Chapter5/move.md#designing-a-movable-class) (neste kapittel) viser hvordan, med nettopp denne `SensorConnection`-klassen.
+Her er regelen i én klasse — en logger der det eneste medlemmet allerede er en RAII-type:
+
+```cpp
+class Logger {
+public:
+    explicit Logger(const std::string& path) : out_(path) {}
+
+    void write(const std::string& line) { out_ << line << '\n'; }
+
+private:
+    std::ofstream out_;   // åpner i konstruktøren, lukker seg selv ved destruksjon
+};
+```
+
+Ingen destruktør, ingen oppryddingskode, ingenting å glemme: `std::ofstream`-medlemmet eier filen, så den kompilatorgenererte destruktøren er allerede korrekt.
+
+Baksiden er den sjeldnere klassen som eier en *rå* ressurs direkte — en ingen standardtype pakker inn, slik som `SensorConnection` ovenfor. Den kan ikke lene seg på Rule of Zero, og å **kopiere** den er en felle: begge kopiene ville eid samme tilkobling, og hver destruktør ville frigitt den — en dobbel lukking. Det umiddelbare grepet er å forby kopiering (`SensorConnection(const SensorConnection&) = delete;`); den fulle løsningen er å gjøre klassen **move-only**, slik at ressursen overføres i stedet for å kopieres. [Å designe en flyttbar klasse](../Chapter5/move.md#designing-a-movable-class) (neste kapittel) viser hvordan, med nettopp denne `SensorConnection`-klassen.
 
 ---
 
 ## Oppsummering {#summary}
 
 - RAII knytter en ressurs' levetid til et objekt: **skaff i konstruktøren, frigi i destruktøren.**
-- Destruktøren kjører automatisk når objektet går ut av skop — selv ved en tidlig `return` eller et unntak — så oppryddingen kan ikke glemmes eller hoppes over.
+- Destruktøren kjører automatisk når objektet går ut av skop — selv ved en tidlig `return` eller et unntak (**stack unwinding** destruerer lokale objekter i motsatt rekkefølge av konstruksjonen) — så oppryddingen kan ikke glemmes eller hoppes over.
+- En konstruktør som kaster, etterlater ingenting: intet objekt, intet destruktørkall, ingen halvåpen ressurs.
 - Du er allerede avhengig av RAII: `std::vector`, `std::string` og filstrømmene rydder alle opp etter seg selv.
-- Foretrekk en standard RAII-type fremfor å skrive din egen destruktør. Smartpekere (neste kapittel) bringer RAII til rått minne.
+- Foretrekk en standard RAII-type fremfor å skrive din egen destruktør (Rule of Zero). Smartpekere (neste kapittel) bringer RAII til rått minne.
+- En klasse som eier en rå ressurs, må ikke kunne kopieres i blinde — slett kopieringsoperasjonene eller gjør den move-only, slik at to objekter aldri frigir samme ressurs.
 - RAII er grunnen til at C++ forvalter ressurser trygt og deterministisk, uten søppelsamler.

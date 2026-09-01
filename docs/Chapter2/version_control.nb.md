@@ -217,7 +217,7 @@ Brancher er billige. Lag én for hver funksjon, hvert eksperiment og hvert fors�
 
 En **pull request** (PR, noen ganger "merge request") er GitHubs måte å spørre "vær så snill, se over og merge branchen min inn i main" på. Du pusher branchen din til GitHub, klikker "Create pull request", og lagkameratene dine kan lese endringen, kommentere og godkjenne før mergen skjer.
 
-Du kommer ikke alltid til å bruke PR-er på soloprosjekter. Du kommer til å bruke dem konstant i enhver teamsammenheng og i gruppearbeidet i dette emnet. Mekanikken:
+Du kommer ikke alltid til å bruke PR-er på soloprosjekter. Du kommer til å bruke dem konstant i enhver teamsammenheng. Mekanikken:
 
 1. Opprett en branch, commit endringene dine, og push branchen til GitHub. En splitter ny branch har ingen motpart på remoten ennå, så den første pushen må navngi én: `git push -u origin new-controller-tuning`. (En ren `git push` feiler her med *"no upstream branch"* — `-u`-en oppretter upstreamen og husker den, så senere pusher på denne branchen er bare `git push`.)
 2. Åpne en pull request fra den branchen til `main`. Den enkleste måten: rett etter at du har pushet, åpne repoet på github.com — et gult banner med en **Compare & pull request**-knapp dukker opp. Klikk den, skriv en kort beskrivelse av endringen, og klikk **Create pull request**.

@@ -217,7 +217,7 @@ Branches are cheap. Make one for every feature, experiment, or attempt.
 
 A **pull request** (PR, sometimes "merge request") is GitHub's way of asking "please review and merge my branch into main." You push your branch to GitHub, click "Create pull request," and your teammates can read the change, comment, and approve before the merge happens.
 
-You will not always use PRs on solo projects. You will use them constantly in any team setting and in this course's group work. The mechanics:
+You will not always use PRs on solo projects. You will use them constantly in any team setting. The mechanics:
 
 1. Create a branch, commit your changes, and push the branch to GitHub. A brand-new branch has no remote counterpart yet, so the first push must name one: `git push -u origin new-controller-tuning`. (A bare `git push` fails here with *"no upstream branch"* — the `-u` creates the upstream and remembers it, so later pushes on this branch are just `git push`.)
 2. Open a pull request from that branch to `main`. The easiest way: right after you push, open the repo on github.com — a yellow banner with a **Compare & pull request** button appears. Click it, write a short description of the change, and click **Create pull request**.

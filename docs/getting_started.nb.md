@@ -47,7 +47,7 @@ CLion har også med **CMake** (byggeverktøyet emnet bruker), så det trenger du
 
 ---
 
-## 2. Lag ditt første prosjekt
+## 2. Lag ditt første prosjekt {#2-create-your-first-project}
 
 1. På velkomstskjermen, velg **New Project** (eller **File → New Project** hvis CLion allerede er åpent).
 2. Velg **C++ Executable**.

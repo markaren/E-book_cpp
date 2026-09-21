@@ -43,10 +43,14 @@ project(tank_control)
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
+include(CTest)             # turn on testing, so `ctest` can find the suite
+
 add_subdirectory(src)      # the components, as a library
 add_subdirectory(app)      # the application
 add_subdirectory(tests)    # the tests
 ```
+
+`include(CTest)` belongs here, in the top-level file: `ctest` looks for its list of tests in the root of the build folder, and only the top-level `CMakeLists.txt` writes one there. Put it in `tests/` instead and `ctest --test-dir build` reports `No tests were found!!!`.
 
 `src/` compiles the components once into a library, `tank_lib`:
 
@@ -92,7 +96,6 @@ FetchContent_MakeAvailable(Catch2)
 add_executable(tests test_tank.cpp)
 target_link_libraries(tests PRIVATE tank_lib Catch2::Catch2WithMain)
 
-include(CTest)                          # so `ctest` can find the suite
 add_test(NAME tests COMMAND tests)      # register the runner with CTest
 ```
 

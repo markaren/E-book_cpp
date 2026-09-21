@@ -213,6 +213,23 @@ Branches are cheap. Make one for every feature, experiment, or attempt.
 
 ---
 
+## Tags: naming a commit
+
+A **tag** is a permanent name for one commit. A branch moves along with every new commit; a tag stays put. It marks "this is the state at that moment": the version you handed in, a release, the point where a feature first worked.
+
+Use an *annotated* tag, which carries a message and a date of its own:
+
+```bash
+git tag -a part1-done -m "Part 1 works: window, box, rig. Next: plug in the simulation."
+git push --tags      # a plain git push does not send tags
+```
+
+`git tag` lists your tags, and `git show part1-done` shows the message and the commit it points to. Write the message like a good commit message, only a little longer: what works now, what was hard, what comes next. Months later, `git log` tells you *what* changed; the tags tell you *where you were*.
+
+In CLion: **Git → New Tag...** — give it a name and a message (the message is what makes it annotated). To send tags to GitHub, tick **Push Tags** in the push dialog. Tags appear as labels in the **Git** tool window's **Log** tab.
+
+---
+
 ## Pull requests
 
 A **pull request** (PR, sometimes "merge request") is GitHub's way of asking "please review and merge my branch into main." You push your branch to GitHub, click "Create pull request," and your teammates can read the change, comment, and approve before the merge happens.
@@ -271,6 +288,7 @@ From then on **Ctrl+K** (**⌘K** on macOS) opens the commit dialog, and the res
 | `git pull` | **Git → Update Project** |
 | `git switch -c <name>` | Branch name in toolbar → **New Branch** |
 | `git merge <branch>` | Branch name in toolbar → pick branch → **Merge into Current** |
+| `git tag -a <name> -m "..."` | **Git → New Tag...**; tick **Push Tags** when pushing |
 | `git log` | **Git** tool window → **Log** tab |
 | `git diff` | Click a file in the commit dialog |
 
@@ -305,6 +323,8 @@ When a merge hits a conflict, CLion opens a **Conflicts** dialog listing the aff
 | `git switch <name>` | Switch to an existing branch |
 | `git merge <branch>` | Merge another branch into the current one |
 | `git branch` | List branches |
+| `git tag -a <name> -m "..."` | Give the current commit a permanent name and a message |
+| `git push --tags` | Send your tags to the remote |
 
 ---
 

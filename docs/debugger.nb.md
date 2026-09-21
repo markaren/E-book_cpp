@@ -117,7 +117,7 @@ Breakpoints, steg for steg, og Variables-ruten alene vil løse det store flertal
 
 ---
 
-## Fire verktøy for "noe er galt"
+## Fire verktøy for "noe er galt" {#four-tools-for-something-is-wrong}
 
 Hvert passer til et ulikt øyeblikk:
 

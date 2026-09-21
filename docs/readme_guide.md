@@ -42,6 +42,8 @@ Scale the README to the project. A small course project needs only the first few
 
 The order matters: lead with *what it is* and *how to run it*, because that is what a reader wants first.
 
+A project you are *presenting* — a portfolio piece, like the [capstone](capstone.md) — needs more than this; see [Presenting a bigger project](#presenting-a-bigger-project) below.
+
 ---
 
 ## A small example
@@ -102,6 +104,40 @@ Two habits make the difference:
 
 ---
 
+## Presenting a bigger project
+
+Some projects are not just used but *shown*: a course portfolio, a capstone, something you want a future employer to look at. Then the README is also your presentation, written by you, in your own words, and it has two more jobs: **show** what the project does, and **explain** the thinking behind it.
+
+### Show it: screenshots and GIFs
+
+A reader who sees your program running understands it in seconds; a paragraph takes much longer. Put a picture, or better a short animated GIF, near the top.
+
+- **Screenshot.** On Windows, press **Win + Shift + S**, choose **Window** mode in the bar at the top of the screen, and click the program's window. Windows 11 usually saves the picture in *Pictures\Screenshots*; if it does not, click the notification that pops up and save it from there. Move the file into your project. (On macOS: **Cmd + Shift + 4**, then **Space**, then click the window.)
+- **GIF.** Use a free screen-to-GIF recorder — for example [ScreenToGif](https://www.screentogif.com/) on Windows. Record just the program's window, keep it to 5–10 seconds, and keep the file small (a few MB), or the page loads slowly.
+- **Store them in the repository**, in a folder such as `docs/images/`, and commit them with the code. Use file names without spaces (`onoff-demo.gif`, not `on off demo.gif`).
+- **Show them** with the image syntax — an exclamation mark, a short description of the picture, and the path *relative to the README*:
+
+    ```markdown
+    ![The tank under on/off control](docs/images/onoff-demo.gif)
+    ```
+
+    The description in square brackets is shown to readers who cannot see the image, so make it say what the picture shows. Check that the image appears in CLion's Markdown preview before you commit, and on GitHub after you push.
+
+Capture as you go. The screenshot of a bug before you fixed it, or of the first run that worked, cannot be taken afterwards.
+
+### Explain it
+
+For a project you present, add sections like these after *what it is* and *how to build and run it*:
+
+- **How it works** — the main parts and how they talk to each other, with a [UML class diagram](uml.md) of the types you wrote.
+- **Why it is built this way** — the decisions you made, the alternatives you rejected, and the trade-offs. This is where you argue that it is a good solution.
+- **What did not make it** — what you wanted to build but did not, what does not work yet, and what it would take. Knowing the limits of your own solution is part of understanding it, and a README that is honest about them is more convincing than one that claims everything works.
+- **How you worked** — the short story of the project, pointing at the commits and notes that show it: the hardest problem, how you found the cause, what you would do differently.
+- **How you used AI**, or that you did not — which tools and models, what you used them for, how you worked with them, where they were wrong, and what you learned from it ([Using AI for Coding](using_ai.md)).
+- **Credits** — code you did not write, and where it came from.
+
+---
+
 ## Summary
 
 - The `README.md` at your repository root is the project's front page; hosting sites render it automatically.
@@ -109,3 +145,4 @@ Two habits make the difference:
 - Answer **what is this, how do I build it, how do I run it**, in that order.
 - Scale it to the project, lead with usage, and keep it honest and up to date.
 - The real test: a stranger should be able to build and run your project from the README alone.
+- A project you present also **shows** itself — screenshots and GIFs, stored in the repository — and **explains** itself: how it works, why it is built this way, what did not make it, how you used AI.

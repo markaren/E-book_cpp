@@ -90,7 +90,7 @@ For styringssløyfer som integrerer over tid, er drift noe å holde øye med ove
 
 ---
 
-## `NaN`, uendelig og divisjon med null
+## `NaN`, uendelig og divisjon med null {#nan-infinity-and-division-by-zero}
 
 Flyttall har spesialverdier som heltallsaritmetikk ikke har:
 
@@ -99,6 +99,7 @@ double inf  = 1.0 / 0.0;      // +infinity
 double ninf = -1.0 / 0.0;     // -infinity
 double nan  = 0.0 / 0.0;      // NaN, "not a number"
 double nan2 = std::sqrt(-1.0); // NaN
+double nan3 = 0.0 * inf;       // NaN: null ganger uendelig har ingen fornuftig verdi
 ```
 
 I motsetning til heltallsdivisjon med null (som er udefinert oppførsel og kan krasje), krasjer ikke flyttallsdivisjon med null på noen plattform du kommer til å bruke: den gir uendelig eller NaN, og programmet fortsetter å kjøre. (Strengt tatt lar C++-standarden selv flyttallsdivisjon med null være *udefinert*; det er **IEEE 754**-standarden som definerer uendelig/NaN-resultatet, og hver kompilator og CPU i dette kurset følger IEEE 754 — så i praksis kan du stole på det.)
@@ -112,7 +113,7 @@ double z = std::sin(y);          // NaN
 if (z < 1.0) { /* ... */ }       // false! enhver ordnet sammenligning med NaN er false
 ```
 
-NaN forgifter ethvert uttrykk den berører, og sammenligninger med den oppfører seg merkelig: enhver *ordnet* sammenligning (`<`, `>`, `<=`, `>=`) og `==` er **false** — selv `nan == nan` er false. Den som overrasker folk er `!=`: `nan != nan` er **true**, og det samme er `nan != hva som helst`. Den inverteringen (`!=` true mens `==` false) er faktisk det standard trikset for å oppdage en NaN for hånd: `x != x` er true bare når `x` er NaN. Hvis sensorrørledningen din begynner å produsere nuller og du ikke ser noen feil, mistenk en NaN.
+NaN forgifter ethvert uttrykk den berører, og sammenligninger med den oppfører seg merkelig: enhver *ordnet* sammenligning (`<`, `>`, `<=`, `>=`) og `==` er **false** — selv `nan == nan` er false. Den som overrasker folk er `!=`: `nan != nan` er **true**, og det samme er `nan != hva som helst`. Den inverteringen (`!=` true mens `==` false) er faktisk det standard trikset for å oppdage en NaN for hånd: `x != x` er true bare når `x` er NaN. Hvis sensorrørledningen din begynner å produsere nuller og du ikke ser noen feil, mistenk en NaN. I CLions debugger vises uendelig som `inf` og en NaN som `nan` eller `-nan(0x8000000000000)`.
 
 For å sjekke eksplisitt:
 

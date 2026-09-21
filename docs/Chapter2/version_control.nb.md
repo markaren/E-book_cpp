@@ -213,6 +213,23 @@ Brancher er billige. Lag én for hver funksjon, hvert eksperiment og hvert fors�
 
 ---
 
+## Tagger: å gi en commit et navn {#tags-naming-a-commit}
+
+En **tag** er et permanent navn på én commit. En branch flytter seg med hver nye commit; en tag blir stående. Den markerer "slik var tilstanden akkurat da": versjonen du leverte, en utgivelse, punktet der en funksjon virket for første gang.
+
+Bruk en *annotert* tag, som har sin egen melding og dato:
+
+```bash
+git tag -a part1-done -m "Del 1 virker: vindu, boks, rigg. Neste: koble til simuleringen."
+git push --tags      # en vanlig git push sender ikke tagger
+```
+
+`git tag` lister taggene dine, og `git show part1-done` viser meldingen og commiten den peker på. Skriv meldingen som en god commit-melding, bare litt lengre: hva som virker nå, hva som var vanskelig, hva som kommer videre. Måneder senere forteller `git log` deg *hva* som ble endret; taggene forteller deg *hvor du var*.
+
+I CLion: **Git → New Tag...** — gi den et navn og en melding (det er meldingen som gjør den annotert). For å sende tagger til GitHub, kryss av **Push Tags** i push-dialogen. Taggene vises som etiketter i **Log**-fanen i **Git**-verktøyvinduet.
+
+---
+
 ## Pull requests {#pull-requests}
 
 En **pull request** (PR, noen ganger "merge request") er GitHubs måte å spørre "vær så snill, se over og merge branchen min inn i main" på. Du pusher branchen din til GitHub, klikker "Create pull request", og lagkameratene dine kan lese endringen, kommentere og godkjenne før mergen skjer.
@@ -271,6 +288,7 @@ Fra da av åpner **Ctrl+K** (**⌘K** på macOS) commit-dialogen, og resten av d
 | `git pull` | **Git → Update Project** |
 | `git switch -c <name>` | Branch-navnet i verktøylinjen → **New Branch** |
 | `git merge <branch>` | Branch-navnet i verktøylinjen → velg branch → **Merge into Current** |
+| `git tag -a <name> -m "..."` | **Git → New Tag...**; kryss av **Push Tags** når du pusher |
 | `git log` | **Git**-verktøyvinduet → **Log**-fanen |
 | `git diff` | Klikk en fil i commit-dialogen |
 
@@ -305,6 +323,8 @@ Når en merge treffer en konflikt, åpner CLion en **Conflicts**-dialog som list
 | `git switch <name>` | Bytt til en eksisterende branch |
 | `git merge <branch>` | Merge en annen branch inn i den gjeldende |
 | `git branch` | List brancher |
+| `git tag -a <name> -m "..."` | Gi gjeldende commit et permanent navn og en melding |
+| `git push --tags` | Send taggene dine til remoten |
 
 ---
 

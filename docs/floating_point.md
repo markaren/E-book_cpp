@@ -99,6 +99,7 @@ double inf  = 1.0 / 0.0;      // +infinity
 double ninf = -1.0 / 0.0;     // -infinity
 double nan  = 0.0 / 0.0;      // NaN, "not a number"
 double nan2 = std::sqrt(-1.0); // NaN
+double nan3 = 0.0 * inf;       // NaN: zero times infinity has no sensible value
 ```
 
 Unlike integer division by zero (which is undefined behaviour and may crash), floating-point division by zero does not crash on any platform you will use: it produces infinity or NaN, and the program keeps running. (Strictly, the C++ standard itself leaves floating-point division by zero *undefined*; it is the **IEEE 754** standard that defines the infinity/NaN result, and every compiler and CPU in this course follows IEEE 754 — so in practice you can rely on it.)
@@ -112,7 +113,7 @@ double z = std::sin(y);          // NaN
 if (z < 1.0) { /* ... */ }       // false! every ordered comparison with NaN is false
 ```
 
-NaN poisons every expression it touches, and comparisons with it behave strangely: every *ordered* comparison (`<`, `>`, `<=`, `>=`) and `==` is **false** — even `nan == nan` is false. The one that surprises people is `!=`: `nan != nan` is **true**, and so is `nan != anything`. That inversion (`!=` true while `==` false) is in fact the standard trick to detect a NaN by hand: `x != x` is true only when `x` is NaN. If your sensor pipeline starts producing zeros and you see no errors, suspect a NaN.
+NaN poisons every expression it touches, and comparisons with it behave strangely: every *ordered* comparison (`<`, `>`, `<=`, `>=`) and `==` is **false** — even `nan == nan` is false. The one that surprises people is `!=`: `nan != nan` is **true**, and so is `nan != anything`. That inversion (`!=` true while `==` false) is in fact the standard trick to detect a NaN by hand: `x != x` is true only when `x` is NaN. If your sensor pipeline starts producing zeros and you see no errors, suspect a NaN. In CLion's debugger, infinity shows up as `inf` and a NaN as `nan` or `-nan(0x8000000000000)`.
 
 To check explicitly:
 

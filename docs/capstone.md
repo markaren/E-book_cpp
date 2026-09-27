@@ -67,10 +67,6 @@ When you are stuck, go in this order: the [four tools for "something is wrong"](
 
     The first time CMake configures this project it **downloads** threepp (about 200 MB — you need an internet connection), and the first build **compiles** it, which takes **several minutes**. Start the build, then read on. It happens once per build folder: CLion keeps one folder per profile (`cmake-build-debug`, `cmake-build-release`), so adding a profile, choosing **Tools → CMake → Reset Cache and Reload Project**, or deleting the folder starts it over.
 
-!!! tip "Run the 3D app from a Release profile"
-
-    In the Debug profile, every change to `main.cpp` relinks a very large executable against a very large Debug build of threepp — over a minute each time, long enough to think CLion has hung. A Release build does the same in a few seconds. Add one under **File → Settings → Build, Execution, Deployment → CMake** (click **+**; CLion suggests *Release*), then pick it in the profile switcher next to the Run button. Switch back to Debug when you need the [debugger](debugger.md) — and in Milestone 5, you will ([Debug and Release](Chapter2/cmake_intro.md#build-configurations-debug-and-release)).
-
 !!! note "What your machine needs"
 
     threepp draws with **OpenGL 3.3**, which every graphics card of the last decade supports. It will not work over a Remote Desktop session or in a virtual machine without 3D acceleration — run this one on your own machine.
@@ -97,7 +93,7 @@ When you are stuck, go in this order: the [four tools for "something is wrong"](
 5. **Reload CMake** — click the reload icon CLion shows over the editor ([CMake in CLion](Chapter2/cmake_intro.md#cmake-in-clion)). Until you do, CLion may say `main.cpp` does not belong to any project target; that is expected. This reload is the one that downloads threepp, and the **CMake** window at the bottom can show nothing new for several minutes. Wait until it prints `Build files have been written to`.
 6. In `rig/main.cpp`, create a `Canvas` (the window), a `GLRenderer`, a `Scene` with a background colour, and a `PerspectiveCamera`, then hand the animation loop a lambda that renders one frame.
 
-> Hint: the CMake part is the `FetchContent_Declare` / `FetchContent_MakeAvailable` / `target_link_libraries` pattern from the CMake chapter, with `threepp::threepp` as the target threepp exports. Turn threepp's own tests and examples **off** before fetching, or you build those too and download its example assets.
+> Hint: the CMake part is the `FetchContent_Declare` / `FetchContent_MakeAvailable` / `target_link_libraries` pattern from the CMake chapter, with `threepp::threepp` as the target threepp exports. Turn threepp's own tests and examples **off** before fetching, or you build those too and download its example assets. With CLion's MinGW compiler, also build threepp as a *shared* library — the solution shows the two lines and explains why. Without them, every rebuild spends most of a minute linking.
 >
 > The threepp names — `Canvas`, `Scene`, `canvas.animate`, the option names — you cannot guess from anything in this book. Look at one of threepp's examples ([Finding things out yourself](#finding-things-out-yourself)), or open the solution and type it in; in Milestone 1 that is expected. One warning when you borrow from an example: threepp's examples create their renderer with `auto renderer = createRenderer(canvas);`, which at this version stops and **asks on the console** which renderer to use before anything is drawn. Write `GLRenderer renderer(canvas);` instead, and `renderer.` wherever the example writes `renderer->`.
 
@@ -118,6 +114,8 @@ When you are stuck, go in this order: the [four tools for "something is wrong"](
     set(CMAKE_CXX_STANDARD 20)
     set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
+    set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)   # every program in one folder, next to threepp's DLLs
+
     add_subdirectory(rig)      # the 3D view
     ```
 
@@ -126,6 +124,9 @@ When you are stuck, go in this order: the [four tools for "something is wrong"](
     ```cmake
     include(FetchContent)
 
+    if(MINGW)
+        set(BUILD_SHARED_LIBS ON)   # build threepp as a DLL, so a rebuild links in seconds
+    endif()
     set(THREEPP_BUILD_TESTS OFF)
     set(THREEPP_BUILD_EXAMPLES OFF)
     FetchContent_Declare(
@@ -172,6 +173,7 @@ When you are stuck, go in this order: the [four tools for "something is wrong"](
     Things worth naming:
 
     - **`set(THREEPP_BUILD_TESTS OFF)` before `FetchContent_MakeAvailable`** overrides the default of an [`option()`](Chapter2/cmake_intro.md#cmake-options-making-parts-of-the-build-optional) that threepp declares: when threepp's own `CMakeLists.txt` runs, it finds your value already set and uses it.
+    - **`BUILD_SHARED_LIBS` and the `bin` folder belong together.** threepp is a very large library. Built the usual way — as a *static* library — it is copied into your program every time the program is linked, and with MinGW that makes every rebuild take the better part of a minute. Built as a *shared* library (a DLL on Windows), it is compiled once and your program only refers to it, so a rebuild links in a few seconds. The catch: Windows only finds a DLL that sits next to the program (or on the `PATH`), so the top-level file sends every program to the same `bin` folder, where threepp already puts its DLLs. Leave that line out and the program never starts: CLion reports exit code `-1073741515` (`0xC0000135`), which is Windows for "a DLL was not found". The `if(MINGW)` keeps the change to CLion's MinGW compiler, where the static link is slowest; other compilers keep the default.
     - **`Canvas` owns the window.** When `canvas` is destroyed at the end of `main`, the window is closed and its resources released — you never clean up by hand, the same idea as `std::ofstream` in [RAII](Chapter4/raii.md). `GLRenderer` draws into that window and cleans up after itself the same way.
     - **Construct `GLRenderer` yourself, as here** — not with the `createRenderer(canvas)` helper threepp's examples use, which at this version waits for an answer on the console before anything is drawn.
     - **`Scene::create()` and `PerspectiveCamera::create()` hand you smart pointers**, which is why you write `scene->` and `*scene`. Milestone 2 says which kind, and why.
@@ -426,6 +428,8 @@ Here is the milestone the whole project exists for.
     set(CMAKE_CXX_STANDARD 20)
     set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
+    set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)   # every program in one folder, next to threepp's DLLs
+
     include(CTest)             # at the top level, so ctest finds the tests from the build folder
 
     add_subdirectory(src)      # tank_lib
@@ -490,7 +494,7 @@ Your simulation passed every Version 5 test, and you changed nothing in it. Some
 
 ??? tip "Hint 1 — the tool"
 
-    It builds and runs but does the wrong thing, so reach for the **debugger** ([four tools](debugger.md#four-tools-for-something-is-wrong)). Switch to the Debug profile — its first build compiles threepp again, which takes several minutes. Put a breakpoint on the first line inside the `animate` lambda and start with **Debug**. At the breakpoint nothing below it has run yet, so `measurement` and `opening` show leftover garbage: press **Step Over** and read each value just after its line has run. On the *second* frame `dt` is large, because it includes the time you spent paused — that is not the bug. Look hard at the first frame.
+    It builds and runs but does the wrong thing, so reach for the **debugger** ([four tools](debugger.md#four-tools-for-something-is-wrong)). Use the Debug profile (CLion's default). Put a breakpoint on the first line inside the `animate` lambda and start with **Debug**. At the breakpoint nothing below it has run yet, so `measurement` and `opening` show leftover garbage: press **Step Over** and read each value just after its line has run. On the *second* frame `dt` is large, because it includes the time you spent paused — that is not the bug. Look hard at the first frame.
 
 ??? tip "Hint 2 — the place"
 
@@ -704,7 +708,7 @@ You can see *that* it settles; now show *what* it is doing. Add a screen-space `
 
 *Practises: [Testing](Chapter6/testing.md), [CMake](Chapter2/cmake_intro.md#building-libraries), [Git](Chapter2/version_control.md#when-something-goes-wrong)*
 
-Run the tests: pick the `tests` configuration in CLion's run dropdown and click **Run** (the dropdown also lists targets that CTest and threepp add — `Continuous…`, `Nightly…`, `glfw`, `threepp` — ignore them), or type `ctest --test-dir cmake-build-release` (or `cmake-build-debug` — whichever profile you built) in CLion's **Terminal** tab. Every test from [Version 5](tank_control/v5_tests.md) should still be green: the 3D view changed nothing they cover, and a first-frame fix in `tank_lib` must not break them either. (If your fix went into `tank_lib`, your new test runs too.)
+Run the tests: pick the `tests` configuration in CLion's run dropdown and click **Run** (the dropdown also lists targets that CTest and threepp add — `Continuous…`, `Nightly…`, `glfw`, `threepp` — ignore them), or type `ctest --test-dir cmake-build-debug` (the build folder of the profile you use) in CLion's **Terminal** tab. Every test from [Version 5](tank_control/v5_tests.md) should still be green: the 3D view changed nothing they cover, and a first-frame fix in `tank_lib` must not break them either. (If your fix went into `tank_lib`, your new test runs too.)
 
 Then prove the suite is really guarding the thing on screen:
 
@@ -731,7 +735,7 @@ Make the change, rebuild, and run the tests and the rig. Take a screenshot of th
     Nothing to write, apart from your prediction. In CLion's **Terminal** tab, point `ctest` at the build folder you are using — CLion's are called `cmake-build-debug` and `cmake-build-release`:
 
     ```bash
-    ctest --test-dir cmake-build-release --output-on-failure
+    ctest --test-dir cmake-build-debug --output-on-failure
     ```
 
     (A PowerShell window opened from the Start menu may not find `ctest`; CLion's Terminal tab can.)
@@ -762,7 +766,7 @@ At the end of the milestones your project looks like this:
 
 ```
 tank-rig/
-├── CMakeLists.txt      # top level: C++20, include(CTest), src, app, tests and rig
+├── CMakeLists.txt      # top level: C++20, the bin folder, include(CTest), src, app, tests and rig
 ├── LOG.md              # your log
 ├── README.md           # your presentation
 ├── include/            # from Version 5
@@ -781,6 +785,9 @@ The two build files you wrote are the top-level one from Milestone 5 and `rig/CM
 ```cmake
 include(FetchContent)
 
+if(MINGW)
+    set(BUILD_SHARED_LIBS ON)
+endif()
 set(THREEPP_BUILD_TESTS OFF)
 set(THREEPP_BUILD_EXAMPLES OFF)
 FetchContent_Declare(

@@ -93,9 +93,9 @@ When you are stuck, go in this order: the [four tools for "something is wrong"](
 5. **Reload CMake** — click the reload icon CLion shows over the editor ([CMake in CLion](Chapter2/cmake_intro.md#cmake-in-clion)). Until you do, CLion may say `main.cpp` does not belong to any project target; that is expected. This reload is the one that downloads threepp, and the **CMake** window at the bottom can show nothing new for several minutes. Wait until it prints `Build files have been written to`.
 6. In `rig/main.cpp`, create a `Canvas` (the window), a `GLRenderer`, a `Scene` with a background colour, and a `PerspectiveCamera`, then hand the animation loop a lambda that renders one frame.
 
-> Hint: the CMake part is the `FetchContent_Declare` / `FetchContent_MakeAvailable` / `target_link_libraries` pattern from the CMake chapter, with `threepp::threepp` as the target threepp exports. Turn threepp's own tests and examples **off** before fetching, or you build those too and download its example assets. With CLion's MinGW compiler, also build threepp as a *shared* library — the solution shows the two lines and explains why. Without them, every rebuild spends most of a minute linking.
+> Hint: the CMake part is the `FetchContent_Declare` / `FetchContent_MakeAvailable` / `target_link_libraries` pattern from the CMake chapter, with `threepp::threepp` as the target threepp exports. With CLion's MinGW compiler, also build threepp as a *shared* library — the solution shows the two lines and explains why. Without them, every rebuild spends most of a minute linking.
 >
-> The threepp names — `Canvas`, `Scene`, `canvas.animate`, the option names — you cannot guess from anything in this book. Look at one of threepp's examples ([Finding things out yourself](#finding-things-out-yourself)), or open the solution and type it in; in Milestone 1 that is expected. One warning when you borrow from an example: threepp's examples create their renderer with `auto renderer = createRenderer(canvas);`, which at this version stops and **asks on the console** which renderer to use before anything is drawn. Write `GLRenderer renderer(canvas);` instead, and `renderer.` wherever the example writes `renderer->`.
+> The threepp names — `Canvas`, `Scene`, `canvas.animate` — you cannot guess from anything in this book. Look at one of threepp's examples ([Finding things out yourself](#finding-things-out-yourself)), or open the solution and type it in; in Milestone 1 that is expected. One warning when you borrow from an example: threepp's examples `#include "renderer_factory.hpp"` and create their renderer with `auto renderer = createRenderer(canvas);`. That helper is not part of the library — it sits next to the examples — and it stops and **asks on the console** which renderer to use before anything is drawn. Leave out the include, write `GLRenderer renderer(canvas);` instead, and `renderer.` wherever the example writes `renderer->`.
 
 !!! example "Run it — you should see"
 
@@ -127,12 +127,10 @@ When you are stuck, go in this order: the [four tools for "something is wrong"](
     if(MINGW)
         set(BUILD_SHARED_LIBS ON)   # build threepp as a DLL, so a rebuild links in seconds
     endif()
-    set(THREEPP_BUILD_TESTS OFF)
-    set(THREEPP_BUILD_EXAMPLES OFF)
     FetchContent_Declare(
         threepp
         GIT_REPOSITORY https://github.com/markaren/threepp.git
-        GIT_TAG        2026-06-17    # pin a tag, never a moving branch
+        GIT_TAG        2026-09-27    # pin a tag, never a moving branch
         GIT_SHALLOW    TRUE          # fetch only the latest commits, not the whole history
     )
     FetchContent_MakeAvailable(threepp)
@@ -172,10 +170,9 @@ When you are stuck, go in this order: the [four tools for "something is wrong"](
 
     Things worth naming:
 
-    - **`set(THREEPP_BUILD_TESTS OFF)` before `FetchContent_MakeAvailable`** overrides the default of an [`option()`](Chapter2/cmake_intro.md#cmake-options-making-parts-of-the-build-optional) that threepp declares: when threepp's own `CMakeLists.txt` runs, it finds your value already set and uses it.
     - **`BUILD_SHARED_LIBS` and the `bin` folder belong together.** threepp is a very large library. Built the usual way — as a *static* library — it is copied into your program every time the program is linked, and with MinGW that makes every rebuild take the better part of a minute. Built as a *shared* library (a DLL on Windows), it is compiled once and your program only refers to it, so a rebuild links in a few seconds. The catch: Windows only finds a DLL that sits next to the program (or on the `PATH`), so the top-level file sends every program to the same `bin` folder, where threepp already puts its DLLs. Leave that line out and the program never starts: CLion reports exit code `-1073741515` (`0xC0000135`), which is Windows for "a DLL was not found". The `if(MINGW)` keeps the change to CLion's MinGW compiler, where the static link is slowest; other compilers keep the default.
     - **`Canvas` owns the window.** When `canvas` is destroyed at the end of `main`, the window is closed and its resources released — you never clean up by hand, the same idea as `std::ofstream` in [RAII](Chapter4/raii.md). `GLRenderer` draws into that window and cleans up after itself the same way.
-    - **Construct `GLRenderer` yourself, as here** — not with the `createRenderer(canvas)` helper threepp's examples use, which at this version waits for an answer on the console before anything is drawn.
+    - **Construct `GLRenderer` yourself, as here** — not with the `createRenderer(canvas)` helper threepp's examples use. That helper lives in the examples' own `renderer_factory.hpp`, not in the library, and it waits for an answer on the console before anything is drawn.
     - **`Scene::create()` and `PerspectiveCamera::create()` hand you smart pointers**, which is why you write `scene->` and `*scene`. Milestone 2 says which kind, and why.
     - **`canvas.animate(...)` takes a [lambda](lambdas.md)** and calls it once per frame until you close the window. `[&]` captures `renderer`, `scene` and `camera` by reference — safe here, because they all outlive the loop.
     - **`onWindowResize` takes a callback**: you hand the canvas a function and it calls you back when something happens. You do not poll for resizes; you subscribe to them. (Chapter 6 calls this the [Observer pattern](Chapter6/observer.md).)
@@ -788,12 +785,10 @@ include(FetchContent)
 if(MINGW)
     set(BUILD_SHARED_LIBS ON)
 endif()
-set(THREEPP_BUILD_TESTS OFF)
-set(THREEPP_BUILD_EXAMPLES OFF)
 FetchContent_Declare(
     threepp
     GIT_REPOSITORY https://github.com/markaren/threepp.git
-    GIT_TAG        2026-06-17
+    GIT_TAG        2026-09-27
     GIT_SHALLOW    TRUE
 )
 FetchContent_MakeAvailable(threepp)
@@ -809,8 +804,8 @@ target_link_libraries(tank_rig PRIVATE tank_lib threepp::threepp)
 From here on, nobody hands you the exact call. That is normal: working programmers spend much of their time finding out how a library works. Here is how to do it with threepp.
 
 - **Read the headers.** Ctrl+click any threepp name in CLion to open its declaration. The headers themselves are in your build folder, under `cmake-build-<profile>/_deps/threepp-src/include/threepp/`, and the source files under `_deps/threepp-src/src/`. Reading the `.cpp` is allowed, and often the final answer — the bug hunt in Milestone 5 ends in `Clock.cpp`.
-- **Read the examples.** threepp comes with around a hundred small example programs. Browse the ones for the version you use at <https://github.com/markaren/threepp/tree/2026-06-17/examples> — read them in the browser, and copy only the few lines you need, with a comment saying where they came from. They start with `createRenderer(canvas)`; use `GLRenderer renderer(canvas);` instead, as in Milestone 1.
-- **See one run.** Copy an example's `.cpp` into `rig/` under a new name (say `try_raycast.cpp`), add `add_executable(try_raycast try_raycast.cpp)` and `target_link_libraries(try_raycast PRIVATE threepp::threepp)` to `rig/CMakeLists.txt`, swap in `GLRenderer`, reload CMake, and pick it in the run dropdown. It uses the threepp you have already built. A few examples need extra files or libraries and will not build this way — pick another.
+- **Read the examples.** threepp comes with around a hundred small example programs. Browse the ones for the version you use at <https://github.com/markaren/threepp/tree/2026-09-27/examples> — read them in the browser, and copy only the few lines you need, with a comment saying where they came from. They start with `#include "renderer_factory.hpp"` and `createRenderer(canvas)`; leave out the include and use `GLRenderer renderer(canvas);` instead, as in Milestone 1.
+- **See one run.** Copy an example's `.cpp` into `rig/` under a new name (say `try_raycast.cpp`), add `add_executable(try_raycast try_raycast.cpp)` and `target_link_libraries(try_raycast PRIVATE threepp::threepp)` to `rig/CMakeLists.txt`, swap in `GLRenderer` as above, reload CMake, and pick it in the run dropdown. It uses the threepp you have already built. A few examples need extra files or libraries and will not build this way — pick another.
 - **Shrink, then port.** Find an example that does something close to what you want. Work out the smallest part of it that does the thing. Move that part into your rig, get it working, *then* make it yours.
 - **Check what you assumed.** When something behaves oddly, write down what you expected, then test the assumption with the smallest change you can think of — exactly like the log entry after Milestone 4.
 

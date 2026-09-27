@@ -130,7 +130,7 @@ When you are stuck, go in this order: the [four tools for "something is wrong"](
     FetchContent_Declare(
         threepp
         GIT_REPOSITORY https://github.com/markaren/threepp.git
-        GIT_TAG        2026-09-27    # pin a tag, never a moving branch
+        GIT_TAG        2026-09-28    # pin a tag, never a moving branch
         GIT_SHALLOW    TRUE          # fetch only the latest commits, not the whole history
     )
     FetchContent_MakeAvailable(threepp)
@@ -788,7 +788,7 @@ endif()
 FetchContent_Declare(
     threepp
     GIT_REPOSITORY https://github.com/markaren/threepp.git
-    GIT_TAG        2026-09-27
+    GIT_TAG        2026-09-28
     GIT_SHALLOW    TRUE
 )
 FetchContent_MakeAvailable(threepp)
@@ -804,7 +804,7 @@ target_link_libraries(tank_rig PRIVATE tank_lib threepp::threepp)
 From here on, nobody hands you the exact call. That is normal: working programmers spend much of their time finding out how a library works. Here is how to do it with threepp.
 
 - **Read the headers.** Ctrl+click any threepp name in CLion to open its declaration. The headers themselves are in your build folder, under `cmake-build-<profile>/_deps/threepp-src/include/threepp/`, and the source files under `_deps/threepp-src/src/`. Reading the `.cpp` is allowed, and often the final answer — the bug hunt in Milestone 5 ends in `Clock.cpp`.
-- **Read the examples.** threepp comes with around a hundred small example programs. Browse the ones for the version you use at <https://github.com/markaren/threepp/tree/2026-09-27/examples> — read them in the browser, and copy only the few lines you need, with a comment saying where they came from. They start with `#include "renderer_factory.hpp"` and `createRenderer(canvas)`; leave out the include and use `GLRenderer renderer(canvas);` instead, as in Milestone 1.
+- **Read the examples.** threepp comes with around a hundred small example programs. Browse the ones for the version you use at <https://github.com/markaren/threepp/tree/2026-09-28/examples> — read them in the browser, and copy only the few lines you need, with a comment saying where they came from. They start with `#include "renderer_factory.hpp"` and `createRenderer(canvas)`; leave out the include and use `GLRenderer renderer(canvas);` instead, as in Milestone 1.
 - **See one run.** Copy an example's `.cpp` into `rig/` under a new name (say `try_raycast.cpp`), add `add_executable(try_raycast try_raycast.cpp)` and `target_link_libraries(try_raycast PRIVATE threepp::threepp)` to `rig/CMakeLists.txt`, swap in `GLRenderer` as above, reload CMake, and pick it in the run dropdown. It uses the threepp you have already built. A few examples need extra files or libraries and will not build this way — pick another.
 - **Shrink, then port.** Find an example that does something close to what you want. Work out the smallest part of it that does the thing. Move that part into your rig, get it working, *then* make it yours.
 - **Check what you assumed.** When something behaves oddly, write down what you expected, then test the assumption with the smallest change you can think of — exactly like the log entry after Milestone 4.

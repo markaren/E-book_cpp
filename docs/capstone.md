@@ -61,7 +61,7 @@ When you are stuck, go in this order: the [four tools for "something is wrong"](
 ## Before you start
 
 - **Part 1** needs [CMake](Chapter2/cmake_intro.md) and [Git](Chapter2/version_control.md) (Chapter 2), [lambdas](lambdas.md) (Chapter 3), [classes](Chapter4/classes.md), [references and pointers](Chapter4/types_refs_ptrs.md) and [RAII](Chapter4/raii.md) (Chapter 4), and [smart pointers](Chapter5/memory.md#smart-pointers) (Chapter 5). It does **not** need the tank project. A few explanations in the solutions point ahead — to polymorphism, the Observer pattern and the tank project. If you have not reached those yet, skip those paragraphs; the code does not depend on them.
-- **Part 2** needs the finished **Version 5** tank project — the one with `include/`, `src/`, `app/`, `tests/` and a `tank_lib` library — and so the rest of Chapters 5 and 6. If you have not built it, work through [the five versions](tank_control/v1_classes.md) first.
+- **Part 2** needs the finished **tank project**. That is the book's worked example [Tank Control System](tank_control/v1_classes.md) (in the menu after Chapter 6): five short pages, *Version 1* to *Version 5*, in which you build a water-tank controller step by step, each version growing out of the one before. You follow the pages, type the code into a CLion project of your own, and run it. What this page calls **your Version 5 project** is that CLion project as it stands at the end of [Version 5](tank_control/v5_tests.md): the one with `include/`, `src/`, `app/` and `tests/` folders, a `tank_lib` library and a green Catch2 suite. The tank pages build on the rest of Chapters 5 and 6. If you have not built the tank project yet, start at [Version 1](tank_control/v1_classes.md) now; you can do Part 1 of this project while you work through it.
 
 !!! warning "The first build takes a while"
 
@@ -89,55 +89,88 @@ When you are stuck, go in this order: the [four tools for "something is wrong"](
 1. In CLion, create a new **C++ Executable** project called `tank-rig` in a plain folder such as `C:\dev\tank-rig` ([Getting Started](getting_started.md#2-create-your-first-project)).
 2. **Put it under Git** before the first build: open the **Terminal** tab at the bottom of CLion (it opens in the project folder) and type `git init` ([Starting a new project](Chapter2/version_control.md#starting-a-new-project)). Then right-click `tank-rig` at the top of the **Project** panel → **New → File**, name it `.gitignore`, and write two lines in it: `cmake-build-*/` and `.idea/` ([What to put in `.gitignore`](Chapter2/version_control.md#what-to-put-in-gitignore)). Create an empty **private** repository on GitHub and connect it over SSH ([Put a local project on GitHub](Chapter2/version_control.md#getting-a-project)).
 3. Right-click `tank-rig` → **New → Directory**, name it `rig`, and drag `main.cpp` into it (confirm the **Move** dialog).
-4. Replace everything in the top-level `CMakeLists.txt` with a short file that sets C++20 and adds the `rig` folder ([Splitting the build across folders](Chapter2/cmake_intro.md#splitting-the-build-across-folders)). Then right-click `rig` → **New → File**, name it `CMakeLists.txt`, and make it pull threepp in with `FetchContent` and build an executable `tank_rig` from `main.cpp`.
-5. **Reload CMake** — click the reload icon CLion shows over the editor ([CMake in CLion](Chapter2/cmake_intro.md#cmake-in-clion)). Until you do, CLion may say `main.cpp` does not belong to any project target; that is expected. This reload is the one that downloads threepp, and the **CMake** window at the bottom can show nothing new for several minutes. Wait until it prints `Build files have been written to`.
-6. In `rig/main.cpp`, create a `Canvas` (the window), a `GLRenderer`, a `Scene` with a background colour, and a `PerspectiveCamera`, then hand the animation loop a lambda that renders one frame.
+4. Open the top-level `CMakeLists.txt`. **Keep** the lines CLion wrote at the top: `cmake_minimum_required`, `project` and `set(CMAKE_CXX_STANDARD 20)` (if that line shows a lower number, change it to `20`, and if `set(CMAKE_CXX_STANDARD_REQUIRED ON)` is missing, add it below, as in [Setting the C++ standard](Chapter2/cmake_intro.md#setting-the-c-standard)). The last line, `add_executable(...)`, no longer fits, because `main.cpp` has moved: replace it with these two lines ([Splitting the build across folders](Chapter2/cmake_intro.md#splitting-the-build-across-folders)):
 
-> Hint: the CMake part is the `FetchContent_Declare` / `FetchContent_MakeAvailable` / `target_link_libraries` pattern from the CMake chapter, with `threepp::threepp` as the target threepp exports. With CLion's MinGW compiler, also build threepp as a *shared* library — the solution shows the two lines and explains why. Without them, every rebuild spends most of a minute linking.
->
-> The threepp names — `Canvas`, `Scene`, `canvas.animate` — you cannot guess from anything in this book. Look at one of threepp's examples ([Finding things out yourself](#finding-things-out-yourself)), or open the solution and type it in; in Milestone 1 that is expected. One warning when you borrow from an example: threepp's examples `#include "renderer_factory.hpp"` and create their renderer with `auto renderer = createRenderer(canvas);`. That helper is not part of the library — it sits next to the examples — and it stops and **asks on the console** which renderer to use before anything is drawn. Leave out the include, write `GLRenderer renderer(canvas);` instead, and `renderer.` wherever the example writes `renderer->`.
+    ```cmake
+    set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
+    add_subdirectory(rig)
+    ```
+
+    The first line puts your program in the same folder as threepp's DLLs; the solution under step 5 explains why that matters.
+
+5. Right-click `rig` → **New → File**, name it `CMakeLists.txt`. In it, pull threepp in with `FetchContent`, exactly as the CMake chapter fetches Catch2 in [Consuming third-party libraries](Chapter2/cmake_intro.md#consuming-third-party-libraries), and build an executable `tank_rig` from `main.cpp` that links threepp. Only the names change:
+
+    | What the pattern needs | For threepp |
+    |---|---|
+    | the name in `FetchContent_Declare` and `FetchContent_MakeAvailable` | `threepp` |
+    | `GIT_REPOSITORY` | `https://github.com/markaren/threepp.git` |
+    | `GIT_TAG` | `2026-09-28` |
+    | the target to link | `threepp::threepp` |
+
+    You can also add `GIT_SHALLOW TRUE` under `GIT_TAG`: it downloads only the pinned version, not threepp's whole history.
+
+    One addition that Catch2 did not need: put these three lines **before** `FetchContent_Declare`, so that threepp is built as a DLL with CLion's MinGW compiler. Without them, every rebuild spends most of a minute linking.
+
+    ```cmake
+    if(MINGW)
+        set(BUILD_SHARED_LIBS ON)
+    endif()
+    ```
+
+    ??? success "Show solution: the two CMake files"
+
+        <div class="spoiler" markdown title="Click to reveal">
+
+        `CMakeLists.txt` (top level; the version in `cmake_minimum_required` and the name in `project` may differ from what CLion wrote for you, and that is fine):
+
+        ```cmake
+        cmake_minimum_required(VERSION 3.20)
+        project(tank_rig)
+
+        set(CMAKE_CXX_STANDARD 20)
+        set(CMAKE_CXX_STANDARD_REQUIRED ON)
+
+        set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)   # every program in one folder, next to threepp's DLLs
+
+        add_subdirectory(rig)      # the 3D view
+        ```
+
+        `rig/CMakeLists.txt`:
+
+        ```cmake
+        include(FetchContent)
+
+        if(MINGW)
+            set(BUILD_SHARED_LIBS ON)   # build threepp as a DLL, so a rebuild links in seconds
+        endif()
+        FetchContent_Declare(
+            threepp
+            GIT_REPOSITORY https://github.com/markaren/threepp.git
+            GIT_TAG        2026-09-28    # pin a tag, never a moving branch
+            GIT_SHALLOW    TRUE          # fetch only the latest commits, not the whole history
+        )
+        FetchContent_MakeAvailable(threepp)
+
+        add_executable(tank_rig main.cpp)
+        target_link_libraries(tank_rig PRIVATE threepp::threepp)
+        ```
+
+        **`BUILD_SHARED_LIBS` and the `bin` folder belong together.** threepp is a very large library. Built the usual way — as a *static* library — it is copied into your program every time the program is linked, and with MinGW that makes every rebuild take the better part of a minute. Built as a *shared* library (a DLL on Windows), it is compiled once and your program only refers to it, so a rebuild links in a few seconds. The catch: Windows only finds a DLL that sits next to the program (or on the `PATH`), so the top-level file sends every program to the same `bin` folder, where threepp already puts its DLLs. Leave that line out and the program never starts: CLion reports exit code `-1073741515` (`0xC0000135`), which is Windows for "a DLL was not found". The `if(MINGW)` keeps the change to CLion's MinGW compiler, where the static link is slowest; other compilers keep the default.
+
+        </div>
+
+6. **Reload CMake** — click the reload icon CLion shows over the editor ([CMake in CLion](Chapter2/cmake_intro.md#cmake-in-clion)). Until you do, CLion may say `main.cpp` does not belong to any project target; that is expected. This reload is the one that downloads threepp, and the **CMake** window at the bottom can show nothing new for several minutes. Wait until it prints `Build files have been written to`.
+7. In `rig/main.cpp`, create a `Canvas` (the window), a `GLRenderer`, a `Scene` with a background colour, and a `PerspectiveCamera`, then hand the animation loop a lambda that renders one frame.
+
+> Hint: the threepp names — `Canvas`, `Scene`, `canvas.animate` — you cannot guess from anything in this book. Look at one of threepp's examples ([Finding things out yourself](#finding-things-out-yourself)), or open the solution and type it in; in Milestone 1 that is expected. One warning when you borrow from an example: threepp's examples `#include "renderer_factory.hpp"` and create their renderer with `auto renderer = createRenderer(canvas);`. That helper is not part of the library — it sits next to the examples — and it stops and **asks on the console** which renderer to use before anything is drawn. Leave out the include, write `GLRenderer renderer(canvas);` instead, and `renderer.` wherever the example writes `renderer->`.
 
 !!! example "Run it — you should see"
 
     An empty window in the background colour you chose, that you can resize and close. Nothing else. That is the milestone. Commit it — the commit should hold only `.gitignore`, the two `CMakeLists.txt` files and `rig/main.cpp`; if you see files from `cmake-build-debug`, your `.gitignore` is not working — and push.
 
-??? success "Show solution"
+??? success "Show solution: main.cpp"
 
     <div class="spoiler" markdown title="Click to reveal">
-
-    `CMakeLists.txt` (top level):
-
-    ```cmake
-    cmake_minimum_required(VERSION 3.20)
-    project(tank_rig)
-
-    set(CMAKE_CXX_STANDARD 20)
-    set(CMAKE_CXX_STANDARD_REQUIRED ON)
-
-    set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)   # every program in one folder, next to threepp's DLLs
-
-    add_subdirectory(rig)      # the 3D view
-    ```
-
-    `rig/CMakeLists.txt`:
-
-    ```cmake
-    include(FetchContent)
-
-    if(MINGW)
-        set(BUILD_SHARED_LIBS ON)   # build threepp as a DLL, so a rebuild links in seconds
-    endif()
-    FetchContent_Declare(
-        threepp
-        GIT_REPOSITORY https://github.com/markaren/threepp.git
-        GIT_TAG        2026-09-28    # pin a tag, never a moving branch
-        GIT_SHALLOW    TRUE          # fetch only the latest commits, not the whole history
-    )
-    FetchContent_MakeAvailable(threepp)
-
-    add_executable(tank_rig main.cpp)
-    target_link_libraries(tank_rig PRIVATE threepp::threepp)
-    ```
 
     `rig/main.cpp`:
 
@@ -170,7 +203,6 @@ When you are stuck, go in this order: the [four tools for "something is wrong"](
 
     Things worth naming:
 
-    - **`BUILD_SHARED_LIBS` and the `bin` folder belong together.** threepp is a very large library. Built the usual way — as a *static* library — it is copied into your program every time the program is linked, and with MinGW that makes every rebuild take the better part of a minute. Built as a *shared* library (a DLL on Windows), it is compiled once and your program only refers to it, so a rebuild links in a few seconds. The catch: Windows only finds a DLL that sits next to the program (or on the `PATH`), so the top-level file sends every program to the same `bin` folder, where threepp already puts its DLLs. Leave that line out and the program never starts: CLion reports exit code `-1073741515` (`0xC0000135`), which is Windows for "a DLL was not found". The `if(MINGW)` keeps the change to CLion's MinGW compiler, where the static link is slowest; other compilers keep the default.
     - **`Canvas` owns the window.** When `canvas` is destroyed at the end of `main`, the window is closed and its resources released — you never clean up by hand, the same idea as `std::ofstream` in [RAII](Chapter4/raii.md). `GLRenderer` draws into that window and cleans up after itself the same way.
     - **Construct `GLRenderer` yourself, as here** — not with the `createRenderer(canvas)` helper threepp's examples use. That helper lives in the examples' own `renderer_factory.hpp`, not in the library, and it waits for an answer on the console before anything is drawn.
     - **`Scene::create()` and `PerspectiveCamera::create()` hand you smart pointers**, which is why you write `scene->` and `*scene`. Milestone 2 says which kind, and why.
@@ -398,7 +430,7 @@ Part 1 is a complete 3D program on its own — a good place to commit, take a sc
 
 Here is the milestone the whole project exists for.
 
-1. **Bring in your Version 5 project.** Commit Part 1 first. Then copy only these four folders from your Version 5 project into `tank-rig`, next to `rig/`: `include/`, `src/`, `app/` and `tests/`. Leave Version 5's own top-level `CMakeLists.txt` behind — `tank-rig` keeps its own, and step 2 extends it — and leave its `.git`, `.idea` and `cmake-build-*` folders behind too. Commit the four folders in a commit of their own, with nothing else in it. In the commit dialog, tick **Unversioned Files** so every copied file goes in, and start the message with `Import:` — for example `Import: my Version 5 tank project (include, src, app, tests)`. Everything after that commit is new work, and anyone reading your history can see exactly where it starts.
+1. **Bring in your Version 5 project**: the CLion project you built by following the book's [Tank Control System](tank_control/v1_classes.md) pages up to [Version 5](tank_control/v5_tests.md) (see [Before you start](#before-you-start)). Commit Part 1 first. Then, in File Explorer, copy only these four folders from that project's folder into the `tank-rig` folder, next to `rig/`: `include/`, `src/`, `app/` and `tests/`. Leave Version 5's own top-level `CMakeLists.txt` behind — `tank-rig` keeps its own, and step 2 extends it — and leave its `.git`, `.idea` and `cmake-build-*` folders behind too. Commit the four folders in a commit of their own, with nothing else in it. In the commit dialog, tick **Unversioned Files** so every copied file goes in, and start the message with `Import:` — for example `Import: my Version 5 tank project (include, src, app, tests)`. Everything after that commit is new work, and anyone reading your history can see exactly where it starts.
 2. **Wire up the build.** In the top-level `CMakeLists.txt`, add `src`, `app` and `tests` next to `rig`. Do not add `include`: it has no `CMakeLists.txt` of its own, and `src/CMakeLists.txt` already points `tank_lib` at it. Turn on testing with `include(CTest)` *at the top level*, so `ctest` finds the tests from your build folder. In `rig/CMakeLists.txt`, link `tank_lib` as well as threepp. Reload CMake (this reload downloads Catch2).
 3. **Drive the water.** Include your headers, create a `Plant`, a `LevelSensor` reading it, and a `PIDController`, and point a `Controller*` at the PID — Version 4 used a `Controller&`, but Milestone 6 needs something it can re-point. Each frame: read the sensor, ask the controller for a valve opening, step the plant, then set the water's `scale.y` and `position.y` from the plant's level. The two "for now" water lines from Milestone 4 can go; the loop sets the water from now on.
 
@@ -801,7 +833,7 @@ target_link_libraries(tank_rig PRIVATE tank_lib threepp::threepp)
 
 ## Finding things out yourself
 
-From here on, nobody hands you the exact call. That is normal: working programmers spend much of their time finding out how a library works. Here is how to do it with threepp.
+The milestones are done, and with them the guided part of the project. What remains is yours: an [extension](#your-extension) you choose and design, and a README that [presents what you built](#present-your-project). From here on, nobody hands you the exact call. That is normal: working programmers spend much of their time finding out how a library works. Here is how to do it with threepp.
 
 - **Read the headers.** Ctrl+click any threepp name in CLion to open its declaration. The headers themselves are in your build folder, under `cmake-build-<profile>/_deps/threepp-src/include/threepp/`, and the source files under `_deps/threepp-src/src/`. Reading the `.cpp` is allowed, and often the final answer — the bug hunt in Milestone 5 ends in `Clock.cpp`.
 - **Read the examples.** threepp comes with more than a hundred small example programs. Browse the ones for the version you use at <https://github.com/markaren/threepp/tree/2026-09-28/examples> — read them in the browser, and copy only the few lines you need, with a comment saying where they came from. They start with `#include "renderer_factory.hpp"` and `createRenderer(canvas)`; leave out the include and use `GLRenderer renderer(canvas);` instead, as in Milestone 1.
@@ -811,31 +843,13 @@ From here on, nobody hands you the exact call. That is normal: working programme
 
 ---
 
-## From the tank to your own machine
-
-The tank is one machine. The same skeleton fits almost any controlled machine — a lift, a robot joint, a conveyor — because it is made of four roles:
-
-- **State that steps in time.** Something with `step(input, dt)`, like `Plant`. The update is the same kind of line as in `Tank::update`: the new value is the old value plus a rate times `dt`. For motion, position changes by velocity × `dt` and velocity by acceleration × `dt`.
-- **Sensors** that read the state, behind an interface.
-- **Actuators with limits** — a valve that cannot open more than fully, a motor with a maximum force.
-- **Controllers** behind an interface, swappable at runtime.
-
-Two things to watch when you move to a new machine:
-
-- **Check what the classes you reuse assume.** The book's PID clamps its output to 0..1 because it drives a valve ([Version 3](tank_control/v3_pid.md)). A motor that can push both ways needs −1..+1. Reuse the idea; question the details.
-- **Time steps matter more for moving things.** A tank forgives a long frame; a machine with momentum may overshoot badly after one. Decide what your simulation should do when a frame takes far longer than usual — after a breakpoint, say, or while you drag the window.
-
-Keep the machine's logic in a library of its own that does not link threepp, with tests, and let the 3D view only show it — exactly as `tank_lib` and `rig/` do.
-
----
-
 ## Your extension
 
 Choosing an extension, and being able to say why you built it the way you did, is part of the project. The rule from Milestone 8 still holds: **the logic belongs in a library, with a test; the view only shows it.** Build one extension well — tested, explained, with its trade-offs understood — before you think about a second.
 
-Each card below says what to build, the design question you will have to answer, and a test that would prove it works. Where you will need something the book has not shown you, it says where to look. There are no solutions.
+Each suggestion below says what to build, the design question you will have to answer, and a test that would prove it works. Where you will need something the book has not shown you, it says where to look. There are no solutions.
 
-These are suggestions; an idea of your own is just as good. Whatever you pick, start by writing its plan in your log: what it does, which new classes go where, what the rig will show, and one thing you do not know yet. Some cards grow out of Version 5's own list — if you built one there, it arrives with your import, so take it further here: into the view, with its design question answered and its test written.
+These are suggestions; an idea of your own is just as good. Whatever you pick, start by writing its plan in your log: what it does, which new classes go where, what the rig will show, and one thing you do not know yet. Some suggestions grow out of Version 5's own list — if you built one there, it arrives with your import, so take it further here: into the view, with its design question answered and its test written.
 
 **Small**
 
@@ -876,7 +890,19 @@ These are suggestions; an idea of your own is just as good. Whatever you pick, s
 
 **Your own machine**
 
-Build a second machine *next to* the tank, in the same repository: a lift, a robot joint, a conveyor sorter, or your own idea. It gets its own library target that does not link threepp, its own tests, and its own view. Write its card yourself before you start — what it does, the design question, what you need to find out, the first test — using the ones above as the pattern. [From the tank to your own machine](#from-the-tank-to-your-own-machine) lists what to watch for. threepp's `examples/projects/MotorControl/` and `examples/libs/utility/Regulator.hpp` show a motor and a regulator you can learn from.
+Build a second machine *next to* the tank, in the same repository: a lift, a robot joint, a conveyor sorter, or your own idea. It gets its own library target that does not link threepp, its own tests, and its own view. Before you start, describe it in your log in the same form as the suggestions above: what it does, the design question, what you need to find out, and the first test. threepp's `examples/projects/MotorControl/` and `examples/libs/utility/Regulator.hpp` show a motor and a regulator you can learn from.
+
+The tank's skeleton fits almost any controlled machine, because it is made of four roles:
+
+- **State that steps in time.** Something with `step(input, dt)`, like `Plant`. The update is the same kind of line as in `Tank::update`: the new value is the old value plus a rate times `dt`. For motion, position changes by velocity × `dt` and velocity by acceleration × `dt`.
+- **Sensors** that read the state, behind an interface.
+- **Actuators with limits** — a valve that cannot open more than fully, a motor with a maximum force.
+- **Controllers** behind an interface, swappable at runtime.
+
+Two things to watch when you move to a new machine:
+
+- **Check what the classes you reuse assume.** The book's PID clamps its output to 0..1 because it drives a valve ([Version 3](tank_control/v3_pid.md)). A motor that can push both ways needs −1..+1. Reuse the idea; question the details.
+- **Time steps matter more for moving things.** A tank forgives a long frame; a machine with momentum may overshoot badly after one. Decide what your simulation should do when a frame takes far longer than usual — after a breakpoint, say, or while you drag the window.
 
 **Decisions worth writing down.** Whatever you build, record the decisions that shaped it, a few lines each, in your log or in your README's *Why it is built this way* section. For example:
 

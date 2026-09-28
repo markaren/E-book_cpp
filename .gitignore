@@ -9,3 +9,6 @@ __pycache__/
 .venv/
 venv/
 
+
+# Claude desktop app (preview config, worktrees)
+.claude/

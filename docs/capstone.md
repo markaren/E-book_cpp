@@ -487,7 +487,7 @@ Here is the milestone the whole project exists for.
 
 ### Bug hunt: where did the water go?
 
-Your simulation passed every Version 5 test, and you changed nothing in it. Something about its new consumer is different. Find out what — the hints go from gentle to specific — and **log how you found it**, with a screenshot of what you saw: this is the best log entry of the whole project. If the hints are not enough, open the fix options — that is allowed. Write in your log that you did, and what you still had to work out yourself: where to put the fix, and why.
+Your simulation passed every Version 5 test, and you changed nothing in it. Something about its new consumer is different. Find out what — the hints go from gentle to specific — and **log how you found it**, with screenshots of what you saw: the empty tank, and the debugger stopped in the first frame with the value of `dt` visible. This is the best log entry of the whole project. If the hints are not enough, open the fix options — that is allowed. Write in your log that you did, and what you still had to work out yourself: where to put the fix, and why.
 
 ??? tip "Hint 1 — the tool"
 
@@ -804,7 +804,7 @@ target_link_libraries(tank_rig PRIVATE tank_lib threepp::threepp)
 From here on, nobody hands you the exact call. That is normal: working programmers spend much of their time finding out how a library works. Here is how to do it with threepp.
 
 - **Read the headers.** Ctrl+click any threepp name in CLion to open its declaration. The headers themselves are in your build folder, under `cmake-build-<profile>/_deps/threepp-src/include/threepp/`, and the source files under `_deps/threepp-src/src/`. Reading the `.cpp` is allowed, and often the final answer — the bug hunt in Milestone 5 ends in `Clock.cpp`.
-- **Read the examples.** threepp comes with around a hundred small example programs. Browse the ones for the version you use at <https://github.com/markaren/threepp/tree/2026-09-28/examples> — read them in the browser, and copy only the few lines you need, with a comment saying where they came from. They start with `#include "renderer_factory.hpp"` and `createRenderer(canvas)`; leave out the include and use `GLRenderer renderer(canvas);` instead, as in Milestone 1.
+- **Read the examples.** threepp comes with more than a hundred small example programs. Browse the ones for the version you use at <https://github.com/markaren/threepp/tree/2026-09-28/examples> — read them in the browser, and copy only the few lines you need, with a comment saying where they came from. They start with `#include "renderer_factory.hpp"` and `createRenderer(canvas)`; leave out the include and use `GLRenderer renderer(canvas);` instead, as in Milestone 1.
 - **See one run.** Copy an example's `.cpp` into `rig/` under a new name (say `try_raycast.cpp`), add `add_executable(try_raycast try_raycast.cpp)` and `target_link_libraries(try_raycast PRIVATE threepp::threepp)` to `rig/CMakeLists.txt`, swap in `GLRenderer` as above, reload CMake, and pick it in the run dropdown. It uses the threepp you have already built. A few examples need extra files or libraries and will not build this way — pick another.
 - **Shrink, then port.** Find an example that does something close to what you want. Work out the smallest part of it that does the thing. Move that part into your rig, get it working, *then* make it yours.
 - **Check what you assumed.** When something behaves oddly, write down what you expected, then test the assumption with the smallest change you can think of — exactly like the log entry after Milestone 4.
@@ -892,7 +892,7 @@ Build a second machine *next to* the tank, in the same repository: a lift, a rob
 
 ## Present your project
 
-Your `README.md` is where you **present** the project — to a teacher, to a future employer, to yourself in a year. It is written by you, about your work, in your own words. Start from [The README](readme_guide.md), read its section on [presenting a bigger project](readme_guide.md#presenting-a-bigger-project), and make yours a proper presentation:
+Your `README.md` is where you **present** the project — to a teacher, to a future employer, to yourself in a year. It is written by you, about your work, in your own words. Start from [The README](readme_guide.md), read its section on [presenting a bigger project](readme_guide.md#presenting-a-bigger-project), and make yours a proper presentation. (If you are taking AIS1003, your portfolio brief lists the sections your README must have and adds a few questions to them; where the two differ, follow the brief.)
 
 1. **What it is** — a paragraph, and a **GIF of it running** at the top. The first thing a reader sees should be your rig in motion.
 2. **How to build and run it** — the steps, how long the first build takes, and the controls (which keys do what).
@@ -911,7 +911,7 @@ Your `README.md` is where you **present** the project — to a teacher, to a fut
 
 - A 3D view is just another **consumer** of your simulation's numbers. Plugging it in required no edits to `src/` — the simulation does not know the view exists.
 - A new consumer can still expose an assumption your tests never made. A clock's first frame has **no elapsed time**, and a `NaN`, once in, flows through every calculation and slips past every clamp. Where to guard against it is a design decision.
-- Pulling in a real dependency is a few lines of CMake: `include(FetchContent)`, `FetchContent_Declare`, `FetchContent_MakeAvailable`, then link the target it exports. **Pin a tag**, and turn off the parts of it you do not need.
+- Pulling in a real dependency is a few lines of CMake: `include(FetchContent)`, `FetchContent_Declare`, `FetchContent_MakeAvailable`, then link the target it exports. **Pin a tag**, never a moving branch, so everyone who builds your project gets the same threepp.
 - A scene graph is **composition**: a group *has* children, a child's transform is relative to its parent, and moving the parent moves all its children.
 - threepp's `create` functions return a `shared_ptr` because threepp chose **shared ownership**: the scene keeps what you add alive, and your variable is another owner.
 - A base-class pointer chosen by a key press is **runtime polymorphism** you can watch; the loop that runs both controllers never changed.
